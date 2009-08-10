@@ -1,0 +1,23 @@
+usePlugin(com.pietschy.gradle.plugin.GWTAppPlugin, ['gwtVersion' : '1.7.0'])
+
+clean.dependsOn(':gwt-pectin:clean')
+
+gwtCompile {
+   modules('com.pietschy.gwt.pectin.demo.Demo')
+//   style = 'PRETTY'
+}
+ 
+createTask('shell', type: com.pietschy.gradle.plugin.GWTHostedMode)
+shell {
+   modules('com.pietschy.gwt.pectin.demo.Demo')
+   startupUrl = 'Demo.html'
+//   style = 'PRETTY'
+}
+
+createTask('run')
+run.dependsOn 'clean', 'compile', 'shell'
+
+
+createTask('wrapper', type: Wrapper).configure {
+   gradleVersion = '0.5.2'
+}
