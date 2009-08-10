@@ -1,0 +1,17 @@
+usePlugin(com.pietschy.gradle.plugin.GWTLibPlugin, ["gwtVersion": "1.7.0"])
+
+version = '1.0-SNAPSHOT'
+
+//dependencies {
+//
+//   compile("com.google.gwt:gwt-incubator:1.7.0",
+//           "com.google.gwt:gwt-fx:3.0.0")
+//
+//   testCompile("org.testng:testng:5.8:jdk15",
+//               "org.easymock:easymock:2.2")
+//}
+
+
+createTask('wrapper', type: Wrapper).configure {
+   gradleVersion = '0.5.2'
+}
