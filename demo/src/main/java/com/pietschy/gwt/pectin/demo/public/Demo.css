@@ -1,0 +1,15 @@
+select.validation-error,
+   input.validation-error {
+   background-color: lightcoral;
+}
+
+.gwt-pectin-ComboBoxWithOther.validation-error input,
+   .gwt-pectin-ComboBoxWithOther.validation-error td select {
+   background-color: lightcoral;
+}
+
+.gwt-pectin-ValidationMessageDisplay {
+   color: #555555;
+   font-size: 80%;
+}
+      
