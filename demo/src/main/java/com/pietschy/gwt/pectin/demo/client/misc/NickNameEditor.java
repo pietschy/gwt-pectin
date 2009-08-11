@@ -14,21 +14,32 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.basic;
+package com.pietschy.gwt.pectin.demo.client.misc;
 
-import com.pietschy.gwt.pectin.client.components.ComboBox;
+import com.pietschy.gwt.pectin.client.components.AbstractComboBoxWithOther;
+import com.pietschy.gwt.pectin.client.validation.ValidationResult;
+import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.UIObject;
 
 /**
  * Created by IntelliJ IDEA.
 * User: andrew
 * Date: Aug 7, 2009
-* Time: 10:43:18 AM
+* Time: 10:43:36 AM
 * To change this template use File | Settings | File Templates.
 */
-public class GenderRenderer implements ComboBox.Renderer<Gender>
+public class NickNameEditor extends AbstractComboBoxWithOther<String> 
 {
-   public String toDisplayString(Gender gender)
+   public NickNameEditor()
    {
-      return gender.getDisplayString();
+      super("Bazza", "Shazza", "Davo", "Damo", "Wayno");
+   }
+
+   protected HasValue<String> createOtherEditor()
+   {
+      return new TextBox();
    }
 }

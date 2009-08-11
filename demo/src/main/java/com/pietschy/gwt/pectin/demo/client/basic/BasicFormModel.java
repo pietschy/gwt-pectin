@@ -22,21 +22,21 @@ import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.*;
+import com.pietschy.gwt.pectin.client.bean.BeanPropertyValueModel;
 import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.getValidationManager;
-import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
-import com.pietschy.gwt.pectin.client.validation.validator.NotNullValidator;
+import com.pietschy.gwt.pectin.demo.client.domain.Gender;
+import com.pietschy.gwt.pectin.demo.client.domain.Person;
+import com.pietschy.gwt.pectin.demo.client.domain.Wine;
+import com.pietschy.gwt.pectin.demo.client.misc.LoginNameGenerator;
+import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
 
 /**
  *
  */
-public class PersonFormModel extends FormModel
+public class BasicFormModel extends FormModel
 {
 
-   public static abstract class PersonProvider extends BeanModelProvider<Person>
-   {
-   }
+   public static abstract class PersonProvider extends BeanModelProvider<Person> {}
 
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
 
@@ -44,61 +44,35 @@ public class PersonFormModel extends FormModel
 
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
-   protected final FieldModel<String> nickName;
-   protected final FieldModel<Boolean> hasNickName;
    protected final FormattedFieldModel<Integer> age;
    protected final FieldModel<String> loginName;
    protected final FieldModel<Gender> gender;
-   protected final FieldModel<Boolean> wineLover;
    protected final ListFieldModel<Wine> favoriteWines;
 
-
-   public PersonFormModel()
+   public BasicFormModel()
    {
-
       // Create our models...
       givenName = fieldOfType(String.class).boundTo(personProvider, "givenName");
       surname = fieldOfType(String.class).boundTo(personProvider, "surname");
-
-      hasNickName = fieldOfType(Boolean.class).createWithValue(false);
-      nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
-
-      loginName = fieldOfType(String.class)
-         .computedFrom(givenName, surname)
-         .using(new LoginNameGenerator());
-
       gender = fieldOfType(Gender.class).boundTo(personProvider, "gender");
 
+      // a formatted field.
       age = formattedFieldOfType(Integer.class)
          .using(ageFormat)
          .boundTo(personProvider, "age");
 
-      wineLover = fieldOfType(Boolean.class).boundTo(personProvider, "wineLover");
+      // a list field
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
-
-      // Configure our validator rules
-      validateField(givenName).using(new NotEmptyValidator("Given Name is required"));
-      validateField(surname).using(new NotEmptyValidator("Surname is required"));
-      // use the fomatter to provide validation at the text level.
-      validateField(age).usingFieldFormat();
-      validateField(age).using(new NotNullValidator("Age is required"));
-
-      validateField(nickName)
-         .using(new NotEmptyValidator("Nick name is required"))
-         .when(hasNickName);
-
-      validateField(favoriteWines).using(new WineListValidator()).when(wineLover);
-
-      // Configure and wire up the metadata.
-      enable(nickName).when(hasNickName);
-      show(favoriteWines).when(wineLover);
-      // manually configure the metadata for the login name.
-      getMetadata(loginName).setEnabled(false);
+      
+      // a computed field
+      loginName = fieldOfType(String.class)
+         .computedFrom(givenName, surname)
+         .using(new LoginNameGenerator());
    }
 
    public void commit()
    {
-      personProvider.commit();
+      personProvider.commit();      
    }
 
    public void revert()
@@ -110,10 +84,4 @@ public class PersonFormModel extends FormModel
    {
       personProvider.setBean(person);
    }
-
-   public boolean validate()
-   {
-      return getValidationManager(this).validate();
-   }
-
 }

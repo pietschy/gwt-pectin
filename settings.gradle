@@ -1,0 +1,8 @@
+addMavenRepo()
+addMavenStyleRepo('pietschy', 'http://maven.pietschy.com')
+
+dependencies("com.pietschy.gradle:buildEnvironment:0.5.2-SNAPSHOT")
+
+include 'gwt-pectin', 'demo'
+
+

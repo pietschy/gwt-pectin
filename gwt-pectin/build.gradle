@@ -1,6 +1,6 @@
 usePlugin(com.pietschy.gradle.plugin.GWTLibPlugin, ["gwtVersion": "1.7.0"])
 
-version = '1.0-SNAPSHOT'
+version = '0.1-SNAPSHOT'
 
 
 createTask('wrapper', type: Wrapper).configure {

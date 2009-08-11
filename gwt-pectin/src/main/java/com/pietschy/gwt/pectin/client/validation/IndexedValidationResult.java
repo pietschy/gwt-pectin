@@ -30,7 +30,9 @@ public interface IndexedValidationResult extends ValidationResult
 {
    public int size();
    
-   ValidationResult get(int index);
+   ValidationResult getUnindexedResult();
 
-   Set<Integer> getErrorIndicies();
+   ValidationResult getIndexedResult(int index);
+
+   Set<Integer> getResultIndicies();
 }

@@ -14,28 +14,36 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.basic;
+package com.pietschy.gwt.pectin.demo.client.misc;
+
+import com.pietschy.gwt.pectin.client.value.Function;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 1, 2009
- * Time: 4:31:54 PM
+ * Date: Jul 13, 2009
+ * Time: 5:35:31 PM
  * To change this template use File | Settings | File Templates.
  */
-public enum Gender
+public class LoginNameGenerator implements Function<String, String>
 {
-   MALE("Male"), FEMALE("Female");
-   
-   private String displayString;
-
-   Gender(String displayString)
+   public String compute(List<String> source)
    {
-      this.displayString = displayString;
-   }
+      String login = "";
+      for (String value : source)
+      {
+         if (value != null && value.length() > 0)
+         {
+            if (login.length() > 0 && !login.endsWith("_"))
+            {
+               login += "_";
+            }
+            login += value.trim().replaceAll("\\s+", "_").toLowerCase();
+         }
+      }
 
-   public String getDisplayString()
-   {
-      return displayString;
+      return login;
    }
 }

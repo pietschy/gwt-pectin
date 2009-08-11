@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.InlineHTML;
 import com.pietschy.gwt.pectin.client.validation.ValidationEvent;
 import com.pietschy.gwt.pectin.client.validation.ValidationHandler;
 import com.pietschy.gwt.pectin.client.validation.ValidationResult;
+import com.pietschy.gwt.pectin.client.validation.IndexedValidationResult;
 import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 
 import java.util.List;
@@ -33,7 +34,7 @@ import java.util.List;
  */
 public class ValidationMessageDisplay 
 extends Composite
-implements ValidationHandler, ValidationDisplay
+implements ValidationHandler, ValidationDisplay, IndexedValidationDisplay
 {
    private InlineHTML label = new InlineHTML();
    
@@ -50,6 +51,16 @@ implements ValidationHandler, ValidationDisplay
    }
 
    public void setValidationResult(ValidationResult result)
+   {
+      updateDisplay(result);
+   }
+
+   public void setValidationResult(IndexedValidationResult result)
+   {
+      updateDisplay(result);
+   }
+
+   private void updateDisplay(ValidationResult result)
    {
       List<ValidationMessage> messages = result.getMessages();
       if (messages.size() > 0)

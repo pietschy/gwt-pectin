@@ -14,7 +14,7 @@ shell {
 //   style = 'PRETTY'
 }
 
-createTask('run')
+createTask('demo')
 run.dependsOn 'clean', 'compile', 'shell'
 
 

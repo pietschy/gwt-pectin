@@ -50,7 +50,7 @@ implements ValueModel<Boolean>, HasValueChangeHandlers<Boolean>
       delegate.addValueChangeHandler(new ValueChangeHandler<Boolean>()
       {
          public void onValueChange(ValueChangeEvent<Boolean> event)
-         {
+         {                                                    
             ValueChangeEvent.fire(DelegatingCondition.this, event.getValue());
          }
       });
@@ -60,7 +60,15 @@ implements ValueModel<Boolean>, HasValueChangeHandlers<Boolean>
 
    public Boolean getValue()
    {
-      return delegate == null ? true : delegate.getValue();
+      if (delegate == null)
+      {
+         return true;
+      }
+      else
+      {
+         Boolean value = delegate.getValue();
+         return value != null ? value : false;
+      }
    }
 
    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Boolean> handler)

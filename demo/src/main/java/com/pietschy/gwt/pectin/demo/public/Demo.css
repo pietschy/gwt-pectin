@@ -9,7 +9,54 @@ select.validation-error,
 }
 
 .gwt-pectin-ValidationMessageDisplay {
-   color: #555555;
+   color: #333333;
    font-size: 80%;
 }
-      
+
+.AbstractDemo-Content {
+   padding: 0.5em;
+}
+
+.AbstractDemo-Blurb {
+   padding: 0.5em;
+   color: #555555;
+}
+.AbstractDemo-Blurb p {
+   margin: 0 0 0.5em 0;
+   padding: 0;
+}
+
+.AbstractDemo-Aside {
+   padding: 0.5em;
+   width: 180px;
+   color: #333333;
+}
+
+.AbstractDemo-Footer {
+   padding: 1.2em 0.5em 0 0.5em;
+}
+
+.AbstractDemo-Footer a {
+   color: #333333;
+   margin-right: 1em;
+}
+
+.AbstractDemo-Footer a:hover {
+   color: black;
+}
+
+.AbstractDemo-Footer a:visited {
+   color: #333333;
+}
+
+.VerySimpleForm-Label {
+   color: #555555;
+   font-weight:bold;
+   text-align: right;
+   padding-right: 0.5em;
+}
+
+.VerySimpleForm-GapRow {
+   height: 0.4em;
+   font-size: 10%;
+}

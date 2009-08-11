@@ -14,36 +14,22 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.basic;
+package com.pietschy.gwt.pectin.demo.client.misc;
 
-import com.pietschy.gwt.pectin.client.value.Function;
-
-import java.util.List;
+import com.pietschy.gwt.pectin.client.components.ComboBox;
+import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 
 /**
  * Created by IntelliJ IDEA.
 * User: andrew
-* Date: Jul 13, 2009
-* Time: 5:35:31 PM
+* Date: Aug 7, 2009
+* Time: 10:43:18 AM
 * To change this template use File | Settings | File Templates.
 */
-class LoginNameGenerator implements Function<String, String>
+public class GenderRenderer implements ComboBox.Renderer<Gender>
 {
-   public String compute(List<String> source)
+   public String toDisplayString(Gender gender)
    {
-      String login = "";
-      for (String value : source)
-      {
-         if (value != null && value.length() > 0)
-         {
-            if (login.length() > 0 && !login.endsWith("_"))
-            {
-               login += "_";
-            }
-            login += value.trim().replaceAll("\\s+", "_").toLowerCase();
-         }
-      }
-
-      return login;
+      return gender.getDisplayString();
    }
 }

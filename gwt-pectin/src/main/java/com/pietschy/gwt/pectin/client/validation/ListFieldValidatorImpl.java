@@ -109,5 +109,4 @@ public class ListFieldValidatorImpl<T> implements ListFieldValidator<T>
    {
       handlers.fireEvent(event);
    }
-
 }

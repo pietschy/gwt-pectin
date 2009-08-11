@@ -14,28 +14,29 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.basic;
+package com.pietschy.gwt.pectin.demo.client.validation;
+
+import com.pietschy.gwt.pectin.client.validation.ListValidator;
+import com.pietschy.gwt.pectin.client.validation.IndexedValidationResultCollector;
+import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
+import com.pietschy.gwt.pectin.demo.client.domain.Wine;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 2, 2009
- * Time: 10:44:15 AM
+ * Date: Jul 13, 2009
+ * Time: 4:07:01 PM
  * To change this template use File | Settings | File Templates.
  */
-public enum Wine
+public class WineListValidator implements ListValidator<Wine>
 {
-   CAB_SAV("Cab Sav"), MERLOT("Merlot"), SHIRAZ("Shiraz");
-   
-   private String displayString;
-
-   Wine(String displayString)
+   public void validate(List<? extends Wine> values, IndexedValidationResultCollector results)
    {
-      this.displayString = displayString;
-   }
-
-   public String getDisplayString()
-   {
-      return displayString;
+      if (values.size() < 1)
+      {
+         results.add(new ErrorMessage("Please select at least one wine"));
+      }
    }
 }

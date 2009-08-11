@@ -14,28 +14,28 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.basic;
-
-import com.pietschy.gwt.pectin.client.components.AbstractComboBoxWithOther;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.TextBox;
+package com.pietschy.gwt.pectin.demo.client.domain;
 
 /**
  * Created by IntelliJ IDEA.
-* User: andrew
-* Date: Aug 7, 2009
-* Time: 10:43:36 AM
-* To change this template use File | Settings | File Templates.
-*/
-public class NickNameEditor extends AbstractComboBoxWithOther<String>
+ * User: andrew
+ * Date: Jul 2, 2009
+ * Time: 10:44:15 AM
+ * To change this template use File | Settings | File Templates.
+ */
+public enum Wine
 {
-   public NickNameEditor()
+   CAB_SAV("Cab Sav"), MERLOT("Merlot"), SHIRAZ("Shiraz");
+   
+   private String displayString;
+
+   Wine(String displayString)
    {
-      super("Bazza", "Shazza", "Davo", "Damo", "Wayno");
+      this.displayString = displayString;
    }
 
-   protected HasValue<String> createOtherEditor()
+   public String getDisplayString()
    {
-      return new TextBox();
+      return displayString;
    }
 }

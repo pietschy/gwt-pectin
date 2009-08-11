@@ -19,6 +19,7 @@ package com.pietschy.gwt.pectin.client.validation.component;
 import com.pietschy.gwt.pectin.client.validation.Severity;
 import com.pietschy.gwt.pectin.client.validation.ValidationResult;
 import com.google.gwt.user.client.ui.UIObject;
+import com.google.gwt.user.client.ui.Widget;
 
 import java.util.TreeMap;
 import java.util.Map;

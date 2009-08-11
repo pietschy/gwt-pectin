@@ -14,7 +14,7 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.basic;
+package com.pietschy.gwt.pectin.demo.client.misc;
 
 import com.pietschy.gwt.pectin.client.validation.Validator;
 import com.pietschy.gwt.pectin.client.validation.ValidationResultCollector;

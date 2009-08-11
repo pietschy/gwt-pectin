@@ -29,5 +29,8 @@ import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 public interface IndexedValidationResultCollector
 {
    void 
+   add(ValidationMessage message);
+   
+   void 
    add(int index, ValidationMessage message);
 }

@@ -1,0 +1,21 @@
+group = 'com.pietschy.gwt'
+
+allprojects {
+   
+   usePlugin('java')
+   usePlugin(com.pietschy.gradle.plugin.IdeaPlugin)
+   usePlugin(com.pietschy.gradle.plugin.RepositoryPlugin)
+   
+   sourceCompatibility = 1.5
+   targetCompatibility = 1.5
+   
+   dependencies {
+      addMavenStyleRepo('pietschy', 'http://maven.pietschy.com')
+   }
+}
+
+
+// define project dependencies
+project(':demo') {
+   dependencies.compile project(':gwt-pectin')
+} 

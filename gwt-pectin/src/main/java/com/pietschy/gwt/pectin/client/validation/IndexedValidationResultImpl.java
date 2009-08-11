@@ -29,10 +29,16 @@ import java.util.Set;
 public class IndexedValidationResultImpl 
 implements IndexedValidationResult, IndexedValidationResultCollector
 {
+   private static final int UNINDEXED_MESSAGE_INDEX = -1;
    private TreeMap<Integer, ValidationResult> results = new TreeMap<Integer, ValidationResult>();
-   
+
    public IndexedValidationResultImpl()
    {
+   }
+
+   public void add(ValidationMessage message)
+   {
+      prepareIndexedResult(UNINDEXED_MESSAGE_INDEX).add(message);
    }
 
    public void
@@ -81,13 +87,20 @@ implements IndexedValidationResult, IndexedValidationResultCollector
       return false;
    }
 
-   public Set<Integer> getErrorIndicies()
+   public Set<Integer> getResultIndicies()
    {
-      return results.keySet();
+      Set<Integer> results = this.results.keySet();
+      results.remove(UNINDEXED_MESSAGE_INDEX);
+      return results;
+   }
+
+   public ValidationResult getUnindexedResult()
+   {
+      return prepareIndexedResult(UNINDEXED_MESSAGE_INDEX);
    }
 
    public ValidationResult
-   get(int index)
+   getIndexedResult(int index)
    {
       return prepareIndexedResult(index);
    }

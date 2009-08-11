@@ -34,7 +34,7 @@ implements Function<Boolean, Boolean>
    {
       for (Boolean value : source)
       {
-         if (value)
+         if (value != null && value)
          {
             return true;
          }

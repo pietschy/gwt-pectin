@@ -14,31 +14,28 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.basic;
-
-import com.pietschy.gwt.pectin.client.validation.ListValidator;
-import com.pietschy.gwt.pectin.client.validation.IndexedValidationResultCollector;
-import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
-
-import java.util.List;
+package com.pietschy.gwt.pectin.demo.client.domain;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 13, 2009
- * Time: 4:07:01 PM
+ * Date: Jul 1, 2009
+ * Time: 4:31:54 PM
  * To change this template use File | Settings | File Templates.
  */
-public class WineListValidator implements ListValidator<Wine>
+public enum Gender
 {
-   public void validate(List<? extends Wine> values, IndexedValidationResultCollector results)
+   MALE("Male"), FEMALE("Female");
+   
+   private String displayString;
+
+   Gender(String displayString)
    {
-      for (int i = 0; i < values.size(); i++)
-      {
-         if (values.get(i) == null)
-         {
-            results.add(i, new ErrorMessage("Can't contain empty values"));
-         }
-      }
+      this.displayString = displayString;
+   }
+
+   public String getDisplayString()
+   {
+      return displayString;
    }
 }

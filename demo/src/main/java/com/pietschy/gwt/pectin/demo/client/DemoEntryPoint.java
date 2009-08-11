@@ -23,7 +23,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.pietschy.gwt.pectin.demo.client.basic.FormDemo;
+import com.pietschy.gwt.pectin.demo.client.basic.BasicDemo;
+import com.pietschy.gwt.pectin.demo.client.metadata.MetadataDemo;
+import com.pietschy.gwt.pectin.demo.client.validation.ValidationDemo;
 
 
 /**
@@ -34,43 +36,43 @@ import com.pietschy.gwt.pectin.demo.client.basic.FormDemo;
  * To change this template use File | Settings | File Templates.
  */
 public class DemoEntryPoint
-implements EntryPoint
+   implements EntryPoint
 {
    private TabPanel tabs;
+   protected RootPanel rootPanel;
 
    public void onModuleLoad()
    {
       FlowPanel panel = new FlowPanel();
-      
+
       tabs = new TabPanel();
-      tabs.add(new FormDemo(), "Basic Binding");
+      tabs.add(new BasicDemo(), "Basic");
+      tabs.add(new MetadataDemo(), "Metadata");
+      tabs.add(new ValidationDemo(), "Validation");
       tabs.selectTab(0);
-      tabs.getDeckPanel().setHeight("100%");
 
       panel.add(tabs);
-      
-      RootPanel.get("page-content").add(panel);
-      
+
+      rootPanel = RootPanel.get("page-content");
+      rootPanel.add(panel);
+
       Window.enableScrolling(true);
-      
+
       Window.addResizeHandler(new ResizeHandler()
       {
          public void onResize(ResizeEvent event)
          {
-            udpateSize(event.getWidth(), event.getHeight());
+            updateSize();
          }
       });
-      
-      udpateSize(Window.getClientWidth(), Window.getClientHeight());
-      
+
+      updateSize();
    }
 
-   private void udpateSize(int width, int height)
+   private void updateSize()
    {
-      height = height - tabs.getAbsoluteTop() - 20;
-     
-      tabs.setSize("" + (width - 50) + "px", "" + height + "px");
+      tabs.setSize("" + rootPanel.getOffsetWidth() + "px", "auto");
    }
-   
-   
+
+
 }

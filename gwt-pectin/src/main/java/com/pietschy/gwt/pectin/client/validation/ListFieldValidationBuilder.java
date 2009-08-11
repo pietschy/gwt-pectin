@@ -19,6 +19,8 @@ package com.pietschy.gwt.pectin.client.validation;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.condition.DelegatingCondition;
 
+import java.util.List;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,5 +50,4 @@ public class ListFieldValidationBuilder<T>
       
       return new DelegatingConditionBuilder(conditionDelegate);
    }
-
 }

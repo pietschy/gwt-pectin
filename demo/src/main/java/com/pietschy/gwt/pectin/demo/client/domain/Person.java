@@ -14,7 +14,7 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.basic;
+package com.pietschy.gwt.pectin.demo.client.domain;
 
 import com.pietschy.gwt.pectin.client.bean.BeanPropertySource;
 
@@ -68,6 +68,11 @@ implements BeanPropertySource
       return nickName;
    }
 
+   public void setNickName(String nickName)
+   {
+      this.nickName = nickName;
+   }
+
    public Integer getAge()
    {
       return age;
@@ -76,11 +81,6 @@ implements BeanPropertySource
    public void setAge(Integer age)
    {
       this.age = age;
-   }
-
-   public void setNickName(String nickName)
-   {
-      this.nickName = nickName;
    }
 
    public Gender getGender()
