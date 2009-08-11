@@ -47,15 +47,15 @@ public class MetadataFormModel extends FormModel
    
    public MetadataFormModel()
    {
+      // Create our field models..
       hasNickName = fieldOfType(Boolean.class).createWithValue(false);
       nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
-      
       wineLover = fieldOfType(Boolean.class).boundTo(personProvider, "wineLover");
       hasFavoriteWines = fieldOfType(Boolean.class).createWithValue(false);
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
       
+      // Configure the metadata for the various models.
       enable(nickName).when(hasNickName);
-      
       enable(hasFavoriteWines).when(wineLover);
       enable(favoriteWines).when(and(wineLover, hasFavoriteWines));
 
