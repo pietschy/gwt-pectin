@@ -43,17 +43,19 @@ public class DemoEntryPoint
 
    public void onModuleLoad()
    {
+      rootPanel = RootPanel.get("demo-target");
+      
       FlowPanel panel = new FlowPanel();
 
       tabs = new TabPanel();
       tabs.add(new BasicDemo(), "Basic");
-      tabs.add(new MetadataDemo(), "Metadata");
-      tabs.add(new ValidationDemo(), "Validation");
+      tabs.add(new MetadataDemo(), "Metadata Plugin");
+      tabs.add(new ValidationDemo(), "Validation Plugin");
       tabs.selectTab(0);
 
       panel.add(tabs);
 
-      rootPanel = RootPanel.get("page-content");
+      
       rootPanel.add(panel);
 
       Window.enableScrolling(true);

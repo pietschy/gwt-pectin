@@ -33,10 +33,13 @@ public class MetadataDemo extends AbstractDemo
    public MetadataDemo()
    {
 
-      addBlurbParagraph("This demo shows the use of the MetadataPlugin to control enabledness.");
-      addBlurbParagraph("The nick name editor also shows an example of a custom HasValue<T> component.");
-      addBlurbParagraph("The list of wines is only enabled if you're both a wine lover and you " +
-                        "have favorite wines");
+      addBlurbParagraph("This demo shows the use of the MetadataPlugin to control the enabledness " +
+                        "of `Focusable` components.  This is configured using enable(nickName).when(hasNickName) " +
+                        "in the model.  The plugin then takes care of the rest.  The nick name " +
+                        "editor is an example of a custom component that implements `HasEnabled` " +
+                        "to integrate with the bindings.");
+      
+      addBlurbParagraph("The list of wines is only enabled if you like wine and you have favorite wines.");
 
       addLinkToModel(model);
       addLinkToView(form);

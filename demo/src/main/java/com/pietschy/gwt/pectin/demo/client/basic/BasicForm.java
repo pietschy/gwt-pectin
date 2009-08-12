@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.DOM;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
+import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
@@ -30,8 +31,11 @@ import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
  */
 public class BasicForm extends VerySimpleForm
 {
-   private TextBox givenName = new TextBox();
-   private TextBox surname = new TextBox();
+   // we'll use an EnhancedTextBox as it fires value change events as
+   // you type, much more exciting for the demo (c:
+   private TextBox givenName = new EnhancedTextBox();
+   private TextBox surname = new EnhancedTextBox();
+   
    private TextBox age = new TextBox();
    private TextBox loginName = new TextBox();
    
@@ -48,22 +52,28 @@ public class BasicForm extends VerySimpleForm
 
    public BasicForm(BasicFormModel model)
    {
-      // see the metadata demo to see how this can be done in the model.
+      // see the metadata demo to see how you can control
+      // enabledness in the model.
       loginName.setEnabled(false);
       age.setVisibleLength(5);
       
+      // bind our widgets to our model.  In normal practice I'd combine the
+      // binding, wiget creation and form layout into some nice reusable methods.
       widgets.bind(model.givenName).to(givenName);
       widgets.bind(model.surname).to(surname);
       widgets.bind(model.age).to(age);
-      widgets.bind(model.loginName).toLabel(loginName);
+      widgets.bind(model.loginName).to(loginName);
 
+      // now lets bind a value using radio buttons
       widgets.bind(model.gender).withValue(Gender.MALE).to(maleRadio);
       widgets.bind(model.gender).withValue(Gender.FEMALE).to(femaleRadio);
 
+      // and a list model to a collection of check boxes
       widgets.bind(model.favoriteWines).containingValue(Wine.CAB_SAV).to(cabSavCheckBox);
       widgets.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
       widgets.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
+      // now layout the form
       addRow("Given Name", givenName);
       addRow("Surname", surname);
       addRow("Login Name", loginName);

@@ -36,7 +36,7 @@ public class MetadataForm extends VerySimpleForm
    private CheckBox hasNickName = new CheckBox("I have a nick name");
    private NickNameEditor nickName = new NickNameEditor();
 
-   private CheckBox wineLover = new NullSafeCheckBox("I love wine!");
+   private CheckBox wineLover = new NullSafeCheckBox("I like wine");
    private CheckBox hasFavoriteWines = new CheckBox("I have favorite wines");
    private CheckBox cabSavCheckBox = new CheckBox("Cab Sav");
    private CheckBox merlotCheckBox = new CheckBox("Merlot");
