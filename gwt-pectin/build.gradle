@@ -1,8 +1,23 @@
 usePlugin(com.pietschy.gradle.plugin.GWTLibPlugin, ["gwtVersion": "1.7.0"])
 
-version = '0.1-SNAPSHOT'
+version = "0.1.${buildNumber}"
 
+init.doFirst {
+   if (build.taskGraph.hasTask(':gwt-pectin:release')) {
+      incrementBuildNumber(project)
+   } else {
+      version = version + '-SNAPSHOT'
+   }
+}
+
+createTask('release', dependsOn: 'libs')
 
 createTask('wrapper', type: Wrapper).configure {
    gradleVersion = '0.5.2'
 }
+
+String getBuildNumber()
+{
+   return readBuildNumber(project)
+}
+
