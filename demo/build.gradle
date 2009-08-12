@@ -1,23 +1,45 @@
 usePlugin(com.pietschy.gradle.plugin.GWTAppPlugin, ['gwtVersion' : '1.7.0'])
 
+version = "0.1.${buildNumber}"
+
+defaultTasks "demo" 
+
 clean.dependsOn(':gwt-pectin:clean')
 
 gwtCompile {
-   modules('com.pietschy.gwt.pectin.demo.Demo')
+   modules('com.pietschy.gwt.pectin.demo.PectinDemo')
 //   style = 'PRETTY'
 }
  
 createTask('shell', type: com.pietschy.gradle.plugin.GWTHostedMode)
 shell {
-   modules('com.pietschy.gwt.pectin.demo.Demo')
-   startupUrl = 'Demo.html'
+   modules('com.pietschy.gwt.pectin.demo.PectinDemo')
+   startupUrl = 'PectinDemo.html'
 //   style = 'PRETTY'
 }
 
-createTask('demo')
-demo.dependsOn 'clean', 'compile', 'shell'
+createTask('demo', dependsOn: ['clean', 'compile', 'shell'])
 
 
+// create a zip of the demo so we can upload it 
+createTask('dist', overwrite: true, dependsOn: ['clean', 'compile', 'gwtCompile']) {
+   
+   File compileOutput = gwtCompile.compileOutputDir;
+   File webAppDir = gwtCompile.webappDir;
+   
+   File dest = new File(project.buildDir, 'web')
+   ant.copy(toDir: dest) {
+      fileset(dir: compileOutput)
+      fileset(dir: webAppDir, excludes: 'WEB-INF/**')
+   }
+}
+
+// Task for creating the gradle wrapper for this project.
 createTask('wrapper', type: Wrapper).configure {
    gradleVersion = '0.5.2'
+}
+
+String getBuildNumber()
+{
+   return readBuildNumber(getProject())
 }

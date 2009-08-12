@@ -1,3 +1,5 @@
+import org.gradle.api.Project
+
 group = 'com.pietschy.gwt'
 
 allprojects {
@@ -19,3 +21,20 @@ allprojects {
 project(':demo') {
    dependencies.compile project(':gwt-pectin')
 } 
+
+def incrementBuildNumber(Project project) {
+   project.ant.buildnumber(); 
+}
+
+String readBuildNumber(Project project) {
+   File buildNumberFile = project.file('build.number')
+   return buildNumberFile.exists() ? loadProperties(buildNumberFile).getProperty('build.number') : '0'
+}
+
+Properties loadProperties(File file) {
+   Properties map = new Properties()
+   map.load(new FileInputStream(file))
+   return map
+}
+
+
