@@ -48,8 +48,6 @@ extends VerySimpleForm
    private HTML nickNameLabel = new HTML("Nick Name");
    private NickNameEditor nickName = new NickNameEditor();
 
-   private Button validateButton = new Button("Validate");
-   
    private WidgetBinder binder = new WidgetBinder();
    private StyleBinder style = new StyleBinder();
    private ValidationBinder validation = new ValidationBinder();
@@ -82,22 +80,13 @@ extends VerySimpleForm
       addRow("Title", title);
       addGap();
       
-      addNote("Type something in, click validate and watch the label");
+      addNote("Clear this field and watch the label");
       addRow(nameLabel, name);
-      addRow("", validateButton);
       addGap();
 
       addNote("Click the check box and watch the label");
       addRow("", hasNickName);
       addRow(nickNameLabel, nickName);
-
-      validateButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            model.validate();
-         }
-      });
-      
+     
    }
 }

@@ -23,6 +23,8 @@ import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validat
 import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.*;
 import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
 import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,7 +46,7 @@ extends FormModel
       title = fieldOfType(String.class).create();
 
       // create a validation field...
-      name = fieldOfType(String.class).create();
+      name = fieldOfType(String.class).createWithValue("Fred");
       validateField(name).using(new NotEmptyValidator("Name is required"));
       
       // create an enabled field...
@@ -52,7 +54,15 @@ extends FormModel
       nickName = fieldOfType(String.class).create();
       enable(nickName).when(hasNickName);
       
-      validate();
+      // the validation plugin doesn't have VALIDATE_ON_EDIT functionality
+      // yet so we do it manually. 
+      name.addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            validate();
+         }
+      });
    }
 
    public void validate()
