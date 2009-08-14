@@ -5,8 +5,8 @@ group = 'com.pietschy.gwt'
 allprojects {
    
    usePlugin('java')
-   usePlugin(com.pietschy.gradle.plugin.IdeaPlugin)
    usePlugin(com.pietschy.gradle.plugin.RepositoryPlugin)
+   usePlugin(com.pietschy.gradle.plugin.IdePlugin)
    
    sourceCompatibility = 1.5
    targetCompatibility = 1.5
@@ -22,7 +22,9 @@ project(':demo') {
    dependencies.compile project(':gwt-pectin')
 } 
 
-def incrementBuildNumber(Project project) {
+
+// define some generic functions for use by other project builds
+void incrementBuildNumber(Project project) {
    project.ant.buildnumber(); 
 }
 
