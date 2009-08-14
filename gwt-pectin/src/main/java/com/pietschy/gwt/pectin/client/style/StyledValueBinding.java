@@ -14,12 +14,12 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.binding;
+package com.pietschy.gwt.pectin.client.style;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.HasValue;
-import com.pietschy.gwt.pectin.client.FieldModel;
+import com.google.gwt.user.client.ui.UIObject;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,35 +28,35 @@ import com.pietschy.gwt.pectin.client.FieldModel;
  * Time: 4:35:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FieldToHasValueBinding<T> 
-extends AbstractFieldBinding<T>
+public class StyledValueBinding<T>
+extends AbstractValueBinding<T>
 {
-   private HasValue<T> widget;
+   private UIObject widget;
+   private T value;
+   private String styleName;
 
-   private WidgetMonitor widgetMonitor = new WidgetMonitor();
-
-   public FieldToHasValueBinding(FieldModel<T> field, HasValue<T> widget)
+   public StyledValueBinding(ValueModel<T> field, UIObject widget, T value, String styleName)
    {
       super(field);
       this.widget = widget;
-      registerHandler(widget.addValueChangeHandler(widgetMonitor));
+      this.value = value;
+      this.styleName = styleName;
    }
 
    protected void updateWidget(T value)
    {
-      widget.setValue(value, false);
-   }
-   
-   public HasValue<T> getTarget()
-   {
-      return widget;
+      if (areEqual(this.value, value))
+      {
+         widget.addStyleName(styleName);
+      }
+      else
+      {
+         widget.removeStyleName(styleName);
+      }
    }
 
-   private class WidgetMonitor implements ValueChangeHandler<T>
+   public UIObject getTarget()
    {
-      public void onValueChange(ValueChangeEvent<T> event)
-      {
-         updateModel(event.getValue());
-      }
+      return widget;
    }
 }

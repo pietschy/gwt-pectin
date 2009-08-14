@@ -25,7 +25,7 @@ import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
 import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
 import com.pietschy.gwt.pectin.client.validation.binding.IndexedValidationDisplayBinding;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationDisplayBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
 import com.pietschy.gwt.pectin.client.binding.BindingContainer;
@@ -139,7 +139,7 @@ implements PluginCallback
       }
    }
    
-   public <T> void onWidgetBinding(final AbstractValueBinding<T> binding, FieldModel<T> field, Object target)
+   public <T> void onWidgetBinding(final AbstractFieldBinding<T> binding, FieldModel<T> field, Object target)
    {
       doBinding(binding, target, getFieldValidator(field, false));
    }

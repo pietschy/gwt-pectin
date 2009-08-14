@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -71,6 +72,14 @@ extends Composite
       cellFormatter.addStyleName(row, 0, "VerySimpleForm-Label");
    }
 
+   protected void addNote(String text)
+   {
+      int row = table.getRowCount();
+      table.setText(row, 1, text);
+      cellFormatter.setStylePrimaryName(row, 1, "VerySimpleForm-Note");
+      
+   }
+   
    public void addGap()
    {
       int row = table.getRowCount();
@@ -97,4 +106,6 @@ extends Composite
       }
       return p;
    }
+
+  
 }

@@ -43,7 +43,7 @@ extends AbstractBinder
       return new ListBindingBuilder<T>(this, field);
    }
 
-   protected <T> void registerBinding(AbstractValueBinding<T> binding)
+   protected <T> void registerBinding(AbstractFieldBinding<T> binding)
    {
       super.registerBinding(binding);
 

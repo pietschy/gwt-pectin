@@ -25,7 +25,7 @@ import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
  * Time: 9:01:36 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface ListFieldValidator<T> extends HasIndexedValidationHandlers
+public interface ListFieldValidator<T> extends HasValidationResult, HasIndexedValidationHandlers
 {
    IndexedValidationResult getValidationResult();
 

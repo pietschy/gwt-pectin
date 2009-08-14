@@ -22,7 +22,7 @@ import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.PluginCallback;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.metadata.binding.AllMetadataBindingBuilder;
-import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
 
@@ -53,7 +53,7 @@ implements PluginCallback
       return metadata;
    }
 
-   public <T> void onWidgetBinding(AbstractValueBinding<T> binding, FieldModel<T> model, Object target)
+   public <T> void onWidgetBinding(AbstractFieldBinding<T> binding, FieldModel<T> model, Object target)
    {
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
    }

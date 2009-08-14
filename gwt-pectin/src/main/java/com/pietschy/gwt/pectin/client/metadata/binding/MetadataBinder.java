@@ -17,6 +17,7 @@
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
 import com.pietschy.gwt.pectin.client.Field;
+import com.pietschy.gwt.pectin.client.condition.Conditions;
 import com.pietschy.gwt.pectin.client.metadata.binding.AllMetadataBindingBuilder;
 import com.pietschy.gwt.pectin.client.metadata.binding.VisibilityBindingBuilder;
 import com.pietschy.gwt.pectin.client.metadata.binding.EnabledBindingBuilder;
@@ -35,21 +36,32 @@ public class MetadataBinder
 extends AbstractBinder
 {
    
-   public AllMetadataBindingBuilder bindMetadataOf(Field field)
+   public AllMetadataBindingBuilder bindMetadata(Field field)
    {
       return new AllMetadataBindingBuilder(this, MetadataPlugin.getMetadata(field));
    }
    
-   public VisibilityBindingBuilder bindVisibilityOf(Field field)
+   public VisibilityBindingBuilder bindVisibility(Field field)
    {
       return new VisibilityBindingBuilder(this, MetadataPlugin.getMetadata(field).getVisibleModel());
    }
    
-   public EnabledBindingBuilder bindEnabledOf(Field field)
+   public EnabledBindingBuilder bindEnabled(Field field)
    {
       return new EnabledBindingBuilder(this, MetadataPlugin.getMetadata(field).getEnabledModel());
    }
    
+   public EnabledBindingBuilder bindDisabled(Field field)
+   {
+      return new EnabledBindingBuilder(this, Conditions.not(MetadataPlugin.getMetadata(field).getEnabledModel()));
+   }
+
+   /**
+    * Binds the value of an arbitrary boolean model to the enabledness and/or visibility of
+    * component.
+    * @param model the value model to bind to.
+    * @return the 
+    */
    public VisibilityBindingBuilder bindValueOf(ValueModel<Boolean> model)
    {
       return new VisibilityBindingBuilder(this, model);

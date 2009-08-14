@@ -28,7 +28,7 @@ import com.pietschy.gwt.pectin.client.format.DisplayFormat;
  * To change this template use File | Settings | File Templates.
  */
 public class FieldToHasTextBinding<T> 
-extends AbstractValueBinding<T>
+extends AbstractFieldBinding<T>
 {
    private HasText widget;
    private DisplayFormat<? super T> format;

@@ -19,7 +19,6 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,35 +27,61 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * Time: 4:53:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractValueBinding<T> extends AbstractBinding
+public abstract class AbstractFieldBinding<T> extends AbstractBinding
 {
-   protected ValueModel<T> model;
-   protected ValueMonitor valueMonitor = new ValueMonitor();
+   protected FieldModel<T> field;
+   protected FieldMonitor fieldMonitor = new FieldMonitor();
 
-   public AbstractValueBinding(ValueModel<T> field)
+   public AbstractFieldBinding(FieldModel<T> field)
    {
-      this.model = field;
-      registerHandler(field.addValueChangeHandler(valueMonitor));
+      this.field = field;
+      registerHandler(field.addValueChangeHandler(fieldMonitor));
+   }
+
+   public FieldModel<T> getFieldModel()
+   {
+      return field;
    }
 
    public void updateTarget()
    {
-      updateWidget(model.getValue());
+      updateWidget(field.getValue());
    }
 
    protected abstract void updateWidget(T value);
 
-   protected Boolean areEqual(T one, T two)
+   protected void updateModel(T value)
    {
-      return one != null ? one.equals(two) : two == null;
-   }
-
-   private class ValueMonitor implements ValueChangeHandler<T>
-   {
-      public void onValueChange(ValueChangeEvent<T> event)
+      fieldMonitor.setIgnoreEvents(true);
+      try
       {
-         T value = event.getValue();
-         updateWidget(value);
+         field.setValue(value);
+      }
+      finally
+      {
+         fieldMonitor.setIgnoreEvents(false);
       }
    }
+
+   private class FieldMonitor implements ValueChangeHandler<T>
+   {
+      private boolean ignoreEvents = false;
+      
+      public void onValueChange(ValueChangeEvent<T> event)
+      {
+         if (!ignoreEvents)
+         {
+            T value = event.getValue();
+            updateWidget(value);
+         }
+      }
+
+      public void setIgnoreEvents(boolean ignoreEvents)
+      {
+         this.ignoreEvents = ignoreEvents;
+      }
+   }
+
+
+   
 }

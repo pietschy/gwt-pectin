@@ -60,3 +60,23 @@ select.validation-error,
    height: 0.4em;
    font-size: 10%;
 }
+
+.VerySimpleForm-Note {
+   color: #333333;
+}
+
+.LordVadar {
+   color: white;
+   background-color:black;
+}
+
+.VerySimpleForm-Label .validation-error {
+   color: red;
+}
+.VerySimpleForm-Label .validation-error:before {
+   content: "* ";
+}
+
+.VerySimpleForm-Label .disabled {
+   color: #aaaaaa;
+}

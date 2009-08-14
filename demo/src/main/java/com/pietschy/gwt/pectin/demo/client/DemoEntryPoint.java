@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.pietschy.gwt.pectin.demo.client.basic.BasicDemo;
 import com.pietschy.gwt.pectin.demo.client.metadata.MetadataDemo;
 import com.pietschy.gwt.pectin.demo.client.validation.ValidationDemo;
+import com.pietschy.gwt.pectin.demo.client.style.StyleDemo;
 
 
 /**
@@ -51,6 +52,7 @@ public class DemoEntryPoint
       tabs.add(new BasicDemo(), "Basic");
       tabs.add(new MetadataDemo(), "Metadata Plugin");
       tabs.add(new ValidationDemo(), "Validation Plugin");
+      tabs.add(new StyleDemo(), "Style Bindings");
       tabs.selectTab(0);
 
       panel.add(tabs);

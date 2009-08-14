@@ -29,7 +29,7 @@ import com.pietschy.gwt.pectin.client.FieldModel;
  * To change this template use File | Settings | File Templates.
  */
 public class FieldWithValueBinding<T>
-extends AbstractValueBinding<T>
+extends AbstractFieldBinding<T>
 {
    private HasValue<Boolean> widget;
 

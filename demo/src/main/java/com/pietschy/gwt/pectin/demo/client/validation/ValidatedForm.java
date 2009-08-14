@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationMessageDisplay;
-import com.pietschy.gwt.pectin.client.validation.ValidationBinder;
+import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.client.components.ComboBox;
@@ -103,24 +103,24 @@ public class ValidatedForm extends VerySimpleForm
 
    }
 
-   private Widget createValidationDisplay(ListFieldModel<Wine> field)
-   {
-      ValidationMessageDisplay display = new ValidationMessageDisplay();
-      validation.displayValidationOf(field).using(display);
-      return display;
-   }
-
    private ValidationMessageDisplay createValidationDisplay(FieldModel<?> field)
    {
       ValidationMessageDisplay display = new ValidationMessageDisplay();
-      validation.displayValidationOf(field).using(display);
+      validation.bindValidationOf(field).to(display);
       return display;
    }
 
    private ValidationMessageDisplay createValidationDisplay(FormattedFieldModel<?> field)
    {
       ValidationMessageDisplay display = new ValidationMessageDisplay();
-      validation.displayValidationOf(field).using(display);
+      validation.bindValidationOf(field).to(display);
+      return display;
+   }
+
+   private Widget createValidationDisplay(ListFieldModel<Wine> field)
+   {
+      ValidationMessageDisplay display = new ValidationMessageDisplay();
+      validation.bindValidationOf(field).to(display);
       return display;
    }
 

@@ -14,21 +14,23 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.validation;
+package com.pietschy.gwt.pectin.client.style;
 
-import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
+import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 13, 2009
- * Time: 9:01:36 AM
+ * Date: Aug 14, 2009
+ * Time: 12:14:53 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface FieldValidator<T> extends HasValidationResult, HasValidationHandlers 
+public class StyleBinder 
+   extends AbstractBinder
 {
-
-   void addExternalMessage(ValidationMessage message);
-
-   void clear();
+   public <T> FieldStyleBindingBuilder<T> bind(ValueModel<T> model)
+   {
+      return new FieldStyleBindingBuilder<T>(this, model);
+   }
 }

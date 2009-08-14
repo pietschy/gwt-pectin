@@ -8,9 +8,14 @@ init.doFirst {
    } else {
       version = version + '-SNAPSHOT'
    }
+   
+   println "Version: ${version}"
 }
 
+
+// Increments the build number and builds the release.
 createTask('release', dependsOn: 'libs')
+
 
 createTask('wrapper', type: Wrapper).configure {
    gradleVersion = '0.5.2'

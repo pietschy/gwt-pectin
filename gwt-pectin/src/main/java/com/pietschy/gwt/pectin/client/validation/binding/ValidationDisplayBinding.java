@@ -36,7 +36,7 @@ extends AbstractBinding
 implements ValidationHandler
 {
    private ValidationDisplay display;
-   protected FieldValidator<?> validator;
+   private FieldValidator<?> validator;
 
    public ValidationDisplayBinding(FieldValidator<?> validator, ValidationDisplay display)
    {

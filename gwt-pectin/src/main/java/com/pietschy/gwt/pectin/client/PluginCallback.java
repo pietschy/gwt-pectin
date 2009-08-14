@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
 
@@ -29,7 +29,7 @@ import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
  */
 public interface PluginCallback
 {
-   <T> void onWidgetBinding(AbstractValueBinding<T> binding, FieldModel<T> model, Object target);
+   <T> void onWidgetBinding(AbstractFieldBinding<T> binding, FieldModel<T> model, Object target);
 
    <T> void onWidgetBinding(AbstractFormattedBinding<T> binding, FormattedFieldModel<T> model, Object target);
 

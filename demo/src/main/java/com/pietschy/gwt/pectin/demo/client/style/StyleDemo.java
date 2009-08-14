@@ -14,21 +14,32 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.validation;
+package com.pietschy.gwt.pectin.demo.client.style;
 
-import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
+import com.pietschy.gwt.pectin.demo.client.misc.AbstractDemo;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 13, 2009
- * Time: 9:01:36 AM
+ * Date: Aug 14, 2009
+ * Time: 12:26:35 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface FieldValidator<T> extends HasValidationResult, HasValidationHandlers 
+public class StyleDemo
+extends AbstractDemo
 {
-
-   void addExternalMessage(ValidationMessage message);
-
-   void clear();
+   private StyleFormModel model = new StyleFormModel();
+   private StyleForm form = new StyleForm(model);
+   
+   public StyleDemo()
+   {
+      addBlurbParagraph("Pectin also supports binding various conditions to the style of an " +
+                        "arbitrary widget. This allows values, metadata and validation state to " +
+                        "trigger style changes on elements like field labels or containers.");
+      
+      setMainContent(form);
+      
+      addLinkToModel(model);
+      addLinkToView(form);
+   }
 }
