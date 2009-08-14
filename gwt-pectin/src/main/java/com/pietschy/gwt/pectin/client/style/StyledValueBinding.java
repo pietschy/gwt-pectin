@@ -18,7 +18,6 @@ package com.pietschy.gwt.pectin.client.style;
 
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
 
 /**
@@ -29,23 +28,23 @@ import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
  * To change this template use File | Settings | File Templates.
  */
 public class StyledValueBinding<T>
-extends AbstractValueBinding<T>
+   extends AbstractValueBinding<T>
 {
    private UIObject widget;
-   private T value;
+   private T triggerValue;
    private String styleName;
 
-   public StyledValueBinding(ValueModel<T> field, UIObject widget, T value, String styleName)
+   public StyledValueBinding(ValueModel<T> field, UIObject widget, T triggerValue, String styleName)
    {
       super(field);
       this.widget = widget;
-      this.value = value;
+      this.triggerValue = triggerValue;
       this.styleName = styleName;
    }
 
    protected void updateWidget(T value)
    {
-      if (areEqual(this.value, value))
+      if (areEqual(this.triggerValue, value))
       {
          widget.addStyleName(styleName);
       }
