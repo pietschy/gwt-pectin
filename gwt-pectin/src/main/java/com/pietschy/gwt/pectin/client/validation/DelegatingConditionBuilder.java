@@ -16,8 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.validation;
 
-import com.pietschy.gwt.pectin.client.condition.DelegatingCondition;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,9 +28,9 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 */
 class DelegatingConditionBuilder implements ConditionBuilder
 {
-   protected DelegatingCondition conditionDelegate;
+   protected DelegatingValueModel<Boolean> conditionDelegate;
 
-   public DelegatingConditionBuilder(DelegatingCondition conditionDelegate)
+   public DelegatingConditionBuilder(DelegatingValueModel<Boolean> conditionDelegate)
    {
       this.conditionDelegate = conditionDelegate;
    }

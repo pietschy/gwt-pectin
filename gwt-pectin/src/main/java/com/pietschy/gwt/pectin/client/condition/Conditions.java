@@ -33,9 +33,14 @@ public class Conditions
       return new ValueConditionBuilder<T>(model);
    }
    
+   public static TextConditionBuilder textOf(ValueModel<String> model)
+   {
+      return new TextConditionBuilder(model);
+   }
+   
    public static Condition and(ValueModel<Boolean> a, ValueModel<Boolean> b, ValueModel<Boolean>... others)
    {
-      AndCondition condition = new AndCondition();
+      AbstractFunctionCondition condition = new AbstractFunctionCondition(new AndFunction());
       condition.addSourceModels(a, b);
       condition.addSourceModels(others);
       return condition;
@@ -43,7 +48,7 @@ public class Conditions
    
    public static Condition or(ValueModel<Boolean> a, ValueModel<Boolean> b, ValueModel<Boolean>... others)
    {
-      OrCondition condition = new OrCondition();
+      AbstractFunctionCondition condition = new AbstractFunctionCondition(new OrFunction());
       condition.addSourceModels(a, b);
       condition.addSourceModels(others);
       return condition;

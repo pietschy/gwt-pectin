@@ -63,7 +63,8 @@ extends VerySimpleForm
       binder.bind(model.hasNickName).to(hasNickName);
       binder.bind(model.nickName).to(nickName);
 
-      // Now change the title style when the magic name is entered.
+      // Now change the title style when the magic value is entered.  I'd normally
+      // use this approach for booleans, but it works with any type.
       style.bind(model.title).withValue("lord vadar").toStyle("LordVadar").on(title);
       
       // Our name label gets styles 'validation-error', 'validation-warning'
@@ -71,7 +72,7 @@ extends VerySimpleForm
       validation.bindValidationOf(model.name).toStyleOf(nameLabel);
       
       // Here our nick name label has it's style configured from the metadata
-      // of the nickName field.  Could have also used the withValue technique
+      // of the nickName field.  Could have also used the withValue approach
       // above in this case as well.
       metadata.bindDisabled(model.nickName).toStyle("disabled").on(nickNameLabel);
       

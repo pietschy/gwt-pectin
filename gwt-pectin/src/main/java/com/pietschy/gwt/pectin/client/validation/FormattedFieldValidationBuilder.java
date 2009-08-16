@@ -16,13 +16,12 @@
 
 package com.pietschy.gwt.pectin.client.validation;
 
-import com.pietschy.gwt.pectin.client.validation.Validator;
-import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
-import com.pietschy.gwt.pectin.client.validation.message.Message;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.format.Format;
 import com.pietschy.gwt.pectin.client.format.FormatException;
-import com.pietschy.gwt.pectin.client.condition.DelegatingCondition;
+import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
+import com.pietschy.gwt.pectin.client.validation.message.Message;
+import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
 
 
 /**
@@ -32,67 +31,85 @@ import com.pietschy.gwt.pectin.client.condition.DelegatingCondition;
  * Time: 7:58:57 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FormattedFieldValidationBuilder<T> {
-  
-  FormattedFieldValidatorImpl<T> fieldValidator;
-  DelegatingCondition conditionDelegate = new DelegatingCondition();
+public class FormattedFieldValidationBuilder<T>
+{
 
-  public FormattedFieldValidationBuilder(ValidationManager validationManager, FormattedFieldModel<T> field) {
-    fieldValidator = validationManager.getFieldValidator(field, true);
-  }
+   private FormattedFieldValidatorImpl<T> fieldValidator;
 
-  public ConditionBuilder usingFieldFormat() {
-    
-    FieldFormatValidator<T> validator = new FieldFormatValidator<T>(fieldValidator.getFieldModel());
-    fieldValidator.addTextValidator(validator, conditionDelegate);
-    return new DelegatingConditionBuilder(conditionDelegate);
-    
-  }
+   // create a delegating condition since we don't know if we're going to get one.  The
+   // delegate returns true if there's no delegate (i.e. we alwasy validate if there's no
+   // delegate
+   private DelegatingValueModel<Boolean> conditionDelegate = new DelegatingValueModel<Boolean>(true);
 
-  public ConditionBuilder usingTextValidator(Validator<String> validator, Validator<String>... others) {
-    fieldValidator.addTextValidator(validator, conditionDelegate);
+   public FormattedFieldValidationBuilder(ValidationManager validationManager, FormattedFieldModel<T> field)
+   {
+      fieldValidator = validationManager.getFieldValidator(field, true);
+   }
 
-    for (Validator<? super String> other : others) {
-      fieldValidator.addTextValidator(other, conditionDelegate);
-    }
+   public ConditionBuilder usingFieldFormat()
+   {
 
-    return new DelegatingConditionBuilder(conditionDelegate);
-  }
+      FieldFormatValidator<T> validator = new FieldFormatValidator<T>(fieldValidator.getFieldModel());
+      fieldValidator.addTextValidator(validator, conditionDelegate);
+      return new DelegatingConditionBuilder(conditionDelegate);
 
-  public ConditionBuilder using(Validator<? super T> validator, Validator<? super T>... others) {
-    fieldValidator.addValidator(validator, conditionDelegate);
+   }
 
-    for (Validator<? super T> other : others) {
-      fieldValidator.addValidator(other, conditionDelegate);
-    }
+   public ConditionBuilder usingTextValidator(Validator<String> validator, Validator<String>... others)
+   {
+      fieldValidator.addTextValidator(validator, conditionDelegate);
 
-    return new DelegatingConditionBuilder(conditionDelegate);
-  }
-
-  private class FieldFormatValidator<T> implements Validator<String> {
-
-    protected FormattedFieldModel<T> model;
-
-    public FieldFormatValidator(FormattedFieldModel<T> model) {
-      this.model = model;
-    }
-
-    public void validate(String value, ValidationResultCollector results) {
-      Format<T> format = model.getFormat();
-
-      try {
-        format.parse(value);
-      }
-      catch (FormatException e) {
-        if (e instanceof Message) {
-          Message m = (Message) e;
-          results.add(new ErrorMessage(m.getMessage(), m.getAdditionalInfo()));
-        }
-        else {
-          results.add(new ErrorMessage(e.getMessage()));
-        }
+      for (Validator<? super String> other : others)
+      {
+         fieldValidator.addTextValidator(other, conditionDelegate);
       }
 
-    }
-  }
+      return new DelegatingConditionBuilder(conditionDelegate);
+   }
+
+   public ConditionBuilder using(Validator<? super T> validator, Validator<? super T>... others)
+   {
+      fieldValidator.addValidator(validator, conditionDelegate);
+
+      for (Validator<? super T> other : others)
+      {
+         fieldValidator.addValidator(other, conditionDelegate);
+      }
+
+      return new DelegatingConditionBuilder(conditionDelegate);
+   }
+
+   private class FieldFormatValidator<T> implements Validator<String>
+   {
+
+      protected FormattedFieldModel<T> model;
+
+      public FieldFormatValidator(FormattedFieldModel<T> model)
+      {
+         this.model = model;
+      }
+
+      public void validate(String value, ValidationResultCollector results)
+      {
+         Format<T> format = model.getFormat();
+
+         try
+         {
+            format.parse(value);
+         }
+         catch (FormatException e)
+         {
+            if (e instanceof Message)
+            {
+               Message m = (Message) e;
+               results.add(new ErrorMessage(m.getMessage(), m.getAdditionalInfo()));
+            }
+            else
+            {
+               results.add(new ErrorMessage(e.getMessage()));
+            }
+         }
+
+      }
+   }
 }

@@ -16,25 +16,35 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
-import com.pietschy.gwt.pectin.client.value.Converter;
+import com.pietschy.gwt.pectin.client.value.AbstractComputedValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 20, 2009
- * Time: 11:53:27 AM
+ * Date: Aug 15, 2009
+ * Time: 8:44:12 AM
  * To change this template use File | Settings | File Templates.
  */
-public class NotConverter
-implements Converter<Boolean, Boolean>
+public abstract class AbstractComputedCondition<T> extends AbstractComputedValueModel<Boolean, T> implements Condition
 {
-   public Boolean fromSource(Boolean value)
+   public AbstractComputedCondition(ValueModel<T> source)
    {
-      return !(value == null || !value);  
+      super(source);
    }
 
-   public Boolean toSource(Boolean value)
+   public Condition and(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
    {
-      return !(value == null || !value); 
+      return Conditions.and(this, condition, others);
+   }
+
+   public Condition or(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
+   {
+      return Conditions.or(this, condition, others);
+   }
+
+   public Condition not()
+   {
+      return Conditions.not(this);
    }
 }

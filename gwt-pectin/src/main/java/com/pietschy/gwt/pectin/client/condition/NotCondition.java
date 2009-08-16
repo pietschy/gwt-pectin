@@ -27,7 +27,7 @@ import com.pietschy.gwt.pectin.client.value.AbstractComputedValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public class NotCondition
-extends AbstractComputedValueModel<Boolean, Boolean>
+extends AbstractComputedCondition<Boolean>
 implements Condition
 {
    public NotCondition(ValueModel<Boolean> source)
@@ -38,20 +38,5 @@ implements Condition
    protected Boolean computeValue(Boolean value)
    {
       return value == null || !value;
-   }
-
-   public Condition and(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
-   {
-      return Conditions.and(this, condition, others);
-   }
-
-   public Condition or(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
-   {
-      return Conditions.or(this, condition, others);
-   }
-
-   public Condition not()
-   {
-      return Conditions.not(this);
    }
 }

@@ -17,6 +17,7 @@
 package com.pietschy.gwt.pectin.client.condition;
 
 import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -26,58 +27,34 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Created by IntelliJ IDEA.
-* User: andrew
-* Date: Aug 5, 2009
-* Time: 1:36:29 PM
-* To change this template use File | Settings | File Templates.
-*/
-public class DelegatingCondition
-implements ValueModel<Boolean>, HasValueChangeHandlers<Boolean>
+ * User: andrew
+ * Date: Aug 5, 2009
+ * Time: 1:36:29 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class DelegatingCondition extends DelegatingValueModel<Boolean> implements Condition
 {
-   private HandlerManager handlerManager = new HandlerManager(this);
-   
-   private ValueModel<Boolean> delegate;
-
-   public void setDelegate(ValueModel<Boolean> delegate)
+   public DelegatingCondition()
    {
-      if (this.delegate != null)
-      {
-         throw new IllegalStateException("delegate already set");
-      }
-      
-      this.delegate = delegate;
-      
-      delegate.addValueChangeHandler(new ValueChangeHandler<Boolean>()
-      {
-         public void onValueChange(ValueChangeEvent<Boolean> event)
-         {                                                    
-            ValueChangeEvent.fire(DelegatingCondition.this, event.getValue());
-         }
-      });
-      
-      ValueChangeEvent.fire(DelegatingCondition.this, delegate.getValue());
    }
 
-   public Boolean getValue()
+   public DelegatingCondition(Boolean defaultValue)
    {
-      if (delegate == null)
-      {
-         return true;
-      }
-      else
-      {
-         Boolean value = delegate.getValue();
-         return value != null ? value : false;
-      }
+      super(defaultValue);
    }
 
-   public HandlerRegistration addValueChangeHandler(ValueChangeHandler<Boolean> handler)
+   public Condition and(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
    {
-      return handlerManager.addHandler(ValueChangeEvent.getType(), handler);
+      return Conditions.and(this, condition, others);
    }
 
-   public void fireEvent(GwtEvent<?> event)
+   public Condition or(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
    {
-      handlerManager.fireEvent(event);
+      return Conditions.or(this, condition, others);
+   }
+
+   public Condition not()
+   {
+      return Conditions.not(this);
    }
 }

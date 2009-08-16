@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.client.validation;
 
 import com.pietschy.gwt.pectin.client.validation.Validator;
 import com.pietschy.gwt.pectin.client.FieldModel;
+import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
 import com.pietschy.gwt.pectin.client.condition.DelegatingCondition;
 
 
@@ -30,8 +31,12 @@ import com.pietschy.gwt.pectin.client.condition.DelegatingCondition;
  */
 public class FieldValidationBuilder<T>
 {
-   FieldValidatorImpl<T> fieldValidator;
-   DelegatingCondition conditionDelegate = new DelegatingCondition();
+   private FieldValidatorImpl<T> fieldValidator;
+   
+   // create a delegating condition since we don't know if we're going to get one.  The
+   // delegate returns true if there's no delegate (i.e. we alwasy validate if there's no
+   // delegate
+   private DelegatingValueModel<Boolean> conditionDelegate = new DelegatingValueModel<Boolean>(true);
 
    public FieldValidationBuilder(ValidationManager validationManager, FieldModel<T> field)
    {

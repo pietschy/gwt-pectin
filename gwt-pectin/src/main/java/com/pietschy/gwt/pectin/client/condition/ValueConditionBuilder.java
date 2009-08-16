@@ -36,7 +36,7 @@ public class ValueConditionBuilder<T>
 
    public Condition is(T value)
    {
-      return new ValueIsCondition<T>(model, value);
+      return new ValueIsCondition<T>(getModel(), value);
    }
    
    public Condition isNot(T value)
@@ -44,14 +44,18 @@ public class ValueConditionBuilder<T>
       return is(value).not();
    }
    
-   public Condition equals(ValueModel<T> model)
+   public Condition isSameAs(ValueModel<T> model)
    {
-      return new ValueEqualsCondition<T>(this.model, model);
+      return new ValueEqualsCondition<T>(getModel(), model);
    }
 
-   public Condition doesNotEqual(ValueModel<T> model)
+   public Condition isNotSameAs(ValueModel<T> model)
    {
-      return equals(model).not();
+      return isSameAs(model).not();
    }
 
+   protected ValueModel<T> getModel()
+   {
+      return model;
+   }
 }

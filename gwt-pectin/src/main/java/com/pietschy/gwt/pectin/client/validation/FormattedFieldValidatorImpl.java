@@ -33,10 +33,8 @@ import java.util.Map;
  * Time: 9:10:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class FormattedFieldValidatorImpl<T> implements FieldValidator<T>
+public class FormattedFieldValidatorImpl<T> extends AbstractFieldValidator implements FieldValidator<T>
 {
-   private HandlerManager handlers = new HandlerManager(this);
-   
    private FormattedFieldModel<T> fieldModel;
    private LinkedHashMap<Validator<? super String>, ValueModel<Boolean>> textValidators = new LinkedHashMap<Validator<? super String>, ValueModel<Boolean>>();
    private LinkedHashMap<Validator<? super T>, ValueModel<Boolean>> validators = new LinkedHashMap<Validator<? super T>, ValueModel<Boolean>>();
@@ -45,6 +43,11 @@ public class FormattedFieldValidatorImpl<T> implements FieldValidator<T>
 
    public FormattedFieldValidatorImpl(FormattedFieldModel<T> fieldModel)
    {
+      if (fieldModel == null)
+      {
+         throw new NullPointerException("fieldModel is null");
+      }
+      
       this.fieldModel = fieldModel;
    }
 
@@ -56,6 +59,16 @@ public class FormattedFieldValidatorImpl<T> implements FieldValidator<T>
    public void 
    addValidator(Validator<? super T> validator, ValueModel<Boolean> condition)
    {
+      if (validator == null)
+      {
+         throw new NullPointerException("validator is null");
+      }
+      
+      if (condition == null)
+      {
+         throw new NullPointerException("condition is null");
+      }
+      
       validators.put(validator, condition);
    }
 
@@ -63,22 +76,38 @@ public class FormattedFieldValidatorImpl<T> implements FieldValidator<T>
    public void 
    addTextValidator(Validator<? super String> validator, ValueModel<Boolean> condition)
    {
+      if (validator == null)
+      {
+         throw new NullPointerException("validator is null");
+      }
+      
+      if (condition == null)
+      {
+         throw new NullPointerException("condition is null");
+      }
+      
       textValidators.put(validator, condition);
    }
  
    public void runTextValidators(String value, ValidationResultCollector collector)
    {
+      if (collector == null)
+      {
+         throw new NullPointerException("collector is null");
+      }
+      
       for (Map.Entry<Validator<? super String>, ValueModel<Boolean>> entry : textValidators.entrySet())
       {
          ValueModel<Boolean> condition = entry.getValue();
          Validator<? super String> validator = entry.getKey();
          
-         if (condition.getValue())
+         if (conditionSatisfied(condition))
          {
             validator.validate(value, collector);
          }
       }
    }
+   
    
    public void runValidators(T value, ValidationResultCollector collector)
    {
@@ -137,12 +166,8 @@ public class FormattedFieldValidatorImpl<T> implements FieldValidator<T>
    
    public HandlerRegistration addValidationHandler(ValidationHandler handler)
    {
-      return handlers.addHandler(ValidationEvent.getType(), handler);
+      return addHandler(ValidationEvent.getType(), handler);
    }
 
-   public void fireEvent(GwtEvent<?> event)
-   {
-      handlers.fireEvent(event);
-   }
 
 }

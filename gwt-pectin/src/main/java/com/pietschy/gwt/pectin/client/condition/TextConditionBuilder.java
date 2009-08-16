@@ -14,38 +14,27 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.value;
+package com.pietschy.gwt.pectin.client.condition;
+
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jun 30, 2009
- * Time: 7:36:28 PM
+ * Date: Jul 1, 2009
+ * Time: 8:03:21 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ValueHolder<T> 
-extends AbstractMutableValueModel<T>
+public class TextConditionBuilder extends ValueConditionBuilder<String>
 {
-   private T value;
-
-   public ValueHolder()
+   public TextConditionBuilder(ValueModel<String> model)
    {
+      super(model);
    }
 
-   public ValueHolder(T value)
+   public Condition matches(String regex)
    {
-      this.value = value;
+      return new TextMatchesCondition(getModel(), regex);
    }
 
-   public T getValue()
-   {
-      return value;
-   }
-
-   public void setValue(T newValue)
-   {
-      T oldValue = this.value;
-      this.value = newValue;
-      fireValueChangeEvent(oldValue, newValue);
-   }
 }

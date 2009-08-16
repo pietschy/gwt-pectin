@@ -43,8 +43,6 @@ public class ValidatedFormModel extends FormModel
    public static abstract class PersonProvider extends BeanModelProvider<Person> {}
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
 
-   private AgeFormat ageFormat = new AgeFormat();
-
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
    protected final FieldModel<String> nickName;
@@ -63,7 +61,7 @@ public class ValidatedFormModel extends FormModel
       gender = fieldOfType(Gender.class).boundTo(personProvider, "gender");
 
       age = formattedFieldOfType(Integer.class)
-         .using(ageFormat)
+         .using(new AgeFormat())
          .boundTo(personProvider, "age");
 
       wineLover = fieldOfType(Boolean.class).boundTo(personProvider, "wineLover");
@@ -79,6 +77,7 @@ public class ValidatedFormModel extends FormModel
          .using(new NotEmptyValidator("Please enter your nick name"))
          .when(hasNickName);
       
+      // we use the AgeFormat as the first line of validation
       validateField(age).usingFieldFormat();
       validateField(age).using(new NotNullValidator("Age is requried"));
 

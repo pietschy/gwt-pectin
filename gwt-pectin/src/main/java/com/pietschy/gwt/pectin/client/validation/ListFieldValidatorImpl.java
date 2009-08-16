@@ -34,10 +34,9 @@ import java.util.Map;
  * Time: 9:47:41 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ListFieldValidatorImpl<T> implements ListFieldValidator<T>
+public class ListFieldValidatorImpl<T> extends AbstractFieldValidator implements ListFieldValidator<T>
 {
-   private HandlerManager handlers = new HandlerManager(this);
-   
+
    private ListFieldModel<T> fieldModel;
    private IndexedValidationResultImpl validationResult = new IndexedValidationResultImpl();
    
@@ -45,26 +44,51 @@ public class ListFieldValidatorImpl<T> implements ListFieldValidator<T>
 
    public ListFieldValidatorImpl(ListFieldModel<T> fieldModel)
    {
+      if (fieldModel == null)
+      {
+         throw new NullPointerException("fieldModel is null");
+      }
+      
       this.fieldModel = fieldModel;
    }
 
    public void addValidator(ListValidator<? super T> validator, ValueModel<Boolean> condition)
    {
+      if (validator == null)
+      {
+         throw new NullPointerException("validator is null");
+      }
+      
+      if (condition == null)
+      {
+         throw new NullPointerException("condition is null");
+      }
       validators.put(validator, condition);
    }
 
    public void runValidators(List<T> values, IndexedValidationResultCollector collector)
    {
+      if (values == null)
+      {
+         throw new NullPointerException("values is null");
+      }
+      
+      if (collector == null)
+      {
+         throw new NullPointerException("collector is null");
+      }
+      
       for (Map.Entry<ListValidator<? super T>, ValueModel<Boolean>> entry : validators.entrySet())
       {
          ListValidator<? super T> validator = entry.getKey();
          ValueModel<Boolean> condition = entry.getValue();
-         if (condition.getValue())
+         if (conditionSatisfied(condition))
          {
             validator.validate(values, collector);
          }
       }
    }
+
 
    public void validate()
    {
@@ -102,11 +126,7 @@ public class ListFieldValidatorImpl<T> implements ListFieldValidator<T>
 
    public HandlerRegistration addValidationHandler(IndexedValidationHandler handler)
    {
-      return handlers.addHandler(IndexedValidationEvent.getType(), handler);
+      return addHandler(IndexedValidationEvent.getType(), handler);
    }
 
-   public void fireEvent(GwtEvent<?> event)
-   {
-      handlers.fireEvent(event);
-   }
 }

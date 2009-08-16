@@ -5,6 +5,7 @@ group = 'com.pietschy.gwt'
 allprojects {
    
    usePlugin('java')
+   usePlugin(com.pietschy.gradle.plugin.TestNGPlugin)
    usePlugin(com.pietschy.gradle.plugin.RepositoryPlugin)
    usePlugin(com.pietschy.gradle.plugin.IdePlugin)
    
@@ -16,12 +17,6 @@ allprojects {
       addMavenStyleRepo('pietschy', 'http://maven.pietschy.com')
    }
 }
-
-
-// define project dependencies
-project(':demo') {
-   dependencies.compile project(':gwt-pectin')
-} 
 
 
 // define some generic functions for use by other project builds

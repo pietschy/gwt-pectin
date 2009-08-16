@@ -17,24 +17,23 @@
 package com.pietschy.gwt.pectin.client.condition;
 
 import com.pietschy.gwt.pectin.client.value.ValueModelFunction;
+import com.pietschy.gwt.pectin.client.value.Function;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 20, 2009
- * Time: 11:59:08 AM
+ * Date: Aug 16, 2009
+ * Time: 11:24:38 AM
  * To change this template use File | Settings | File Templates.
  */
-public class OrCondition
-extends ValueModelFunction<Boolean, Boolean>
-implements Condition
+public class AbstractFunctionCondition extends ValueModelFunction<Boolean, Boolean> implements Condition
 {
-   public OrCondition()
+   public AbstractFunctionCondition(Function<Boolean, Boolean> function)
    {
-      super(new OrFunction());
+      super(function);
    }
-   
+
    public Condition and(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
    {
       return Conditions.and(this, condition, others);

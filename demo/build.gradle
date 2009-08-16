@@ -4,6 +4,10 @@ version = "0.1.${buildNumber}"
 
 defaultTasks "demo" 
 
+dependencies {
+   compile project(':gwt-pectin')
+}
+
 clean.dependsOn(':gwt-pectin:clean')
 
 gwtCompile {

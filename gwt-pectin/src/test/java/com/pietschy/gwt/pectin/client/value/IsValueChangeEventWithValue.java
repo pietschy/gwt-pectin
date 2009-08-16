@@ -16,36 +16,29 @@
 
 package com.pietschy.gwt.pectin.client.value;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import org.mockito.ArgumentMatcher;
+
 /**
  * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jun 30, 2009
- * Time: 7:36:28 PM
- * To change this template use File | Settings | File Templates.
- */
-public class ValueHolder<T> 
-extends AbstractMutableValueModel<T>
+* User: andrew
+* Date: Aug 16, 2009
+* Time: 10:27:35 AM
+* To change this template use File | Settings | File Templates.
+*/
+public class IsValueChangeEventWithValue<T> extends ArgumentMatcher<ValueChangeEvent<T>>
 {
-   private T value;
+   private T newValue;
 
-   public ValueHolder()
+   public IsValueChangeEventWithValue(T newValue)
    {
+      this.newValue = newValue;
    }
 
-   public ValueHolder(T value)
+   @SuppressWarnings("unchecked")
+   public boolean matches(Object o)
    {
-      this.value = value;
-   }
-
-   public T getValue()
-   {
-      return value;
-   }
-
-   public void setValue(T newValue)
-   {
-      T oldValue = this.value;
-      this.value = newValue;
-      fireValueChangeEvent(oldValue, newValue);
+      T eventValue = ((ValueChangeEvent<T>) o).getValue();
+      return newValue == null ? eventValue == null : newValue.equals(eventValue);
    }
 }

@@ -29,7 +29,7 @@ import com.pietschy.gwt.pectin.client.format.Format;
  * Time: 4:33:06 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AgeFormat implements Format<Integer>, Validator<String>
+public class AgeFormat implements Format<Integer>
 {
    public String format(Integer value)
    {
@@ -42,7 +42,7 @@ public class AgeFormat implements Format<Integer>, Validator<String>
       {
          if (text != null && text.trim().length() > 0)
          {
-            int age = Integer.parseInt(text);
+            int age = Integer.parseInt(text.trim());
             
             if (age < 0)
             {
@@ -58,18 +58,6 @@ public class AgeFormat implements Format<Integer>, Validator<String>
       catch (NumberFormatException e)
       {
          throw new FormatException("Not a valid number", e);
-      }
-   }
-
-   public void validate(String value, ValidationResultCollector results)
-   {
-      try
-      {
-         parse(value);
-      }
-      catch (FormatException e)
-      {
-         results.add(new ErrorMessage(e.getMessage()));
       }
    }
 }

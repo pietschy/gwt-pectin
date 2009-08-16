@@ -17,9 +17,8 @@
 package com.pietschy.gwt.pectin.client.validation;
 
 import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
 import com.pietschy.gwt.pectin.client.condition.DelegatingCondition;
-
-import java.util.List;
 
 
 /**
@@ -32,7 +31,11 @@ import java.util.List;
 public class ListFieldValidationBuilder<T>
 {
    private ListFieldValidatorImpl<T> fieldValidator;
-   DelegatingCondition conditionDelegate = new DelegatingCondition();
+   
+   // create a delegating condition since we don't know if we're going to get one.  The
+   // delegate returns true if there's no delegate (i.e. we alwasy validate if there's no
+   // delegate
+   private DelegatingValueModel<Boolean> conditionDelegate = new DelegatingValueModel<Boolean>(true);
 
    public ListFieldValidationBuilder(ValidationManager validationManager, ListFieldModel<T> field)
    {

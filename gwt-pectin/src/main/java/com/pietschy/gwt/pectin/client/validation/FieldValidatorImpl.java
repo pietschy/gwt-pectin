@@ -33,9 +33,8 @@ import java.util.Map;
  * Time: 9:10:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class FieldValidatorImpl<T> implements FieldValidator<T>
+public class FieldValidatorImpl<T> extends AbstractFieldValidator implements FieldValidator<T>
 {
-   private HandlerManager handlers = new HandlerManager(this);
    private FieldModel<T> fieldModel;
 
    private LinkedHashMap<Validator<? super T>, ValueModel<Boolean>> validators = new LinkedHashMap<Validator<? super T>, ValueModel<Boolean>>();
@@ -44,6 +43,11 @@ public class FieldValidatorImpl<T> implements FieldValidator<T>
 
    public FieldValidatorImpl(FieldModel<T> fieldModel)
    {
+      if (fieldModel == null)
+      {
+         throw new NullPointerException("fieldModel is null");
+      }
+      
       this.fieldModel = fieldModel;
    }
 
@@ -55,24 +59,39 @@ public class FieldValidatorImpl<T> implements FieldValidator<T>
    public void 
    addValidator(Validator<? super T> validator, ValueModel<Boolean> condition)
    {
+      if (validator == null)
+      {
+         throw new NullPointerException("validator is null");
+      }
+      
+      if (condition == null)
+      {
+         throw new NullPointerException("condition is null");
+      }
+      
       validators.put(validator, condition);
    }
 
  
    public void runValidators(T value, ValidationResultCollector collector)
    {
+      if (collector == null)
+      {
+         throw new NullPointerException("collector is null");
+      }
+      
       for (Map.Entry<Validator<? super T>, ValueModel<Boolean>> entry : validators.entrySet())
       {
          ValueModel<Boolean> condition = entry.getValue();
          Validator<? super T> validator = entry.getKey();
          
-         if (condition.getValue())
+         if (conditionSatisfied(condition))
          {
             validator.validate(value, collector);
          }
       }
    }
-   
+
    public void validate()
    {
       ValidationResultImpl result = new ValidationResultImpl();
@@ -115,12 +134,7 @@ public class FieldValidatorImpl<T> implements FieldValidator<T>
    
    public HandlerRegistration addValidationHandler(ValidationHandler handler)
    {
-      return handlers.addHandler(ValidationEvent.getType(), handler);
-   }
-
-   public void fireEvent(GwtEvent<?> event)
-   {
-      handlers.fireEvent(event);
+      return addHandler(ValidationEvent.getType(), handler);
    }
 
 }

@@ -16,37 +16,35 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
-import com.pietschy.gwt.pectin.client.value.ValueModelFunction;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.value.AbstractComputedValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
  * Date: Jul 20, 2009
- * Time: 11:59:08 AM
+ * Time: 12:09:09 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AndCondition
-extends ValueModelFunction<Boolean, Boolean>
-implements Condition
+public class TextMatchesCondition extends AbstractComputedCondition<String>
 {
-   public AndCondition()
+   private String regex;
+
+   public TextMatchesCondition(ValueModel<String> source, String regex)
    {
-      super(new AndFunction());
-   }
-   
-   public Condition and(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
-   {
-      return Conditions.and(this, condition, others);
+      super(source);
+
+      if (regex == null)
+      {
+         throw new NullPointerException("regex is null");
+      }
+
+      this.regex = regex;
    }
 
-   public Condition or(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
+   protected Boolean computeValue(String sourceValue)
    {
-      return Conditions.or(this, condition, others);
+      return sourceValue != null && sourceValue.matches(regex);
    }
 
-   public Condition not()
-   {
-      return Conditions.not(this);
-   }
 }

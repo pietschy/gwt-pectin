@@ -2,6 +2,13 @@ usePlugin(com.pietschy.gradle.plugin.GWTLibPlugin, ["gwtVersion": "1.7.0"])
 
 version = "0.1.${buildNumber}"
 
+
+dependencies {
+   testCompile("org.testng:testng:5.8:jdk15",
+               "org.mockito:mockito-all:1.7")
+}
+
+
 init.doFirst {
    if (build.taskGraph.hasTask(':gwt-pectin:release')) {
       incrementBuildNumber(project)
