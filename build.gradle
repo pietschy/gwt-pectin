@@ -12,6 +12,7 @@ allprojects {
    targetCompatibility = 1.5
    
    dependencies {
+      addMavenRepo() 
       addMavenStyleRepo('pietschy', 'http://maven.pietschy.com')
    }
 }
