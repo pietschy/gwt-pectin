@@ -16,13 +16,13 @@
 
 package com.pietschy.gwt.pectin.demo.client.basic;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
+import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.misc.AbstractDemo;
 
 /**
@@ -60,8 +60,9 @@ public class BasicDemo extends AbstractDemo
       panel.add(saveButton);
 
       addBlurbParagraph("This demo shows a simple form that's bound to an underlying bean. " +
-                        "It also contains a computed field (login name) a fomatted field (age) " +
-                        "and a list field bound to checkboxes (favorite wines).");
+                        "It also contains a computed field (letters in name), a fomatted field (age), " +
+                        "a converted formatted field (age in dog years) and a list field bound to " +
+                        "checkboxes (favorite wines).");
       
       addBlurbParagraph("Clicking save commits the changes to the bean but doesn't show you " +
                         "anything.  It's riveting stuff (c:");

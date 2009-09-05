@@ -16,34 +16,56 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.list.ListModel;
+import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.format.Format;
+import com.pietschy.gwt.pectin.client.list.ListModel;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
- * 
+ * <p>
+ * FormModel provides builders for creating {@link FieldModel}s, {@link FormattedFieldModel}s
+ * and {@link ListFieldModel} to which wigets can be bound using a {@link WidgetBinder}.
+ * </p>
+ * @see #fieldOfType(Class) 
+ * @see #formattedFieldOfType(Class) 
+ * @see #listOfType(Class)  
  */
 public class FormModel
 {
    private HashMap<Object, Object> properties = new HashMap<Object, Object>(); 
    private ArrayList<PluginCallback> mixinCallbacks = new ArrayList<PluginCallback>();
 
+   /**
+    * Returns a {@link FieldModel} buider of the specified type.
+    * @param type the value type held by the field.
+    * @return a builder for the specified type.
+    */
    public <T> FieldBuilder<T> fieldOfType(Class<T> type)
    {
       return new FieldBuilder<T>(this, type);
    }
 
+   /**
+    * Returns a {@link FormattedFieldModel} builder for the specified type.
+    * @param type the value type held by the field.
+    * @return a builder for the specified type.
+    */
    public <T> FormattedFieldBuilder<T> formattedFieldOfType(Class<T> type)
    {
       return new FormattedFieldBuilder<T>(this, type);
    }
    
+   /**
+    * Returns a {@link ListFieldModel} builder for the specified type.
+    * @param type the value type held by the list.
+    * @return a builder for the specified type.
+    */
    public <T> ListFieldBuilder<T> listOfType(Class<T> type)
    {
       return new ListFieldBuilder<T>(this, type);
@@ -89,6 +111,5 @@ public class FormModel
    public Collection<PluginCallback> getMixinCallbacks()
    {
       return Collections.unmodifiableCollection(mixinCallbacks);
-      
    }
 }

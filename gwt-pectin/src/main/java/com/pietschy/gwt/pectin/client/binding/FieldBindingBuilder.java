@@ -16,10 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.HasText;
 
 /**
  * Created by IntelliJ IDEA.
@@ -74,11 +74,4 @@ public class FieldBindingBuilder<T>
       }
    }
 
-   private static class ToStringFormat<T> implements DisplayFormat<T>
-   {
-      public String format(T value)
-      {
-         return value != null ? value.toString() : "";
-      }
-   }
 }

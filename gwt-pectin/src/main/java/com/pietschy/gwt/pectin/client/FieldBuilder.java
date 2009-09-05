@@ -16,18 +16,8 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.ValueModelProvider;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.value.ValueModelFunction;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
-import com.pietschy.gwt.pectin.client.value.ConvertingValueModel;
-import com.pietschy.gwt.pectin.client.value.ConvertingMutableValueModel;
-import com.pietschy.gwt.pectin.client.value.Converter;
-import com.pietschy.gwt.pectin.client.value.Function;
-
-import java.util.Arrays;
-import java.util.List;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -67,55 +57,15 @@ public class FieldBuilder<T>
       return boundTo(provider.getValueModel(propertyName, valueType));
    }
 
-   public <S> ConvertedFieldBuilder<S> convertedFrom(ValueModel<S> source)
+   public <S> ConvertedFieldBuilder<T, S> convertedFrom(ValueModel<S> source)
    {
-      return new ConvertedFieldBuilder<S>(source);
+      return new ConvertedFieldBuilder<T, S>(formModel, source);
    }
 
-   public <S> ComputedFieldBuilder<S> computedFrom(ValueModel<S>... source)
+   public <S> ComputedFieldBuilder<T, S> computedFrom(ValueModel<S>... source)
    {
-      return new ComputedFieldBuilder<S>(source);
-   }
-
-
-   public class ConvertedFieldBuilder<S>
-   {
-      private ValueModel<S> from;
-
-      protected ConvertedFieldBuilder(ValueModel<S> from)
-      {
-         this.from = from;
-      }
-
-      public FieldModel<T> using(Converter<T, S> converter)
-      {
-         if (from instanceof MutableValueModel)
-         {
-            ValueModel<T> vm = new ConvertingMutableValueModel<T, S>((MutableValueModel<S>) from, converter);
-            return formModel.createFieldModel(vm);
-         }
-         else
-         {
-            return formModel.createFieldModel(new ConvertingValueModel<T, S>(from, converter));
-         }
-      }
+      return new ComputedFieldBuilder<T, S>(formModel, source);
    }
 
 
-   public class ComputedFieldBuilder<S>
-   {
-      private List<ValueModel<S>> models;
-
-      public ComputedFieldBuilder(ValueModel<S>... models)
-      {
-         this.models = Arrays.asList(models);
-      }
-
-      public FieldModel<T> using(Function<T, S> function)
-      {
-         ValueModelFunction<T, S> valueModel = new ValueModelFunction<T, S>(function);
-         valueModel.addSourceModels(models);
-         return formModel.createFieldModel(valueModel);
-      }
-   }
 }

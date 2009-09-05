@@ -18,14 +18,11 @@ package com.pietschy.gwt.pectin.demo.client.style;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
+import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.client.style.StyleBinder;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
-import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 
@@ -39,6 +36,8 @@ import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 public class StyleForm
 extends VerySimpleForm
 {
+   // we'll use an EnhancedTextBox as it fires value change events as
+   // you type, much more exciting for the demo (c:
    private EnhancedTextBox title = new EnhancedTextBox();
    
    private HTML nameLabel = new HTML("Name");

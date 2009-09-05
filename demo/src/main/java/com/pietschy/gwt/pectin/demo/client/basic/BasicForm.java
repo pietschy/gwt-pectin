@@ -16,10 +16,10 @@
 
 package com.pietschy.gwt.pectin.demo.client.basic;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.DOM;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
@@ -35,9 +35,10 @@ public class BasicForm extends VerySimpleForm
    // you type, much more exciting for the demo (c:
    private TextBox givenName = new EnhancedTextBox();
    private TextBox surname = new EnhancedTextBox();
+   private TextBox lettersInName = new TextBox();
    
-   private TextBox age = new TextBox();
-   private TextBox loginName = new TextBox();
+   private TextBox age = new EnhancedTextBox();
+   private TextBox ageInDogYears = new EnhancedTextBox();
    
    private String buttonGroupId = DOM.createUniqueId();
    private RadioButton maleRadio = new RadioButton(buttonGroupId, "Male");
@@ -47,14 +48,14 @@ public class BasicForm extends VerySimpleForm
    private CheckBox merlotCheckBox = new CheckBox("Merlot");
    private CheckBox shirazCheckBox = new CheckBox("Shiraz");
    
-   WidgetBinder widgets = new WidgetBinder();
+   private WidgetBinder widgets = new WidgetBinder();
 
 
    public BasicForm(BasicFormModel model)
    {
       // see the metadata demo to see how you can control
       // enabledness in the model.
-      loginName.setEnabled(false);
+      lettersInName.setEnabled(false);
       age.setVisibleLength(5);
       
       // bind our widgets to our model.  In normal practice I'd combine the
@@ -62,7 +63,12 @@ public class BasicForm extends VerySimpleForm
       widgets.bind(model.givenName).to(givenName);
       widgets.bind(model.surname).to(surname);
       widgets.bind(model.age).to(age);
-      widgets.bind(model.loginName).to(loginName);
+      widgets.bind(model.ageInDogYears).to(ageInDogYears);
+      
+      // here we're binding field to a staic display (HasText).  We can also use
+      // a DisplayFormat here if we need to.  In this case the default ToStringFormat
+      // will be used.
+      widgets.bind(model.lettersInName).toLabel(lettersInName);
 
       // now lets bind a value using radio buttons
       widgets.bind(model.gender).withValue(Gender.MALE).to(maleRadio);
@@ -76,10 +82,11 @@ public class BasicForm extends VerySimpleForm
       // now layout the form
       addRow("Given Name", givenName);
       addRow("Surname", surname);
-      addRow("Login Name", loginName);
+      addRow("Letters in name", lettersInName);
       addGap();
       addRow("Gender", maleRadio, femaleRadio);
       addRow("Age", age);
+      addRow("Age (in dog years)", ageInDogYears);
       addGap();
       addRow("Favorite Wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
    }

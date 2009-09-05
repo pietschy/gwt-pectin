@@ -16,8 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 
@@ -25,47 +26,52 @@ import com.pietschy.gwt.pectin.client.format.DisplayFormat;
  * Created by IntelliJ IDEA.
  * User: andrew
  * Date: Jul 1, 2009
- * Time: 4:48:23 PM
+ * Time: 4:35:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FormattedFieldBindingBuilder<T>
+public class FormattedFieldToHasTextBinding<T>
+extends AbstractBinding
 {
-   private WidgetBinder binder;
+   private HasText widget;
    private FormattedFieldModel<T> field;
+   private DisplayFormat<? super T> format;
 
-   public FormattedFieldBindingBuilder(WidgetBinder binder, FormattedFieldModel<T> field)
+   public FormattedFieldToHasTextBinding(FormattedFieldModel<T> field, HasText widget, DisplayFormat<? super T> format)
    {
-      this.binder = binder;
       this.field = field;
+      this.widget = widget;
+      this.format = format;
+      registerHandler(field.addValueChangeHandler(new FieldMonitor()));
    }
-   
-   public void to(HasValue<String> widget)
-   {
-      binder.registerBinding(new FormattedFieldToHasValueBinding<T>(field, widget));
-   }
-   
-   public void toLabel(HasText label)
-   {
-      toLabel(label, new ToStringFormat<T>());
-   }
-   
-   public void toLabel(HasText label, DisplayFormat<? super T> format)
-   {
-      binder.registerBinding(new FormattedFieldToHasTextBinding<T>(field, label, format));
-   }
-   
-   public class FormattedFieldBuilder 
-   {
-      protected DisplayFormat<T> format;
 
-      public FormattedFieldBuilder(DisplayFormat<T> format)
+   public HasText getTarget()
+   {
+      return widget;
+   }
+
+
+   public void updateTarget()
+   {
+      T value = field.getValue();
+      updateTarget(value);
+   }
+
+   protected void updateTarget(T value)
+   {
+      getTarget().setText(format.format(value));
+   }
+
+   private void onModelChanged(T value)
+   {
+      updateTarget(value);
+   }
+
+   private class FieldMonitor implements ValueChangeHandler<T>
+   {
+      public void onValueChange(ValueChangeEvent<T> event)
       {
-         this.format = format;
-      }
-      
-      public void to(HasValue<String> widget)
-      {
-         binder.registerBinding(new FormattedFieldToHasValueBinding<T>(field, widget));
+         onModelChanged(event.getValue());
       }
    }
+
 }

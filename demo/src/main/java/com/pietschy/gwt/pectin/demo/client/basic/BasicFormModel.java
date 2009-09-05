@@ -22,13 +22,14 @@ import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import com.pietschy.gwt.pectin.client.bean.BeanPropertyValueModel;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
+import com.pietschy.gwt.pectin.client.value.Converter;
+import com.pietschy.gwt.pectin.client.value.Function;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
-import com.pietschy.gwt.pectin.demo.client.misc.LoginNameGenerator;
 import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
+
+import java.util.List;
 
 /**
  *
@@ -40,12 +41,11 @@ public class BasicFormModel extends FormModel
 
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
 
-   private AgeFormat ageFormat = new AgeFormat();
-
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
+   protected final FieldModel<Integer> lettersInName;
    protected final FormattedFieldModel<Integer> age;
-   protected final FieldModel<String> loginName;
+   protected final FormattedFieldModel<Integer> ageInDogYears;
    protected final FieldModel<Gender> gender;
    protected final ListFieldModel<Wine> favoriteWines;
 
@@ -58,16 +58,21 @@ public class BasicFormModel extends FormModel
 
       // a formatted field.
       age = formattedFieldOfType(Integer.class)
-         .using(ageFormat)
+         .using(new AgeFormat())
          .boundTo(personProvider, "age");
 
       // a list field
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
       
       // a computed field
-      loginName = fieldOfType(String.class)
+      lettersInName = fieldOfType(Integer.class)
          .computedFrom(givenName, surname)
-         .using(new LoginNameGenerator());
+         .using(new CharacterCounter());
+      
+      // a converted field (that is also a formatted field)
+      ageInDogYears = formattedFieldOfType(Integer.class).using(new AgeFormat())
+         .convertedFrom(age).using(new DogYearsConverter());
+      
    }
 
    public void commit()
@@ -83,5 +88,44 @@ public class BasicFormModel extends FormModel
    public void setPerson(Person person)
    {
       personProvider.setBean(person);
+   }
+   
+   public Person getPerson()
+   {
+      return personProvider.getBean();
+   }
+
+   private static class CharacterCounter implements Function<Integer, String>
+   {
+      public Integer compute(List<String> source)
+      {
+         int total = 0;
+         for (String name : source)
+         {
+            if (name != null)
+            {
+               // I'm ignoring the fact that there could be
+               // whitespace in the name..
+               total += name.trim().length();
+            }
+         }
+         
+         return total;
+      }
+   }
+
+   private static class DogYearsConverter implements Converter<Integer, Integer>
+   {
+      private static final int DOG_AGE_MULTIPLE = 7;
+
+      public Integer fromSource(Integer value)
+      {
+         return value != null ? DOG_AGE_MULTIPLE * value : null;
+      }
+
+      public Integer toSource(Integer value)
+      {
+         return value != null ? (int) ((double) value / DOG_AGE_MULTIPLE) : null;
+      }
    }
 }

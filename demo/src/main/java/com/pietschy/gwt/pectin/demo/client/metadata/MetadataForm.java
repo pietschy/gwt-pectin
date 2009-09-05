@@ -16,17 +16,12 @@
 
 package com.pietschy.gwt.pectin.demo.client.metadata;
 
-import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.DOM;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
-import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
-import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
-import com.pietschy.gwt.pectin.demo.client.basic.BasicFormModel;
+import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 
 /**
  * 
@@ -34,15 +29,20 @@ import com.pietschy.gwt.pectin.demo.client.basic.BasicFormModel;
 public class MetadataForm extends VerySimpleForm
 {
    private CheckBox hasNickName = new CheckBox("I have a nick name");
+   // NickNameEditor is an example of a custom HasValue<T> widget.
    private NickNameEditor nickName = new NickNameEditor();
 
+   // value models can contain nulls so if we need a null safe check
+   // box if we're binding directly to one.
    private CheckBox wineLover = new NullSafeCheckBox("I like wine");
-   private CheckBox hasFavoriteWines = new CheckBox("I have favorite wines");
+   private CheckBox hasFavoriteWines = new NullSafeCheckBox("I have favorite wines");
+   // the containingValue and withValue bindings never use nulls so we
+   // can use regular check boxes.
    private CheckBox cabSavCheckBox = new CheckBox("Cab Sav");
    private CheckBox merlotCheckBox = new CheckBox("Merlot");
    private CheckBox shirazCheckBox = new CheckBox("Shiraz");
    
-   WidgetBinder widgets = new WidgetBinder();
+   private WidgetBinder widgets = new WidgetBinder();
 
 
    public MetadataForm(MetadataFormModel model)

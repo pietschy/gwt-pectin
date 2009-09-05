@@ -16,29 +16,35 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.format.Format;
+import com.pietschy.gwt.pectin.client.value.Function;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueModelFunction;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 1, 2009
- * Time: 12:20:38 PM
- * To change this template use File | Settings | File Templates.
- */
-public class FormattedFieldBuilder<T>
+* User: andrew
+* Date: Sep 5, 2009
+* Time: 10:40:33 AM
+* To change this template use File | Settings | File Templates.
+*/
+public class ComputedFieldBuilder<T, S>
 {
    private FormModel formModel;
-   private Class<T> valueType;
+   private List<ValueModel<S>> models;
 
-   protected FormattedFieldBuilder(FormModel formModel, Class<T> valueType)
+   public ComputedFieldBuilder(FormModel formModel, ValueModel<S>... models)
    {
       this.formModel = formModel;
-      this.valueType = valueType;
+      this.models = Arrays.asList(models);
    }
 
-   public FormattedFieldBindingBuilder<T> using(Format<T> formatter)
+   public FieldModel<T> using(Function<T, S> function)
    {
-      return new FormattedFieldBindingBuilder<T>(formModel, valueType, formatter);
+      ValueModelFunction<T, S> valueModel = new ValueModelFunction<T, S>(function);
+      valueModel.addSourceModels(models);
+      return formModel.createFieldModel(valueModel);
    }
-
 }

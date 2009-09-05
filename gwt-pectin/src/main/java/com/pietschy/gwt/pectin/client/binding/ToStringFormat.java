@@ -14,31 +14,21 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client;
+package com.pietschy.gwt.pectin.client.binding;
 
-import com.pietschy.gwt.pectin.client.format.Format;
+import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 
 /**
  * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 1, 2009
- * Time: 12:20:38 PM
- * To change this template use File | Settings | File Templates.
- */
-public class FormattedFieldBuilder<T>
+* User: andrew
+* Date: Aug 17, 2009
+* Time: 1:18:27 PM
+* To change this template use File | Settings | File Templates.
+*/
+public class ToStringFormat<T> implements DisplayFormat<T>
 {
-   private FormModel formModel;
-   private Class<T> valueType;
-
-   protected FormattedFieldBuilder(FormModel formModel, Class<T> valueType)
+   public String format(T value)
    {
-      this.formModel = formModel;
-      this.valueType = valueType;
+      return value != null ? value.toString() : "";
    }
-
-   public FormattedFieldBindingBuilder<T> using(Format<T> formatter)
-   {
-      return new FormattedFieldBindingBuilder<T>(formModel, valueType, formatter);
-   }
-
 }
