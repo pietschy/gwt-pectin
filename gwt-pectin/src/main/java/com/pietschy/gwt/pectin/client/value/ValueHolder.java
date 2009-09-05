@@ -44,8 +44,8 @@ extends AbstractMutableValueModel<T>
 
    public void setValue(T newValue)
    {
-      T oldValue = this.value;
       this.value = newValue;
-      fireValueChangeEvent(oldValue, newValue);
+      // we always fire the change event.
+      fireValueChangeEvent(newValue);
    }
 }

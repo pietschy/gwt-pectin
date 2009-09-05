@@ -80,7 +80,7 @@ public class ValueHolderTest
       subject.setValue("abc");
       subject.setValue("abc");
 
-      verify(changeHandler).onValueChange(argThat(new IsValueChangeEventWithValue<String>("abc")));
+      verify(changeHandler, times(2)).onValueChange(argThat(new IsValueChangeEventWithValue<String>("abc")));
    }
 
 }
