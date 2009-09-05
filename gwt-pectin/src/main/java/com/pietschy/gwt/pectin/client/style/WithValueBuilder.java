@@ -20,25 +20,26 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 1, 2009
- * Time: 4:48:23 PM
- * To change this template use File | Settings | File Templates.
- */
-public class FieldStyleBindingBuilder<T>
+* User: andrew
+* Date: Sep 6, 2009
+* Time: 9:00:13 AM
+* To change this template use File | Settings | File Templates.
+*/
+public class WithValueBuilder<T>
 {
-   private StyleBinder binder;
+   private T selectedValue;
    private ValueModel<T> field;
+   private StyleBinder binder;
 
-   public FieldStyleBindingBuilder(StyleBinder binder, ValueModel<T> field)
+   public WithValueBuilder(StyleBinder binder, ValueModel<T> field, T selectedValue)
    {
       this.binder = binder;
       this.field = field;
-   }
-   
-   public WithValueBuilder withValue(T value)
-   {
-       return new WithValueBuilder<T>(binder, field, value);
+      this.selectedValue = selectedValue;
    }
 
+   public StyleBindingBuilder toStyle(String styleName)
+   {
+      return new StyleBindingBuilder<T>(binder, field, selectedValue, styleName);
+   }
 }
