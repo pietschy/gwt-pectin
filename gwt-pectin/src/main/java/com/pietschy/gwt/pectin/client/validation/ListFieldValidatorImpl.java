@@ -16,15 +16,13 @@
 
 package com.pietschy.gwt.pectin.client.validation;
 
-import com.pietschy.gwt.pectin.client.ListFieldModel;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent;
+import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
-import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,6 +61,7 @@ public class ListFieldValidatorImpl<T> extends AbstractFieldValidator implements
       {
          throw new NullPointerException("condition is null");
       }
+      
       validators.put(validator, condition);
    }
 

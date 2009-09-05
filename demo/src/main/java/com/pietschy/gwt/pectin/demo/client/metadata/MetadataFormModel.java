@@ -58,6 +58,11 @@ public class MetadataFormModel extends FormModel
       enable(nickName).when(hasNickName);
       enable(hasFavoriteWines).when(wineLover);
       enable(favoriteWines).when(and(wineLover, hasFavoriteWines));
-
    }
+   
+   public void setPerson(Person person)
+   {
+      personProvider.setBean(person);
+   }
+   
 }

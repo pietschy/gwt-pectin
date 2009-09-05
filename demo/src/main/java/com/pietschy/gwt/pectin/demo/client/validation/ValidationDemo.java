@@ -17,8 +17,6 @@
 package com.pietschy.gwt.pectin.demo.client.validation;
 
 import com.pietschy.gwt.pectin.demo.client.misc.AbstractDemo;
-import com.pietschy.gwt.pectin.demo.client.metadata.MetadataFormModel;
-import com.pietschy.gwt.pectin.demo.client.metadata.MetadataForm;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,7 +32,8 @@ public class ValidationDemo extends AbstractDemo
 
    public ValidationDemo()
    {
-
+//      model.setPerson(new Person());
+      
       addBlurbParagraph("This demo shows the use of the ValidationPlugin.  The nick name " +
                         "and wine list only validate when their corresponding checkboxes " +
                         "are selected.");

@@ -16,6 +16,7 @@
 
 package com.pietschy.gwt.pectin.demo.client.metadata;
 
+import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.misc.AbstractDemo;
 
 /**
@@ -32,7 +33,8 @@ public class MetadataDemo extends AbstractDemo
 
    public MetadataDemo()
    {
-
+      model.setPerson(new Person());
+      
       addBlurbParagraph("This demo shows the use of the MetadataPlugin to control the enabledness " +
                         "of `Focusable` components.  This is configured using enable(nickName).when(hasNickName) " +
                         "in the model.  The plugin then takes care of the rest.  The nick name " +

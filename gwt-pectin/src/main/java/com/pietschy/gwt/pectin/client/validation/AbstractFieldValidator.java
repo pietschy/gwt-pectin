@@ -16,11 +16,11 @@
 
 package com.pietschy.gwt.pectin.client.validation;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.EventHandler;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,15 +35,7 @@ public class AbstractFieldValidator
 
    protected boolean conditionSatisfied(ValueModel<Boolean> condition)
    {
-      if (condition == null)
-      {
-         return true;
-      }
-      else
-      {
-         Boolean value = condition.getValue();
-         return value == null ? true : value;
-      }
+      return Boolean.TRUE.equals(condition.getValue());
    }
 
    public void fireEvent(GwtEvent<?> event)
