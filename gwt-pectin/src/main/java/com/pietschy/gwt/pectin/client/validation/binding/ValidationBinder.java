@@ -17,19 +17,11 @@
 package com.pietschy.gwt.pectin.client.validation.binding;
 
 import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
+import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
-import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
-import com.pietschy.gwt.pectin.client.validation.binding.ValidationDisplayBinding;
-import com.pietschy.gwt.pectin.client.validation.binding.IndexedValidationDisplayBinding;
-import com.pietschy.gwt.pectin.client.validation.binding.ValidationStyleBinding;
 import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
-import com.pietschy.gwt.pectin.client.validation.FieldValidator;
-import com.pietschy.gwt.pectin.client.validation.ListFieldValidator;
-import com.google.gwt.user.client.ui.UIObject;
+import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -59,58 +51,17 @@ extends AbstractBinder
 
    public ValidationBindingBuider bindValidationOf(FieldModel<?> field)
    {
-      return new ValidationBindingBuider(ValidationPlugin.getFieldValidator(field));
+      return new ValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), styleApplicator);
    }
    
    public ValidationBindingBuider bindValidationOf(FormattedFieldModel<?> field)
    {
-      return new ValidationBindingBuider(ValidationPlugin.getFieldValidator(field));
+      return new ValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), styleApplicator);
    }
    
    public IndexedValidationBindingBuider bindValidationOf(ListFieldModel<?> field)
    {
-      return new IndexedValidationBindingBuider(ValidationPlugin.getFieldValidator(field));
+      return new IndexedValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), styleApplicator);
    }
-   
-   public class ValidationBindingBuider 
-   {
-      protected FieldValidator<?> validator;
 
-      public ValidationBindingBuider(FieldValidator<?> validator)
-      {
-         this.validator = validator;
-      }
-      
-      public void to(final ValidationDisplay validationDisplay)
-      {
-         registerBinding(new ValidationDisplayBinding(validator, validationDisplay));
-      }
-      
-      public void toStyleOf(UIObject widget)
-      {
-         registerBinding(new ValidationStyleBinding(validator, widget, styleApplicator));
-      }
-   }
-   
-   public class IndexedValidationBindingBuider 
-   {
-      private ListFieldValidator<?> validator;
-
-      public IndexedValidationBindingBuider(ListFieldValidator<?> validator)
-      {
-         this.validator = validator;
-      }
-      
-      public void to(final IndexedValidationDisplay validationDisplay)
-      {
-         registerBinding(new IndexedValidationDisplayBinding(validator, validationDisplay));
-      }
-      
-      public void toStyle(UIObject widget)
-      {
-         registerBinding(new ValidationStyleBinding(validator, widget, styleApplicator));
-      }
-      
-      
-   }
 }
