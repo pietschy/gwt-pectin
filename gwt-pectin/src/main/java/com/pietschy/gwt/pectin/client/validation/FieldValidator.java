@@ -28,7 +28,34 @@ import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 public interface FieldValidator<T> extends HasValidationResult, HasValidationHandlers 
 {
 
+   /**
+    * Runs all the validators and updates the validation result.  If any widgets are bound
+    * to the result then they will also update.
+    * @return <code>false</code> if any validation message has {@link Severity#ERROR}, <code>true</code> 
+    * otherwise.
+    * @see #runValidators(ValidationResultCollector) 
+    */
+   boolean validate();
+
+   /**
+    * Runs all the validator and stores the result in the specified collector.  The validation result
+    * is not updated and no widgets will be affected.  This allows you to check the validation of a
+    * field without affecting the model state.
+    * 
+    * @param collector the result collector.
+    */
+   void runValidators(ValidationResultCollector collector);
+
+   /**
+    * Adds a validation message from an external source.
+    * 
+    * @param message the message to add.
+    */
    void addExternalMessage(ValidationMessage message);
 
+   /**
+    * Clears the validation result for this validator.
+    */
    void clear();
+   
 }

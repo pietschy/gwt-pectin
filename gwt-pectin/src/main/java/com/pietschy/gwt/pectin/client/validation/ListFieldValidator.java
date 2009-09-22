@@ -29,7 +29,40 @@ public interface ListFieldValidator<T> extends HasValidationResult, HasIndexedVa
 {
    IndexedValidationResult getValidationResult();
 
+   /**
+    * Runs all the validators and updates the validation result.  If any widgets are bound
+    * to the result then they will also update.
+    * @return <code>false</code> if any validation message has {@link Severity#ERROR}, <code>true</code> 
+    * otherwise.
+    * @see #runValidators(IndexedValidationResultCollector) 
+    */
+   boolean validate();
+
+   /**
+    * Runs all the validator and stores the result in the specified collector.  The validation result
+    * is not updated and no widgets will be affected.  This allows you to check the validation of a
+    * field without affecting the model state.
+    * 
+    * @param collector the result collector.
+    */
+   void runValidators(IndexedValidationResultCollector collector);
+
+   /**
+    * Adds an external validation message for the specified index.
+    * @param index the index of the value in error
+    * @param message the validation message.
+    */
    void addExternalMessage(int index, ValidationMessage message);
 
+   /**
+    * Adds a 'non-indexed' external validation message.
+    * @param message the validation message.
+    * @see IndexedValidationResultCollector#add(ValidationMessage) 
+    */
+   void addExternalMessage(ValidationMessage message);
+
+   /**
+    * Clears all validation messages.
+    */
    void clear();
 }

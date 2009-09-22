@@ -16,9 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.validation;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
@@ -72,31 +70,37 @@ public class FieldValidatorImpl<T> extends AbstractFieldValidator implements Fie
       validators.put(validator, condition);
    }
 
- 
-   public void runValidators(T value, ValidationResultCollector collector)
+
+   public boolean validate()
+   {
+      ValidationResultImpl result = new ValidationResultImpl();
+      runValidators(result);
+      setValidationResult(result);
+      return !result.contains(Severity.ERROR);
+   }
+
+   public void runValidators(ValidationResultCollector collector)
+   {
+      runValidators(fieldModel.getValue(), collector);
+   }
+
+   protected void runValidators(T value, ValidationResultCollector collector)
    {
       if (collector == null)
       {
          throw new NullPointerException("collector is null");
       }
-      
+
       for (Map.Entry<Validator<? super T>, ValueModel<Boolean>> entry : validators.entrySet())
       {
          ValueModel<Boolean> condition = entry.getValue();
          Validator<? super T> validator = entry.getKey();
-         
+
          if (conditionSatisfied(condition))
          {
             validator.validate(value, collector);
          }
       }
-   }
-
-   public void validate()
-   {
-      ValidationResultImpl result = new ValidationResultImpl();
-      runValidators(fieldModel.getValue(), result);
-      setValidationResult(result);
    }
 
    public ValidationResult getValidationResult()

@@ -65,7 +65,20 @@ public class ListFieldValidatorImpl<T> extends AbstractFieldValidator implements
       validators.put(validator, condition);
    }
 
-   public void runValidators(List<T> values, IndexedValidationResultCollector collector)
+   public boolean validate()
+   {
+      IndexedValidationResultImpl result = new IndexedValidationResultImpl();
+      runValidators(result);
+      setValidationResult(result);
+      return !result.contains(Severity.ERROR);
+   }
+
+   public void runValidators(IndexedValidationResultCollector collector)
+   {
+      runValidators(fieldModel.asUnmodifiableList(), collector);
+   }
+
+   protected void runValidators(List<T> values, IndexedValidationResultCollector collector)
    {
       if (values == null)
       {
@@ -88,14 +101,6 @@ public class ListFieldValidatorImpl<T> extends AbstractFieldValidator implements
       }
    }
 
-
-   public void validate()
-   {
-      IndexedValidationResultImpl result = new IndexedValidationResultImpl();
-      runValidators(fieldModel.asUnmodifiableList(), result);
-      setValidationResult(result);
-   }
-
    public IndexedValidationResult getValidationResult()
    {
       return validationResult;
@@ -104,6 +109,12 @@ public class ListFieldValidatorImpl<T> extends AbstractFieldValidator implements
    private void setValidationResult(IndexedValidationResultImpl result)
    {
       validationResult = result;
+      fireValidationChanged();
+   }
+
+   public void addExternalMessage(ValidationMessage message)
+   {
+      validationResult.add(message);
       fireValidationChanged();
    }
 

@@ -16,9 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.validation;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
@@ -33,7 +31,7 @@ import java.util.Map;
  * Time: 9:10:23 AM
  * To change this template use File | Settings | File Templates.
  */
-public class FormattedFieldValidatorImpl<T> extends AbstractFieldValidator implements FieldValidator<T>
+public class FormattedFieldValidatorImpl<T> extends AbstractFieldValidator implements FormattedFieldValidator<T>
 {
    private FormattedFieldModel<T> fieldModel;
    private LinkedHashMap<Validator<? super String>, ValueModel<Boolean>> textValidators = new LinkedHashMap<Validator<? super String>, ValueModel<Boolean>>();
@@ -88,47 +86,63 @@ public class FormattedFieldValidatorImpl<T> extends AbstractFieldValidator imple
       
       textValidators.put(validator, condition);
    }
- 
-   public void runTextValidators(String value, ValidationResultCollector collector)
+
+   public boolean validate()
    {
-      if (collector == null)
-      {
-         throw new NullPointerException("collector is null");
-      }
-      
-      for (Map.Entry<Validator<? super String>, ValueModel<Boolean>> entry : textValidators.entrySet())
-      {
-         ValueModel<Boolean> condition = entry.getValue();
-         Validator<? super String> validator = entry.getKey();
-         
-         if (conditionSatisfied(condition))
-         {
-            validator.validate(value, collector);
-         }
-      }
+      ValidationResultImpl result = new ValidationResultImpl();
+      runValidators(result);
+      setValidationResult(result);
+      return !result.contains(Severity.ERROR);
    }
+
    
-   
-   public void runValidators(T value, ValidationResultCollector collector)
+   public void runValidators(ValidationResultCollector collector)
+   {
+      runTextValidators(collector);
+      runValueValidators(collector);
+   }
+
+   public void runValueValidators(ValidationResultCollector collector)
+   {
+      runValueValidators(fieldModel.getValue(), collector);
+   }
+
+   protected void runValueValidators(T value, ValidationResultCollector collector)
    {
       for (Map.Entry<Validator<? super T>, ValueModel<Boolean>> entry : validators.entrySet())
       {
          ValueModel<Boolean> condition = entry.getValue();
          Validator<? super T> validator = entry.getKey();
-         
+
          if (condition.getValue())
          {
             validator.validate(value, collector);
          }
       }
    }
-   
-   public void validate()
+
+   public void runTextValidators(ValidationResultCollector collector)
    {
-      ValidationResultImpl result = new ValidationResultImpl();
-      runTextValidators(fieldModel.getTextModel().getValue(), result);
-      runValidators(fieldModel.getValue(), result);
-      setValidationResult(result);
+      runTextValidators(fieldModel.getTextModel().getValue(), collector);
+   }
+
+   public void runTextValidators(String value, ValidationResultCollector collector)
+   {
+      if (collector == null)
+      {
+         throw new NullPointerException("collector is null");
+      }
+
+      for (Map.Entry<Validator<? super String>, ValueModel<Boolean>> entry : textValidators.entrySet())
+      {
+         ValueModel<Boolean> condition = entry.getValue();
+         Validator<? super String> validator = entry.getKey();
+
+         if (conditionSatisfied(condition))
+         {
+            validator.validate(value, collector);
+         }
+      }
    }
 
    public ValidationResult getValidationResult()

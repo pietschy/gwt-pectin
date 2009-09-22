@@ -28,6 +28,10 @@ import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
  */
 public interface ValidationResultCollector
 {
+   /**
+    * Adds a new message to the collector.
+    * @param message the validation message to add.
+    */
    void 
    add(ValidationMessage message);
 }

@@ -16,33 +16,16 @@
 
 package com.pietschy.gwt.pectin.client.validation;
 
-import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
-
-
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jun 15, 2008
- * Time: 4:52:26 PM
+ * Date: Sep 22, 2009
+ * Time: 9:59:52 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface IndexedValidationResultCollector
+public interface FormattedFieldValidator<T> extends FieldValidator<T>
 {
-   /**
-    * Adds a non-indexed message.  This may be a message such as "the list requires
-    * at lest one value".
-    *
-    * @param message the message to add.
-    */
-   void
-   add(ValidationMessage message);
+   void runValueValidators(ValidationResultCollector collector);
 
-   /**
-    * Adds a indexed message.
-    *
-    * @param index   the index of the value in error
-    * @param message the message to add.
-    */
-   void
-   add(int index, ValidationMessage message);
+   void runTextValidators(ValidationResultCollector collector);
 }

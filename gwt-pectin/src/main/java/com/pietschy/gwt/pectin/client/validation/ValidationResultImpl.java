@@ -33,10 +33,6 @@ implements ValidationResult, ValidationResultCollector
    private ArrayList<ValidationMessage> results = new ArrayList<ValidationMessage>();
    private HashMap<Severity, List<ValidationMessage>> severityMap = new HashMap<Severity, List<ValidationMessage>>();
 
-   // this is lazily created using lazyGetIndexedResults
-   private HashMap<Integer, ValidationResultImpl> indexedResults;
-
-   
    public ValidationResultImpl()
    {
    }
