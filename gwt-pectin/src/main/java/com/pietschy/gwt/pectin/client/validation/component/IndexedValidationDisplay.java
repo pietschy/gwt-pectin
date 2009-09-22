@@ -19,13 +19,13 @@ package com.pietschy.gwt.pectin.client.validation.component;
 import com.pietschy.gwt.pectin.client.validation.IndexedValidationResult;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 13, 2009
- * Time: 12:26:26 PM
- * To change this template use File | Settings | File Templates.
+ * IndexedValidationDisplay denotes components that can display {@link IndexedValidationResult}s.
  */
 public interface IndexedValidationDisplay
 {
+   /**
+    * Sets the {@link IndexedValidationResult} to display.
+    * @param result the {@link IndexedValidationResult} to display.
+    */
    void setValidationResult(IndexedValidationResult result);
 }

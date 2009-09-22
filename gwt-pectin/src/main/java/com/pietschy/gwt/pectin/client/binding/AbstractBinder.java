@@ -20,22 +20,28 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 17, 2009
- * Time: 12:02:40 PM
- * To change this template use File | Settings | File Templates.
+ * Base class for binders that provides the common registration and dispose methods.
  */
 public class AbstractBinder implements BindingContainer
 {
    private ArrayList<AbstractBinding> bindings = new ArrayList<AbstractBinding>();
-   
+
+   /**
+    * Registers a binding with this binder.  The binding will be disposed when this binder
+    * is disposed.
+    * 
+    * @param binding the binding to register.
+    */
    public void registerBinding(AbstractBinding binding)
    {
       binding.updateTarget();
       bindings.add(binding);
    }
-   
+
+   /**
+    * Disposes all bindings created by the binder.  After this methods has finished 
+    * listeners created by the bindings will be removed from all widgets and models.
+    */
    public void dispose()
    {
       for (AbstractBinding binding : bindings)
@@ -44,6 +50,10 @@ public class AbstractBinder implements BindingContainer
       }
    }
 
+   /**
+    * Disposes all bindings whose target (widget) is the specified target.
+    * @param target the target (widget) for which bindings are to be disposed.
+    */
    public void disposeBindingFor(Object target)
    {
       Iterator<AbstractBinding> iter = bindings.iterator();

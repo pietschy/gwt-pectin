@@ -92,7 +92,7 @@ public class MetadataPlugin
       {
          manager = new MetadataManager();
          form.putProperty(MetadataManager.class, manager);
-         form.addMixinCallback(manager);
+         form.addBindingCallback(manager);
       }
 
       return manager;

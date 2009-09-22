@@ -16,22 +16,39 @@
 
 package com.pietschy.gwt.pectin.client.validation;
 
+import com.pietschy.gwt.pectin.client.ListFieldModel;
+
 import java.util.Set;
 
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jun 21, 2008
- * Time: 3:01:33 PM
- * To change this template use File | Settings | File Templates.
+ * IndexedValidationResult records validation messages that have been registered
+ * against a {@link ListFieldModel}.  Messages can be indexed in that they are associated
+ * with particular value in the model, or they can be non-indexed messages that apply to 
+ * the whole collection.
  */
 public interface IndexedValidationResult extends ValidationResult
 {
+   /**
+    * The total number of messages in this result.
+    * @return the total number of messages in this result. 
+    */
    public int size();
-   
+
+   /**
+    * Gets the a {@link ValidationResult} containing only the unindexed mesages.
+    * @return a {@link ValidationResult} containing only the unindexed mesages.  Returns
+    * an empty {@link ValidationResult} if there are no unindexed messages. 
+    */
    ValidationResult getUnindexedResult();
 
+   /**
+    * Gets the a {@link ValidationResult} containing only the mesages at the specified
+    * index.
+    * @param index the index of interest.
+    * @return a {@link ValidationResult} containing only the message of the specified index.  Returns
+    * an empty {@link ValidationResult} if there are none at that index. 
+    */
    ValidationResult getIndexedResult(int index);
 
    Set<Integer> getResultIndicies();

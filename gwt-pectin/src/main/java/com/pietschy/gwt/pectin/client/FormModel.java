@@ -30,7 +30,11 @@ import java.util.HashMap;
 /**
  * <p>
  * FormModel provides builders for creating {@link FieldModel}s, {@link FormattedFieldModel}s
- * and {@link ListFieldModel} to which wigets can be bound using a {@link WidgetBinder}.
+ * and {@link ListFieldModel}.  Widgets can then be bound to these models using a {@link WidgetBinder}.
+ * </p>
+ * <p>
+ * FormModels also allow support properties to allow plugins to store additional
+ * information and {@link BindingCallback}s to hook into the binding process. 
  * </p>
  * @see #fieldOfType(Class) 
  * @see #formattedFieldOfType(Class) 
@@ -39,7 +43,7 @@ import java.util.HashMap;
 public class FormModel
 {
    private HashMap<Object, Object> properties = new HashMap<Object, Object>(); 
-   private ArrayList<PluginCallback> mixinCallbacks = new ArrayList<PluginCallback>();
+   private ArrayList<BindingCallback> bindingCallbacks = new ArrayList<BindingCallback>();
 
    /**
     * Returns a {@link FieldModel} buider of the specified type.
@@ -103,13 +107,13 @@ public class FormModel
       return properties.get(key);
    }
 
-   public void addMixinCallback(PluginCallback callback)
+   public void addBindingCallback(BindingCallback callback)
    {
-      mixinCallbacks.add(callback);
+      bindingCallbacks.add(callback);
    }
 
-   public Collection<PluginCallback> getMixinCallbacks()
+   public Collection<BindingCallback> getBindingCallbacks()
    {
-      return Collections.unmodifiableCollection(mixinCallbacks);
+      return Collections.unmodifiableCollection(bindingCallbacks);
    }
 }

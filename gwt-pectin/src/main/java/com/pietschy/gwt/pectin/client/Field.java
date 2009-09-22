@@ -17,11 +17,8 @@
 package com.pietschy.gwt.pectin.client;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 2, 2009
- * Time: 5:04:47 PM
- * To change this template use File | Settings | File Templates.
+ * Field is the base interfact for all types of field model.  It contains
+ * a single method for accessing the enclosing {@link FormModel}.
  */
 public interface Field
 {

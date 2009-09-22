@@ -20,11 +20,8 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jun 16, 2009
- * Time: 12:57:09 PM
- * To change this template use File | Settings | File Templates.
+ * FieldModel extends {@link MutableValueModel} and provides access to the 
+ * {@link FormModel} to which it belongs.
  */
 public interface FieldModel<T>
 extends Field, MutableValueModel<T>, HasValueChangeHandlers<T>

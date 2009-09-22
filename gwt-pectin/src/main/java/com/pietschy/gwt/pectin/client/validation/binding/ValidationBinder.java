@@ -24,22 +24,27 @@ import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
 import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 13, 2009
- * Time: 12:44:37 PM
- * To change this template use File | Settings | File Templates.
+ * ValidationBinder binds the validation status of a given field to arbitrary widgets.
+ * @see ValidationDisplay
  */
 public class ValidationBinder
 extends AbstractBinder
 {
    private StyleApplicator styleApplicator;
 
+   /**
+    * Creates a new binder instance.
+    */
    public ValidationBinder()
    {
       this(StyleApplicator.defaultInstance());
    }
 
+   /**
+    * Creates a new instance that uses the specified {@link StyleApplicator} to apply styles
+    * to widgets.
+    * @param styleApplicator the StyleApplicator to use.
+    */
    public ValidationBinder(StyleApplicator styleApplicator)
    {
       if (styleApplicator == null)
@@ -49,6 +54,7 @@ extends AbstractBinder
       this.styleApplicator = styleApplicator;
    }
 
+   
    public ValidationBindingBuider bindValidationOf(FieldModel<?> field)
    {
       return new ValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), styleApplicator);

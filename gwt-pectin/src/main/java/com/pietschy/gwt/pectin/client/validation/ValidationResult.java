@@ -22,19 +22,36 @@ import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jun 21, 2008
- * Time: 3:01:33 PM
- * To change this template use File | Settings | File Templates.
+ * ValidationResult is a container for {@link ValidationMessage}s. 
+ * @see ValidationBinder
+ * @see ValidationDisplay
+ * 
  */
 public interface ValidationResult extends HasValidationMessages
 {
+   /**
+    * Checks if the result is empty.
+    * @return <code>true</code> if there are no messages, <code>false</code> otherwise.
+    */
    boolean isEmpty();
 
+   /**
+    * Checks if the result contains one or messages of the specified severity.
+    * @param severity the severity of interest.
+    * @return <code>true</code> if the result contains messages with the specified severity, <code>false</code> otherwise.
+    */
    boolean contains(Severity severity);
 
+   /**
+    * Gets all the messages contained in this result. 
+    * @return all the messages contained in this result.  
+    */
    List<ValidationMessage> getMessages();
 
+   /**
+    * Gets all the messages of the specified severity contained in this result.
+    * @param severity the severity of interest. 
+    * @return all the messages contain in this result.  
+    */
    List<ValidationMessage> getMessages(Severity severity);
 }

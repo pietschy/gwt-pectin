@@ -19,13 +19,13 @@ package com.pietschy.gwt.pectin.client.validation.component;
 import com.pietschy.gwt.pectin.client.validation.ValidationResult;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 13, 2009
- * Time: 12:26:26 PM
- * To change this template use File | Settings | File Templates.
+ * ValidationDisplay denotes components that can display {@link ValidationResult}s.
  */
 public interface ValidationDisplay
 {
+   /**
+    * Sets the {@link ValidationResult} to display.
+    * @param result the validation result to display.
+    */
    void setValidationResult(ValidationResult result);
 }

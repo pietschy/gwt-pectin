@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.bean;
 
 /**
- * A marker interface for using a bean with an instance of {@link BeanModelProvider}
+ * A marker interface for using a bean with an instance of {@link BeanModelProvider}.
  */
 public interface BeanPropertySource
 {

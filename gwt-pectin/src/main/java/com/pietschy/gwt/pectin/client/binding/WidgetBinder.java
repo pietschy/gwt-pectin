@@ -16,13 +16,14 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
+import com.pietschy.gwt.pectin.client.BindingCallback;
 import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
-import com.pietschy.gwt.pectin.client.PluginCallback;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
+import com.pietschy.gwt.pectin.client.ListFieldModel;
 
 /**
- * 
+ * WidgetBinder provides a builders to bind widgets to field models.  During the binding process
+ * any {@link BindingCallback}s installed by plugins will be automatically invoked. 
  */
 public class WidgetBinder 
 extends AbstractBinder
@@ -47,9 +48,9 @@ extends AbstractBinder
    {
       super.registerBinding(binding);
 
-      for (PluginCallback mxin : binding.getFieldModel().getFormModel().getMixinCallbacks())
+      for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
       {
-         mxin.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
+         callback.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
       }
    }
 
@@ -57,9 +58,9 @@ extends AbstractBinder
    {
       super.registerBinding(binding);
 
-      for (PluginCallback mxin : binding.getFieldModel().getFormModel().getMixinCallbacks())
+      for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
       {
-         mxin.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
+         callback.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
       }
    }
 
@@ -67,9 +68,9 @@ extends AbstractBinder
    {
       super.registerBinding(binding);
 
-      for (PluginCallback mixin : binding.getFieldModel().getFormModel().getMixinCallbacks())
+      for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
       {
-         mixin.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
+         callback.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
       }
    }
 

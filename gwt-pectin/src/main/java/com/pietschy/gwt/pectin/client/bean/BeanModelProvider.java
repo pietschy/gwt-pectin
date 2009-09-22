@@ -16,23 +16,20 @@
 
 package com.pietschy.gwt.pectin.client.bean;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.pietschy.gwt.pectin.client.ListModelProvider;
+import com.pietschy.gwt.pectin.client.ValueModelProvider;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
-import com.pietschy.gwt.pectin.client.ValueModelProvider;
-import com.pietschy.gwt.pectin.client.ListModelProvider;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
 import java.util.HashMap;
 
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jun 17, 2008
- * Time: 3:53:30 PM
- * To change this template use File | Settings | File Templates.
+ * BeanModelProvider is a facgtory for creating {@link ValueModel}s and 
+ * {@link ListModel}s from Java Beans.
  */
 public abstract class BeanModelProvider<B extends BeanPropertySource>
 implements ValueModelProvider, ListModelProvider
@@ -59,6 +56,9 @@ implements ValueModelProvider, ListModelProvider
       setBeanSource(new ValueHolder<B>());
    }
 
+   /**
+    * Writes the values of all models the the current bean.
+    */
    public void commit()
    {
       for (BeanPropertyValueModel<?> model : valueModels.values())

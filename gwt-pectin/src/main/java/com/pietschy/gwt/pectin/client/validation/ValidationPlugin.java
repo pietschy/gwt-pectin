@@ -18,9 +18,9 @@ package com.pietschy.gwt.pectin.client.validation;
 
 
 import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
+import com.pietschy.gwt.pectin.client.ListFieldModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -74,7 +74,7 @@ public class ValidationPlugin
       {
          manager = new ValidationManager();
          form.putProperty(ValidationManager.class, manager);
-         form.addMixinCallback(manager);
+         form.addBindingCallback(manager);
       }
       
       return manager;

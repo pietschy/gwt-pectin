@@ -17,18 +17,18 @@
 package com.pietschy.gwt.pectin.client.validation;
 
 
+import com.pietschy.gwt.pectin.client.BindingCallback;
 import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
-import com.pietschy.gwt.pectin.client.PluginCallback;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
+import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
+import com.pietschy.gwt.pectin.client.binding.BindingContainer;
 import com.pietschy.gwt.pectin.client.validation.binding.IndexedValidationDisplayBinding;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationDisplayBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
-import com.pietschy.gwt.pectin.client.binding.BindingContainer;
+import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
 
 import java.util.HashMap;
 
@@ -40,7 +40,7 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class ValidationManager
-implements PluginCallback
+implements BindingCallback
 {
    private HashMap<FieldModel<?>, FieldValidatorImpl<?>> fieldValidators = new HashMap<FieldModel<?>, FieldValidatorImpl<?>>();
    

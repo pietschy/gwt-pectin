@@ -16,15 +16,15 @@
 
 package com.pietschy.gwt.pectin.client.metadata;
 
+import com.pietschy.gwt.pectin.client.BindingCallback;
 import com.pietschy.gwt.pectin.client.Field;
 import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
-import com.pietschy.gwt.pectin.client.PluginCallback;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.metadata.binding.AllMetadataBindingBuilder;
+import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
+import com.pietschy.gwt.pectin.client.metadata.binding.AllMetadataBindingBuilder;
 
 import java.util.HashMap;
 
@@ -36,7 +36,7 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class MetadataManager
-implements PluginCallback
+implements BindingCallback
 {
     private HashMap<Field, Metadata> metadataMap = new HashMap<Field, Metadata>();
 
