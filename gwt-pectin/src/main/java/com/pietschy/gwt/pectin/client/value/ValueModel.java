@@ -16,19 +16,25 @@
 
 package com.pietschy.gwt.pectin.client.value;
 
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 1, 2009
- * Time: 11:25:39 AM
- * To change this template use File | Settings | File Templates.
+ * ValueModels provide a standard interface for obtaining values and being notified when that
+ * value changes.  Mutation of the value is supported by {@link MutableValueModel}.
  */
 public interface ValueModel<T>
 {
+   /**
+    * Gets the value held by this model.
+    * @return the value held by this model.
+    */
    T getValue();
 
+   /**
+    * Adds a handler that will be notified when ever this models value changes.
+    * @param handler the handler to be notified.
+    * @return a {@link HandlerRegistration}.
+    */
    HandlerRegistration addValueChangeHandler(ValueChangeHandler<T> handler);
 }

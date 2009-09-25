@@ -19,13 +19,17 @@ package com.pietschy.gwt.pectin.client;
 import com.pietschy.gwt.pectin.client.list.ListModel;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Aug 6, 2009
- * Time: 5:05:27 PM
- * To change this template use File | Settings | File Templates.
+ * ValueModelProvider marks objects that vend {@link ListModel} instances based on 
+ * a simple name and type.  This interface is typically used to obtain list models
+ * from sources such as bean properties.
  */
 public interface ListModelProvider
 {
-   <T> ListModel<T> getListModel(String modelName, Class<T> valueType);
+   /**
+    * Gets the {@link ListModel} containing the specified type and identified by 'name'.
+    * @param name the name used to identify the list model.
+    * @param valueType the type held by the list model.
+    * @return a list model for the specified name and type.
+    */
+   <T> ListModel<T> getListModel(String name, Class<T> valueType);
 }

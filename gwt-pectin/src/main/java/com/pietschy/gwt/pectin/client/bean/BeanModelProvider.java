@@ -21,18 +21,27 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.ListModelProvider;
 import com.pietschy.gwt.pectin.client.ValueModelProvider;
+import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.HashMap;
 
 
 /**
- * BeanModelProvider is a facgtory for creating {@link ValueModel}s and 
- * {@link ListModel}s from Java Beans.
+ * BeanModelProvider is a factory for creating {@link ValueModel}s and {@link ListModel}s from 
+ * Java Beans.  This class is intended for use using <code>GWT.create(...)</code>.
+ * <pre>
+ * // create an abstract subclass with your bean type.
+ * public static abstract class MyBeanModelProvider extends BeanModelProvider<MyBean>{}
+ * 
+ * // and use GWT.create(..) to get a new instance.
+ * MyBeanModelProvider provider = GWT.create(MyBeanModelProvider.class); 
+ * </pre>
  */
-public abstract class BeanModelProvider<B extends BeanPropertySource>
-implements ValueModelProvider, ListModelProvider
+public abstract class BeanModelProvider<B>
+   implements ValueModelProvider, ListModelProvider
 {
 
    private HashMap<Key<?>, BeanPropertyValueModel<?>> valueModels = new HashMap<Key<?>, BeanPropertyValueModel<?>>();
@@ -72,13 +81,36 @@ implements ValueModelProvider, ListModelProvider
       }
    }
 
+   /**
+    * Gets the bean in use by the provider.
+    * @return the bean in use by the provider.
+    */
    public B getBean()
    {
       return beanSource.getValue();
    }
 
+   /**
+    * Gets a {@link ListModel} based on the specified property name and value type.  Property types
+    * of the generic interface types {@link Collection}, {@link List}, {@link Set}, {@link SortedSet} are supported
+    * out of the box.  Additional types can be supported by registering a suitable {@link CollectionConverter}.
+    * <p>
+    * Multiple calls to this method will return the same model.
+    *
+    * @param propertyName the name of the property.
+    * @param valueType    the type contained by the collection
+    *
+    * @return the {@link ListModel} for the specified property.  Multiple calls to this method will return the same
+    *         model.
+    *
+    * @throws UnknownPropertyException if the bean doesn't define the specified property.
+    * @throws UnsupportedCollectionTypeException
+    *                                  if a suitable {@link CollectionConverter} hasn't been registered
+    *                                  for the bean property collection type.
+    * @see #registerCollectionConverter(Class, CollectionConverter)
+    */
    @SuppressWarnings("unchecked")
-   public <T> BeanPropertyListModel<T> getListModel(String propertyName, Class<T> valueType)
+   public <T> BeanPropertyListModel<T> getListModel(String propertyName, Class<T> valueType) throws UnknownPropertyException, UnsupportedCollectionTypeException
    {
       Key<T> key = new Key<T>(valueType, propertyName);
       BeanPropertyListModel<T> listModel = (BeanPropertyListModel<T>) listModels.get(key);
@@ -92,9 +124,7 @@ implements ValueModelProvider, ListModelProvider
 
          if (converter == null)
          {
-            throw new IllegalStateException("No collection converter registered for type:" + collectionType +
-                                            " Either register a converter or ensure your bean uses only the interface types " +
-                                            " Collection, List, Set and SortedSet");
+            throw new UnsupportedCollectionTypeException(collectionType);
          }
 
          listModel = new BeanPropertyListModel<T>(this, propertyName, converter);
@@ -104,18 +134,30 @@ implements ValueModelProvider, ListModelProvider
       return (BeanPropertyListModel<T>) listModel;
    }
 
+   /**
+    * Gets a {@link ValueModel} for the specified bean property and the specified type.  Multiple calls to this method
+    * will return the same model.
+    *
+    * @param propertyName the name of the property.
+    * @param modelType    the type of the property.
+    *
+    * @return a {@link ValueModel} for the specified bean property.  Multiple calls to this method
+    *         will return the same model.
+    *
+    * @throws UnknownPropertyException       if the property isn't defined by the bean.
+    * @throws IncorrectPropertyTypeException if the type of the property doesn't match the model type.
+    */
    @SuppressWarnings("unchecked")
-   public <T> BeanPropertyValueModel<T> getValueModel(String propertyName, Class<T> type)
+   public <T> BeanPropertyValueModel<T> getValueModel(String propertyName, Class<T> modelType) throws UnknownPropertyException, IncorrectPropertyTypeException
    {
+      Class beanPropertyType = getPropertyType(propertyName);
 
-      Class propertyType = getPropertyType(propertyName);
-
-      if (!type.equals(propertyType))
+      if (!modelType.equals(beanPropertyType))
       {
-         throw new IllegalStateException("Incorrect bean property type, expected: " + type + " but found: " + propertyType);
+         throw new IncorrectPropertyTypeException(modelType, beanPropertyType);
       }
 
-      Key<T> key = new Key<T>(type, propertyName);
+      Key<T> key = new Key<T>(modelType, propertyName);
       BeanPropertyValueModel<T> valueModel = (BeanPropertyValueModel<T>) valueModels.get(key);
 
       if (valueModel == null)
@@ -127,11 +169,21 @@ implements ValueModelProvider, ListModelProvider
       return (BeanPropertyValueModel<T>) valueModel;
    }
 
+   /**
+    * Registers a new converter for converting between collection based bean properties and the ListModel.
+    * This allows uses to support collection types other than the generic interface types on their beans.
+    *
+    * @param collectionClass the colleciton type of the bean property.
+    * @param converter       the converter to use for bean properties of the specified collection type.
+    */
    public <T> void registerCollectionConverter(Class<T> collectionClass, CollectionConverter<T> converter)
    {
       collectionConverters.register(collectionClass, converter);
    }
 
+   /**
+    * Reverts all the models in this provider to the values contained in the bean.
+    */
    public void revert()
    {
       for (BeanPropertyValueModel<?> model : valueModels.values())
@@ -145,11 +197,22 @@ implements ValueModelProvider, ListModelProvider
       }
    }
 
+   /**
+    * Sets the bean to back all the models created by this provider.  All value models will update after this
+    * method has been called.  
+    * @param bean the bean
+    */
    public void setBean(B bean)
    {
       beanSource.setValue(bean);
    }
 
+   /**
+    * Sets the {@link ValueModel} to be used as the source of this provider.  All changes to the source
+    * model will be tracked.
+    * 
+    * @param source the {@link ValueModel} containing the source bean.
+    */
    public void setBeanSource(MutableValueModel<B> source)
    {
       if (source == null)
@@ -168,13 +231,13 @@ implements ValueModelProvider, ListModelProvider
       revert();
    }
 
-   protected abstract Class getPropertyType(String property);
+   protected abstract Class getPropertyType(String property) throws UnknownPropertyException;
 
-   protected abstract Object readValue(String property);
+   protected abstract Object readValue(String property) throws UnknownPropertyException;
 
-   protected abstract void writeValue(String property, Object value);
+   protected abstract void writeValue(String property, Object value) throws UnknownPropertyException;
 
-   
+
    private static class Key<T>
    {
       private Class<T> type;
@@ -219,5 +282,5 @@ implements ValueModelProvider, ListModelProvider
          return result;
       }
    }
-   
+
 }

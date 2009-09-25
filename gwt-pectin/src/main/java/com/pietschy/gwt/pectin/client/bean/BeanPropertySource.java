@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.client.bean;
 
 /**
  * A marker interface for using a bean with an instance of {@link BeanModelProvider}.
+ * @deprecated This interface is no longer required, any POJO with get/set methods will do.
  */
 public interface BeanPropertySource
 {

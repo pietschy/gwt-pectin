@@ -16,19 +16,16 @@
 
 package com.pietschy.gwt.pectin.client.value;
 
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.pietschy.gwt.pectin.client.value.Function;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 1, 2009
- * Time: 11:42:05 AM
- * To change this template use File | Settings | File Templates.
+ * ValueModelFunction is a value model whose value is derived from collection of source
+ * {@link ValueModel}s and a {@link Function}.  Changes in any of the source models result in
+ * the funcion being re-evaluated and the value updating.
  */
 public class ValueModelFunction<T, S>
 extends AbstractValueModel<T>

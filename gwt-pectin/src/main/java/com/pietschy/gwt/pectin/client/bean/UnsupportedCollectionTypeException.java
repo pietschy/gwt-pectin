@@ -14,34 +14,21 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.value;
+package com.pietschy.gwt.pectin.client.bean;
 
 /**
- * ValueHolder is a s
+ * Created by IntelliJ IDEA.
+ * User: andrew
+ * Date: Sep 25, 2009
+ * Time: 10:07:51 AM
+ * To change this template use File | Settings | File Templates.
  */
-public class ValueHolder<T> 
-extends AbstractMutableValueModel<T>
+public class UnsupportedCollectionTypeException extends RuntimeException
 {
-   private T value;
-
-   public ValueHolder()
+   public UnsupportedCollectionTypeException(Class collectionType)
    {
-   }
-
-   public ValueHolder(T value)
-   {
-      this.value = value;
-   }
-
-   public T getValue()
-   {
-      return value;
-   }
-
-   public void setValue(T newValue)
-   {
-      this.value = newValue;
-      // we always fire the change event.
-      fireValueChangeEvent(newValue);
+      super("No collection converter registered for type:" + collectionType +
+                                            " Either register a converter or ensure your bean uses only the interface types " +
+                                            " Collection, List, Set and SortedSet");
    }
 }

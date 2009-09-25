@@ -8,6 +8,15 @@ dependencies {
    compile project(':gwt-pectin')
 }
 
+
+// a hack to stop tests when running the demo.. there's probably a better way
+// but I don't know it.
+init.doFirst {
+   if (build.taskGraph.hasTask(':demo:shell')) {
+      System.properties['skip.test'] = 'true'
+   }
+}
+
 clean.dependsOn(':gwt-pectin:clean')
 
 gwtCompile {
@@ -19,7 +28,7 @@ createTask('shell', type: com.pietschy.gradle.plugin.GWTHostedMode)
 shell {
    modules('com.pietschy.gwt.pectin.demo.PectinDemo')
    startupUrl = 'PectinDemo.html'
-//   style = 'PRETTY'
+   style = 'PRETTY'
 }
 
 createTask('demo', dependsOn: ['clean', 'compile', 'shell'])

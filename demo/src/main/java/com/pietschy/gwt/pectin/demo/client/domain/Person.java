@@ -16,8 +16,6 @@
 
 package com.pietschy.gwt.pectin.demo.client.domain;
 
-import com.pietschy.gwt.pectin.client.bean.BeanPropertySource;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +27,6 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class Person
-implements BeanPropertySource
 {
    private String givenName;
    private String surname;

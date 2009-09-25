@@ -21,10 +21,10 @@ import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
+import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
-import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 
@@ -54,12 +54,14 @@ public class BeanModelProviderCreator
       try
       {
          JClassType classType = typeOracle.getType(typeName);
-         SourceWriter source = getSourceWriter(classType);
          
          String fullClassName = createClassNameWithPackage(classType);
          
-         // Si le wrapper existe déjà, getSourceWriter renvoie null
-         // Il n'est donc pas nécessaire de créer cette classe
+         SourceWriter source = getSourceWriter(classType);
+         
+         
+         // The source writer is null if the class already exists, so we don't need
+         // to generate it.
          if (source == null)
          {
             return fullClassName;
@@ -113,7 +115,7 @@ public class BeanModelProviderCreator
             }
             source.println("{");
             source.indent();
-            source.println("throw new IllegalArgumentException(\"Unknown property=\" + property);");
+            source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
             source.outdent();
             source.println("}");
             source.outdent();
@@ -141,7 +143,7 @@ public class BeanModelProviderCreator
             }
             source.println("{");
             source.indent();
-            source.println("throw new IllegalArgumentException(\"Unknown property=\" + property);");
+            source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
             source.outdent();
             source.println("}");
             source.outdent();
@@ -173,7 +175,7 @@ public class BeanModelProviderCreator
             
             source.println("{");
             source.indent();
-            source.println("throw new IllegalArgumentException(\"Unknown property=\" + property);");
+            source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
             source.outdent();
             source.println("}");
             source.outdent();

@@ -14,18 +14,13 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.value;
+package com.pietschy.gwt.pectin.client.bean.test;
+
+import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 
 /**
- * MutableValueModel represents a value model whose value change can be changed by external actors.
- */
-public interface MutableValueModel<T> 
-extends ValueModel<T>
-{
-   /**
-    * Sets the value of this model to the specified value.  All handlers will be notified of
-    * the change.
-    * @param value the new value.
-    */
-   void setValue(T value);
-}
+ * this would normally be a static inner class but we need to be in a different
+ * package to our created instance doesn't have any 'accidentally working' imports. 
+*/
+public abstract class TestBeanModelProvider extends BeanModelProvider<TestBean>
+{}

@@ -17,18 +17,14 @@
 package com.pietschy.gwt.pectin.client.value;
 
 import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Aug 16, 2009
- * Time: 10:44:59 AM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class DelegatingValueModel<T> implements ValueModel<T>, HasValueChangeHandlers<T>
 {

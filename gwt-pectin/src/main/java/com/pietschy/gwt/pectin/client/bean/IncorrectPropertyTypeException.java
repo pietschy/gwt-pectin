@@ -14,18 +14,19 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.value;
+package com.pietschy.gwt.pectin.client.bean;
 
 /**
- * MutableValueModel represents a value model whose value change can be changed by external actors.
+ * Created by IntelliJ IDEA.
+ * User: andrew
+ * Date: Sep 25, 2009
+ * Time: 10:07:51 AM
+ * To change this template use File | Settings | File Templates.
  */
-public interface MutableValueModel<T> 
-extends ValueModel<T>
+public class IncorrectPropertyTypeException extends RuntimeException
 {
-   /**
-    * Sets the value of this model to the specified value.  All handlers will be notified of
-    * the change.
-    * @param value the new value.
-    */
-   void setValue(T value);
+   public IncorrectPropertyTypeException(Class expected, Class found)
+   {
+      super("Incorrect bean property type, expected: " + expected + " but found: " + found);
+   }
 }

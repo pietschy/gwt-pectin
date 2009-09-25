@@ -5,31 +5,33 @@ version = "0.1.${buildNumber}"
 
 dependencies {
    testCompile("org.testng:testng:5.8:jdk15",
+               "junit:junit:4.7",
                "org.mockito:mockito-all:1.7")
 }
 
 
 init.doFirst {
-   if (build.taskGraph.hasTask(':gwt-pectin:release')) {
-      incrementBuildNumber(project)
-   } else {
+
+   if (!build.taskGraph.hasTask(':gwt-pectin:release')) {
       version = version + '-SNAPSHOT'
    }
-   
+
    println "Version: ${version}"
 }
 
+test.dependsOn('gwtTest')
 
-// Increments the build number and builds the release.
-createTask('release', dependsOn: 'libs')
+// Creates the release and increments the build number when finished.
+createTask('release', dependsOn: ['libs']) {
+   incrementBuildNumber(project)
+}
 
-
+// task for creating the gradle scripts.
 createTask('wrapper', type: Wrapper).configure {
    gradleVersion = '0.5.2'
 }
 
-String getBuildNumber()
-{
+String getBuildNumber() {
    return readBuildNumber(project)
 }
 
