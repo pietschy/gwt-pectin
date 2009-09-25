@@ -31,14 +31,28 @@ import java.util.HashMap;
 
 /**
  * BeanModelProvider is a factory for creating {@link ValueModel}s and {@link ListModel}s from 
- * Java Beans.  This class is intended for use using <code>GWT.create(...)</code>.
+ * Java Bean properties.  This class is created using <code>GWT.create(...)</code>.
+ * <p>
+ * An example:
  * <pre>
  * // create an abstract subclass with your bean type.
- * public static abstract class MyBeanModelProvider extends BeanModelProvider<MyBean>{}
+ * public static abstract class MyBeanModelProvider extends BeanModelProvider&lt;MyBean&gt;{}
  * 
  * // and use GWT.create(..) to get a new instance.
- * MyBeanModelProvider provider = GWT.create(MyBeanModelProvider.class); 
+ * MyBeanModelProvider <b>provider</b> = GWT.create(MyBeanModelProvider.class); 
+ * 
+ * // then use it in your form
+ * FieldModel<String> myField = fieldOfType(String.class).boundTo(<b>provider</b>, "myProperty");
+ * 
+ * // and load the bean you want to edit.
+ * <b>provider</b>.setBean(new MyBean());
+ * 
+ * // or you can use another value model as the bean source.
+ * ValueModel<MyBean> myBeanSource = ...;
+ * <b>provider</b>.setBeanSource(myBeanSource);
+ * 
  * </pre>
+ * 
  */
 public abstract class BeanModelProvider<B>
    implements ValueModelProvider, ListModelProvider
