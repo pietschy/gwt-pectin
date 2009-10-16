@@ -54,10 +54,13 @@ implements BindingContainer
       {
          registration.removeHandler();
       }
+      eventRegistrations.clear();
       
       for (AbstractBinding binding : childBindings)
       {
          binding.dispose();
       }
+      
+      childBindings.clear();
    }
 }

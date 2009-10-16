@@ -48,6 +48,7 @@ public class AbstractBinder implements BindingContainer
       {
          binding.dispose();
       }
+      bindings.clear();
    }
 
    /**
