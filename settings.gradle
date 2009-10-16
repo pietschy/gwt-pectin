@@ -3,7 +3,7 @@ addMavenStyleRepo('pietschy', 'http://maven.pietschy.com')
 
 // this provides the plugins used to build pectin, most notably 
 // the GWTLibPluing and GWTAppPlugin and associated tasks
-dependencies("com.pietschy.gradle:buildEnvironment:0.5.2-1")
+dependencies("com.pietschy.gradle:buildEnvironment:0.5.2-2-SNAPSHOT")
 
 include 'gwt-pectin', 'demo'
 

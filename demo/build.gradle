@@ -1,4 +1,4 @@
-usePlugin(com.pietschy.gradle.plugin.GWTAppPlugin, ['gwtVersion' : '1.7.0'])
+usePlugin(com.pietschy.gradle.plugin.GWTAppPlugin, ['gwtVersion' : '1.7.1'])
 
 version = "0.1.${buildNumber}"
 
