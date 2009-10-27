@@ -22,7 +22,6 @@ import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
 import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.metadataOf;
-import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.client.style.StyleBinder;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
@@ -52,7 +51,6 @@ extends VerySimpleForm
    private WidgetBinder binder = new WidgetBinder();
    private StyleBinder style = new StyleBinder();
    private ValidationBinder validation = new ValidationBinder();
-   private MetadataBinder metadata = new MetadataBinder();
 
 
    public StyleForm(final StyleFormModel model)
