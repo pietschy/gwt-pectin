@@ -81,7 +81,7 @@ public class MetadataForm extends VerySimpleForm
 
       // Here we'll show and hide the whole row based on the visibility on whether
       // we in edit mode.
-      Row watermarkRow = addRow("Age Watermark", ageWaterMark, "You can change the Age watermark here");
+      Row watermarkRow = addRow("Watermark", ageWaterMark, "You can change the Age watermark here");
       metadata.bindValueOf(model.editingAgeWatermark).toVisibilityOf(watermarkRow);
 
       addGap();

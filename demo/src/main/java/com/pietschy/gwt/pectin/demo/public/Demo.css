@@ -50,8 +50,9 @@ select.validation-error,
 }
 
 .VerySimpleForm-Label {
-   color: #555555;
+   color: #666666;
    font-weight:bold;
+   font-size: 75%;
    text-align: right;
    padding-right: 0.5em;
 }
@@ -66,7 +67,7 @@ select.validation-error,
 }
 
 .VerySimpleForm-Hint {
-   color: #666666;
+   color: #999999;
 }
 
 .LordVadar {
@@ -82,7 +83,7 @@ select.validation-error,
 }
 
 .VerySimpleForm-Label .disabled {
-   color: #aaaaaa;
+   color: #bbbbbb;
 }
 
 input.watermark {
