@@ -33,22 +33,22 @@ public class MetadataBinder
 extends AbstractBinder
 {
    
-   public AllMetadataBindingBuilder bindMetadata(Field field)
+   public AllMetadataBindingBuilder bindMetadataOf(Field field)
    {
       return new AllMetadataBindingBuilder(this, MetadataPlugin.getMetadata(field));
    }
    
-   public VisibilityBindingBuilder bindVisibility(Field field)
+   public VisibilityBindingBuilder bindVisibilityOf(Field field)
    {
       return new VisibilityBindingBuilder(this, MetadataPlugin.getMetadata(field).getVisibleModel());
    }
    
-   public EnabledBindingBuilder bindEnabled(Field field)
+   public EnabledBindingBuilder bindEnabledOf(Field field)
    {
       return new EnabledBindingBuilder(this, MetadataPlugin.getMetadata(field).getEnabledModel());
    }
    
-   public EnabledBindingBuilder bindDisabled(Field field)
+   public EnabledBindingBuilder bindDisabledOf(Field field)
    {
       return new EnabledBindingBuilder(this, Conditions.not(MetadataPlugin.getMetadata(field).getEnabledModel()));
    }

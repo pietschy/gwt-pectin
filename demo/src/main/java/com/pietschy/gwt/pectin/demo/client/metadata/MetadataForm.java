@@ -34,7 +34,7 @@ public class MetadataForm extends VerySimpleForm
    private TextBox givenName = new TextBox();
    private TextBox surname = new TextBox();
    private TextBox age = new TextBox();
-   private CheckBox editWatermark = new CheckBox("Edit watermark");
+   private CheckBox editAgeWatermark = new CheckBox("Edit watermark");
    private TextBox ageWaterMark = new EnhancedTextBox();
 
    private CheckBox hasNickName = new CheckBox("I have a nick name");
@@ -60,7 +60,7 @@ public class MetadataForm extends VerySimpleForm
       widgets.bind(model.givenName).to(givenName);
       widgets.bind(model.surname).to(surname);
       widgets.bind(model.age).to(age);
-      widgets.bind(model.editWatermark).to(editWatermark);
+      widgets.bind(model.editAgeWatermark).to(editAgeWatermark);
       widgets.bind(model.ageWaterMark).to(ageWaterMark);
 
       widgets.bind(model.hasNickName).to(hasNickName);
@@ -74,15 +74,13 @@ public class MetadataForm extends VerySimpleForm
       widgets.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
 
-      addRow("First Name", givenName, "This field uses a plain text watermark");
+      addRow("First Name", givenName, "The first two fields use a plain text watermark");
       addRow("Last Name", surname);
-      addRow("Age", age, editWatermark);
+      addRow("Age", age, editAgeWatermark);
+      Row watermarkRow = addRow("Age Watermark", ageWaterMark, "You can change the Age watermark here");
 
-      // Here we're using the meta bindings to control the visibility of the row based on
-      // some other value model.  This is useful when you need to control other
-      // widgets that aren't directly bound to the mode.
-      Row watermarkRow = addRow("Age Watermark", ageWaterMark, "The Age watermark above is bound to this value");
-      metadata.bindValueOf(model.editWatermark).toVisibilityOf(watermarkRow);
+      // Here we'll show and hide the whole row based on the visibility o
+      metadata.bindVisibilityOf(model.ageWaterMark).to(watermarkRow);
 
       addGap();
       addRow("", hasNickName);

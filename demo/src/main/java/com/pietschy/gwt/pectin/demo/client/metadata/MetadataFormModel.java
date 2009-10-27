@@ -23,8 +23,7 @@ import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import static com.pietschy.gwt.pectin.client.condition.Conditions.and;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.watermark;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.*;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
@@ -41,7 +40,7 @@ public class MetadataFormModel extends FormModel
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
    protected final FormattedFieldModel<Integer> age;
-   protected final FieldModel<Boolean> editWatermark;
+   protected final FieldModel<Boolean> editAgeWatermark;
    protected final FieldModel<String> ageWaterMark;
    protected final FieldModel<String> nickName;
    protected final FieldModel<Boolean> hasNickName;
@@ -81,8 +80,11 @@ public class MetadataFormModel extends FormModel
       // we can also use other value models for the watermark, you can use any old
       // ValueModel<String>, were using a field so we can add it to the UI..
       ageWaterMark= fieldOfType(String.class).createWithValue("Enter your age");
-      editWatermark = fieldOfType(Boolean.class).createWithValue(false);
       watermark(age).using(ageWaterMark);
+
+      // we'll also create the ability to edit the watermark
+      editAgeWatermark = fieldOfType(Boolean.class).createWithValue(false);
+      show(ageWaterMark).when(editAgeWatermark);
 
       // and now our enabled-ness stuff.
       enable(nickName).when(hasNickName);
