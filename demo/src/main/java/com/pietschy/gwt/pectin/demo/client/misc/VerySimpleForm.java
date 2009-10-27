@@ -16,12 +16,8 @@
 
 package com.pietschy.gwt.pectin.demo.client.misc;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.*;
+import com.pietschy.gwt.pectin.client.metadata.HasVisible;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,30 +37,37 @@ extends Composite
       initWidget(table);
    }
    
-   public void addRow(String label, Widget widget)
+   public Row addRow(String label, Widget widget)
    {
-      int row = table.getRowCount();
-      table.setText(row, 0, label);
-      styleLabel(row);
-      table.setWidget(row, 1, widget);
+      int rowIndex = table.getRowCount();
+      table.setText(rowIndex, 0, label);
+      styleLabel(rowIndex);
+      table.setWidget(rowIndex, 1, widget);
+      return new Row(rowIndex);
    }
 
-   public void addRow(Widget label, Widget widget)
+   public Row addRow(Widget label, Widget widget)
    {
-      int row = table.getRowCount();
-      table.setWidget(row, 0, label);
-      styleLabel(row);
-      table.setWidget(row, 1, widget);
-   }
-   
-   public void addRow(String label, Widget widget, Widget... others)
-   {
-      addRow(label, hp(widget, others));
+      int rowIndex = table.getRowCount();
+      table.setWidget(rowIndex, 0, label);
+      styleLabel(rowIndex);
+      table.setWidget(rowIndex, 1, widget);
+      return new Row(rowIndex);
    }
 
-   public void addRow(Widget label, Widget widget, Widget... others)
+   protected Row addRow(String label, Widget widget, String hint)
    {
-      addRow(label, hp(widget, others));
+      return addRow(label, widget, stylesHint(new Label(hint)));
+   }
+
+   public Row addRow(String label, Widget widget, Widget... others)
+   {
+      return addRow(label, hp(widget, others));
+   }
+
+   public Row addRow(Widget label, Widget widget, Widget... others)
+   {
+      return addRow(label, hp(widget, others));
    }
 
    private void styleLabel(int row)
@@ -72,30 +75,38 @@ extends Composite
       cellFormatter.addStyleName(row, 0, "VerySimpleForm-Label");
    }
 
-   protected void addNote(String text)
+   private Widget stylesHint(Widget widget)
    {
-      int row = table.getRowCount();
-      table.setText(row, 1, text);
-      cellFormatter.setStylePrimaryName(row, 1, "VerySimpleForm-Note");
-      
+      widget.addStyleName("VerySimpleForm-Hint");
+      return widget;
    }
-   
-   public void addGap()
+
+   protected Row addNote(String text)
    {
-      int row = table.getRowCount();
-      table.setWidget(row, 0, new HTML("&nbsp;"));
-      cellFormatter.setColSpan(row, 0, 2);
-      cellFormatter.setStylePrimaryName(row, 0, "VerySimpleForm-GapRow");
+      int rowIndex = table.getRowCount();
+      table.setText(rowIndex, 1, text);
+      cellFormatter.setStylePrimaryName(rowIndex, 1, "VerySimpleForm-Note");
+      return new Row(rowIndex);
    }
-   
-   
+
+
+   public Row addGap()
+   {
+      int rowIndex = table.getRowCount();
+      table.setWidget(rowIndex, 0, new HTML("&nbsp;"));
+      cellFormatter.setColSpan(rowIndex, 0, 2);
+      cellFormatter.setStylePrimaryName(rowIndex, 0, "VerySimpleForm-GapRow");
+      return new Row(rowIndex);
+   }
+
+
    protected Widget hp(Widget first, Widget... others)
    {
       if (others.length == 0)
       {
          return first;
       }
-      
+
       HorizontalPanel p = new HorizontalPanel();
       p.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
       p.add(first);
@@ -107,5 +118,24 @@ extends Composite
       return p;
    }
 
-  
+   public class Row implements HasVisible
+   {
+      private int rowIndex;
+
+      public Row(int rowIndex)
+      {
+         this.rowIndex = rowIndex;
+      }
+
+      public void setVisible(boolean visible)
+      {
+         table.getRowFormatter().setVisible(rowIndex, visible);
+      }
+
+      public boolean isVisible()
+      {
+         return table.getRowFormatter().isVisible(rowIndex);
+      }
+   }
+
 }

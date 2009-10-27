@@ -35,8 +35,8 @@ public class MetadataDemo extends AbstractDemo
    {
       model.setPerson(new Person());
       
-      addBlurbParagraph("This demo shows the use of the MetadataPlugin that allows the control of watermarks, " +
-                        "enabledness and visibility.   This example demonstrates enabledness and watermarks.");
+      addBlurbParagraph("This demo shows the use of the MetadataPlugin that allows us to control the " +
+                        "enabledness and visibility and watermarks for various components.");
       
       addLinkToModel(model);
       addLinkToView(form);

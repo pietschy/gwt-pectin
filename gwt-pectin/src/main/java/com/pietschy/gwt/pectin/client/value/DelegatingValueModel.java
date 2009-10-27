@@ -26,7 +26,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 /**
  *
  */
-public class DelegatingValueModel<T> implements ValueModel<T>, HasValueChangeHandlers<T>
+public class DelegatingValueModel<T> implements MutableValueModel<T>, HasValueChangeHandlers<T>
 {
    private HandlerManager handlerManager = new HandlerManager(this);
    private DelegateMonitor delegateChangeMonitor = new DelegateMonitor();
@@ -44,6 +44,11 @@ public class DelegatingValueModel<T> implements ValueModel<T>, HasValueChangeHan
       this.defaultValue = defaultValue;
    }
 
+   public DelegatingValueModel(ValueModel<T> delegate)
+   {
+      setDelegate(delegate);
+   }
+
    public void setDelegate(ValueModel<T> delegate)
    {
       if (registration != null)
@@ -58,9 +63,36 @@ public class DelegatingValueModel<T> implements ValueModel<T>, HasValueChangeHan
       fireValueChanged();
    }
 
+   protected ValueModel<T> getDelegate()
+   {
+      return delegate;
+   }
+
+   public T getDefaultValue()
+   {
+      return defaultValue;
+   }
+
    public T getValue()
    {
       return delegate == null ? defaultValue : delegate.getValue();
+   }
+
+   public void setValue(T value)
+   {
+      if (delegate == null)
+      {
+         throw new IllegalStateException("delegate is null");
+      }
+
+      if (delegate instanceof MutableValueModel)
+      {
+         ((MutableValueModel) delegate).setValue(value);
+      }
+      else
+      {
+         throw new IllegalStateException("delegate doesn't implement MutableValueModel");
+      }
    }
 
    private void fireValueChanged()

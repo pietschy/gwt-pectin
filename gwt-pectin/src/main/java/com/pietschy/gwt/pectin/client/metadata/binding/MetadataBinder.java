@@ -17,13 +17,10 @@
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
 import com.pietschy.gwt.pectin.client.Field;
+import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
 import com.pietschy.gwt.pectin.client.condition.Conditions;
-import com.pietschy.gwt.pectin.client.metadata.binding.AllMetadataBindingBuilder;
-import com.pietschy.gwt.pectin.client.metadata.binding.VisibilityBindingBuilder;
-import com.pietschy.gwt.pectin.client.metadata.binding.EnabledBindingBuilder;
 import com.pietschy.gwt.pectin.client.metadata.MetadataPlugin;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
 
 /**
  * Created by IntelliJ IDEA.
@@ -60,11 +57,11 @@ extends AbstractBinder
     * Binds the value of an arbitrary boolean model to the enabledness and/or visibility of
     * component.
     * @param model the value model to bind to.
-    * @return the 
+    * @return the
     */
-   public VisibilityBindingBuilder bindValueOf(ValueModel<Boolean> model)
+   public ValueOfBindingBuilder bindValueOf(ValueModel<Boolean> model)
    {
-      return new VisibilityBindingBuilder(this, model);
+      return new ValueOfBindingBuilder(this, model);
    }
 
 }

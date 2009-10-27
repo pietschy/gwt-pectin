@@ -65,6 +65,10 @@ select.validation-error,
    color: #333333;
 }
 
+.VerySimpleForm-Hint {
+   color: #666666;
+}
+
 .LordVadar {
    color: white;
    background-color:black;

@@ -17,7 +17,9 @@
 package com.pietschy.gwt.pectin.client.metadata;
 
 import com.pietschy.gwt.pectin.client.Field;
+import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
+import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBindingBuilder;
 
 /**
@@ -73,6 +75,16 @@ public class MetadataPlugin
    prepareBindingBuilder(Field field, MetadataBindingBuilder.Action action)
    {
       return new MetadataBindingBuilder<T>(getMetadata(field), action);
+   }
+
+   public static WatermarkBindingBuilder watermark(FieldModel<String> field)
+   {
+      return new WatermarkBindingBuilder(getMetadata(field));
+   }
+
+   public static WatermarkBindingBuilder watermark(FormattedFieldModel<?> field)
+   {
+      return new WatermarkBindingBuilder(getMetadata(field)); 
    }
 
    public static MetadataConditionBuidler metadataOf(Field field)

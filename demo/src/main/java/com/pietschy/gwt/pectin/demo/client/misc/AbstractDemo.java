@@ -16,16 +16,10 @@
 
 package com.pietschy.gwt.pectin.demo.client.misc;
 
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.DockPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.FormModel;
 
 /**
@@ -40,19 +34,17 @@ public class AbstractDemo extends Composite
    private DockPanel dock = new DockPanel();
    private FlowPanel contentPanel = new FlowPanel();
    private FlowPanel blurbPanel = new FlowPanel();
-   private FlowPanel asidePanel = new FlowPanel();
    private FlowPanel footerPanel = new FlowPanel();
 
    public AbstractDemo()
    {
+      dock.setWidth("100%");
       dock.add(blurbPanel, DockPanel.NORTH);
-      dock.add(asidePanel, DockPanel.EAST);
       dock.add(contentPanel, DockPanel.CENTER);
       dock.add(footerPanel, DockPanel.SOUTH);
 
       contentPanel.setStylePrimaryName("AbstractDemo-Content");
       blurbPanel.setStylePrimaryName("AbstractDemo-Blurb");
-      asidePanel.setStylePrimaryName("AbstractDemo-Aside");
       footerPanel.setStylePrimaryName("AbstractDemo-Footer");
 
       initWidget(dock);
@@ -63,7 +55,7 @@ public class AbstractDemo extends Composite
       String url = "http://code.google.com/p/gwt-pectin/source/browse/trunk/demo/src/main/java/" +
                    target.getClass().getName().replace('.', '/') + ".java";
       
-      Window.open(url, "Source", "");
+      Window.open(url, "PectinSource", "");
    }
 
    protected void setMainContent(Widget form)
@@ -72,15 +64,10 @@ public class AbstractDemo extends Composite
       contentPanel.add(form);
    }
 
-   protected void addAside(String aside)
-   {
-      asidePanel.add(new Label(aside));
-   }
-
-   protected void addAside(Widget aside)
-   {
-      asidePanel.add(aside);
-   }
+//   protected void addAside(Widget aside)
+//   {
+//      asidePanel.add(aside);
+//   }
 
    protected void addBlurbParagraph(String blurb)
    {

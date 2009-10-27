@@ -28,12 +28,21 @@ extends AbstractHasHandlers
 implements Field<T>
 {
    protected FormModel formModel;
-   private Class<T> valueType;
+   private Class<T> valueClass;
 
-   public AbstractField(FormModel formModel, Class<T> valueType)
+   public AbstractField(FormModel formModel, Class<T> valueClass)
    {
+      if (formModel == null) {
+          throw new NullPointerException("formModel is null");
+      }
+
+      if (valueClass == null)
+      {
+         throw new NullPointerException("valueClass is null");
+      }
+      
       this.formModel = formModel;
-      this.valueType = valueType;
+      this.valueClass = valueClass;
    }
 
    public FormModel getFormModel()
@@ -41,9 +50,9 @@ implements Field<T>
       return formModel;
    }
 
-   public Class<T> getValueType()
+   public Class<T> getValueClass()
    {
-      return valueType;
+      return valueClass;
    }
 
    protected abstract boolean

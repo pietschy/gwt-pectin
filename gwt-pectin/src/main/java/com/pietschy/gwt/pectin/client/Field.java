@@ -28,5 +28,5 @@ public interface Field<T>
     */
    FormModel getFormModel();
 
-   Class<T> getValueType();
+   Class<T> getValueClass();
 }

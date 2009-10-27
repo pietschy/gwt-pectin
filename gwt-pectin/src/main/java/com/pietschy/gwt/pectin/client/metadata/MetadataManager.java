@@ -56,7 +56,7 @@ implements BindingCallback
    {
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
 
-      if (String.class.getName().equals(model.getValueType().getName()) && target instanceof TextBox)
+      if (String.class.getName().equals(model.getValueClass().getName()) && target instanceof TextBox)
       {
          binding.registerBinding(new WatermarkBinding((ValueModel<String>) model,
                                                       getMetadata(model).getWatermarkModel(),

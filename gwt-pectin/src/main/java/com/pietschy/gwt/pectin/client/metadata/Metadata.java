@@ -16,7 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.metadata;
 
+import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
+import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,10 +30,9 @@ import com.pietschy.gwt.pectin.client.value.ValueHolder;
  */
 public class Metadata
 {
-   private ValueHolder<Boolean> enabledModel = new ValueHolder<Boolean>(true);
-   private ValueHolder<Boolean> visibleModel = new ValueHolder<Boolean>(true);
-   private ValueHolder<String> watermarkModel = new ValueHolder<String>("");
-   
+   private MutableValueModel<Boolean> enabledModel = new ValueHolder<Boolean>(true);
+   private MutableValueModel<Boolean> visibleModel = new ValueHolder<Boolean>(true);
+   private DelegatingValueModel<String> watermarkModel = new DelegatingValueModel<String>(new ValueHolder<String>());
 
    public Metadata()
    {
@@ -46,7 +48,7 @@ public class Metadata
       enabledModel.setValue(enabled);
    }
 
-   public ValueHolder<Boolean> getEnabledModel()
+   public MutableValueModel<Boolean> getEnabledModel()
    {
       return enabledModel;
    }
@@ -61,7 +63,7 @@ public class Metadata
       visibleModel.setValue(visible);
    }
 
-   public ValueHolder<Boolean> getVisibleModel()
+   public MutableValueModel<Boolean> getVisibleModel()
    {
       return visibleModel;
    }
@@ -76,8 +78,13 @@ public class Metadata
       return watermarkModel.getValue();
    }
 
-   public ValueHolder<String> getWatermarkModel()
+   public ValueModel<String> getWatermarkModel()
    {
       return watermarkModel;
+   }
+
+   public void setWatermarkModel(ValueModel<String> model)
+   {
+      watermarkModel.setDelegate(model);
    }
 }
