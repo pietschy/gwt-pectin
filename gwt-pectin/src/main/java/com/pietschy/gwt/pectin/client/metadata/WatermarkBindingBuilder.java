@@ -39,7 +39,7 @@ public class WatermarkBindingBuilder
       metadata.setWatermark(watermark);
    }
 
-   public void using(ValueModel<String> model)
+   public void with(ValueModel<String> model)
    {
       metadata.setWatermarkModel(model);
    }

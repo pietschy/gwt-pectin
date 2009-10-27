@@ -23,7 +23,8 @@ import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import static com.pietschy.gwt.pectin.client.condition.Conditions.and;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.*;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.watermark;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
@@ -40,7 +41,7 @@ public class MetadataFormModel extends FormModel
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
    protected final FormattedFieldModel<Integer> age;
-   protected final FieldModel<Boolean> editAgeWatermark;
+   protected final FieldModel<Boolean> editingAgeWatermark;
    protected final FieldModel<String> ageWaterMark;
    protected final FieldModel<String> nickName;
    protected final FieldModel<Boolean> hasNickName;
@@ -71,20 +72,20 @@ public class MetadataFormModel extends FormModel
       hasFavoriteWines = fieldOfType(Boolean.class).createWithValue(false);
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
 
-      
+      // Watermarks can be bound to ohter value models, so we'll create a field
+      // and use that for a watermark.
+      ageWaterMark = fieldOfType(String.class).createWithValue("Enter your age");
+      // and we'll give the user the ability to edit it live.
+      editingAgeWatermark = fieldOfType(Boolean.class).createWithValue(false);
+
+
       // Configure the metadata for the various models.
       // first some watermarks..
       watermark(givenName).with("Enter your first name");
       watermark(surname).with("Enter your last name");
+      // now bind this one to a value model we prepared earlier...
+      watermark(age).with(ageWaterMark);
 
-      // we can also use other value models for the watermark, you can use any old
-      // ValueModel<String>, were using a field so we can add it to the UI..
-      ageWaterMark= fieldOfType(String.class).createWithValue("Enter your age");
-      watermark(age).using(ageWaterMark);
-
-      // we'll also create the ability to edit the watermark
-      editAgeWatermark = fieldOfType(Boolean.class).createWithValue(false);
-      show(ageWaterMark).when(editAgeWatermark);
 
       // and now our enabled-ness stuff.
       enable(nickName).when(hasNickName);

@@ -60,7 +60,7 @@ public class MetadataForm extends VerySimpleForm
       widgets.bind(model.givenName).to(givenName);
       widgets.bind(model.surname).to(surname);
       widgets.bind(model.age).to(age);
-      widgets.bind(model.editAgeWatermark).to(editAgeWatermark);
+      widgets.bind(model.editingAgeWatermark).to(editAgeWatermark);
       widgets.bind(model.ageWaterMark).to(ageWaterMark);
 
       widgets.bind(model.hasNickName).to(hasNickName);
@@ -76,11 +76,13 @@ public class MetadataForm extends VerySimpleForm
 
       addRow("First Name", givenName, "The first two fields use a plain text watermark");
       addRow("Last Name", surname);
-      addRow("Age", age, editAgeWatermark);
-      Row watermarkRow = addRow("Age Watermark", ageWaterMark, "You can change the Age watermark here");
 
-      // Here we'll show and hide the whole row based on the visibility o
-      metadata.bindVisibilityOf(model.ageWaterMark).to(watermarkRow);
+      addRow("Age", age, editAgeWatermark);
+
+      // Here we'll show and hide the whole row based on the visibility on whether
+      // we in edit mode.
+      Row watermarkRow = addRow("Age Watermark", ageWaterMark, "You can change the Age watermark here");
+      metadata.bindValueOf(model.editingAgeWatermark).toVisibilityOf(watermarkRow);
 
       addGap();
       addRow("", hasNickName);
