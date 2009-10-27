@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
+import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.metadataOf;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.client.style.StyleBinder;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
@@ -51,7 +53,7 @@ extends VerySimpleForm
    private StyleBinder style = new StyleBinder();
    private ValidationBinder validation = new ValidationBinder();
    private MetadataBinder metadata = new MetadataBinder();
-   
+
 
    public StyleForm(final StyleFormModel model)
    {
@@ -64,18 +66,17 @@ extends VerySimpleForm
 
       // Now change the title style when the magic value is entered.  I'd normally
       // use this approach for booleans, but it works with any type.
-      style.bind(model.title).withValue("lord vadar").toStyle("LordVadar").on(title);
-      
-      // Our name label gets styles 'validation-error', 'validation-warning'
-      // and 'validation-info' based on the validation state of the model.
-      validation.bindValidationOf(model.name).toStyleOf(nameLabel);
-      
+      style.style(title).with("LordVadar").when(valueOf(model.title).is("lord vadar"));
+
       // Here our nick name label has it's style configured from the metadata
       // of the nickName field.  Could have also used the withValue approach
       // above in this case as well.
-      metadata.bindDisabled(model.nickName).toStyle("disabled").on(nickNameLabel);
-      
-      
+      style.style(nickNameLabel).with("disabled").when(metadataOf(model.nickName).isDisabled());
+
+      // Our name label gets styles 'validation-error', 'validation-warning'
+      // and 'validation-info' based on the validation state of the model.
+      validation.bindValidationOf(model.name).toStyleOf(nameLabel);
+
       addNote("Type in \"lord vadar\" to see what happens");
       addRow("Title", title);
       addGap();

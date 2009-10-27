@@ -24,6 +24,6 @@ import com.pietschy.gwt.pectin.client.value.MutableValueModel;
  * {@link FormModel} to which it belongs.
  */
 public interface FieldModel<T>
-extends Field, MutableValueModel<T>, HasValueChangeHandlers<T>
+extends Field<T>, MutableValueModel<T>, HasValueChangeHandlers<T>
 {
 }

@@ -19,12 +19,15 @@ package com.pietschy.gwt.pectin.demo.client.metadata;
 import com.google.gwt.core.client.GWT;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
+import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import static com.pietschy.gwt.pectin.client.condition.Conditions.and;
 import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.getMetadata;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
+import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,11 +38,15 @@ import com.pietschy.gwt.pectin.demo.client.domain.Wine;
  */
 public class MetadataFormModel extends FormModel
 {
+   protected final FieldModel<String> givenName;
+   protected final FieldModel<String> surname;
+   protected final FormattedFieldModel<Integer> age;
    protected final FieldModel<String> nickName;
    protected final FieldModel<Boolean> hasNickName;
    protected final FieldModel<Boolean> wineLover;
    protected final ListFieldModel<Wine> favoriteWines;
    protected final FieldModel<Boolean> hasFavoriteWines;
+
 
    public static abstract class PersonProvider extends BeanModelProvider<Person> {}
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
@@ -48,16 +55,32 @@ public class MetadataFormModel extends FormModel
    public MetadataFormModel()
    {
       // Create our field models..
+      givenName = fieldOfType(String.class).boundTo(personProvider, "givenName");
+      surname = fieldOfType(String.class).boundTo(personProvider, "surname");
+      // a formatted field.
+      age = formattedFieldOfType(Integer.class)
+         .using(new AgeFormat())
+         .boundTo(personProvider, "age");
+
       hasNickName = fieldOfType(Boolean.class).createWithValue(false);
       nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
       wineLover = fieldOfType(Boolean.class).boundTo(personProvider, "wineLover");
       hasFavoriteWines = fieldOfType(Boolean.class).createWithValue(false);
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
+
       
       // Configure the metadata for the various models.
+      // first some watermarks..
+      getMetadata(givenName).setWatermark("Enter your first name");
+      getMetadata(surname).setWatermark("Enter your last name");
+      getMetadata(age).setWatermark("Enter your age");
+
+      // and now our enabled-ness stuff.
       enable(nickName).when(hasNickName);
       enable(hasFavoriteWines).when(wineLover);
       enable(favoriteWines).when(and(wineLover, hasFavoriteWines));
+
+
    }
    
    public void setPerson(Person person)

@@ -29,6 +29,8 @@ public class Metadata
 {
    private ValueHolder<Boolean> enabledModel = new ValueHolder<Boolean>(true);
    private ValueHolder<Boolean> visibleModel = new ValueHolder<Boolean>(true);
+   private ValueHolder<String> watermarkModel = new ValueHolder<String>("");
+   
 
    public Metadata()
    {
@@ -62,5 +64,20 @@ public class Metadata
    public ValueHolder<Boolean> getVisibleModel()
    {
       return visibleModel;
+   }
+
+   public void setWatermark(String watermark)
+   {
+      watermarkModel.setValue(watermark);
+   }
+
+   public String getWatermark()
+   {
+      return watermarkModel.getValue();
+   }
+
+   public ValueHolder<String> getWatermarkModel()
+   {
+      return watermarkModel;
    }
 }

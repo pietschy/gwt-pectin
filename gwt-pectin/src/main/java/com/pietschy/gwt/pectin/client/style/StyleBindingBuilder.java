@@ -18,7 +18,6 @@ package com.pietschy.gwt.pectin.client.style;
 
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.BindingContainer;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,23 +26,19 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 * Time: 2:09:27 PM
 * To change this template use File | Settings | File Templates.
 */
-public class StyleBindingBuilder<T>
+public class StyleBindingBuilder
 {
-   private ValueModel<T> field;
-   private T value;
-   private String styleName;
    private BindingContainer builder;
+   private UIObject widget;
 
-   public StyleBindingBuilder(BindingContainer builder, ValueModel<T> model, T value, String styleName)
+   public StyleBindingBuilder(BindingContainer builder, UIObject widget)
    {
       this.builder = builder;
-      this.field = model;
-      this.value = value;
-      this.styleName = styleName;
+      this.widget = widget;
    }
 
-   public void on(UIObject widget)
+   public WidgetStyleBindingBuilder with(String style)
    {
-      builder.registerBinding(new StyledValueBinding<T>(field, widget, value, styleName));
+      return new WidgetStyleBindingBuilder(builder, widget, style);
    }
 }

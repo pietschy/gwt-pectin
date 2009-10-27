@@ -16,15 +16,14 @@
 
 package com.pietschy.gwt.pectin.client.metadata;
 
-import com.pietschy.gwt.pectin.client.BindingCallback;
-import com.pietschy.gwt.pectin.client.Field;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.pietschy.gwt.pectin.client.*;
 import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
 import com.pietschy.gwt.pectin.client.metadata.binding.AllMetadataBindingBuilder;
+import com.pietschy.gwt.pectin.client.metadata.binding.WatermarkBinding;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.HashMap;
 
@@ -56,10 +55,25 @@ implements BindingCallback
    public <T> void onWidgetBinding(AbstractFieldBinding<T> binding, FieldModel<T> model, Object target)
    {
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
+
+      if (String.class.getName().equals(model.getValueType().getName()) && target instanceof TextBox)
+      {
+         binding.registerBinding(new WatermarkBinding((ValueModel<String>) model,
+                                                      getMetadata(model).getWatermarkModel(),
+                                                      (TextBox) target));
+      }
+
    }
 
    public <T> void onWidgetBinding(AbstractFormattedBinding<T> binding, FormattedFieldModel<T> model, Object target)
    {
+      if (target instanceof TextBox)
+      {
+         binding.registerBinding(new WatermarkBinding(model.getTextModel(),
+                                                      getMetadata(model).getWatermarkModel(),
+                                                      (TextBox) target));
+      }
+
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
    }
 

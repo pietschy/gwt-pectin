@@ -16,11 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
-import com.pietschy.gwt.pectin.client.binding.BindingContainer;
-import com.pietschy.gwt.pectin.client.style.StyleBindingBuilder;
 import com.google.gwt.user.client.ui.FocusWidget;
+import com.pietschy.gwt.pectin.client.binding.BindingContainer;
+import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -59,12 +58,5 @@ public class EnabledBindingBuilder
    {
       container.registerBinding(new FocusWidgetEnabledBinding(field, widget));
    }
-   
-   
-   public StyleBindingBuilder<Boolean> toStyle(String styleName)
-   {
-      return new StyleBindingBuilder<Boolean>(container, field, true, styleName);
-   }
-   
    
 }

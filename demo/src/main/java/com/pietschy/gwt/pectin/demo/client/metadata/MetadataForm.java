@@ -17,6 +17,7 @@
 package com.pietschy.gwt.pectin.demo.client.metadata;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
@@ -28,6 +29,10 @@ import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
  */
 public class MetadataForm extends VerySimpleForm
 {
+   private TextBox givenName = new TextBox();
+   private TextBox surname = new TextBox();
+   private TextBox age = new TextBox();
+
    private CheckBox hasNickName = new CheckBox("I have a nick name");
    // NickNameEditor is an example of a custom HasValue<T> widget.
    private NickNameEditor nickName = new NickNameEditor();
@@ -47,6 +52,10 @@ public class MetadataForm extends VerySimpleForm
 
    public MetadataForm(MetadataFormModel model)
    {
+      widgets.bind(model.givenName).to(givenName);
+      widgets.bind(model.surname).to(surname);
+      widgets.bind(model.age).to(age);
+
       widgets.bind(model.hasNickName).to(hasNickName);
       widgets.bind(model.nickName).to(nickName);
       
@@ -57,6 +66,11 @@ public class MetadataForm extends VerySimpleForm
       widgets.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
       widgets.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
+
+      addRow("First Name", givenName);
+      addRow("Last Name", surname);
+      addRow("Age", age);
+      addGap();
       addRow("", hasNickName);
       addRow("Nick name", nickName);
       addGap();

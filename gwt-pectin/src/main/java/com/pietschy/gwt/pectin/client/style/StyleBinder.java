@@ -16,8 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.style;
 
+import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,8 +29,8 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 public class StyleBinder 
    extends AbstractBinder
 {
-   public <T> FieldStyleBindingBuilder<T> bind(ValueModel<T> model)
+   public StyleBindingBuilder style(UIObject widget)
    {
-      return new FieldStyleBindingBuilder<T>(this, model);
+      return new StyleBindingBuilder(this, widget);
    }
 }

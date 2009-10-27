@@ -80,21 +80,22 @@ public class FormModel
     * builder and is provided so subclasses can override the specific type that is returned.
     * 
     * @param model the source value model. @return a new field model instance.
-    * @return a new field model 
+    * @param valueType the type of the value held by this model.
+    * @return a new field model
     */
-   protected <T> FieldModel<T> createFieldModel(ValueModel<T> model)
+   protected <T> FieldModel<T> createFieldModel(ValueModel<T> model, Class<T> valueType)
    {
-      return new FieldModelImpl<T>(this, model);
+      return new FieldModelImpl<T>(this, model, valueType);
    }
    
-   protected <T> FormattedFieldModel<T> createFormattedFieldModel(ValueModel<T> model, Format<T> format)
+   protected <T> FormattedFieldModel<T> createFormattedFieldModel(ValueModel<T> model, Format<T> format, Class<T> valueType)
    {
-      return new FormattedFieldModelImpl<T>(this, model, format);
+      return new FormattedFieldModelImpl<T>(this, model, format, valueType);
    }
    
-   protected <T> ListFieldModel<T> createListModel(ListModel<T> source)
+   protected <T> ListFieldModel<T> createListModel(ListModel<T> source, Class<T> valueType)
    {
-      return new ListFieldModelImpl<T>(this, source);
+      return new ListFieldModelImpl<T>(this, source, valueType);
    }
 
    public void putProperty(Object key, Object value)

@@ -26,6 +26,6 @@ import com.pietschy.gwt.pectin.client.list.MutableListModel;
  * To change this template use File | Settings | File Templates.
  */
 public interface ListFieldModel<T>
-extends MutableListModel<T>, Field
+extends Field<T>, MutableListModel<T>
 {
 }

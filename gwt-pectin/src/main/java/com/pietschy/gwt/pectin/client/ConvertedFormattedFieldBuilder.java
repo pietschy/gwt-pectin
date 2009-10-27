@@ -17,11 +17,7 @@
 package com.pietschy.gwt.pectin.client;
 
 import com.pietschy.gwt.pectin.client.format.Format;
-import com.pietschy.gwt.pectin.client.value.Converter;
-import com.pietschy.gwt.pectin.client.value.ConvertingMutableValueModel;
-import com.pietschy.gwt.pectin.client.value.ConvertingValueModel;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.value.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,17 +31,19 @@ public class ConvertedFormattedFieldBuilder<T, S>
    private FormModel formModel;
    private ValueModel<S> from;
    private Format<T> format;
+   private Class<T> valueType;
 
-   protected ConvertedFormattedFieldBuilder(FormModel formModel, ValueModel<S> from, Format<T> format)
+   protected ConvertedFormattedFieldBuilder(FormModel formModel, ValueModel<S> from, Format<T> format, Class<T> valueType)
    {
       this.formModel = formModel;
       this.from = from;
       this.format = format;
+      this.valueType = valueType;
    }
 
    public FormattedFieldModel<T> using(Converter<T, S> converter)
    {
-      return formModel.createFormattedFieldModel(createConvertingModel(converter), format);
+      return formModel.createFormattedFieldModel(createConvertingModel(converter), format, valueType);
    }
 
    protected ConvertingValueModel<T, S> createConvertingModel(Converter<T, S> converter)

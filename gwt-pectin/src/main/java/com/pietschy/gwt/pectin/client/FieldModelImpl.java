@@ -16,11 +16,11 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.pietschy.gwt.pectin.client.value.MutableValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,16 +30,16 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * To change this template use File | Settings | File Templates.
  */
 public class FieldModelImpl<T>
-extends AbstractField
+extends AbstractField<T>
 implements FieldModel<T>
 {
    private SourceModelListener sourceListener = new SourceModelListener();
    private ValueModel<T> source;
    private T cachedValue;
 
-   public FieldModelImpl(FormModel formModel, ValueModel<T> source)
+   public FieldModelImpl(FormModel formModel, ValueModel<T> source, Class<T> valueType)
    {
-      super(formModel);
+      super(formModel, valueType);
       this.source = source;
       
       source.addValueChangeHandler(sourceListener);

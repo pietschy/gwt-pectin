@@ -16,22 +16,18 @@
 
 package com.pietschy.gwt.pectin.demo.client.style;
 
-import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.*;
-import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
-import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.pietschy.gwt.pectin.client.FieldModel;
+import com.pietschy.gwt.pectin.client.FormModel;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
+import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.getValidationManager;
+import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
+import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Aug 14, 2009
- * Time: 12:27:37 PM
- * To change this template use File | Settings | File Templates.
+ * There's nothing much to this model.  The style bindings in the form are
+ * of more interest in this example.
  */
 public class StyleFormModel
 extends FormModel

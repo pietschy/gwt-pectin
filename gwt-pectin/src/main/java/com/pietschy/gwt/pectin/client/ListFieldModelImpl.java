@@ -16,11 +16,11 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
-import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
-import com.pietschy.gwt.pectin.client.list.ListModel;
-import com.pietschy.gwt.pectin.client.list.MutableListModel;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.pietschy.gwt.pectin.client.list.ListModel;
+import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
+import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
+import com.pietschy.gwt.pectin.client.list.MutableListModel;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,15 +34,15 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ListFieldModelImpl<T> 
-extends AbstractField
+extends AbstractField<T>
 implements ListFieldModel<T>
 {
    private ListModel<T> source;
    private SourceListener<T> sourceListener = new SourceListener<T>();
 
-   public ListFieldModelImpl(FormModel formModel, ListModel<T> source)
+   public ListFieldModelImpl(FormModel formModel, ListModel<T> source, Class<T> valueType)
    {
-      super(formModel);
+      super(formModel, valueType);
       this.source = source;
       source.addListModelChangedHandler(sourceListener);
    }

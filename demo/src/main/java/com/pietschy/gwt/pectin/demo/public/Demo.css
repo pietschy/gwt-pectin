@@ -80,3 +80,7 @@ select.validation-error,
 .VerySimpleForm-Label .disabled {
    color: #aaaaaa;
 }
+
+input.watermark {
+   color: #cccccc;
+}

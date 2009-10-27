@@ -34,10 +34,12 @@ public class ComputedFieldBuilder<T, S>
 {
    private FormModel formModel;
    private List<ValueModel<S>> models;
+   private Class valueType;
 
-   public ComputedFieldBuilder(FormModel formModel, ValueModel<S>... models)
+   public ComputedFieldBuilder(FormModel formModel, Class valueType, ValueModel<S>... models)
    {
       this.formModel = formModel;
+      this.valueType = valueType;
       this.models = Arrays.asList(models);
    }
 
@@ -45,6 +47,6 @@ public class ComputedFieldBuilder<T, S>
    {
       ValueModelFunction<T, S> valueModel = new ValueModelFunction<T, S>(function);
       valueModel.addSourceModels(models);
-      return formModel.createFieldModel(valueModel);
+      return formModel.createFieldModel(valueModel, valueType);
    }
 }

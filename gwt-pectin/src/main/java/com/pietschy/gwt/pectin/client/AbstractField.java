@@ -23,15 +23,17 @@ package com.pietschy.gwt.pectin.client;
  * Time: 6:01:58 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractField
+public abstract class AbstractField<T>
 extends AbstractHasHandlers
-implements Field
+implements Field<T>
 {
    protected FormModel formModel;
+   private Class<T> valueType;
 
-   public AbstractField(FormModel formModel)
+   public AbstractField(FormModel formModel, Class<T> valueType)
    {
       this.formModel = formModel;
+      this.valueType = valueType;
    }
 
    public FormModel getFormModel()
@@ -39,10 +41,15 @@ implements Field
       return formModel;
    }
 
-   protected abstract boolean 
+   public Class<T> getValueType()
+   {
+      return valueType;
+   }
+
+   protected abstract boolean
    isMutableSource();
 
-  
+
    protected void verifyMutableSource()
    {
       if (!isMutableSource())

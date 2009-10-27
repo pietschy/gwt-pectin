@@ -16,14 +16,14 @@
 
 package com.pietschy.gwt.pectin.client;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.format.Format;
 import com.pietschy.gwt.pectin.client.format.FormatException;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.value.ValueHolder;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 import com.pietschy.gwt.pectin.client.value.GuardedValueChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.pietschy.gwt.pectin.client.value.MutableValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -71,9 +71,9 @@ implements FormattedFieldModel<T>
    };
 
 
-   public FormattedFieldModelImpl(FormModel formModel, ValueModel<T> source, Format<T> format)
+   public FormattedFieldModelImpl(FormModel formModel, ValueModel<T> source, Format<T> format, Class valueType)
    {
-      super(formModel, source);
+      super(formModel, source, valueType);
       setFormat(format);
 
       addValueChangeHandler(valueMonitor);

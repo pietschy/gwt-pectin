@@ -35,14 +35,9 @@ public class MetadataDemo extends AbstractDemo
    {
       model.setPerson(new Person());
       
-      addBlurbParagraph("This demo shows the use of the MetadataPlugin to control the enabledness " +
-                        "of `Focusable` components.  This is configured using enable(nickName).when(hasNickName) " +
-                        "in the model.  The plugin then takes care of the rest.  The nick name " +
-                        "editor is an example of a custom component that implements `HasEnabled` " +
-                        "to integrate with the bindings.");
+      addBlurbParagraph("This demo shows the use of the MetadataPlugin that allows the control of watermarks, " +
+                        "enabledness and visibility.   This example demonstrates enabledness and watermarks.");
       
-      addBlurbParagraph("The list of wines is only enabled if you like wine and you have favorite wines.");
-
       addLinkToModel(model);
       addLinkToView(form);
       

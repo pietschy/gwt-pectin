@@ -39,17 +39,17 @@ public class FieldBuilder<T>
    
    public FieldModel<T> create()
    {
-      return formModel.createFieldModel(new ValueHolder<T>());
+      return formModel.createFieldModel(new ValueHolder<T>(), valueType);
    }
    
    public FieldModel<T> createWithValue(T initialValue)
    {
-      return formModel.createFieldModel(new ValueHolder<T>(initialValue));
+      return formModel.createFieldModel(new ValueHolder<T>(initialValue), valueType);
    }
 
    public FieldModel<T> boundTo(ValueModel<T> source)
    {
-      return formModel.createFieldModel(source);
+      return formModel.createFieldModel(source, valueType);
    }
    
    public FieldModel<T> boundTo(ValueModelProvider provider, String propertyName)
@@ -59,12 +59,12 @@ public class FieldBuilder<T>
 
    public <S> ConvertedFieldBuilder<T, S> convertedFrom(ValueModel<S> source)
    {
-      return new ConvertedFieldBuilder<T, S>(formModel, source);
+      return new ConvertedFieldBuilder<T, S>(formModel, valueType, source);
    }
 
    public <S> ComputedFieldBuilder<T, S> computedFrom(ValueModel<S>... source)
    {
-      return new ComputedFieldBuilder<T, S>(formModel, source);
+      return new ComputedFieldBuilder<T, S>(formModel, valueType, source);
    }
 
 

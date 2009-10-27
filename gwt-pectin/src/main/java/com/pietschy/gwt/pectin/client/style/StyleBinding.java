@@ -16,29 +16,44 @@
 
 package com.pietschy.gwt.pectin.client.style;
 
+import com.google.gwt.user.client.ui.UIObject;
+import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
  * Date: Jul 1, 2009
- * Time: 4:48:23 PM
+ * Time: 4:35:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FieldStyleBindingBuilder<T>
+public class StyleBinding
+   extends AbstractValueBinding<Boolean>
 {
-   private StyleBinder binder;
-   private ValueModel<T> field;
+   private UIObject widget;
+   private String styleName;
 
-   public FieldStyleBindingBuilder(StyleBinder binder, ValueModel<T> field)
+   public StyleBinding(ValueModel<Boolean> condition, UIObject widget, String styleName)
    {
-      this.binder = binder;
-      this.field = field;
-   }
-   
-   public WithValueBuilder withValue(T value)
-   {
-       return new WithValueBuilder<T>(binder, field, value);
+      super(condition);
+      this.widget = widget;
+      this.styleName = styleName;
    }
 
+   protected void updateWidget(Boolean value)
+   {
+      if (Boolean.TRUE.equals(value))
+      {
+         widget.addStyleName(styleName);
+      }
+      else
+      {
+         widget.removeStyleName(styleName);
+      }
+   }
+
+   public UIObject getTarget()
+   {
+      return widget;
+   }
 }

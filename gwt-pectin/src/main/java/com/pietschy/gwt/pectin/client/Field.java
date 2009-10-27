@@ -20,11 +20,13 @@ package com.pietschy.gwt.pectin.client;
  * Field is the base interfact for all types of field model.  It contains
  * a single method for accessing the enclosing {@link FormModel}.
  */
-public interface Field
+public interface Field<T>
 {
    /**
     * Gets the form to which this field belongs.
     * @return the form to which this field belongs. 
     */
    FormModel getFormModel();
+
+   Class<T> getValueType();
 }

@@ -42,17 +42,17 @@ public class FormattedFieldBindingBuilder<T>
 
    public FormattedFieldModel<T> create()
    {
-      return formModel.createFormattedFieldModel(new ValueHolder<T>(), formatter);
+      return formModel.createFormattedFieldModel(new ValueHolder<T>(), formatter, valueType);
    }
 
    public FormattedFieldModel<T> createWithValue(T initialValue)
    {
-      return formModel.createFormattedFieldModel(new ValueHolder<T>(initialValue), formatter);
+      return formModel.createFormattedFieldModel(new ValueHolder<T>(initialValue), formatter, valueType);
    }
 
    public FormattedFieldModel<T> boundTo(ValueModel<T> source)
    {
-      return formModel.createFormattedFieldModel(source, formatter);
+      return formModel.createFormattedFieldModel(source, formatter, valueType);
    }
 
    public FormattedFieldModel<T> boundTo(ValueModelProvider provider, String propertyName)
@@ -62,6 +62,6 @@ public class FormattedFieldBindingBuilder<T>
    
    public <S> ConvertedFormattedFieldBuilder<T,S> convertedFrom(ValueModel<S> source)
    {
-      return new ConvertedFormattedFieldBuilder<T,S>(formModel, source, formatter);
+      return new ConvertedFormattedFieldBuilder<T,S>(formModel, source, formatter, valueType);
    }
 }

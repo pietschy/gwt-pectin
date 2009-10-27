@@ -17,7 +17,6 @@
 package com.pietschy.gwt.pectin.client;
 
 import com.pietschy.gwt.pectin.client.list.ArrayListModel;
-import com.pietschy.gwt.pectin.client.ListModelProvider;
 import com.pietschy.gwt.pectin.client.list.ListModel;
 
 /**
@@ -40,16 +39,16 @@ public class ListFieldBuilder<T>
    
    public ListFieldModel<T> create()
    {
-      return formModel.createListModel(new ArrayListModel<T>());
+      return formModel.createListModel(new ArrayListModel<T>(), type);
    }
 
    public ListFieldModel<T> boundTo(ListModel<T> source)
    {
-      return formModel.createListModel(source);
+      return formModel.createListModel(source, type);
    }
    
    public ListFieldModel<T> boundTo(ListModelProvider provider, String propertyName)
    {
-      return formModel.createListModel(provider.getListModel(propertyName, type));
+      return formModel.createListModel(provider.getListModel(propertyName, type), type);
    }
 }
