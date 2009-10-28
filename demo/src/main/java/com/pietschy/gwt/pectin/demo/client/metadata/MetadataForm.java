@@ -85,7 +85,7 @@ public class MetadataForm extends VerySimpleForm
       addRow("Last Name", surname);
 
       addGap();
-      addNote("This example shows a dynamically changing watermark for the port field " +
+      addNote("The following shows a dynamically changing watermark for the port field " +
               "based on the selected protocol.");
       addNote("The default port is also displayed if the user enters a port value that isn't the default.");
       addRow("Protocol", protocol);

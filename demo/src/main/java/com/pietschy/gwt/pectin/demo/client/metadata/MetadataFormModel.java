@@ -83,19 +83,19 @@ public class MetadataFormModel extends FormModel
       portWatermark = new ComputedValueModel<String, Integer>(defaultPort, new PortToStringFunction());
 
       enable(port).when(valueOf(protocol).isNotNull());
+      // and we use the computed value model for the port watermark.
+      watermark(port).with(portWatermark);
 
       // we'll only display the default port on the UI if the user has entered a
       // non null value that isn't the default.
       hide(defaultPort).when(valueOf(port).isNull().or(valueOf(port).isSameAs(defaultPort)));
-
-      // and we use the computed value model for the port watermark.
-      watermark(port).with(portWatermark);
 
 
       hasNickName = fieldOfType(Boolean.class).createWithValue(false);
       nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
 
       enable(nickName).when(hasNickName);
+
 
       wineLover = fieldOfType(Boolean.class).boundTo(personProvider, "wineLover");
       hasFavoriteWines = fieldOfType(Boolean.class).createWithValue(false);
