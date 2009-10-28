@@ -65,13 +65,11 @@ public class MetadataFormModel extends FormModel
       givenName = fieldOfType(String.class).boundTo(personProvider, "givenName");
       surname = fieldOfType(String.class).boundTo(personProvider, "surname");
 
-      hasNickName = fieldOfType(Boolean.class).createWithValue(false);
-      nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
-      wineLover = fieldOfType(Boolean.class).boundTo(personProvider, "wineLover");
-      hasFavoriteWines = fieldOfType(Boolean.class).createWithValue(false);
-      favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
+      // now the static watermarks
+      watermark(givenName).with("Enter your first name");
+      watermark(surname).with("Enter your last name");
 
-
+      // now create our protocol fields..
       protocol = fieldOfType(Protocol.class).createWithValue(Protocol.FTP);
       port = formattedFieldOfType(Integer.class).using(new IntegerFormat()).create();
       // the default port field tracks the protocol and extracts the default port.
@@ -84,22 +82,27 @@ public class MetadataFormModel extends FormModel
       // a regular value model.
       portWatermark = new ComputedValueModel<String, Integer>(defaultPort, new PortToStringFunction());
 
-      // Configure the metadata for the various models.
-      enable(nickName).when(hasNickName);
-      enable(hasFavoriteWines).when(wineLover);
-      enable(favoriteWines).when(and(wineLover, hasFavoriteWines));
+      enable(port).when(valueOf(protocol).isNotNull());
 
       // we'll only display the default port on the UI if the user has entered a
       // non null value that isn't the default.
       hide(defaultPort).when(valueOf(port).isNull().or(valueOf(port).isSameAs(defaultPort)));
-      enable(port).when(valueOf(protocol).isNotNull());
-
-      // now the static watermarks
-      watermark(givenName).with("Enter your first name");
-      watermark(surname).with("Enter your last name");
 
       // and we use the computed value model for the port watermark.
       watermark(port).with(portWatermark);
+
+
+      hasNickName = fieldOfType(Boolean.class).createWithValue(false);
+      nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
+
+      enable(nickName).when(hasNickName);
+
+      wineLover = fieldOfType(Boolean.class).boundTo(personProvider, "wineLover");
+      hasFavoriteWines = fieldOfType(Boolean.class).createWithValue(false);
+      favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
+
+      enable(hasFavoriteWines).when(wineLover);
+      enable(favoriteWines).when(and(wineLover, hasFavoriteWines));
 
 
    }
