@@ -22,7 +22,7 @@ import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import static com.pietschy.gwt.pectin.client.condition.Conditions.and;
+import static com.pietschy.gwt.pectin.client.condition.Conditions.is;
 import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
 import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.*;
 import com.pietschy.gwt.pectin.client.value.ComputedValueModel;
@@ -31,6 +31,7 @@ import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Protocol;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.IntegerFormat;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -102,7 +103,7 @@ public class MetadataFormModel extends FormModel
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
 
       enable(hasFavoriteWines).when(wineLover);
-      enable(favoriteWines).when(and(wineLover, hasFavoriteWines));
+      enable(favoriteWines).when(is(wineLover).and(hasFavoriteWines));
 
 
    }

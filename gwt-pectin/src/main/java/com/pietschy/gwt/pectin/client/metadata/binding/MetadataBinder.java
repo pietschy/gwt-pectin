@@ -50,7 +50,7 @@ extends AbstractBinder
    
    public EnabledBindingBuilder bindDisabledOf(Field field)
    {
-      return new EnabledBindingBuilder(this, Conditions.not(MetadataPlugin.getMetadata(field).getEnabledModel()));
+      return new EnabledBindingBuilder(this, Conditions.isNot(MetadataPlugin.getMetadata(field).getEnabledModel()));
    }
 
    /**

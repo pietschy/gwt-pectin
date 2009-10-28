@@ -48,6 +48,6 @@ public class AbstractReducingCondition extends ReducingValueModel<Boolean, Boole
 
    public Condition not()
    {
-      return Conditions.not(this);
+      return Conditions.isNot(this);
    }
 }

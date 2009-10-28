@@ -16,35 +16,26 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
-import com.pietschy.gwt.pectin.client.value.AbstractComputedValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Aug 15, 2009
- * Time: 8:44:12 AM
+ * Date: Jul 20, 2009
+ * Time: 11:56:28 AM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractComputedCondition<T> extends AbstractComputedValueModel<Boolean, T> implements Condition
+public class IsNotCondition
+extends AbstractComputedCondition<Boolean>
+implements Condition
 {
-   public AbstractComputedCondition(ValueModel<T> source)
+   public IsNotCondition(ValueModel<Boolean> source)
    {
       super(source);
    }
 
-   public Condition and(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
+   protected Boolean computeValue(Boolean value)
    {
-      return Conditions.and(this, condition, others);
-   }
-
-   public Condition or(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
-   {
-      return Conditions.or(this, condition, others);
-   }
-
-   public Condition not()
-   {
-      return Conditions.isNot(this);
+      return value == null || !value;
    }
 }

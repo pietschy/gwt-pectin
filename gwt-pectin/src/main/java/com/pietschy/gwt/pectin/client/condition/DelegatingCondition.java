@@ -16,14 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.GwtEvent;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -55,6 +49,6 @@ public class DelegatingCondition extends DelegatingValueModel<Boolean> implement
 
    public Condition not()
    {
-      return Conditions.not(this);
+      return Conditions.isNot(this);
    }
 }

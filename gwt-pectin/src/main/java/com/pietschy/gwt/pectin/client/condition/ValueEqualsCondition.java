@@ -50,7 +50,7 @@ implements Condition
 
    public Condition not()
    {
-      return Conditions.not(this);
+      return Conditions.isNot(this);
    }
 
    private static class EqualsFunction<T> implements ReducingFunction<Boolean, T>

@@ -57,8 +57,13 @@ public class Conditions
       return new AbstractReducingCondition(new OrFunction(), models);
    }
    
-   public static Condition not(ValueModel<Boolean> condition)
+   public static Condition isNot(ValueModel<Boolean> condition)
    {
-      return new NotCondition(condition);
+      return new IsNotCondition(condition);
+   }
+
+   public static Condition is(ValueModel<Boolean> condition)
+   {
+      return new IsCondition(condition);
    }
 }
