@@ -20,13 +20,11 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.pietschy.gwt.pectin.demo.client.basic.BasicDemo;
 import com.pietschy.gwt.pectin.demo.client.metadata.MetadataDemo;
-import com.pietschy.gwt.pectin.demo.client.validation.ValidationDemo;
 import com.pietschy.gwt.pectin.demo.client.style.StyleDemo;
+import com.pietschy.gwt.pectin.demo.client.validation.ValidationDemo;
 
 
 /**
@@ -39,26 +37,20 @@ import com.pietschy.gwt.pectin.demo.client.style.StyleDemo;
 public class DemoEntryPoint
    implements EntryPoint
 {
-   private TabPanel tabs;
-   protected RootPanel rootPanel;
+   private RootPanel rootPanel;
+   private SimpleHistoryTabs tabs = new SimpleHistoryTabs();
 
    public void onModuleLoad()
    {
       rootPanel = RootPanel.get("demo-target");
       
-      FlowPanel panel = new FlowPanel();
+      tabs.add(new BasicDemo(), "Basic", "basic");
+      tabs.add(new MetadataDemo(), "Metadata Plugin", "metadata");
+      tabs.add(new ValidationDemo(), "Validation Plugin", "validation");
+      tabs.add(new StyleDemo(), "Style Bindings", "style");
+      tabs.initialiseSelectionFromHistory();
 
-      tabs = new TabPanel();
-      tabs.add(new BasicDemo(), "Basic");
-      tabs.add(new MetadataDemo(), "Metadata Plugin");
-      tabs.add(new ValidationDemo(), "Validation Plugin");
-      tabs.add(new StyleDemo(), "Style Bindings");
-      tabs.selectTab(0);
-
-      panel.add(tabs);
-
-      
-      rootPanel.add(panel);
+      rootPanel.add(tabs);
 
       Window.enableScrolling(true);
 
