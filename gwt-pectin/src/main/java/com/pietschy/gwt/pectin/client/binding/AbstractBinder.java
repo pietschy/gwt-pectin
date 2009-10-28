@@ -32,7 +32,7 @@ public class AbstractBinder implements BindingContainer
     * 
     * @param binding the binding to register.
     */
-   public void registerBinding(AbstractBinding binding)
+   public void registerAndInitialiseBinding(AbstractBinding binding)
    {
       binding.updateTarget();
       bindings.add(binding);

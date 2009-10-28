@@ -17,11 +17,14 @@
 package com.pietschy.gwt.pectin.demo.client.metadata;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
+import com.pietschy.gwt.pectin.client.components.ComboBox;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
-import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
+import com.pietschy.gwt.pectin.client.format.DisplayFormat;
+import com.pietschy.gwt.pectin.demo.client.domain.Protocol;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
@@ -33,9 +36,10 @@ public class MetadataForm extends VerySimpleForm
 {
    private TextBox givenName = new TextBox();
    private TextBox surname = new TextBox();
-   private TextBox age = new TextBox();
-   private CheckBox editAgeWatermark = new CheckBox("Edit watermark");
-   private TextBox ageWaterMark = new EnhancedTextBox();
+
+   private ComboBox<Protocol> protocol = new ComboBox<Protocol>(Protocol.values());
+   private TextBox port = new EnhancedTextBox();
+   private Label defaultPortLabel = createHint();
 
    private CheckBox hasNickName = new CheckBox("I have a nick name");
    // NickNameEditor is an example of a custom HasValue<T> widget.
@@ -52,16 +56,19 @@ public class MetadataForm extends VerySimpleForm
    private CheckBox shirazCheckBox = new CheckBox("Shiraz");
    
    private WidgetBinder widgets = new WidgetBinder();
-   private MetadataBinder metadata = new MetadataBinder();
 
 
    public MetadataForm(MetadataFormModel model)
    {
+      protocol.setRenderer(new ProtocolRenderer());
+      port.setVisibleLength(5);
+
       widgets.bind(model.givenName).to(givenName);
       widgets.bind(model.surname).to(surname);
-      widgets.bind(model.age).to(age);
-      widgets.bind(model.editingAgeWatermark).to(editAgeWatermark);
-      widgets.bind(model.ageWaterMark).to(ageWaterMark);
+
+      widgets.bind(model.protocol).to(protocol);
+      widgets.bind(model.port).to(port);
+      widgets.bind(model.defaultPort).toLabel(defaultPortLabel, new DefaultPortFormat());
 
       widgets.bind(model.hasNickName).to(hasNickName);
       widgets.bind(model.nickName).to(nickName);
@@ -77,12 +84,12 @@ public class MetadataForm extends VerySimpleForm
       addRow("First Name", givenName, "The first two fields use a plain text watermark");
       addRow("Last Name", surname);
 
-      addRow("Age", age, editAgeWatermark);
-
-      // Here we'll show and hide the whole row based on the visibility on whether
-      // we in edit mode.
-      Row watermarkRow = addRow("Watermark", ageWaterMark, "You can change the Age watermark here");
-      metadata.bindValueOf(model.editingAgeWatermark).toVisibilityOf(watermarkRow);
+      addGap();
+      addNote("This example shows a dynamically changing water mark for the port field " +
+              "based on the selected protocol.");
+      addNote("The default port is also shown if the user enters a port value that isn't the default.");
+      addRow("Protocol", protocol);
+      addRow("Port", port, defaultPortLabel);
 
       addGap();
       addRow("", hasNickName);
@@ -91,6 +98,22 @@ public class MetadataForm extends VerySimpleForm
       addRow("", wineLover);
       addRow("", hasFavoriteWines);
       addRow("Favorite Wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
+      
    }
 
+   private static class ProtocolRenderer implements ComboBox.Renderer<Protocol>
+   {
+      public String toDisplayString(Protocol value)
+      {
+         return value != null ? value.getDisplayName() : "";
+      }
+   }
+
+   private static class DefaultPortFormat implements DisplayFormat<Integer>
+   {
+      public String format(Integer value)
+      {
+         return value != null ? "(the default is " + value + ")" : "";
+      }
+   }
 }

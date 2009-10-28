@@ -16,9 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
+import com.pietschy.gwt.pectin.client.value.ReducingFunction;
+import com.pietschy.gwt.pectin.client.value.ReducingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.value.ValueModelFunction;
-import com.pietschy.gwt.pectin.client.value.Function;
 
 import java.util.List;
 
@@ -30,20 +30,12 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ValueEqualsCondition<T>
-extends ValueModelFunction<Boolean, T>
+extends ReducingValueModel<Boolean, T>
 implements Condition
 {
    public ValueEqualsCondition(ValueModel<T> sourceA, ValueModel<T> sourceB)
    {
-      super(new Function<Boolean, T>()
-      {
-         public Boolean compute(List<T> source)
-         {
-            return source.get(0).equals(source.get(1));
-         }
-      });
-      
-      addSourceModels(sourceA, sourceB);
+      super(new EqualsFunction<T>(), sourceA, sourceB);
    }
 
    public Condition and(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
@@ -59,5 +51,15 @@ implements Condition
    public Condition not()
    {
       return Conditions.not(this);
+   }
+
+   private static class EqualsFunction<T> implements ReducingFunction<Boolean, T>
+   {
+      public Boolean compute(List<T> source)
+      {
+         T a = source.get(0);
+         T b = source.get(1);
+         return a == null ? b == null : a.equals(b);
+      }
    }
 }

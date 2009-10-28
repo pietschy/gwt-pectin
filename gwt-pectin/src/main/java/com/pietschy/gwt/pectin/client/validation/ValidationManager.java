@@ -158,7 +158,7 @@ implements BindingCallback
             ValidationDisplayBinding validationBinding = new ValidationDisplayBinding(fieldValidator, (ValidationDisplay) target);
             validationBinding.updateTarget();
 
-            binding.registerBinding(validationBinding);
+            binding.registerAndInitialiseBinding(validationBinding);
          }
       }
    }
@@ -173,7 +173,7 @@ implements BindingCallback
          {
             IndexedValidationDisplayBinding validationBinding = new IndexedValidationDisplayBinding(fieldValidator, (IndexedValidationDisplay) target);
             validationBinding.updateTarget();
-            binding.registerBinding(validationBinding);
+            binding.registerAndInitialiseBinding(validationBinding);
          }
       }
    }

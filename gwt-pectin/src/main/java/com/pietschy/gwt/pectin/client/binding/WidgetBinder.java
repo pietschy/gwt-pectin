@@ -46,7 +46,7 @@ extends AbstractBinder
 
    protected <T> void registerBinding(AbstractFieldBinding<T> binding)
    {
-      super.registerBinding(binding);
+      super.registerAndInitialiseBinding(binding);
 
       for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
       {
@@ -56,7 +56,7 @@ extends AbstractBinder
 
    protected <T> void registerBinding(AbstractFormattedBinding<T> binding)
    {
-      super.registerBinding(binding);
+      super.registerAndInitialiseBinding(binding);
 
       for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
       {
@@ -66,7 +66,7 @@ extends AbstractBinder
 
    protected <T> void registerBinding(AbstractListBinding<T> binding)
    {
-      super.registerBinding(binding);
+      super.registerAndInitialiseBinding(binding);
 
       for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
       {

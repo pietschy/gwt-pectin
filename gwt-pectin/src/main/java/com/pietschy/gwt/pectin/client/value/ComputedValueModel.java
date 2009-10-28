@@ -14,33 +14,34 @@
  * and limitations under the License.
  */
 
-package com.pietschy.gwt.pectin.client.metadata;
-
-import com.pietschy.gwt.pectin.client.value.ValueModel;
+package com.pietschy.gwt.pectin.client.value;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Oct 27, 2009
- * Time: 1:24:46 PM
+ * Date: Oct 28, 2009
+ * Time: 11:14:29 AM
  * To change this template use File | Settings | File Templates.
  */
-public class WatermarkBindingBuilder
+public class ComputedValueModel<T,S> extends AbstractComputedValueModel<T,S>
 {
-   private Metadata metadata;
+   private Function<T,S> function;
 
-   public WatermarkBindingBuilder(Metadata metadata)
+   public ComputedValueModel(ValueModel<S> source, Function<T,S> function)
    {
-      this.metadata = metadata;
+      super(source);
+
+      if (function == null)
+      {
+         throw new NullPointerException("function is null");
+      }
+
+      this.function = function;
+
    }
 
-   public void with(String watermark)
+   protected T computeValue(S value)
    {
-      metadata.setWatermark(watermark);
-   }
-
-   public void with(ValueModel<String> model)
-   {
-      metadata.setWatermarkModel(model);
+      return function.compute(value);
    }
 }

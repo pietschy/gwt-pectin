@@ -16,12 +16,12 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
+import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.UIObject;
+import com.pietschy.gwt.pectin.client.binding.BindingContainer;
 import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
 import com.pietschy.gwt.pectin.client.metadata.HasVisible;
 import com.pietschy.gwt.pectin.client.metadata.Metadata;
-import com.pietschy.gwt.pectin.client.binding.BindingContainer;
-import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.FocusWidget;
 
 /**
  * Created by IntelliJ IDEA.
@@ -53,27 +53,23 @@ public class AllMetadataBindingBuilder
       if (target instanceof UIObject)
       {
          VisibleBinding binding = new VisibleBinding(metadata.getVisibleModel(), (UIObject) target);
-         container.registerBinding(binding);
-         binding.updateTarget();
+         container.registerAndInitialiseBinding(binding);
       }
       else if (target instanceof HasVisible)
       {
          HasVisibleBinding binding = new HasVisibleBinding(metadata.getVisibleModel(), (HasVisible) target);
-         container.registerBinding(binding);
-         binding.updateTarget();
+         container.registerAndInitialiseBinding(binding);
       }
       
       if (target instanceof FocusWidget)
       {
          FocusWidgetEnabledBinding binding = new FocusWidgetEnabledBinding(metadata.getEnabledModel(), (FocusWidget) target);
-         container.registerBinding(binding);
-         binding.updateTarget();
+         container.registerAndInitialiseBinding(binding);
       }
       else if (target instanceof HasEnabled)
       {
          HasEnabledBinding binding = new HasEnabledBinding(metadata.getEnabledModel(), (HasEnabled) target);
-         container.registerBinding(binding);
-         binding.updateTarget();
+         container.registerAndInitialiseBinding(binding);
       }
    }
 }

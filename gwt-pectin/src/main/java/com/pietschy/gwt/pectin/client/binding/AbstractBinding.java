@@ -39,8 +39,9 @@ implements BindingContainer
    }
    
    
-   public void registerBinding(AbstractBinding binding)
+   public void registerAndInitialiseBinding(AbstractBinding binding)
    {
+      binding.updateTarget();
       childBindings.add(binding);
    }
 

@@ -14,34 +14,33 @@
  * and limitations under the License.
  */
 
-package com.pietschy.gwt.pectin.client.style;
+package com.pietschy.gwt.pectin.client.metadata;
 
-import com.google.gwt.user.client.ui.UIObject;
-import com.pietschy.gwt.pectin.client.binding.BindingContainer;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
  * Date: Oct 27, 2009
- * Time: 10:37:05 AM
+ * Time: 1:24:46 PM
  * To change this template use File | Settings | File Templates.
  */
-public class WidgetStyleBindingBuilder
+public class WatermarkBuilder
 {
-   private BindingContainer builder;
-   private String styleName;
-   private UIObject widget;
+   private Metadata metadata;
 
-   public WidgetStyleBindingBuilder(BindingContainer builder, UIObject widget, String styleName)
+   protected WatermarkBuilder(Metadata metadata)
    {
-      this.builder = builder;
-      this.styleName = styleName;
-      this.widget = widget;
+      this.metadata = metadata;
    }
 
-   public void when(ValueModel<Boolean> condition)
+   public void with(String watermark)
    {
-      builder.registerAndInitialiseBinding(new StyleBinding(condition, widget, styleName));
+      metadata.setWatermark(watermark);
+   }
+
+   public void with(ValueModel<String> model)
+   {
+      metadata.setWatermarkModel(model);
    }
 }

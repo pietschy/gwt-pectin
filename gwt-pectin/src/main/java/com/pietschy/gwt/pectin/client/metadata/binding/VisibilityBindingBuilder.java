@@ -16,10 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.metadata.HasVisible;
-import com.pietschy.gwt.pectin.client.binding.BindingContainer;
 import com.google.gwt.user.client.ui.UIObject;
+import com.pietschy.gwt.pectin.client.binding.BindingContainer;
+import com.pietschy.gwt.pectin.client.metadata.HasVisible;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,7 +46,7 @@ public class VisibilityBindingBuilder
     */
    public void to(UIObject widget) 
    {
-      container.registerBinding(new VisibleBinding(model, widget));
+      container.registerAndInitialiseBinding(new VisibleBinding(model, widget));
    }
    
    /**
@@ -56,6 +56,6 @@ public class VisibilityBindingBuilder
     */
    public void to(HasVisible widget) 
    {
-      container.registerBinding(new HasVisibleBinding(model, widget));
+      container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget));
    }
 }

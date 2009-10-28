@@ -16,8 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.value;
 
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,6 +37,7 @@ extends AbstractValueModel<T>
          fireValueChangeEvent(getValue());
       }
    };
+
    private ValueModel<S> source;
 
    public AbstractComputedValueModel(ValueModel<S> source)

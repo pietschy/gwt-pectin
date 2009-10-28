@@ -16,9 +16,12 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.value.ComputedValueModel;
-import com.pietschy.gwt.pectin.client.value.Function;
+import com.pietschy.gwt.pectin.client.value.ReducingFunction;
+import com.pietschy.gwt.pectin.client.value.ReducingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,22 +30,22 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 * Time: 10:40:33 AM
 * To change this template use File | Settings | File Templates.
 */
-public class ComputedFieldBuilder<T, S>
+public class ReducingFieldBuilder<T, S>
 {
    private FormModel formModel;
-   private ValueModel<S> source;
+   private List<ValueModel<S>> models;
    private Class<T> valueType;
 
-   public ComputedFieldBuilder(FormModel formModel, Class<T> valueType, ValueModel<S> model)
+   public ReducingFieldBuilder(FormModel formModel, Class<T> valueType, ValueModel<S>... models)
    {
       this.formModel = formModel;
       this.valueType = valueType;
-      this.source = model;
+      this.models = Arrays.asList(models);
    }
 
-   public FieldModel<T> using(Function<T, S> function)
+   public FieldModel<T> using(ReducingFunction<T, S> function)
    {
-      ComputedValueModel<T, S> valueModel = new ComputedValueModel<T, S>(source, function);
+      ReducingValueModel<T, S> valueModel = new ReducingValueModel<T, S>(function, models);
       return formModel.createFieldModel(valueModel, valueType);
    }
 }

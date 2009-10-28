@@ -62,9 +62,14 @@ public class FieldBuilder<T>
       return new ConvertedFieldBuilder<T, S>(formModel, valueType, source);
    }
 
-   public <S> ComputedFieldBuilder<T, S> computedFrom(ValueModel<S>... source)
+   public <S> ComputedFieldBuilder<T, S> computedFrom(ValueModel<S> source)
    {
       return new ComputedFieldBuilder<T, S>(formModel, valueType, source);
+   }
+
+   public <S> ReducingFieldBuilder<T, S> computedFrom(ValueModel<S>... source)
+   {
+      return new ReducingFieldBuilder<T, S>(formModel, valueType, source);
    }
 
 

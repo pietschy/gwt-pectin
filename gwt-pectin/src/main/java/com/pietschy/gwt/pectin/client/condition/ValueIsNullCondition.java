@@ -16,30 +16,25 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
-import com.pietschy.gwt.pectin.client.value.ReducingFunction;
-
-import java.util.List;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
  * Date: Jul 20, 2009
- * Time: 11:49:05 AM
+ * Time: 12:09:09 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AndFunction
-implements ReducingFunction<Boolean, Boolean>
+public class ValueIsNullCondition<T>
+extends AbstractComputedCondition<T>
 {
-   public Boolean compute(List<Boolean> source)
+   public ValueIsNullCondition(ValueModel<T> source)
    {
-      for (Boolean value : source)
-      {
-         if (value == null || !value)
-         {
-            return false;
-         }
-      }
-      
-      return true;
+      super(source);
+   }
+
+   protected Boolean computeValue(T sourceValue)
+   {
+      return sourceValue == null;
    }
 }

@@ -25,7 +25,8 @@ package com.pietschy.gwt.pectin.client.binding;
  */
 public interface BindingContainer
 {
-   void registerBinding(AbstractBinding binding);
+
+   void registerAndInitialiseBinding(AbstractBinding binding);
 
    void dispose();
 }

@@ -51,7 +51,7 @@ public class FormattedFieldBindingBuilder<T>
    
    public void toLabel(HasText label, DisplayFormat<? super T> format)
    {
-      binder.registerBinding(new FormattedFieldToHasTextBinding<T>(field, label, format));
+      binder.registerAndInitialiseBinding(new FormattedFieldToHasTextBinding<T>(field, label, format));
    }
    
    public class FormattedFieldBuilder 

@@ -16,29 +16,24 @@
 
 package com.pietschy.gwt.pectin.client.components;
 
-import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.dom.client.ChangeHandler;
-import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.HasFocusHandlers;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.HasBlurHandlers;
-import com.google.gwt.event.dom.client.BlurHandler;
-import com.pietschy.gwt.pectin.client.list.ListModel;
+import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.list.ArrayListModel;
-import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
+import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
-import com.pietschy.gwt.pectin.client.validation.ValidationResult;
+import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
 import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
+import com.pietschy.gwt.pectin.client.validation.ValidationResult;
+import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -95,7 +90,7 @@ implements HasValue<T>, HasEnabled, Focusable, HasFocusHandlers, HasBlurHandlers
             rebuildListBox();
          }
       });
-      
+
       initWidget(listBox);
    }
 

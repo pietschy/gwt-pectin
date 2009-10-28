@@ -16,6 +16,7 @@
 
 package com.pietschy.gwt.pectin.demo.client.misc;
 
+import com.pietschy.gwt.pectin.client.format.Format;
 import com.pietschy.gwt.pectin.client.format.FormatException;
 
 /**
@@ -25,13 +26,38 @@ import com.pietschy.gwt.pectin.client.format.FormatException;
  * Time: 4:33:06 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AgeFormat extends IntegerFormat
+public class IntegerFormat implements Format<Integer>
 {
-   protected void validateInteger(int integer) throws FormatException
+   public String format(Integer value)
    {
-      if (integer < 0)
+      return value != null ? Integer.toString(value) : null;
+   }
+
+   public Integer parse(String text) throws FormatException
+   {
+      try
       {
-         throw new FormatException("Age can't be negative");
+         if (text != null && text.trim().length() > 0)
+         {
+            int integer = Integer.parseInt(text.trim());
+
+            validateInteger(integer);
+
+            return integer;
+         }
+         else
+         {
+            return null;
+         }
       }
+      catch (NumberFormatException e)
+      {
+         throw new FormatException("Not a valid number", e);
+      }
+   }
+
+   protected void validateInteger(int age) throws FormatException
+   {
+      // subclasses can hook in here
    }
 }

@@ -14,34 +14,38 @@
  * and limitations under the License.
  */
 
-package com.pietschy.gwt.pectin.client.style;
-
-import com.google.gwt.user.client.ui.UIObject;
-import com.pietschy.gwt.pectin.client.binding.BindingContainer;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
+package com.pietschy.gwt.pectin.demo.client.domain;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Oct 27, 2009
- * Time: 10:37:05 AM
+ * Date: Oct 28, 2009
+ * Time: 8:56:04 AM
  * To change this template use File | Settings | File Templates.
  */
-public class WidgetStyleBindingBuilder
+public enum Protocol
 {
-   private BindingContainer builder;
-   private String styleName;
-   private UIObject widget;
+   FTP("FTP", 21),
+   FTP_IMPLICIT_SSL("FTP with Implicit SSL", 990),
+   FTP_TLS_SSL("FTP with TLS/SSL", 21),
+   SFTP("SFTP", 22);
 
-   public WidgetStyleBindingBuilder(BindingContainer builder, UIObject widget, String styleName)
+   private int defaultPort;
+   private String displayName;
+
+   Protocol(String displayName, int defaultPort)
    {
-      this.builder = builder;
-      this.styleName = styleName;
-      this.widget = widget;
+      this.defaultPort = defaultPort;
+      this.displayName = displayName;
    }
 
-   public void when(ValueModel<Boolean> condition)
+   public int getDefaultPort()
    {
-      builder.registerAndInitialiseBinding(new StyleBinding(condition, widget, styleName));
+      return defaultPort;
+   }
+
+   public String getDisplayName()
+   {
+      return displayName;
    }
 }

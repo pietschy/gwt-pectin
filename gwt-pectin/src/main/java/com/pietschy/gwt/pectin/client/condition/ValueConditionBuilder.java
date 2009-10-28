@@ -34,11 +34,21 @@ public class ValueConditionBuilder<T>
       this.model = model;
    }
 
+   public Condition isNull()
+   {
+      return new ValueIsNullCondition<T>(getModel());
+   }
+
+   public Condition isNotNull()
+   {
+      return new ValueIsNullCondition<T>(getModel()).not();
+   }
+
    public Condition is(T value)
    {
       return new ValueIsCondition<T>(getModel(), value);
    }
-   
+
    public Condition isNot(T value)
    {
       return is(value).not();

@@ -16,8 +16,6 @@
 
 package com.pietschy.gwt.pectin.client.value;
 
-import java.util.List;
-
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -27,5 +25,5 @@ import java.util.List;
  */
 public interface Function<T,S>
 {
-   T compute(List<S> source);
+   T compute(S source);
 }

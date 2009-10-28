@@ -77,14 +77,14 @@ public class MetadataPlugin
       return new MetadataBindingBuilder<T>(getMetadata(field), action);
    }
 
-   public static WatermarkBindingBuilder watermark(FieldModel<String> field)
+   public static WatermarkBuilder watermark(FieldModel<String> field)
    {
-      return new WatermarkBindingBuilder(getMetadata(field));
+      return new WatermarkBuilder(getMetadata(field));
    }
 
-   public static WatermarkBindingBuilder watermark(FormattedFieldModel<?> field)
+   public static WatermarkBuilder watermark(FormattedFieldModel<?> field)
    {
-      return new WatermarkBindingBuilder(getMetadata(field)); 
+      return new WatermarkBuilder(getMetadata(field));
    }
 
    public static MetadataConditionBuidler metadataOf(Field field)

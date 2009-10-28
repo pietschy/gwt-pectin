@@ -23,11 +23,14 @@ import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import static com.pietschy.gwt.pectin.client.condition.Conditions.and;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.watermark;
+import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.*;
+import com.pietschy.gwt.pectin.client.value.ComputedValueModel;
+import com.pietschy.gwt.pectin.client.value.Function;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
+import com.pietschy.gwt.pectin.demo.client.domain.Protocol;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
-import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
+import com.pietschy.gwt.pectin.demo.client.misc.IntegerFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,16 +43,16 @@ public class MetadataFormModel extends FormModel
 {
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
-   protected final FormattedFieldModel<Integer> age;
-   protected final FieldModel<Boolean> editingAgeWatermark;
-   protected final FieldModel<String> ageWaterMark;
    protected final FieldModel<String> nickName;
    protected final FieldModel<Boolean> hasNickName;
    protected final FieldModel<Boolean> wineLover;
    protected final ListFieldModel<Wine> favoriteWines;
    protected final FieldModel<Boolean> hasFavoriteWines;
 
-
+   protected final FieldModel<Protocol> protocol;
+   protected final FormattedFieldModel<Integer> port;
+   protected final FieldModel<Integer> defaultPort;
+   private ComputedValueModel<String, Integer> portWatermark;
 
 
    public static abstract class PersonProvider extends BeanModelProvider<Person> {}
@@ -61,10 +64,6 @@ public class MetadataFormModel extends FormModel
       // Create our field models..
       givenName = fieldOfType(String.class).boundTo(personProvider, "givenName");
       surname = fieldOfType(String.class).boundTo(personProvider, "surname");
-      // a formatted field.
-      age = formattedFieldOfType(Integer.class)
-         .using(new AgeFormat())
-         .boundTo(personProvider, "age");
 
       hasNickName = fieldOfType(Boolean.class).createWithValue(false);
       nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
@@ -72,25 +71,35 @@ public class MetadataFormModel extends FormModel
       hasFavoriteWines = fieldOfType(Boolean.class).createWithValue(false);
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
 
-      // Watermarks can be bound to ohter value models, so we'll create a field
-      // and use that for a watermark.
-      ageWaterMark = fieldOfType(String.class).createWithValue("Enter your age");
-      // and we'll give the user the ability to edit it live.
-      editingAgeWatermark = fieldOfType(Boolean.class).createWithValue(false);
 
+      protocol = fieldOfType(Protocol.class).createWithValue(Protocol.FTP);
+      port = formattedFieldOfType(Integer.class).using(new IntegerFormat()).create();
+      // the default port field tracks the protocol and extracts the default port.
+      defaultPort = fieldOfType(Integer.class)
+               .computedFrom(protocol)
+               .using(new DefaultPortExtractor());
+
+      // now we create a value model to use as the port watermark.   We could have used
+      // a computed field like above, but we don't expose this to the view so we can use
+      // a regular value model.
+      portWatermark = new ComputedValueModel<String, Integer>(defaultPort, new PortToStringFunction());
 
       // Configure the metadata for the various models.
-      // first some watermarks..
-      watermark(givenName).with("Enter your first name");
-      watermark(surname).with("Enter your last name");
-      // now bind this one to a value model we prepared earlier...
-      watermark(age).with(ageWaterMark);
-
-
-      // and now our enabled-ness stuff.
       enable(nickName).when(hasNickName);
       enable(hasFavoriteWines).when(wineLover);
       enable(favoriteWines).when(and(wineLover, hasFavoriteWines));
+
+      // we'll only display the default port on the UI if the user has entered a
+      // non null value that isn't the default.
+      hide(defaultPort).when(valueOf(port).isNull().or(valueOf(port).isSameAs(defaultPort)));
+      enable(port).when(valueOf(protocol).isNotNull());
+
+      // now the static watermarks
+      watermark(givenName).with("Enter your first name");
+      watermark(surname).with("Enter your last name");
+
+      // and we use the computed value model for the port watermark.
+      watermark(port).with(portWatermark);
 
 
    }
@@ -99,5 +108,20 @@ public class MetadataFormModel extends FormModel
    {
       personProvider.setBean(person);
    }
-   
+
+   private static class DefaultPortExtractor implements Function<Integer, Protocol>
+   {
+      public Integer compute(Protocol source)
+      {
+         return source != null ? source.getDefaultPort() : null;
+      }
+   }
+
+   private static class PortToStringFunction implements Function<String, Integer>
+   {
+      public String compute(Integer port)
+      {
+         return port != null ? Integer.toString(port) : null;
+      }
+   }
 }

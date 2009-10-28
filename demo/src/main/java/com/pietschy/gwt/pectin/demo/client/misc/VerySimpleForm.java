@@ -41,6 +41,7 @@ extends Composite
    {
       int rowIndex = table.getRowCount();
       table.setText(rowIndex, 0, label);
+      table.getFlexCellFormatter().setWordWrap(rowIndex, 0, false);
       styleLabel(rowIndex);
       table.setWidget(rowIndex, 1, widget);
       return new Row(rowIndex);
@@ -50,6 +51,7 @@ extends Composite
    {
       int rowIndex = table.getRowCount();
       table.setWidget(rowIndex, 0, label);
+      table.getFlexCellFormatter().setWordWrap(rowIndex, 0, false);
       styleLabel(rowIndex);
       table.setWidget(rowIndex, 1, widget);
       return new Row(rowIndex);
@@ -57,7 +59,7 @@ extends Composite
 
    protected Row addRow(String label, Widget widget, String hint)
    {
-      return addRow(label, widget, stylesHint(new Label(hint)));
+      return addRow(label, widget, createHint(hint));
    }
 
    public Row addRow(String label, Widget widget, Widget... others)
@@ -75,9 +77,19 @@ extends Composite
       cellFormatter.addStyleName(row, 0, "VerySimpleForm-Label");
    }
 
-   private Widget stylesHint(Widget widget)
+   protected Label createHint()
    {
-      widget.addStyleName("VerySimpleForm-Hint");
+      return createHint("");
+   }
+
+   protected Label createHint(String text)
+   {
+      return styleAs(new Label(text), "VerySimpleForm-Hint");
+   }
+
+   private <T extends Widget> T styleAs(T widget, String style)
+   {
+      widget.addStyleName(style);
       return widget;
    }
 

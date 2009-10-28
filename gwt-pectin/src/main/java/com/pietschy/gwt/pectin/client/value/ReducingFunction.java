@@ -14,32 +14,18 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.condition;
-
-import com.pietschy.gwt.pectin.client.value.ReducingFunction;
+package com.pietschy.gwt.pectin.client.value;
 
 import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 20, 2009
- * Time: 11:49:05 AM
+ * Date: Jul 1, 2009
+ * Time: 11:50:08 AM
  * To change this template use File | Settings | File Templates.
  */
-public class AndFunction
-implements ReducingFunction<Boolean, Boolean>
+public interface ReducingFunction<T,S>
 {
-   public Boolean compute(List<Boolean> source)
-   {
-      for (Boolean value : source)
-      {
-         if (value == null || !value)
-         {
-            return false;
-         }
-      }
-      
-      return true;
-   }
+   T compute(List<S> source);
 }

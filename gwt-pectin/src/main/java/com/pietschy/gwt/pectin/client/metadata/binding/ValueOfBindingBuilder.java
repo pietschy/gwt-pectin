@@ -48,7 +48,7 @@ public class ValueOfBindingBuilder
     */
    public void toVisibilityOf(UIObject widget)
    {
-      container.registerBinding(new VisibleBinding(model, widget));
+      container.registerAndInitialiseBinding(new VisibleBinding(model, widget));
    }
 
    /**
@@ -58,7 +58,7 @@ public class ValueOfBindingBuilder
     */
    public void toVisibilityOf(HasVisible widget)
    {
-      container.registerBinding(new HasVisibleBinding(model, widget));
+      container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget));
    }
 
    /**
@@ -68,7 +68,7 @@ public class ValueOfBindingBuilder
     */
    public void toEnablednessOf(FocusWidget widget)
    {
-      container.registerBinding(new FocusWidgetEnabledBinding(model, widget));
+      container.registerAndInitialiseBinding(new FocusWidgetEnabledBinding(model, widget));
    }
 
    /**
@@ -78,6 +78,6 @@ public class ValueOfBindingBuilder
     */
    public void toEnablednessOf(HasEnabled widget)
    {
-      container.registerBinding(new HasEnabledBinding(model, widget));
+      container.registerAndInitialiseBinding(new HasEnabledBinding(model, widget));
    }
 }

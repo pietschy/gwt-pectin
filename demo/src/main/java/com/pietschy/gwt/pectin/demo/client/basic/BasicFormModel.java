@@ -23,7 +23,7 @@ import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import com.pietschy.gwt.pectin.client.value.Converter;
-import com.pietschy.gwt.pectin.client.value.Function;
+import com.pietschy.gwt.pectin.client.value.ReducingFunction;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
@@ -95,7 +95,7 @@ public class BasicFormModel extends FormModel
       return personProvider.getBean();
    }
 
-   private static class CharacterCounter implements Function<Integer, String>
+   private static class CharacterCounter implements ReducingFunction<Integer, String>
    {
       public Integer compute(List<String> source)
       {

@@ -18,6 +18,9 @@ package com.pietschy.gwt.pectin.client.condition;
 
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -40,18 +43,18 @@ public class Conditions
    
    public static Condition and(ValueModel<Boolean> a, ValueModel<Boolean> b, ValueModel<Boolean>... others)
    {
-      AbstractFunctionCondition condition = new AbstractFunctionCondition(new AndFunction());
-      condition.addSourceModels(a, b);
-      condition.addSourceModels(others);
-      return condition;
+      ArrayList<ValueModel<Boolean>> models = new ArrayList<ValueModel<Boolean>>();
+      models.addAll(Arrays.asList(a, b));
+      models.addAll(Arrays.asList(others));
+      return new AbstractReducingCondition(new AndFunction(), models);
    }
    
    public static Condition or(ValueModel<Boolean> a, ValueModel<Boolean> b, ValueModel<Boolean>... others)
    {
-      AbstractFunctionCondition condition = new AbstractFunctionCondition(new OrFunction());
-      condition.addSourceModels(a, b);
-      condition.addSourceModels(others);
-      return condition;
+      ArrayList<ValueModel<Boolean>> models = new ArrayList<ValueModel<Boolean>>();
+      models.addAll(Arrays.asList(a, b));
+      models.addAll(Arrays.asList(others));
+      return new AbstractReducingCondition(new OrFunction(), models);
    }
    
    public static Condition not(ValueModel<Boolean> condition)

@@ -35,9 +35,9 @@ import java.util.HashMap;
  * To change this template use File | Settings | File Templates.
  */
 public class MetadataManager
-implements BindingCallback
+   implements BindingCallback
 {
-    private HashMap<Field, Metadata> metadataMap = new HashMap<Field, Metadata>();
+   private HashMap<Field, Metadata> metadataMap = new HashMap<Field, Metadata>();
 
    public Metadata getMetadata(Field fieldModel)
    {
@@ -58,9 +58,9 @@ implements BindingCallback
 
       if (String.class.getName().equals(model.getValueClass().getName()) && target instanceof TextBox)
       {
-         binding.registerBinding(new WatermarkBinding((ValueModel<String>) model,
-                                                      getMetadata(model).getWatermarkModel(),
-                                                      (TextBox) target));
+         binding.registerAndInitialiseBinding(new WatermarkBinding((ValueModel<String>) model,
+                                                                   getMetadata(model).getWatermarkModel(),
+                                                                   (TextBox) target));
       }
 
    }
@@ -69,9 +69,9 @@ implements BindingCallback
    {
       if (target instanceof TextBox)
       {
-         binding.registerBinding(new WatermarkBinding(model.getTextModel(),
-                                                      getMetadata(model).getWatermarkModel(),
-                                                      (TextBox) target));
+         binding.registerAndInitialiseBinding(new WatermarkBinding(model.getTextModel(),
+                                                                   getMetadata(model).getWatermarkModel(),
+                                                                   (TextBox) target));
       }
 
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);

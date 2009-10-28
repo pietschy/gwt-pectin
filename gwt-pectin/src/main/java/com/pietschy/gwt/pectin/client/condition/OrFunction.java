@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
-import com.pietschy.gwt.pectin.client.value.Function;
+import com.pietschy.gwt.pectin.client.value.ReducingFunction;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class OrFunction
-implements Function<Boolean, Boolean>
+implements ReducingFunction<Boolean, Boolean>
 {
    public Boolean compute(List<Boolean> source)
    {

@@ -17,29 +17,37 @@
 package com.pietschy.gwt.pectin.client.condition;
 
 import com.pietschy.gwt.pectin.client.value.ReducingFunction;
+import com.pietschy.gwt.pectin.client.value.ReducingValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 20, 2009
- * Time: 11:49:05 AM
+ * Date: Aug 16, 2009
+ * Time: 11:24:38 AM
  * To change this template use File | Settings | File Templates.
  */
-public class AndFunction
-implements ReducingFunction<Boolean, Boolean>
+public class AbstractReducingCondition extends ReducingValueModel<Boolean, Boolean> implements Condition
 {
-   public Boolean compute(List<Boolean> source)
+   public AbstractReducingCondition(ReducingFunction<Boolean, Boolean> function, Collection<ValueModel<Boolean>> models)
    {
-      for (Boolean value : source)
-      {
-         if (value == null || !value)
-         {
-            return false;
-         }
-      }
-      
-      return true;
+      super(function, models);
+   }
+
+   public Condition and(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
+   {
+      return Conditions.and(this, condition, others);
+   }
+
+   public Condition or(ValueModel<Boolean> condition, ValueModel<Boolean>... others)
+   {
+      return Conditions.or(this, condition, others);
+   }
+
+   public Condition not()
+   {
+      return Conditions.not(this);
    }
 }
