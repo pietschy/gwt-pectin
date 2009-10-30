@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.value.ReducingFunction;
+import com.pietschy.gwt.pectin.client.value.Reduce;
 import com.pietschy.gwt.pectin.client.value.ReducingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
@@ -43,7 +43,7 @@ public class ReducingFieldBuilder<T, S>
       this.models = Arrays.asList(models);
    }
 
-   public FieldModel<T> using(ReducingFunction<T, S> function)
+   public FieldModel<T> using(Reduce<T, S> function)
    {
       ReducingValueModel<T, S> valueModel = new ReducingValueModel<T, S>(function, models);
       return formModel.createFieldModel(valueModel, valueType);

@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
-import com.pietschy.gwt.pectin.client.value.ReducingFunction;
+import com.pietschy.gwt.pectin.client.value.Reduce;
 import com.pietschy.gwt.pectin.client.value.ReducingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
@@ -31,7 +31,7 @@ import java.util.Collection;
  */
 public class AbstractReducingCondition extends ReducingValueModel<Boolean, Boolean> implements Condition
 {
-   public AbstractReducingCondition(ReducingFunction<Boolean, Boolean> function, Collection<ValueModel<Boolean>> models)
+   public AbstractReducingCondition(Reduce<Boolean, Boolean> function, Collection<ValueModel<Boolean>> models)
    {
       super(function, models);
    }

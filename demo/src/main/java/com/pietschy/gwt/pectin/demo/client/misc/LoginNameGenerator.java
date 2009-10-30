@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.demo.client.misc;
 
-import com.pietschy.gwt.pectin.client.value.ReducingFunction;
+import com.pietschy.gwt.pectin.client.value.Reduce;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ import java.util.List;
  * Time: 5:35:31 PM
  * To change this template use File | Settings | File Templates.
  */
-public class LoginNameGenerator implements ReducingFunction<String, String>
+public class LoginNameGenerator implements Reduce<String, String>
 {
    public String compute(List<String> source)
    {

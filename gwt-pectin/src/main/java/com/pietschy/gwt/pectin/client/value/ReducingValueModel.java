@@ -25,13 +25,13 @@ import java.util.Collection;
 
 /**
  * ValueModelFunction is a value model whose value is derived from collection of source
- * {@link ValueModel}s and a {@link ReducingFunction}.  Changes in any of the source models result in
+ * {@link ValueModel}s and a {@link Reduce}.  Changes in any of the source models result in
  * the funcion being re-evaluated and the value updating.
  */
 public class ReducingValueModel<T, S>
 extends AbstractValueModel<T>
 {
-   private ReducingFunction<T,S> function;
+   private Reduce<T,S> function;
    private ArrayList<ValueModel<S>> sourceModels = new ArrayList<ValueModel<S>>();
    private ValueChangeHandler<S> changeMonitor = new ValueChangeHandler<S>()
    {
@@ -43,12 +43,12 @@ extends AbstractValueModel<T>
    
    private T computedValue = null;
 
-   public ReducingValueModel(ReducingFunction<T, S> function, ValueModel<S> a, ValueModel<S> b)
+   public ReducingValueModel(Reduce<T, S> function, ValueModel<S> a, ValueModel<S> b)
    {
       this(function, Arrays.asList(a, b));
    }
 
-   public ReducingValueModel(ReducingFunction<T, S> function, Collection<ValueModel<S>> models)
+   public ReducingValueModel(Reduce<T, S> function, Collection<ValueModel<S>> models)
    {
       if (function == null)
       {

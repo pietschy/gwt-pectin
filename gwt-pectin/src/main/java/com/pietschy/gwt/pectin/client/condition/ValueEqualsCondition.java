@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
-import com.pietschy.gwt.pectin.client.value.ReducingFunction;
+import com.pietschy.gwt.pectin.client.value.Reduce;
 import com.pietschy.gwt.pectin.client.value.ReducingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
@@ -53,7 +53,7 @@ implements Condition
       return Conditions.isNot(this);
    }
 
-   private static class EqualsFunction<T> implements ReducingFunction<Boolean, T>
+   private static class EqualsFunction<T> implements Reduce<Boolean, T>
    {
       public Boolean compute(List<T> source)
       {
