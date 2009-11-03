@@ -1,37 +1,45 @@
-usePlugin(com.pietschy.gradle.plugin.GWTLibPlugin, ["gwtVersion": "1.7.1"])
+usePlugin(com.pietschy.gradle.plugin.gwt.GwtLibPlugin)
 
 version = "0.1.${buildNumber}"
 
+gwtVersion = '1.7.1'
+
 
 dependencies {
+
    testCompile("org.testng:testng:5.8:jdk15",
                "junit:junit:4.7",
                "org.mockito:mockito-all:1.7")
 }
 
-
-init.doFirst {
-
-   if (!build.taskGraph.hasTask(':gwt-pectin:release')) {
+gradle.taskGraph.whenReady {taskGraph ->
+   if (!taskGraph.hasTask(':gwt-pectin:release'))
+   {
       version = version + '-SNAPSHOT'
    }
 
    println "Version: ${version}"
 }
 
-test.dependsOn('gwtTest')
+test {
+   useTestNG()
+   dependsOn 'testGwt'
+}
+
 
 // Creates the release and increments the build number when finished.
-createTask('release', dependsOn: ['libs']) {
+task release << {
    incrementBuildNumber(project)
 }
+release.dependsOn 'build', 'install'
 
 // task for creating the gradle scripts.
-createTask('wrapper', type: Wrapper).configure {
-   gradleVersion = '0.5.2'
+task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {
+   gradleVersion = '0.8'
 }
 
-String getBuildNumber() {
+String getBuildNumber()
+{
    return readBuildNumber(project)
 }
 

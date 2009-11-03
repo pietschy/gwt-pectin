@@ -1,46 +1,40 @@
-usePlugin(com.pietschy.gradle.plugin.GWTAppPlugin, ['gwtVersion' : '1.7.1'])
+import com.pietschy.gradle.plugin.gwt.task.Style
+
+usePlugin(com.pietschy.gradle.plugin.gwt.GwtAppPlugin)
 
 version = "0.1.${buildNumber}"
 
-defaultTasks "demo" 
+gwtVersion = '1.7.1'
+
+defaultTasks "demo"
 
 dependencies {
    compile project(':gwt-pectin')
 }
 
 
-// a hack to stop tests when running the demo.. there's probably a better way
-// but I don't know it.
-init.doFirst {
-   if (build.taskGraph.hasTask(':demo:shell')) {
-      System.properties['skip.test'] = 'true'
-   }
-}
-
+// ensure our parent project get's cleaned.
 clean.dependsOn(':gwt-pectin:clean')
 
-gwtCompile {
+compileGwt {
    modules('com.pietschy.gwt.pectin.demo.PectinDemo')
-//   style = 'PRETTY'
 }
  
-createTask('shell', type: com.pietschy.gradle.plugin.GWTHostedMode)
-shell {
+task shell(type: com.pietschy.gradle.plugin.gwt.task.GwtDevelopmentShell) {
    modules('com.pietschy.gwt.pectin.demo.PectinDemo')
    startupUrl = 'PectinDemo.html'
-   style = 'PRETTY'
 }
 
-createTask('demo', dependsOn: ['clean', 'compile', 'shell'])
+task demo(dependsOn: ['classes', 'shell'])
 
+// create a zip of the demo so we can upload it
+task dist(overwrite: true, dependsOn: ['classes', 'compileGwt'])
+dist << {
+   
+   File compileOutput = compileGwt.destinationDir;
+   File webAppDir = project.webAppDir;
 
-// create a zip of the demo so we can upload it 
-createTask('dist', overwrite: true, dependsOn: ['clean', 'compile', 'gwtCompile']) {
-   
-   File compileOutput = gwtCompile.compileOutputDir;
-   File webAppDir = gwtCompile.webappDir;
-   
-   File dest = new File(project.buildDir, 'web')
+   File dest = new File((File)project.buildDir, 'web')
    ant.copy(toDir: dest) {
       fileset(dir: compileOutput)
       fileset(dir: webAppDir, excludes: 'WEB-INF/**')
@@ -48,11 +42,11 @@ createTask('dist', overwrite: true, dependsOn: ['clean', 'compile', 'gwtCompile'
 }
 
 // Task for creating the gradle wrapper for this project.
-createTask('wrapper', type: Wrapper).configure {
-   gradleVersion = '0.5.2'
+task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {
+   gradleVersion = '0.8'
 }
 
 String getBuildNumber()
 {
-   return readBuildNumber(getProject())
+   return readBuildNumber(project)
 }

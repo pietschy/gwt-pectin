@@ -1,35 +1,46 @@
 import org.gradle.api.Project
 
-group = 'com.pietschy.gwt'
-
-allprojects {
-   
-   usePlugin('java')
-   usePlugin(com.pietschy.gradle.plugin.TestNGPlugin)
-   usePlugin(com.pietschy.gradle.plugin.RepositoryPlugin)
-   usePlugin(com.pietschy.gradle.plugin.IdePlugin)
-   
-   sourceCompatibility = 1.5
-   targetCompatibility = 1.5
-   
+buildscript {
+   repositories {
+      mavenRepo urls: 'http://maven.pietschy.com'
+   }
    dependencies {
-      addMavenRepo() 
-      addMavenStyleRepo('pietschy', 'http://maven.pietschy.com')
+      // this provides the plugins used to build pectin, most notably
+      // the GwtLibPlugin and GwtAppPlugin and associated tasks
+      classpath "com.pietschy.gradle:plugins:0.8-2-SNAPSHOT"
    }
 }
 
+allprojects {
 
-// define some generic functions for use by other project builds
-void incrementBuildNumber(Project project) {
-   project.ant.buildnumber(); 
+   group = 'com.pietschy.gwt'
+
+   usePlugin('java')
+   usePlugin(com.pietschy.gradle.plugin.IdePlugin)
+
+   sourceCompatibility = 1.5
+   targetCompatibility = 1.5
+
+   repositories {
+      mavenRepo urls: 'http://maven.pietschy.com'
+      mavenCentral()
+   }
 }
 
-String readBuildNumber(Project project) {
+// define some generic functions for use by other project builds
+void incrementBuildNumber(Project project)
+{
+   project.ant.buildnumber();
+}
+
+String readBuildNumber(Project project)
+{
    File buildNumberFile = project.file('build.number')
    return buildNumberFile.exists() ? loadProperties(buildNumberFile).getProperty('build.number') : '0'
 }
 
-Properties loadProperties(File file) {
+Properties loadProperties(File file)
+{
    Properties map = new Properties()
    map.load(new FileInputStream(file))
    return map
