@@ -17,7 +17,6 @@ gradle.taskGraph.whenReady {taskGraph ->
    {
       version = version + '-SNAPSHOT'
    }
-
    println "Version: ${version}"
 }
 
