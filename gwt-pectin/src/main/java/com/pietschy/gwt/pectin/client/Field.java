@@ -29,4 +29,7 @@ public interface Field<T>
    FormModel getFormModel();
 
    Class<T> getValueClass();
+
+   boolean
+   isMutableSource();
 }

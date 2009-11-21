@@ -17,10 +17,6 @@
 package com.pietschy.gwt.pectin.client.validation;
 
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.format.Format;
-import com.pietschy.gwt.pectin.client.format.FormatException;
-import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
-import com.pietschy.gwt.pectin.client.validation.message.Message;
 import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
 
 
@@ -48,11 +44,9 @@ public class FormattedFieldValidationBuilder<T>
 
    public ConditionBuilder usingFieldFormat()
    {
-
       FieldFormatValidator<T> validator = new FieldFormatValidator<T>(fieldValidator.getFieldModel());
       fieldValidator.addTextValidator(validator, conditionDelegate);
       return new DelegatingConditionBuilder(conditionDelegate);
-
    }
 
    public ConditionBuilder usingTextValidator(Validator<String> validator, Validator<String>... others)
@@ -77,39 +71,5 @@ public class FormattedFieldValidationBuilder<T>
       }
 
       return new DelegatingConditionBuilder(conditionDelegate);
-   }
-
-   private class FieldFormatValidator<T> implements Validator<String>
-   {
-
-      protected FormattedFieldModel<T> model;
-
-      public FieldFormatValidator(FormattedFieldModel<T> model)
-      {
-         this.model = model;
-      }
-
-      public void validate(String value, ValidationResultCollector results)
-      {
-         Format<T> format = model.getFormat();
-
-         try
-         {
-            format.parse(value);
-         }
-         catch (FormatException e)
-         {
-            if (e instanceof Message)
-            {
-               Message m = (Message) e;
-               results.add(new ErrorMessage(m.getMessage(), m.getAdditionalInfo()));
-            }
-            else
-            {
-               results.add(new ErrorMessage(e.getMessage()));
-            }
-         }
-
-      }
    }
 }

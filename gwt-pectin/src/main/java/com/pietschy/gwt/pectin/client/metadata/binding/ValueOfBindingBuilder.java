@@ -16,6 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.BindingContainer;
@@ -55,10 +56,53 @@ public class ValueOfBindingBuilder
     * Binds the visible metadata property to the speicified widget.
     *
     * @param widget the widget to bind to.
+    * @param others additional widgets to bind to.
+    */
+   public void toVisibilityOf(UIObject widget, UIObject... others)
+   {
+      container.registerAndInitialiseBinding(new VisibleBinding(model, widget, others));
+   }
+
+   /**
+    * Binds the visible metadata property to the speicified widget.
+    *
+    * @param widget the widget to bind to.
+    */
+   public void toVisibilityOf(Element widget)
+   {
+      container.registerAndInitialiseBinding(new ElementVisibleBinding(model, widget));
+   }
+
+   /**
+    * Binds the visible metadata property to the speicified widget.
+    *
+    * @param widget the element to bind to.
+    * @param others additional elementsto bind to.
+    */
+   public void toVisibilityOf(Element widget, Element... others)
+   {
+      container.registerAndInitialiseBinding(new ElementVisibleBinding(model, widget, others));
+   }
+
+   /**
+    * Binds the visible metadata property to the speicified widget.
+    *
+    * @param widget the widget to bind to.
     */
    public void toVisibilityOf(HasVisible widget)
    {
       container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget));
+   }
+
+   /**
+    * Binds the visible metadata property to the speicified widget.
+    *
+    * @param widget the widget to bind to.
+    * @param others additional widgets to bind to.
+    */
+   public void toVisibilityOf(HasVisible widget, HasVisible... others)
+   {
+      container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget, others));
    }
 
    /**

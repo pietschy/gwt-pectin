@@ -102,7 +102,7 @@ implements ListFieldModel<T>
       return addHandler(handler, ListModelChangedEvent.getType());
    }
 
-   protected boolean 
+   public boolean 
    isMutableSource()
    {
       return source instanceof MutableListModel;

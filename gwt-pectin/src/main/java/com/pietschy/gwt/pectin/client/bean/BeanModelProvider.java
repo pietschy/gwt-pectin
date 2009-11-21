@@ -145,7 +145,7 @@ public abstract class BeanModelProvider<B>
          listModels.put(key, listModel);
       }
 
-      return (BeanPropertyListModel<T>) listModel;
+      return listModel;
    }
 
    /**
@@ -180,7 +180,7 @@ public abstract class BeanModelProvider<B>
          valueModels.put(key, valueModel);
       }
 
-      return (BeanPropertyValueModel<T>) valueModel;
+      return valueModel;
    }
 
    /**
@@ -280,6 +280,7 @@ public abstract class BeanModelProvider<B>
          {
             return false;
          }
+
          if (type != null ? !type.equals(key.type) : key.type != null)
          {
             return false;

@@ -22,14 +22,24 @@ import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBindingBuilder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+
 /**
  * 
  */
 public class MetadataPlugin
 {
-   public static <T> MetadataBindingBuilder<T> enable(Field field)
+
+   public static <T> MetadataBindingBuilder<T> enable(Field field, Field... others)
    {
-      return prepareBindingBuilder(field, new MetadataBindingBuilder.Action()
+      return enable(toCollection(field, others));
+   }
+
+   public static <T> MetadataBindingBuilder<T> enable(Collection<Field<?>> fields)
+   {
+      return new MetadataBindingBuilder<T>(fields, new MetadataBindingBuilder.Action()
       {
          public void apply(Metadata metadata, boolean value)
          {
@@ -38,9 +48,14 @@ public class MetadataPlugin
       });
    }
 
-   public static <T> MetadataBindingBuilder<T> disable(Field field)
+   public static <T> MetadataBindingBuilder<T> disable(Field field, Field... others)
    {
-      return prepareBindingBuilder(field, new MetadataBindingBuilder.Action()
+      return disable(toCollection(field, others));
+   }
+
+   public static <T> MetadataBindingBuilder<T> disable(Collection<Field<?>> fields)
+   {
+      return new MetadataBindingBuilder<T>(fields, new MetadataBindingBuilder.Action()
       {
          public void apply(Metadata metadata, boolean value)
          {
@@ -49,9 +64,14 @@ public class MetadataPlugin
       });
    }
 
-   public static <T> MetadataBindingBuilder<T> show(Field field)
+   public static <T> MetadataBindingBuilder<T> show(Field field, Field... others)
    {
-      return prepareBindingBuilder(field, new MetadataBindingBuilder.Action()
+      return show(toCollection(field, others));
+   }
+
+   public static <T> MetadataBindingBuilder<T> show(Collection<Field<?>> fields)
+   {
+      return new MetadataBindingBuilder<T>(fields, new MetadataBindingBuilder.Action()
       {
          public void apply(Metadata metadata, boolean value)
          {
@@ -60,9 +80,14 @@ public class MetadataPlugin
       });
    }
 
-   public static <T> MetadataBindingBuilder<T> hide(Field field)
+   public static <T> MetadataBindingBuilder<T> hide(Field field, Field... others)
    {
-      return prepareBindingBuilder(field, new MetadataBindingBuilder.Action()
+      return hide(toCollection(field, others));
+   }
+
+   public static <T> MetadataBindingBuilder<T> hide(Collection<Field<?>> fields)
+   {
+      return new MetadataBindingBuilder<T>(fields, new MetadataBindingBuilder.Action()
       {
          public void apply(Metadata metadata, boolean value)
          {
@@ -71,10 +96,12 @@ public class MetadataPlugin
       });
    }
 
-   public static <T> MetadataBindingBuilder<T>
-   prepareBindingBuilder(Field field, MetadataBindingBuilder.Action action)
+   private static <T> Collection<Field<?>> toCollection(Field<?> field, Field<?>... others)
    {
-      return new MetadataBindingBuilder<T>(getMetadata(field), action);
+      ArrayList<Field<?>> fields = new ArrayList<Field<?>>();
+      fields.add(field);
+      fields.addAll(Arrays.asList(others));
+      return fields;
    }
 
    public static WatermarkBuilder watermark(FieldModel<String> field)
@@ -108,6 +135,25 @@ public class MetadataPlugin
       }
 
       return manager;
+   }
+
+   /**
+    * This method ensures that the metadata binding callbacks are installed.  The callbacks ensure that the Metadata
+    * plugin is activated every time {@link com.pietschy.gwt.pectin.client.binding.WidgetBinder} is used.
+    * <p>
+    * This method is only needed if
+    * you haven't called any of the {@link #enable(com.pietschy.gwt.pectin.client.Field, com.pietschy.gwt.pectin.client.Field[])} style methods
+    * or the {@link #getMetadata(com.pietschy.gwt.pectin.client.Field)} or the
+    * {@link #getMetadataManager(com.pietschy.gwt.pectin.client.FormModel)} method.
+    * <p>
+    * Typically you'd use this if you want the metadata plugin automatically configure widgets based only on
+    * the state of {@link com.pietschy.gwt.pectin.client.Field#isMutableSource()}.
+    *
+    * @param form the form.
+    */
+   public static void ensureMetadataBindingsInstalled(FormModel form)
+   {
+      getMetadataManager(form);
    }
    
 }

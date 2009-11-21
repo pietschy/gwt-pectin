@@ -60,12 +60,11 @@ public class BasicDemo extends AbstractDemo
       panel.add(saveButton);
 
       addBlurbParagraph("This demo shows a simple form that's bound to an underlying bean. " +
-                        "It also contains a computed field (letters in name), a fomatted field (age), " +
-                        "a converted formatted field (age in dog years) and a list field bound to " +
+                        "It also contains a computed field (letters in name) and a list field bound to " +
                         "checkboxes (favorite wines).");
       
       addBlurbParagraph("Clicking save commits the changes to the bean but doesn't show you " +
-                        "anything.  It's riveting stuff (c:");
+                        "anything.  Checkout the other demos if you want more excitement.");
 
       
       addLinkToModel(model);

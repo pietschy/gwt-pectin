@@ -19,6 +19,9 @@ package com.pietschy.gwt.pectin.client.style;
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -31,6 +34,14 @@ public class StyleBinder
 {
    public StyleBindingBuilder style(UIObject widget)
    {
-      return new StyleBindingBuilder(this, widget);
+      return new StyleBindingBuilder(this, Arrays.asList(widget));
+   }
+
+   public StyleBindingBuilder style(UIObject widget, UIObject... others)
+   {
+      ArrayList<UIObject> widgets = new ArrayList<UIObject>();
+      widgets.add(widget);
+      widgets.addAll(Arrays.asList(others));
+      return new StyleBindingBuilder(this, widgets);
    }
 }

@@ -51,5 +51,6 @@ public interface IndexedValidationResult extends ValidationResult
     */
    ValidationResult getIndexedResult(int index);
 
+
    Set<Integer> getResultIndicies();
 }

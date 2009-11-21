@@ -17,10 +17,7 @@
 package com.pietschy.gwt.pectin.client.validation;
 
 
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,6 +44,11 @@ public class ValidationPlugin
       return new ListFieldValidationBuilder<T>(getValidationManager(field.getFormModel()), field);
    }
 
+   public static <T> FormattedListFieldValidationBuilder<T> validateField(FormattedListFieldModel<T> field)
+   {
+      return new FormattedListFieldValidationBuilder<T>(getValidationManager(field.getFormModel()), field);
+   }
+
    public static <T> FieldValidator<T> getFieldValidator(FieldModel<T> field)
    {
       return getValidationManager(field.getFormModel()).getFieldValidator(field, true);
@@ -62,9 +64,9 @@ public class ValidationPlugin
       return getValidationManager(field.getFormModel()).getFieldValidator(field, true);
    }
 
-   public static <T> ListFieldValidator<T> getFieldValidator(ListFieldModel<T> field, boolean create)
+   public static <T> FormattedListFieldValidator<T> getFieldValidator(FormattedListFieldModel<T> field)
    {
-      return getValidationManager(field.getFormModel()).getFieldValidator(field, create);
+      return getValidationManager(field.getFormModel()).getFieldValidator(field, true);
    }
 
    public static ValidationManager getValidationManager(FormModel form)

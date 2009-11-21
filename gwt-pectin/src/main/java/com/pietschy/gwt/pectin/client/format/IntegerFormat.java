@@ -14,17 +14,10 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.misc;
-
-import com.pietschy.gwt.pectin.client.format.Format;
-import com.pietschy.gwt.pectin.client.format.FormatException;
+package com.pietschy.gwt.pectin.client.format;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Aug 3, 2009
- * Time: 4:33:06 PM
- * To change this template use File | Settings | File Templates.
+ * 
  */
 public class IntegerFormat implements Format<Integer>
 {
@@ -52,11 +45,33 @@ public class IntegerFormat implements Format<Integer>
       }
       catch (NumberFormatException e)
       {
-         throw new FormatException("Not a valid number", e);
+         throw toFormatException(e, text);
       }
    }
 
-   protected void validateInteger(int age) throws FormatException
+   /**
+    * This method is called to create a FormatException whenever a NumberFormatException is
+    * thrown.  Subclasses can override this method to create more meaningful messages.
+    * @param e the exectption that was thrown.
+    * @param text the text the was being parsed.
+    * @return a new FormatException that will be thrown by the parse method.
+    */
+   protected FormatException toFormatException(NumberFormatException e, String text)
+   {
+      return new FormatException(text + " is not a valid integer", e);
+   }
+
+   /**
+    * This method is invoked once the text has been successfully parsed into an integer.  Subclasses
+    * can override this method to apply additional constraints to the integer value by throwing a
+    * FormatException if the value is outside any desired limits.
+    * <p>
+    * The default implementation does nothing.
+    *
+    * @param integer the integer value
+    * @throws FormatException if the value violates a constraint.
+    */
+   protected void validateInteger(int integer) throws FormatException
    {
       // subclasses can hook in here
    }

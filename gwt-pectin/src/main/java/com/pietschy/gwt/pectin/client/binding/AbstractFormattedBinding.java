@@ -16,9 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
+import com.pietschy.gwt.pectin.client.value.GuardedValueChangeHandler;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 
 /**
@@ -30,8 +30,15 @@ import com.pietschy.gwt.pectin.client.value.MutableValueModel;
  */
 public abstract class AbstractFormattedBinding<T> extends AbstractBinding
 {
+   private GuardedValueChangeHandler<String> fieldMonitor = new GuardedValueChangeHandler<String>()
+   {
+      public void onGuardedValueChanged(ValueChangeEvent<String> event)
+      {
+         setWidgetText(event.getValue());
+      }
+   };
+
    protected FormattedFieldModel<T> field;
-   private FieldMonitor fieldMonitor = new FieldMonitor();
    protected MutableValueModel<String> textModel;
 
    public AbstractFormattedBinding(FormattedFieldModel<T> field)
@@ -52,12 +59,7 @@ public abstract class AbstractFormattedBinding<T> extends AbstractBinding
 
    public void updateTarget()
    {
-      onModelChanged(textModel.getValue());
-   }
-
-   private void onModelChanged(String value)
-   {
-      setWidgetText(value);
+      setWidgetText(textModel.getValue());
    }
 
    protected void onWidgetChanged(String text)
@@ -73,21 +75,4 @@ public abstract class AbstractFormattedBinding<T> extends AbstractBinding
       }
    }
 
-   private class FieldMonitor implements ValueChangeHandler<String>
-   {
-      private boolean ignoreEvents = false;
-
-      public void onValueChange(ValueChangeEvent<String> event)
-      {
-         if (!ignoreEvents)
-         {
-            onModelChanged(event.getValue());
-         }
-      }
-
-      public void setIgnoreEvents(boolean ignoreEvents)
-      {
-         this.ignoreEvents = ignoreEvents;
-      }
-   }
 }

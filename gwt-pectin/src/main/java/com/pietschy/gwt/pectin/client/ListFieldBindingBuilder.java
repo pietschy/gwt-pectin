@@ -26,12 +26,12 @@ import com.pietschy.gwt.pectin.client.list.ListModel;
  * Time: 12:20:38 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ListFieldBuilder<T>
+public class ListFieldBindingBuilder<T>
 {
    private FormModel formModel;
    private Class<T> type;
 
-   protected ListFieldBuilder(FormModel formModel, Class<T> type)
+   protected ListFieldBindingBuilder(FormModel formModel, Class<T> type)
    {
       this.formModel = formModel;
       this.type = type;

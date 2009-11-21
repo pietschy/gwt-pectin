@@ -16,6 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.BindingContainer;
 import com.pietschy.gwt.pectin.client.metadata.HasVisible;
@@ -23,12 +24,12 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
-* User: andrew
-* Date: Jul 17, 2009
-* Time: 1:47:07 PM
-* To change this template use File | Settings | File Templates.
-*/
-public class VisibilityBindingBuilder 
+ * User: andrew
+ * Date: Jul 17, 2009
+ * Time: 1:47:07 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class VisibilityBindingBuilder
 {
    private ValueModel<Boolean> model;
    private BindingContainer container;
@@ -41,21 +42,70 @@ public class VisibilityBindingBuilder
 
    /**
     * Binds the visible metadata property to the speicified widget.
-    * 
+    *
     * @param widget the widget to bind to.
     */
-   public void to(UIObject widget) 
+   public void to(UIObject widget)
    {
       container.registerAndInitialiseBinding(new VisibleBinding(model, widget));
    }
-   
+
    /**
     * Binds the visible metadata property to the speicified widget.
-    * 
+    *
+    * @param widget the widget to bind to.
+    * @param others other widgets to bind to.
+    */
+   public void to(UIObject widget, UIObject... others)
+   {
+      container.registerAndInitialiseBinding(new VisibleBinding(model, widget, others));
+   }
+
+
+   /**
+    * Binds the visible metadata property to the speicified dom element.  This binding
+    * delegates to {@link UIObject#setVisible(com.google.gwt.dom.client.Element, boolean)}
+    *
+    * @param element the widget to bind to.
+    */
+   public void to(Element element)
+   {
+      container.registerAndInitialiseBinding(new ElementVisibleBinding(model, element));
+   }
+
+   /**
+    * Binds the visible metadata property to the speicified dom element.  This binding
+    * delegates to {@link UIObject#setVisible(com.google.gwt.dom.client.Element, boolean)}
+    *
+    * @param element the widget to bind to.
+    * @param others additional widgets to bind to.
+    */
+   public void to(Element element, Element... others)
+   {
+      container.registerAndInitialiseBinding(new ElementVisibleBinding(model, element, others));
+   }
+
+   /**
+    * Binds the visible metadata property to the speicified widget.
+    *
     * @param widget the widget to bind to.
     */
-   public void to(HasVisible widget) 
+   public void to(HasVisible widget)
    {
       container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget));
    }
+
+   /**
+    * Binds the visible metadata property to the speicified widget.
+    *
+    * @param widget the widget to bind to.
+    * @param others additional widgets to bind to.
+    */
+   public void to(HasVisible widget, HasVisible... others)
+   {
+      container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget, others));
+   }
+
+
+
 }

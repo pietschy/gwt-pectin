@@ -45,6 +45,8 @@ public class FormModel
    private HashMap<Object, Object> properties = new HashMap<Object, Object>(); 
    private ArrayList<BindingCallback> bindingCallbacks = new ArrayList<BindingCallback>();
 
+   private ArrayList<Field<?>> allFields = new ArrayList<Field<?>>();
+
    /**
     * Returns a {@link FieldModel} buider of the specified type.
     * @param type the value type held by the field.
@@ -70,11 +72,43 @@ public class FormModel
     * @param type the value type held by the list.
     * @return a builder for the specified type.
     */
-   public <T> ListFieldBuilder<T> listOfType(Class<T> type)
+   public <T> ListFieldBindingBuilder<T> listOfType(Class<T> type)
    {
-      return new ListFieldBuilder<T>(this, type);
+      return new ListFieldBindingBuilder<T>(this, type);
    }
-   
+
+   /**
+    * Returns a {@link FormattedListFieldModel} builder for the specified type.
+    * @param type the value type held by the list.
+    * @return a builder for the specified type.
+    */
+   public <T> FormattedListFieldBuilder<T> formattedListOfType(Class<T> type)
+   {
+      return new FormattedListFieldBuilder<T>(this, type);
+   }
+
+   /**
+    * Returns all the fields in this form model at the time this method is called.  Fields added
+    * after this method is invoked will not be included in the collection.
+    *
+    * @return a collection of the fields in this model.
+    */
+   public Collection<Field<?>> allFields()
+   {
+      // It may be tempting to include a live colleciton of the fields so that the notion of
+      // "all fields" is true no matter when the method was used to construct an expression
+      // This however would cause problems as most bindings take some initialisation action
+      // when a new field is added.
+      //
+      // Thus if we want this method to return a live collection then we will need to:
+      // a) make the collection observable
+      // b) ensure all bindings that take a collection of fields observe the collection and
+      //    ensure new additions to it are initialised appropriately.
+      //
+      // but for now we return a copy.
+      return new ArrayList<Field<?>>(allFields);
+   }
+
    /**
     * Factory method for creating field model instances.  This method is invoked by the field model
     * builder and is provided so subclasses can override the specific type that is returned.
@@ -85,17 +119,28 @@ public class FormModel
     */
    protected <T> FieldModel<T> createFieldModel(ValueModel<T> model, Class<T> valueType)
    {
-      return new FieldModelImpl<T>(this, model, valueType);
+      FieldModelImpl<T> field = new FieldModelImpl<T>(this, model, valueType);
+      allFields.add(field);
+      return field;
    }
    
    protected <T> FormattedFieldModel<T> createFormattedFieldModel(ValueModel<T> model, Format<T> format, Class<T> valueType)
    {
-      return new FormattedFieldModelImpl<T>(this, model, format, valueType);
+      FormattedFieldModelImpl<T> field = new FormattedFieldModelImpl<T>(this, model, format, valueType);
+      allFields.add(field);
+      return field;
    }
    
    protected <T> ListFieldModel<T> createListModel(ListModel<T> source, Class<T> valueType)
    {
-      return new ListFieldModelImpl<T>(this, source, valueType);
+      ListFieldModelImpl<T> field = new ListFieldModelImpl<T>(this, source, valueType);
+      allFields.add(field);
+      return field;
+   }
+
+   public <T> FormattedListFieldModel<T> createFormattedListFieldModel(ListModel<T> source, Format<T> format, Class<T> valueType)
+   {
+      return new FormattedListFieldModelImpl<T>(this, source, format, valueType);
    }
 
    public void putProperty(Object key, Object value)
@@ -117,4 +162,6 @@ public class FormModel
    {
       return Collections.unmodifiableCollection(bindingCallbacks);
    }
+
+
 }

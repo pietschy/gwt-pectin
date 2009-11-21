@@ -17,14 +17,8 @@
 package com.pietschy.gwt.pectin.client.validation;
 
 
-import com.pietschy.gwt.pectin.client.BindingCallback;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
-import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
-import com.pietschy.gwt.pectin.client.binding.BindingContainer;
+import com.pietschy.gwt.pectin.client.*;
+import com.pietschy.gwt.pectin.client.binding.*;
 import com.pietschy.gwt.pectin.client.validation.binding.IndexedValidationDisplayBinding;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationDisplayBinding;
 import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
@@ -47,7 +41,9 @@ implements BindingCallback
    private HashMap<FormattedFieldModel<?>, FormattedFieldValidatorImpl<?>> formattedFieldValidators = new HashMap<FormattedFieldModel<?>, FormattedFieldValidatorImpl<?>>();
    
    private HashMap<ListFieldModel<?>, ListFieldValidatorImpl<?>> listFieldValidators = new HashMap<ListFieldModel<?>, ListFieldValidatorImpl<?>>();
-   
+
+   private HashMap<FormattedListFieldModel<?>, FormattedListFieldValidatorImpl<?>> formattedListFieldValidators = new HashMap<FormattedListFieldModel<?>, FormattedListFieldValidatorImpl<?>>();
+
    
    @SuppressWarnings("unchecked")
    public <T> FieldValidatorImpl<T> getFieldValidator(FieldModel<T> field, boolean create)
@@ -91,6 +87,20 @@ implements BindingCallback
       
       return validator;
    }
+
+   @SuppressWarnings("unchecked")
+   public <T> FormattedListFieldValidatorImpl<T> getFieldValidator(FormattedListFieldModel<T> field, boolean create)
+   {
+      FormattedListFieldValidatorImpl<T> validator = (FormattedListFieldValidatorImpl<T>) formattedListFieldValidators.get(field);
+
+      if (validator == null && create)
+      {
+         validator = new FormattedListFieldValidatorImpl<T>(field);
+         formattedListFieldValidators.put(field, validator);
+      }
+
+      return validator;
+   }
    
    public boolean validate()
    {
@@ -122,7 +132,16 @@ implements BindingCallback
             valid = false;
          }
       }
-      
+
+      for (FormattedListFieldValidatorImpl<?> validator : formattedListFieldValidators.values())
+      {
+         validator.validate();
+         if (validator.getValidationResult().contains(Severity.ERROR))
+         {
+            valid = false;
+         }
+      }
+
       return valid;
    }
    
@@ -133,7 +152,17 @@ implements BindingCallback
          validator.clear();
       }
 
+      for (FormattedFieldValidatorImpl<?> validator : formattedFieldValidators.values())
+      {
+         validator.clear();
+      }
+
       for (ListFieldValidatorImpl<?> validator : listFieldValidators.values())
+      {
+         validator.clear();
+      }
+
+      for (FormattedListFieldValidatorImpl<?> validator : formattedListFieldValidators.values())
       {
          validator.clear();
       }
@@ -164,6 +193,21 @@ implements BindingCallback
    }
 
    public <T> void onWidgetBinding(AbstractListBinding binding, ListFieldModel<T> field, Object target)
+   {
+      ListFieldValidator<T> fieldValidator = getFieldValidator(field, false);
+
+      if (fieldValidator != null)
+      {
+         if (target instanceof IndexedValidationDisplay)
+         {
+            IndexedValidationDisplayBinding validationBinding = new IndexedValidationDisplayBinding(fieldValidator, (IndexedValidationDisplay) target);
+            validationBinding.updateTarget();
+            binding.registerAndInitialiseBinding(validationBinding);
+         }
+      }
+   }
+
+   public <T> void onWidgetBinding(AbstractFormattedListBinding<T> binding, FormattedListFieldModel<T> field, Object target)
    {
       ListFieldValidator<T> fieldValidator = getFieldValidator(field, false);
 

@@ -63,24 +63,50 @@ implements HasValue<T>, HasEnabled, Focusable, HasFocusHandlers, HasBlurHandlers
 
    public ComboBox(T[] values)
    {
-      this(Arrays.asList(values));
+      this(values, DEFAULT_RENDERER);
+   }
+
+   public ComboBox(T[] values, Renderer<? super T> renderer)
+   {
+      this(Arrays.asList(values), renderer);
    }
    
    public ComboBox(List<T> values)
    {
+      this(values, DEFAULT_RENDERER);
+   }
+
+   public ComboBox(List<T> values, Renderer<? super T> renderer)
+   {
       ArrayListModel<T> model = new ArrayListModel<T>();
       model.setElements(values);
-      init(model);
+      init(model, renderer);
    }
 
    public ComboBox(ListModel<T> values)
    {
-      init(values);
+      init(values, DEFAULT_RENDERER);
    }
 
-   private void init(ListModel<T> values)
+   public ComboBox(ListModel<T> values, Renderer<? super T> renderer)
    {
+      init(values, renderer);
+   }
+
+   private void init(ListModel<T> values, Renderer<? super T> renderer)
+   {
+      if (values == null)
+      {
+         throw new NullPointerException("values is null");
+      }
+
+      if (renderer == null)
+      {
+         throw new NullPointerException("renderer is null");
+      }
+
       valueList = values;
+      this.renderer = renderer;
       rebuildListBox();
       listBox.addChangeHandler(listBoxMonitor);
       valueList.addListModelChangedHandler(new ListModelChangedHandler<T>()

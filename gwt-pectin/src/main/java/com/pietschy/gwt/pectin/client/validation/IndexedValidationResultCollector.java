@@ -45,4 +45,12 @@ public interface IndexedValidationResultCollector
     */
    void
    add(int index, ValidationMessage message);
+
+   /**
+    * Gets a {@link ValidationResultCollector} whose messages are to this collector at
+    * the specified index
+    * @param index the index to add the messages to.
+    * @return a {@link ValidationResultCollector} whose messages are to this collector at
+    */
+   ValidationResultCollector getIndexedCollector(int index);
 }

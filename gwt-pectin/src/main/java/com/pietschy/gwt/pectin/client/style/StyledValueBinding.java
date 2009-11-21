@@ -17,8 +17,8 @@
 package com.pietschy.gwt.pectin.client.style;
 
 import com.google.gwt.user.client.ui.UIObject;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,7 +42,7 @@ public class StyledValueBinding<T>
       this.styleName = styleName;
    }
 
-   protected void updateWidget(T value)
+   protected void updateTarget(T value)
    {
       if (areEqual(this.triggerValue, value))
       {

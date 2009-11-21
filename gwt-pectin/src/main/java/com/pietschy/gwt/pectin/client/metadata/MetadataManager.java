@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.*;
 import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractFormattedListBinding;
 import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
 import com.pietschy.gwt.pectin.client.metadata.binding.AllMetadataBindingBuilder;
 import com.pietschy.gwt.pectin.client.metadata.binding.WatermarkBinding;
@@ -56,6 +57,7 @@ public class MetadataManager
    {
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
 
+      // if we're a FieldModel<String> bound to a text box then apply the water mark.
       if (String.class.getName().equals(model.getValueClass().getName()) && target instanceof TextBox)
       {
          binding.registerAndInitialiseBinding(new WatermarkBinding((ValueModel<String>) model,
@@ -79,6 +81,12 @@ public class MetadataManager
 
    public <T> void onWidgetBinding(AbstractListBinding binding, ListFieldModel<T> model, Object target)
    {
+      new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
+   }
+
+   public <T> void onWidgetBinding(AbstractFormattedListBinding<T> binding, FormattedListFieldModel<T> model, Object target)
+   {
+      // todo: should really support water marks here too....
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
    }
 }

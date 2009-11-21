@@ -55,9 +55,6 @@ implements Field<T>
       return valueClass;
    }
 
-   protected abstract boolean
-   isMutableSource();
-
 
    protected void verifyMutableSource()
    {

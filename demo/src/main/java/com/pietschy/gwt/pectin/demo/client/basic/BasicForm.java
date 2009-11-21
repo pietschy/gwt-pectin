@@ -37,9 +37,6 @@ public class BasicForm extends VerySimpleForm
    private TextBox surname = new EnhancedTextBox();
    private TextBox lettersInName = new TextBox();
    
-   private TextBox age = new EnhancedTextBox();
-   private TextBox ageInDogYears = new EnhancedTextBox();
-   
    private String buttonGroupId = DOM.createUniqueId();
    private RadioButton maleRadio = new RadioButton(buttonGroupId, "Male");
    private RadioButton femaleRadio = new RadioButton(buttonGroupId, "Female");
@@ -56,15 +53,12 @@ public class BasicForm extends VerySimpleForm
       // see the metadata demo to see how you can control
       // enabledness in the model.
       lettersInName.setEnabled(false);
-      age.setVisibleLength(5);
-      
+
       // bind our widgets to our model.  In normal practice I'd combine the
       // binding, wiget creation and form layout into some nice reusable methods.
       widgets.bind(model.givenName).to(givenName);
       widgets.bind(model.surname).to(surname);
-      widgets.bind(model.age).to(age);
-      widgets.bind(model.ageInDogYears).to(ageInDogYears);
-      
+
       // here we're binding field to a staic display (HasText).  We can also use
       // a DisplayFormat here if we need to.  In this case the default ToStringFormat
       // will be used.
@@ -85,8 +79,6 @@ public class BasicForm extends VerySimpleForm
       addRow("Letters in name", lettersInName);
       addGap();
       addRow("Gender", maleRadio, femaleRadio);
-      addRow("Age", age);
-      addRow("Age (in dog years)", ageInDogYears);
       addGap();
       addRow("Favorite Wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
    }

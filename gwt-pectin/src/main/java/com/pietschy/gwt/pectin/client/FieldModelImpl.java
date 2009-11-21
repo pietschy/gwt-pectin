@@ -88,7 +88,7 @@ implements FieldModel<T>
       fireValueChangeEvent(oldValue, value);
    }
 
-   protected boolean 
+   public boolean 
    isMutableSource()
    {
       return getSource() instanceof MutableValueModel;

@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -30,30 +32,33 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 public class StyleBinding
    extends AbstractValueBinding<Boolean>
 {
-   private UIObject widget;
+   private List<UIObject> widgets;
    private String styleName;
 
-   public StyleBinding(ValueModel<Boolean> condition, UIObject widget, String styleName)
+   public StyleBinding(ValueModel<Boolean> condition, List<UIObject> widgets, String styleName)
    {
       super(condition);
-      this.widget = widget;
+      this.widgets = widgets;
       this.styleName = styleName;
    }
 
-   protected void updateWidget(Boolean value)
+   protected void updateTarget(Boolean value)
    {
-      if (Boolean.TRUE.equals(value))
+      for (UIObject widget : widgets)
       {
-         widget.addStyleName(styleName);
-      }
-      else
-      {
-         widget.removeStyleName(styleName);
+         if (Boolean.TRUE.equals(value))
+         {
+            widget.addStyleName(styleName);
+         }
+         else
+         {
+            widget.removeStyleName(styleName);
+         }
       }
    }
 
-   public UIObject getTarget()
+   public List<UIObject> getTarget()
    {
-      return widget;
+      return widgets;
    }
 }

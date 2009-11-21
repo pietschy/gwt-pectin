@@ -16,8 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.client.metadata.HasVisible;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
+
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,14 +32,24 @@ public class HasVisibleBinding
 extends AbstractVisibleBinding<HasVisible>
 {
 
-   public HasVisibleBinding(ValueModel<Boolean> model, HasVisible widget)
+   public HasVisibleBinding(ValueModel<Boolean> model, HasVisible target)
+   {
+      super(model, target);
+   }
+
+   public HasVisibleBinding(ValueModel<Boolean> model, HasVisible target, HasVisible... others)
+   {
+      super(model, target, others);
+   }
+
+   public HasVisibleBinding(ValueModel<Boolean> model, Collection<HasVisible> widget)
    {
       super(model, widget);
    }
 
-   protected void updateWidget(boolean visible)
+   protected void updateVisibility(HasVisible target, boolean visible)
    {
-      getTarget().setVisible(visible);
+      target.setVisible(visible);
    }
 
 }

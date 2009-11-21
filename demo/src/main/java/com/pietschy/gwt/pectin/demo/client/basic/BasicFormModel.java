@@ -19,15 +19,12 @@ package com.pietschy.gwt.pectin.demo.client.basic;
 import com.google.gwt.core.client.GWT;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import com.pietschy.gwt.pectin.client.value.Converter;
 import com.pietschy.gwt.pectin.client.value.Reduce;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
-import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
 
 import java.util.List;
 
@@ -44,8 +41,6 @@ public class BasicFormModel extends FormModel
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
    protected final FieldModel<Integer> lettersInName;
-   protected final FormattedFieldModel<Integer> age;
-   protected final FormattedFieldModel<Integer> ageInDogYears;
    protected final FieldModel<Gender> gender;
    protected final ListFieldModel<Wine> favoriteWines;
 
@@ -55,12 +50,7 @@ public class BasicFormModel extends FormModel
       givenName = fieldOfType(String.class).boundTo(personProvider, "givenName");
       surname = fieldOfType(String.class).boundTo(personProvider, "surname");
       gender = fieldOfType(Gender.class).boundTo(personProvider, "gender");
-
-      // a formatted field.
-      age = formattedFieldOfType(Integer.class)
-         .using(new AgeFormat())
-         .boundTo(personProvider, "age");
-
+      
       // a list field
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
       
@@ -68,11 +58,7 @@ public class BasicFormModel extends FormModel
       lettersInName = fieldOfType(Integer.class)
          .computedFrom(givenName, surname)
          .using(new CharacterCounter());
-      
-      // a converted field (that is also a formatted field)
-      ageInDogYears = formattedFieldOfType(Integer.class).using(new AgeFormat())
-         .convertedFrom(age).using(new DogYearsConverter());
-      
+
    }
 
    public void commit()
@@ -114,18 +100,5 @@ public class BasicFormModel extends FormModel
       }
    }
 
-   private static class DogYearsConverter implements Converter<Integer, Integer>
-   {
-      private static final int DOG_AGE_MULTIPLE = 7;
 
-      public Integer fromSource(Integer value)
-      {
-         return value != null ? DOG_AGE_MULTIPLE * value : null;
-      }
-
-      public Integer toSource(Integer value)
-      {
-         return value != null ? (int) ((double) value / DOG_AGE_MULTIPLE) : null;
-      }
-   }
 }

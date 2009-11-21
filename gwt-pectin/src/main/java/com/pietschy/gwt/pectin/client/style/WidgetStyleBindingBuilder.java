@@ -20,6 +20,8 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.BindingContainer;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
+import java.util.List;
+
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -31,17 +33,17 @@ public class WidgetStyleBindingBuilder
 {
    private BindingContainer builder;
    private String styleName;
-   private UIObject widget;
+   private List<UIObject> widgets;
 
-   public WidgetStyleBindingBuilder(BindingContainer builder, UIObject widget, String styleName)
+   public WidgetStyleBindingBuilder(BindingContainer builder, List<UIObject> widgets, String styleName)
    {
       this.builder = builder;
       this.styleName = styleName;
-      this.widget = widget;
+      this.widgets = widgets;
    }
 
    public void when(ValueModel<Boolean> condition)
    {
-      builder.registerAndInitialiseBinding(new StyleBinding(condition, widget, styleName));
+      builder.registerAndInitialiseBinding(new StyleBinding(condition, widgets, styleName));
    }
 }

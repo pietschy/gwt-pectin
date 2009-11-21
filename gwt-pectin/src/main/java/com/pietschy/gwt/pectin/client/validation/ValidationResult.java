@@ -23,8 +23,8 @@ import java.util.List;
 
 /**
  * ValidationResult is a container for {@link ValidationMessage}s. 
- * @see ValidationBinder
- * @see ValidationDisplay
+ * @see com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder
+ * @see com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay
  * 
  */
 public interface ValidationResult extends HasValidationMessages

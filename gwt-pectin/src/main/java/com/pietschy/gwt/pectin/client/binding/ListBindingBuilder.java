@@ -16,8 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.format.ListDisplayFormat;
 
 import java.util.Collection;
 
@@ -42,6 +44,16 @@ public class ListBindingBuilder<T>
    public void to(HasValue<Collection<T>> widget)
    {
       binder.registerBinding(new ListToHasValueBinding<T>(field, widget));
+   }
+
+   public void toLabel(HasText label)
+   {
+      toLabel(label, new CollectionToStringFormat<T>());
+   }
+
+   public void toLabel(HasText label, ListDisplayFormat<T> format)
+   {
+      binder.registerAndInitialiseBinding(new ListFieldToHasTextBinding(field, label, format));
    }
    
    public ContainingValueBulider containingValue(T value)

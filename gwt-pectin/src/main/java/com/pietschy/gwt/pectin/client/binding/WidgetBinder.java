@@ -16,10 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.pietschy.gwt.pectin.client.BindingCallback;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.*;
 
 /**
  * WidgetBinder provides a builders to bind widgets to field models.  During the binding process
@@ -42,6 +39,11 @@ extends AbstractBinder
    public <T> ListBindingBuilder<T> bind(ListFieldModel<T> field)
    {
       return new ListBindingBuilder<T>(this, field);
+   }
+
+   public <T> FormattedListFieldBindingBuilder<T> bind(FormattedListFieldModel<T> formattedList)
+   {
+      return new FormattedListFieldBindingBuilder<T>(this, formattedList);
    }
 
    protected <T> void registerBinding(AbstractFieldBinding<T> binding)
@@ -74,5 +76,13 @@ extends AbstractBinder
       }
    }
 
+   protected <T> void registerBinding(AbstractFormattedListBinding<T> binding)
+   {
+      super.registerAndInitialiseBinding(binding);
 
+      for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
+      {
+         callback.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
+      }
+   }
 }

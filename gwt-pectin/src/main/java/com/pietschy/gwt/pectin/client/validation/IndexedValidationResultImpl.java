@@ -18,16 +18,16 @@ package com.pietschy.gwt.pectin.client.validation;
 
 import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 
-import java.util.TreeMap;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
- * 
+ *
  */
-public class IndexedValidationResultImpl 
-implements IndexedValidationResult, IndexedValidationResultCollector
+public class IndexedValidationResultImpl
+   implements IndexedValidationResult, IndexedValidationResultCollector
 {
    private static final int UNINDEXED_MESSAGE_INDEX = -1;
    private TreeMap<Integer, ValidationResult> results = new TreeMap<Integer, ValidationResult>();
@@ -45,6 +45,11 @@ implements IndexedValidationResult, IndexedValidationResultCollector
    add(int index, ValidationMessage message)
    {
       prepareIndexedResult(index).add(message);
+   }
+
+   public ValidationResultCollector getIndexedCollector(final int index)
+   {
+      return new PreIndexedValidationResultCollector(index);
    }
 
    public boolean
@@ -83,7 +88,7 @@ implements IndexedValidationResult, IndexedValidationResultCollector
             return true;
          }
       }
-      
+
       return false;
    }
 
@@ -96,13 +101,14 @@ implements IndexedValidationResult, IndexedValidationResultCollector
 
    public ValidationResult getUnindexedResult()
    {
-      return prepareIndexedResult(UNINDEXED_MESSAGE_INDEX);
+      return getIndexedResult(UNINDEXED_MESSAGE_INDEX);
    }
 
    public ValidationResult
    getIndexedResult(int index)
    {
-      return prepareIndexedResult(index);
+      ValidationResultImpl result = (ValidationResultImpl) results.get(index);
+      return result != null ? result : EmptyValidationResult.INSTANCE;
    }
 
    public int size()
@@ -119,8 +125,22 @@ implements IndexedValidationResult, IndexedValidationResultCollector
          result = new ValidationResultImpl();
          results.put(index, result);
       }
-      
+
       return result;
    }
 
+   private class PreIndexedValidationResultCollector implements ValidationResultCollector
+   {
+      private final int index;
+
+      public PreIndexedValidationResultCollector(int index)
+      {
+         this.index = index;
+      }
+
+      public void add(ValidationMessage message)
+      {
+         IndexedValidationResultImpl.this.add(index, message);
+      }
+   }
 }

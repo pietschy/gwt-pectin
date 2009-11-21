@@ -16,10 +16,13 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,32 +32,49 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractVisibleBinding<T> 
-extends AbstractBinding implements ValueChangeHandler<Boolean>
+extends AbstractValueBinding<Boolean>
 {
-   private T widget;
-   private ValueModel<Boolean> model;
+   private Collection<T> targets;
 
-   public AbstractVisibleBinding(ValueModel<Boolean> model, T widget)
+   public AbstractVisibleBinding(ValueModel<Boolean> model, T target)
    {
-      this.model = model;
-      this.widget = widget;
-      registerHandler(model.addValueChangeHandler(this));
+      this(model, asList(target));
    }
 
-   public void updateTarget()
+   public AbstractVisibleBinding(ValueModel<Boolean> model, T target, T... others)
    {
-      updateWidget(model.getValue());
+      this(model, asList(target, others));
    }
 
-   public T getTarget()
+   public AbstractVisibleBinding(ValueModel<Boolean> model, Collection<T> target)
    {
-      return widget;
+      super(model);
+      this.targets = target;
    }
 
-   protected abstract void updateWidget(boolean visible);
-
-   public void onValueChange(ValueChangeEvent<Boolean> event)
+   protected void updateTarget(Boolean value)
    {
-      updateWidget(event.getValue());
+      for (T target : getTarget())
+      {
+         updateVisibility(target, value != null ? value : false);
+      }
+   }
+
+   public Collection<T> getTarget()
+   {
+      return targets;
+   }
+
+   protected abstract void updateVisibility(T target, boolean visible);
+
+   private static <T> List<T> asList(T first, T... others)
+   {
+      ArrayList<T> list = new ArrayList<T>();
+      list.add(first);
+      if (others.length > 0)
+      {
+         list.addAll(Arrays.asList(others));
+      }
+      return list;
    }
 }

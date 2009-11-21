@@ -16,8 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.google.gwt.user.client.ui.UIObject;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
+
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,14 +31,24 @@ import com.google.gwt.user.client.ui.UIObject;
 public class VisibleBinding 
 extends AbstractVisibleBinding<UIObject>
 {
-   public VisibleBinding(ValueModel<Boolean> model, UIObject widget)
+   public VisibleBinding(ValueModel<Boolean> model, UIObject target)
+   {
+      super(model, target);
+   }
+
+   public VisibleBinding(ValueModel<Boolean> model, UIObject target, UIObject... others)
+   {
+      super(model, target, others);
+   }
+
+   public VisibleBinding(ValueModel<Boolean> model, Collection<UIObject> widget)
    {
       super(model, widget);
    }
 
-   protected void updateWidget(boolean visible)
+   protected void updateVisibility(UIObject target, boolean visible)
    {
-      getTarget().setVisible(visible);
+      target.setVisible(visible);
    }
 
 }

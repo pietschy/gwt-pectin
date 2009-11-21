@@ -17,6 +17,7 @@
 package com.pietschy.gwt.pectin.demo.client.misc;
 
 import com.pietschy.gwt.pectin.client.format.FormatException;
+import com.pietschy.gwt.pectin.client.format.IntegerFormat;
 
 /**
  * Created by IntelliJ IDEA.

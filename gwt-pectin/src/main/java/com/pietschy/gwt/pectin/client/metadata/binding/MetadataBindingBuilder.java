@@ -16,10 +16,14 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.metadata.Metadata;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.pietschy.gwt.pectin.client.Field;
+import com.pietschy.gwt.pectin.client.metadata.Metadata;
+import com.pietschy.gwt.pectin.client.metadata.MetadataPlugin;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
+
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,12 +34,12 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
  */
 public class MetadataBindingBuilder<T>
 {
-   private Metadata metadata;
+   private Collection<Field<?>> fields;
    private Action action;
 
-   public MetadataBindingBuilder(Metadata fieldMetadata, Action action)
+   public MetadataBindingBuilder(Collection<Field<?>> fields, Action action)
    {
-      metadata = fieldMetadata;
+      this.fields = fields;
       this.action = action;
    }
    
@@ -46,14 +50,22 @@ public class MetadataBindingBuilder<T>
          public void onValueChange(ValueChangeEvent<Boolean> event)
          {
             Boolean conditionValue = event.getValue();
-            action.apply(metadata, conditionValue != null ? conditionValue : false);
+            configureMetadata(conditionValue != null ? conditionValue : false);
          }
       });
       
       Boolean conditionValue = condition.getValue();
-      action.apply(metadata, conditionValue != null ? conditionValue : false);
+      configureMetadata(conditionValue != null ? conditionValue : false);
    }
-   
+
+   private void configureMetadata(Boolean value)
+   {
+      for (Field<?> field : fields)
+      {
+         action.apply(MetadataPlugin.getMetadata(field), value);
+      }
+   }
+
    public interface Action
    {
       public void apply(Metadata metadata, boolean value);
