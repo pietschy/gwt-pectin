@@ -43,12 +43,7 @@ extends AbstractValueModel<T>
    
    private T computedValue = null;
 
-   public ReducingValueModel(Reduce<T, S> function, ValueModel<S> a, ValueModel<S> b)
-   {
-      this(function, Arrays.asList(a, b));
-   }
-
-   public ReducingValueModel(Reduce<T, S> function, Collection<ValueModel<S>> models)
+   private ReducingValueModel(Reduce<T, S> function, boolean compute)
    {
       if (function == null)
       {
@@ -57,20 +52,55 @@ extends AbstractValueModel<T>
 
       this.function = function;
 
+      if (compute)
+      {
+         recompute();
+      }
+   }
+
+   public ReducingValueModel(Reduce<T, S> function)
+   {
+      this(function, true);
+   }
+
+   public ReducingValueModel(Reduce<T, S> function, ValueModel<S> a, ValueModel<S> b)
+   {
+      this(function, Arrays.asList(a, b));
+   }
+
+   public ReducingValueModel(Reduce<T, S> function, Collection<ValueModel<S>> models)
+   {
+      this(function, false);
+
       for (ValueModel<S> model : models)
       {
-         if (model == null)
-         {
-            throw new NullPointerException("source model is null");
-         }
-         model.addValueChangeHandler(changeMonitor);
-         sourceModels.add(model);
+         addSourceModel(model, false);
       }
 
       recompute();
    }
 
-   
+   public void addSourceModel(ValueModel<S> model)
+   {
+      addSourceModel(model, true);
+   }
+
+   private void addSourceModel(ValueModel<S> model, boolean recompute)
+   {
+      if (model == null)
+      {
+         throw new NullPointerException("source model is null");
+      }
+
+      model.addValueChangeHandler(changeMonitor);
+      sourceModels.add(model);
+
+      if (recompute)
+      {
+         recompute();
+      }
+   }
+
 
    private void recompute()
    {
