@@ -22,6 +22,7 @@ import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import com.pietschy.gwt.pectin.client.value.Reduce;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
@@ -33,7 +34,6 @@ import java.util.List;
  */
 public class BasicFormModel extends FormModel
 {
-
    public static abstract class PersonProvider extends BeanModelProvider<Person> {}
 
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
@@ -43,6 +43,8 @@ public class BasicFormModel extends FormModel
    protected final FieldModel<Integer> lettersInName;
    protected final FieldModel<Gender> gender;
    protected final ListFieldModel<Wine> favoriteWines;
+
+   protected final ValueModel<Boolean> dirty;
 
    public BasicFormModel()
    {
@@ -58,6 +60,8 @@ public class BasicFormModel extends FormModel
       lettersInName = fieldOfType(Integer.class)
          .computedFrom(givenName, surname)
          .using(new CharacterCounter());
+
+      dirty = personProvider.getDirtyModel();
 
    }
 

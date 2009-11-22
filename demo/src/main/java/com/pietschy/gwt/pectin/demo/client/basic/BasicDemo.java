@@ -16,10 +16,6 @@
 
 package com.pietschy.gwt.pectin.demo.client.basic;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
@@ -37,11 +33,11 @@ public class BasicDemo extends AbstractDemo
    private BasicFormModel model = new BasicFormModel();
    private BasicForm form = new BasicForm(model);
 
-   private Button saveButton = new Button("Save");
+
 
    public BasicDemo()
    {
-      saveButton.addClickHandler(new SaveHandler());
+
 
       // throw a person together...
       Person person = new Person();
@@ -56,15 +52,14 @@ public class BasicDemo extends AbstractDemo
       // build a panel the form and add a save button
       VerticalPanel panel = new VerticalPanel();
       panel.add(form);
-      panel.add(new HTML("&nbsp;")); // *cough*
-      panel.add(saveButton);
-
+      
       addBlurbParagraph("This demo shows a simple form that's bound to an underlying bean. " +
                         "It also contains a computed field (letters in name) and a list field bound to " +
                         "checkboxes (favorite wines).");
       
-      addBlurbParagraph("Clicking save commits the changes to the bean but doesn't show you " +
-                        "anything.  Checkout the other demos if you want more excitement.");
+      addBlurbParagraph("The save button is bound to the dirty state of the model.  So if you change " +
+                        "a value it will enable.  Clicking save will commit the changes and save will " +
+                        "again disable.");
 
       
       addLinkToModel(model);
@@ -74,11 +69,5 @@ public class BasicDemo extends AbstractDemo
    }
 
 
-   private class SaveHandler implements ClickHandler
-   {
-      public void onClick(ClickEvent event)
-      {
-         model.commit();
-      }
-   }
+
 }

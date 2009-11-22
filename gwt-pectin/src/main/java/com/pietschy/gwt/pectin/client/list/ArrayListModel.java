@@ -16,19 +16,11 @@
 
 package com.pietschy.gwt.pectin.client.list;
 
-import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
-import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
-import com.pietschy.gwt.pectin.client.list.MutableListModel;
-import com.pietschy.gwt.pectin.client.AbstractHasHandlers;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.pietschy.gwt.pectin.client.AbstractHasHandlers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Collections;
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -72,6 +64,11 @@ implements MutableListModel<T>
 
    public void setElements(Collection<? extends T> elements)
    {
+      setElementsInternal(elements);
+   }
+
+   protected void setElementsInternal(Collection<? extends T> elements)
+   {
       internalList.clear();
       internalList.addAll(elements);
       fireListChanged();
@@ -100,6 +97,11 @@ implements MutableListModel<T>
    public boolean contains(T element)
    {
       return internalList.contains(element);  
+   }
+
+   public boolean containsAll(Collection<?> c)
+   {
+      return internalList.containsAll(c);
    }
 
    public List<T> asUnmodifiableList()

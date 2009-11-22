@@ -17,8 +17,12 @@
 package com.pietschy.gwt.pectin.client.bean;
 
 import com.pietschy.gwt.pectin.client.list.ArrayListModel;
+import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
@@ -26,9 +30,13 @@ import java.util.Collection;
 public class BeanPropertyListModel<T>
 extends ArrayListModel<T>
 {
+   private List<T> EMPTY_LIST = Collections.emptyList();
+   
    private BeanModelProvider provider;
    private String propertyName;
    private CollectionConverter listConverter;
+   private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
+
 
    public BeanPropertyListModel(BeanModelProvider provider, String propertyName, CollectionConverter listConverter)
    {
@@ -40,38 +48,75 @@ extends ArrayListModel<T>
    public void setElements(Collection<? extends T> elements)
    {
       super.setElements(elements);
-      doAutoCommit();
+      onMutation();
    }
 
    public void add(T element)
    {
       super.add(element);
-      doAutoCommit();
+      onMutation();
    }
 
    public void remove(T element)
    {
       super.remove(element);
-      doAutoCommit();
+      onMutation();
    }
 
-   private void doAutoCommit()
+   public ValueModel<Boolean> getDirtyModel()
+   {
+      return dirtyModel;
+   }
+
+   private void onMutation()
    {
       if (provider.isAutoCommit())
       {
          commit();
+      }
+      else
+      {
+         updateDirtyState();
       }
    }
 
    @SuppressWarnings("unchecked")
    protected void revert()
    {
-      setElements((Collection<T>) provider.readValue(propertyName));
+      Collection<T> collection = (Collection<T>) provider.readValue(propertyName);
+      // invoke setElementInternal() so we don't trigger onMutation() and write the value
+      // back down to the bean again.
+      setElementsInternal(collection != null ? collection : EMPTY_LIST);
+      dirtyModel.setValue(false);
    }
    
    @SuppressWarnings("unchecked")
    protected void commit()
    {
       provider.writeValue(propertyName, listConverter.toBean(asUnmodifiableList()));
+      dirtyModel.setValue(false);      
    }
+
+   @SuppressWarnings("unchecked")
+   void updateDirtyState()
+   {
+      Collection<T> beanCollection = (Collection<T>) provider.readValue(propertyName);
+
+      if (beanCollection == null)
+      {
+         dirtyModel.setValue(size() != 0);
+      }
+      else
+      {
+         if (size() != beanCollection.size())
+         {
+            dirtyModel.setValue(true);
+         }
+         else
+         {
+            dirtyModel.setValue(!containsAll(beanCollection));
+         }
+      }
+   }
+
 }

@@ -21,8 +21,10 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.ListModelProvider;
 import com.pietschy.gwt.pectin.client.ValueModelProvider;
+import com.pietschy.gwt.pectin.client.condition.OrFunction;
 import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
+import com.pietschy.gwt.pectin.client.value.ReducingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
@@ -73,6 +75,7 @@ public abstract class BeanModelProvider<B>
    private MutableValueModel<B> beanSource;
    private HandlerRegistration beanChangeRegistration;
 
+   private ReducingValueModel<Boolean, Boolean> dirtyModel = new ReducingValueModel<Boolean, Boolean>(new OrFunction());
    private boolean autoCommit = false;
 
    protected BeanModelProvider()
@@ -85,6 +88,7 @@ public abstract class BeanModelProvider<B>
     */
    public void commit()
    {
+      // performace could be improved here if the dirty model went deaf for a bit.
       for (BeanPropertyValueModel<?> model : valueModels.values())
       {
          model.commit();
@@ -107,8 +111,17 @@ public abstract class BeanModelProvider<B>
    }
 
    /**
+    * Gets the dirty model for this provider.
+    * @return the dirty model for this provider.
+    */
+   public ValueModel<Boolean> getDirtyModel()
+   {
+      return dirtyModel;
+   }
+
+   /**
     * Gets a {@link ListModel} based on the specified property name and value type.  Property types
-    * of the generic interface types {@link Collection}, {@link List}, {@link Set}, {@link SortedSet} are supported
+    * of the generic interface types {@link java.util.Collection}, {@link java.util.List}, {@link java.util.Set}, {@link java.util.SortedSet} are supported
     * out of the box.  Additional types can be supported by registering a suitable {@link CollectionConverter}.
     * <p/>
     * Multiple calls to this method will return the same model.
@@ -143,6 +156,7 @@ public abstract class BeanModelProvider<B>
 
          listModel = new BeanPropertyListModel<T>(this, propertyName, converter);
          listModels.put(key, listModel);
+         dirtyModel.addSourceModel(listModel.getDirtyModel());
       }
 
       return listModel;
@@ -176,6 +190,7 @@ public abstract class BeanModelProvider<B>
       {
          valueModel = new BeanPropertyValueModel<T>(this, propertyName);
          valueModels.put(key, valueModel);
+         dirtyModel.addSourceModel(valueModel.getDirtyModel());
       }
 
       return valueModel;
@@ -198,6 +213,7 @@ public abstract class BeanModelProvider<B>
     */
    public void revert()
    {
+      // performace could be improved here if the dirty model went deaf for a bit.
       for (BeanPropertyValueModel<?> model : valueModels.values())
       {
          model.revert();

@@ -16,12 +16,16 @@
 
 package com.pietschy.gwt.pectin.demo.client.basic;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
+import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
@@ -31,6 +35,8 @@ import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
  */
 public class BasicForm extends VerySimpleForm
 {
+   protected BasicFormModel model;
+
    // we'll use an EnhancedTextBox as it fires value change events as
    // you type, much more exciting for the demo (c:
    private TextBox givenName = new EnhancedTextBox();
@@ -44,12 +50,17 @@ public class BasicForm extends VerySimpleForm
    private CheckBox cabSavCheckBox = new CheckBox("Cab Sav");
    private CheckBox merlotCheckBox = new CheckBox("Merlot");
    private CheckBox shirazCheckBox = new CheckBox("Shiraz");
+
+   private Button saveButton = new Button("Save");
    
    private WidgetBinder widgets = new WidgetBinder();
+   private MetadataBinder metadata = new MetadataBinder();
+
 
 
    public BasicForm(BasicFormModel model)
    {
+      this.model = model;
       // see the metadata demo to see how you can control
       // enabledness in the model.
       lettersInName.setEnabled(false);
@@ -73,6 +84,10 @@ public class BasicForm extends VerySimpleForm
       widgets.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
       widgets.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
+      saveButton.addClickHandler(new SaveHandler());
+      metadata.bindValueOf(model.dirty).toEnablednessOf(saveButton);
+
+
       // now layout the form
       addRow("Given Name", givenName);
       addRow("Surname", surname);
@@ -81,5 +96,15 @@ public class BasicForm extends VerySimpleForm
       addRow("Gender", maleRadio, femaleRadio);
       addGap();
       addRow("Favorite Wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
+      addGap();
+      addRow("", saveButton);
+   }
+
+   private class SaveHandler implements ClickHandler
+   {
+      public void onClick(ClickEvent event)
+      {
+         model.commit();
+      }
    }
 }

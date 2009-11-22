@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.pietschy.gwt.pectin.client.bean.test.TestBean;
 import com.pietschy.gwt.pectin.client.bean.test.TestBeanModelProvider;
+import org.junit.Test;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,6 @@ import java.util.SortedSet;
  */
 public class BeanModelProviderTest extends GWTTestCase
 {
-
    private TestBeanModelProvider provider;
 
    @Override
@@ -35,6 +35,7 @@ public class BeanModelProviderTest extends GWTTestCase
       return "com.pietschy.gwt.pectin.Pectin";
    }
 
+   @Test
    public void testReadValue()
    {
       assertNull(provider.readValue("string"));
@@ -44,7 +45,8 @@ public class BeanModelProviderTest extends GWTTestCase
       provider.setBean(bean);
       assertEquals(provider.readValue("string"), name);
    }
-   
+
+   @Test
    public void testWriteValue()
    {
       TestBean bean = new TestBean();
@@ -53,7 +55,8 @@ public class BeanModelProviderTest extends GWTTestCase
       provider.writeValue("string", name);
       assertEquals(bean.getString(), name);
    }
-   
+
+   @Test
    public void testReadValueWithUnknownProperty()
    {
       try
@@ -66,6 +69,7 @@ public class BeanModelProviderTest extends GWTTestCase
       }
    }
 
+   @Test
    public void testWriteValueWithUnknownProperty()
    {
       try
@@ -77,7 +81,8 @@ public class BeanModelProviderTest extends GWTTestCase
       {
       }
    }
-   
+
+   @Test
    public void testGetPropertyType()
    {
       assertEquals(provider.getPropertyType("string"), String.class);
@@ -90,7 +95,8 @@ public class BeanModelProviderTest extends GWTTestCase
       assertEquals(provider.getPropertyType("sortedSet"), SortedSet.class);
       assertEquals(provider.getPropertyType("collection"), Collection.class);
    }
-   
+
+   @Test
    public void testGetPropertyTypeWithUnknownProperty()
    {
       try
@@ -101,6 +107,40 @@ public class BeanModelProviderTest extends GWTTestCase
       catch (UnknownPropertyException e)
       {
       }
+   }
+
+   @Test
+   public void testDirtyModel()
+   {
+      TestBean bean = new TestBean();
+      bean.setString("abc");
+      bean.setPrimativeInt(5);
+      provider.setBean(bean);
+
+      assertFalse(provider.getDirtyModel().getValue());
+
+      BeanPropertyValueModel<String> vm1 = provider.getValueModel("string", String.class);
+      BeanPropertyValueModel<Integer> vm2 = provider.getValueModel("primativeInt", Integer.class);
+
+      vm1.setValue("def");
+      assertTrue(provider.getDirtyModel().getValue());
+
+      vm2.setValue(42);
+      assertTrue(provider.getDirtyModel().getValue());
+
+      vm1.setValue("abc");
+      assertTrue(provider.getDirtyModel().getValue());
+
+      vm2.setValue(5);
+      assertFalse(provider.getDirtyModel().getValue());
+
+      vm1.setValue("def");
+      assertTrue(provider.getDirtyModel().getValue());
+      vm2.setValue(42);
+      assertTrue(provider.getDirtyModel().getValue());
+
+      provider.commit();
+      assertFalse(provider.getDirtyModel().getValue());
    }
 
 }

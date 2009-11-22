@@ -17,6 +17,8 @@
 package com.pietschy.gwt.pectin.client.bean;
 
 import com.pietschy.gwt.pectin.client.value.AbstractMutableValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * 
@@ -27,6 +29,7 @@ extends AbstractMutableValueModel<T>
    private BeanModelProvider provider;
    private String propertyName;
    private T bufferedValue;
+   private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
 
    public BeanPropertyValueModel(BeanModelProvider provider, String propertyName)
    {
@@ -40,6 +43,10 @@ extends AbstractMutableValueModel<T>
       if (provider.isAutoCommit())
       {
          commit();
+      }
+      else
+      {
+         updateDirtyState();
       }
       fireValueChangeEvent(value);
    }
@@ -59,11 +66,30 @@ extends AbstractMutableValueModel<T>
    @SuppressWarnings("unchecked")
    public void revert()
    {
-      setValue((T) provider.readValue(propertyName));
+      bufferedValue = (T) provider.readValue(propertyName);
+      dirtyModel.setValue(false);
+      fireValueChangeEvent(bufferedValue);
    }
-   
+
    public void commit()
    {
       provider.writeValue(propertyName, getValue());
+      dirtyModel.setValue(false);
+   }
+
+   public ValueModel<Boolean> getDirtyModel()
+   {
+      return dirtyModel;
+   }
+
+   void updateDirtyState()
+   {
+      Object beanValue = provider.readValue(propertyName);
+      dirtyModel.setValue(!areEqual(bufferedValue, beanValue));
+   }
+
+   boolean areEqual(T bufferedValue, Object beanValue)
+   {
+      return bufferedValue == null ? beanValue == null : bufferedValue.equals(beanValue);
    }
 }
