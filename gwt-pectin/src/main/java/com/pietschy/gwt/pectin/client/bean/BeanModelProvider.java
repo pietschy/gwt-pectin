@@ -30,29 +30,28 @@ import java.util.HashMap;
 
 
 /**
- * BeanModelProvider is a factory for creating {@link ValueModel}s and {@link ListModel}s from 
+ * BeanModelProvider is a factory for creating {@link ValueModel}s and {@link ListModel}s from
  * Java Bean properties.  This class is created using <code>GWT.create(...)</code>.
- * <p>
+ * <p/>
  * An example:
  * <pre>
  * // create an abstract subclass with your bean type.
  * public static abstract class MyBeanModelProvider extends BeanModelProvider&lt;MyBean&gt;{}
- * 
+ * <p/>
  * // and use GWT.create(..) to get a new instance.
- * MyBeanModelProvider <b>provider</b> = GWT.create(MyBeanModelProvider.class); 
- * 
+ * MyBeanModelProvider <b>provider</b> = GWT.create(MyBeanModelProvider.class);
+ * <p/>
  * // then use it in your form
  * FieldModel<String> myField = fieldOfType(String.class).boundTo(<b>provider</b>, "myProperty");
- * 
+ * <p/>
  * // and load the bean you want to edit.
  * <b>provider</b>.setBean(new MyBean());
- * 
+ * <p/>
  * // or you can use another value model as the bean source.
  * ValueModel<MyBean> myBeanSource = ...;
  * <b>provider</b>.setBeanSource(myBeanSource);
- * 
+ * <p/>
  * </pre>
- * 
  */
 public abstract class BeanModelProvider<B>
    implements ValueModelProvider, ListModelProvider
@@ -73,6 +72,8 @@ public abstract class BeanModelProvider<B>
 
    private MutableValueModel<B> beanSource;
    private HandlerRegistration beanChangeRegistration;
+
+   private boolean autoCommit = false;
 
    protected BeanModelProvider()
    {
@@ -97,6 +98,7 @@ public abstract class BeanModelProvider<B>
 
    /**
     * Gets the bean in use by the provider.
+    *
     * @return the bean in use by the provider.
     */
    public B getBean()
@@ -108,15 +110,13 @@ public abstract class BeanModelProvider<B>
     * Gets a {@link ListModel} based on the specified property name and value type.  Property types
     * of the generic interface types {@link Collection}, {@link List}, {@link Set}, {@link SortedSet} are supported
     * out of the box.  Additional types can be supported by registering a suitable {@link CollectionConverter}.
-    * <p>
+    * <p/>
     * Multiple calls to this method will return the same model.
     *
     * @param propertyName the name of the property.
     * @param valueType    the type contained by the collection
-    *
     * @return the {@link ListModel} for the specified property.  Multiple calls to this method will return the same
     *         model.
-    *
     * @throws UnknownPropertyException if the bean doesn't define the specified property.
     * @throws UnsupportedCollectionTypeException
     *                                  if a suitable {@link CollectionConverter} hasn't been registered
@@ -154,10 +154,8 @@ public abstract class BeanModelProvider<B>
     *
     * @param propertyName the name of the property.
     * @param modelType    the type of the property.
-    *
     * @return a {@link ValueModel} for the specified bean property.  Multiple calls to this method
     *         will return the same model.
-    *
     * @throws UnknownPropertyException       if the property isn't defined by the bean.
     * @throws IncorrectPropertyTypeException if the type of the property doesn't match the model type.
     */
@@ -213,7 +211,8 @@ public abstract class BeanModelProvider<B>
 
    /**
     * Sets the bean to back all the models created by this provider.  All value models will update after this
-    * method has been called.  
+    * method has been called.
+    *
     * @param bean the bean
     */
    public void setBean(B bean)
@@ -224,7 +223,7 @@ public abstract class BeanModelProvider<B>
    /**
     * Sets the {@link ValueModel} to be used as the source of this provider.  All changes to the source
     * model will be tracked.
-    * 
+    *
     * @param source the {@link ValueModel} containing the source bean.
     */
    public void setBeanSource(MutableValueModel<B> source)
@@ -244,6 +243,17 @@ public abstract class BeanModelProvider<B>
       beanChangeRegistration = beanSource.addValueChangeHandler(beanChangeHandler);
       revert();
    }
+
+   public boolean isAutoCommit()
+   {
+      return autoCommit;
+   }
+
+   public void setAutoCommit(boolean autoCommit)
+   {
+      this.autoCommit = autoCommit;
+   }
+
 
    protected abstract Class getPropertyType(String property) throws UnknownPropertyException;
 

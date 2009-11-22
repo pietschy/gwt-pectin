@@ -37,6 +37,32 @@ extends ArrayListModel<T>
       this.listConverter = listConverter;
    }
 
+   public void setElements(Collection<? extends T> elements)
+   {
+      super.setElements(elements);
+      doAutoCommit();
+   }
+
+   public void add(T element)
+   {
+      super.add(element);
+      doAutoCommit();
+   }
+
+   public void remove(T element)
+   {
+      super.remove(element);
+      doAutoCommit();
+   }
+
+   private void doAutoCommit()
+   {
+      if (provider.isAutoCommit())
+      {
+         commit();
+      }
+   }
+
    @SuppressWarnings("unchecked")
    protected void revert()
    {

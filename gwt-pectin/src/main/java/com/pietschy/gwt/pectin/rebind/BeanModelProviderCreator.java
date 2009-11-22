@@ -18,13 +18,7 @@ package com.pietschy.gwt.pectin.rebind;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.JParameter;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
-import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.core.ext.typeinfo.*;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 
@@ -68,118 +62,22 @@ public class BeanModelProviderCreator
          }
          else
          {
-            source.indent();
-            source.println();
-            source.println();
-
             JClassType beanType = classType.getSuperclass().isParameterized().getTypeArgs()[0];
             JMethod[] methods = beanType.getMethods();
-            
-            
-            // create the getAttribute method
-            source.println("public Object readValue(String property) {");
-            source.indent();
 
-            for (int i = 0; i < methods.length; i++)
-            {
-               String methodName = methods[i].getName();
-               JParameter[] methodParameters = methods[i].getParameters();
-               if (methodName.startsWith("get") && methodParameters.length == 0)
-               {
-                  source.println("if (property.equals(\""
-                                 + toPropertyName(methods[i])
-                                 + "\")) {");
-                  source.indent();
-                  source.println("return getBean() == null ? null : getBean()." + methodName+ "();");
-                  source.outdent();
-                  source.print("} else ");
-               }
-            }
-            
-            for (int i = 0; i < methods.length; i++)
-            {
-               String methodName = methods[i].getName();
-               JParameter[] methodParameters = methods[i].getParameters();
-               boolean isBooleanReturn = methods[i].getReturnType().getSimpleSourceName().equals("boolean");
-               
-               if (methodName.startsWith("is") && methodParameters.length == 0 && isBooleanReturn)
-               {
-                  source.println("if (property.equals(\""
-                                 + toPropertyName(methods[i])
-                                 + "\")) {");
-                  source.indent();
-                  source.println("return getBean() == null ? false : getBean()." + methodName+ "();");
-                  source.outdent();
-                  source.print("} else ");
-               }
-            }
-            source.println("{");
             source.indent();
-            source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
-            source.outdent();
-            source.println("}");
-            source.outdent();
-            source.println("}");
             source.println();
-            // create the set attribute method
-            source.println("public void writeValue(String property, Object value) {");
-            source.indent();
-            for (int i = 0; i < methods.length; i++)
-            {
-               JMethod method = methods[i];
-               JParameter[] parameters = method.getParameters();
-               if (method.getName().startsWith("set") && parameters.length == 1)
-               {
-                  JType type = parameters[0].getType();
-                  JPrimitiveType primativeType = type.isPrimitive();
-                  String typeName = (primativeType != null) ? primativeType.getQualifiedBoxedSourceName() : type.getQualifiedSourceName();
-                  
-                  source.println("if (property.equals(\"" + toPropertyName(method) + "\")) { ");
-                  source.indent();
-                  source.println("getBean()." + method.getName() + "(("+ typeName + ") value);");
-                  source.outdent();
-                  source.print("} else ");
-               }
-            }
-            source.println("{");
-            source.indent();
-            source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
-            source.outdent();
-            source.println("}");
-            source.outdent();
-            source.println("}");
-            
-            // create the getPropertyType method
-            source.println("public Class getPropertyType(String property) {");
-            source.indent();
 
-            for (int i = 0; i < methods.length; i++)
-            {
-               JMethod method = methods[i];
-               JParameter[] parameters = method.getParameters();
-               if (method.getName().startsWith("set") && parameters.length == 1)
-               {
-                  JType type = parameters[0].getType();
-                  JPrimitiveType primativeType = type.isPrimitive();
-                  
-                  String typeName = (primativeType != null) ? primativeType.getQualifiedBoxedSourceName() : type.getQualifiedSourceName();
-                  
-                  source.println("if (property.equals(\"" + toPropertyName(method) + "\")) { ");
-                  source.indent();
-                  source.println("return " + typeName + ".class;");
-                  
-                  source.outdent();
-                  source.print("} else ");
-               }
-            }
-            
-            source.println("{");
-            source.indent();
-            source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
-            source.outdent();
-            source.println("}");
-            source.outdent();
-            source.println("}");
+            generateReadValueMethod(source, methods);
+
+            source.println();
+
+            generateWriteValueMethod(source, methods);
+
+            source.println();
+
+            generateGetPropertyTypeMethod(source, methods);
+
             source.println();
             
             source.commit(logger);
@@ -192,6 +90,118 @@ public class BeanModelProviderCreator
          e.printStackTrace();
          return null;
       }
+   }
+
+   private void generateGetPropertyTypeMethod(SourceWriter source, JMethod[] methods)
+   {
+      // create the getPropertyType method
+      source.println("public Class getPropertyType(String property) {");
+      source.indent();
+
+      for (JMethod method : methods)
+      {
+         JParameter[] parameters = method.getParameters();
+         if (method.getName().startsWith("set") && parameters.length == 1)
+         {
+            JType type = parameters[0].getType();
+            JPrimitiveType primativeType = type.isPrimitive();
+
+            String typeName = (primativeType != null) ? primativeType.getQualifiedBoxedSourceName() : type.getQualifiedSourceName();
+
+            source.println("if (property.equals(\"" + toPropertyName(method) + "\")) { ");
+            source.indent();
+            source.println("return " + typeName + ".class;");
+
+            source.outdent();
+            source.print("} else ");
+         }
+      }
+
+      source.println("{");
+      source.indent();
+      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
+      source.outdent();
+      source.println("}");
+      source.outdent();
+      source.println("}");
+   }
+
+   private void generateWriteValueMethod(SourceWriter source, JMethod[] methods)
+   {
+      // create the set attribute method
+      source.println("public void writeValue(String property, Object value) {");
+      source.indent();
+      for (JMethod method : methods)
+      {
+         JParameter[] parameters = method.getParameters();
+         if (method.getName().startsWith("set") && parameters.length == 1)
+         {
+            JType type = parameters[0].getType();
+            JPrimitiveType primativeType = type.isPrimitive();
+            String typeName = (primativeType != null) ? primativeType.getQualifiedBoxedSourceName() : type.getQualifiedSourceName();
+
+            source.println("if (property.equals(\"" + toPropertyName(method) + "\")) { ");
+            source.indent();
+            source.println("getBean()." + method.getName() + "((" + typeName + ") value);");
+            source.outdent();
+            source.print("} else ");
+         }
+      }
+      source.println("{");
+      source.indent();
+      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
+      source.outdent();
+      source.println("}");
+      source.outdent();
+      source.println("}");
+   }
+
+   private void generateReadValueMethod(SourceWriter source, JMethod[] methods)
+   {
+      // create the getAttribute method
+      source.println("public Object readValue(String property) {");
+      source.indent();
+
+      for (JMethod method : methods)
+      {
+         String methodName = method.getName();
+         JParameter[] methodParameters = method.getParameters();
+         if (methodName.startsWith("get") && methodParameters.length == 0)
+         {
+            source.println("if (property.equals(\""
+                           + toPropertyName(method)
+                           + "\")) {");
+            source.indent();
+            source.println("return getBean() == null ? null : getBean()." + methodName + "();");
+            source.outdent();
+            source.print("} else ");
+         }
+      }
+
+      for (JMethod method : methods)
+      {
+         String methodName = method.getName();
+         JParameter[] methodParameters = method.getParameters();
+         boolean isBooleanReturn = method.getReturnType().getSimpleSourceName().equals("boolean");
+
+         if (methodName.startsWith("is") && methodParameters.length == 0 && isBooleanReturn)
+         {
+            source.println("if (property.equals(\""
+                           + toPropertyName(method)
+                           + "\")) {");
+            source.indent();
+            source.println("return getBean() == null ? false : getBean()." + methodName + "();");
+            source.outdent();
+            source.print("} else ");
+         }
+      }
+      source.println("{");
+      source.indent();
+      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
+      source.outdent();
+      source.println("}");
+      source.outdent();
+      source.println("}");
    }
 
    private String toPropertyName(JMethod method)

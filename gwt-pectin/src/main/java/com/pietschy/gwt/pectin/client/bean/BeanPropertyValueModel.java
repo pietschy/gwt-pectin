@@ -37,6 +37,10 @@ extends AbstractMutableValueModel<T>
    public void setValue(T value)
    {
       bufferedValue = value;
+      if (provider.isAutoCommit())
+      {
+         commit();
+      }
       fireValueChangeEvent(value);
    }
 
