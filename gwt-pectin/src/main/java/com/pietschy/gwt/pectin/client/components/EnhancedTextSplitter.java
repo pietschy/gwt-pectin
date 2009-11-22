@@ -21,11 +21,8 @@ import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisp
 import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Nov 21, 2009
- * Time: 4:29:45 PM
- * To change this template use File | Settings | File Templates.
+ * A subclass of {@link TextSplitter} that implements {@link IndexedValidationDisplay} and
+ * delegates to either an {@link EnhancedTextBox} or {@link EnhancedTextArea}.
  */
 public class EnhancedTextSplitter extends TextSplitter
 implements IndexedValidationDisplay
