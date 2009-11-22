@@ -53,11 +53,11 @@ extends VerySimpleForm
 
       // bind formattedListField to a text box (wrapped by out ListTextBox to
       // make it impement HasValue<Collection<String>>)
-      binder.bind(model.formattedList).to(luckyNumbers);
+      binder.bind(model.luckyNumbers).to(luckyNumbers);
 
       // Now bind the list to a Label for simple display.  This format only
       // has to deal with integer values.
-      binder.bind(model.formattedList).toLabel(luckyNumberLabel, new LuckyNumberLabelFormat());
+      binder.bind(model.luckyNumbers).toLabel(luckyNumberLabel, new LuckyNumberLabelFormat());
 
       age.setVisibleLength(5);
       ageInDogYears.setVisibleLength(5);
@@ -67,7 +67,7 @@ extends VerySimpleForm
 
       addGap();
 
-      addNote("The following binds a list model of integers to the value of a comma separated text box.");
+      addNote("The following binds a list of integers to the value of a comma separated text box.");
       addNote("Type your lucky numbers separated by a comma.");
       addRow("Lucky numbers", luckyNumbers);
 

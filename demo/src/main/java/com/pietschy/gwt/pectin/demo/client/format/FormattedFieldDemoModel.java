@@ -34,7 +34,7 @@ public class FormattedFieldDemoModel extends FormModel
 {
    protected final FormattedFieldModel<Integer> age;
    protected final FormattedFieldModel<Integer> ageInDogYears;
-   protected final FormattedListFieldModel<Integer> formattedList;
+   protected final FormattedListFieldModel<Integer> luckyNumbers;
 
    public FormattedFieldDemoModel()
    {
@@ -43,16 +43,17 @@ public class FormattedFieldDemoModel extends FormModel
          .using(new AgeFormat())
          .create();
 
-      // a converted field (that is also a formatted field)
+      // a formatted field that is also converted from the another
       ageInDogYears = formattedFieldOfType(Integer.class)
          .using(new AgeFormat())
          .convertedFrom(age)
          .using(new DogYearsConverter());
 
       // a formatted list with a base type of Integer
-      formattedList = formattedListOfType(Integer.class)
+      luckyNumbers = formattedListOfType(Integer.class)
          .using(new IntegerFormat())
          .create();
+      
    }
 
    private static class DogYearsConverter implements Converter<Integer, Integer>
