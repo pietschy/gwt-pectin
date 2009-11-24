@@ -21,7 +21,14 @@
    <inherits name='com.pietschy.gwt.pectin.Pectin'/>
    
    <stylesheet src="Demo.css"/>
-   
+
+   <!--
+   OOHPM doesn't pick up the pectin styles unless we put this in.
+   Really really wierd...  is it me or them!!??!
+    -->
+   <public path="public"/>
+
+
    <entry-point class='com.pietschy.gwt.pectin.demo.client.DemoEntryPoint'/>
  
 </module>

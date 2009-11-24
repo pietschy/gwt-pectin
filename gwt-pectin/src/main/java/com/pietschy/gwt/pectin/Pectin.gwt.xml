@@ -20,5 +20,9 @@
       <when-type-assignable class="com.pietschy.gwt.pectin.client.bean.BeanModelProvider"/>
    </generate-with>
 
+   
+   <stylesheet src="pectin/Validation.css"/>
+   <stylesheet src="pectin/Metadata.css"/>
+
 </module>
    

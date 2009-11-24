@@ -16,17 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.validation.binding;
 
-import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
-import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
-import com.pietschy.gwt.pectin.client.validation.ValidationHandler;
-import com.pietschy.gwt.pectin.client.validation.ValidationEvent;
-import com.pietschy.gwt.pectin.client.validation.ValidationResult;
-import com.pietschy.gwt.pectin.client.validation.FieldValidator;
-import com.pietschy.gwt.pectin.client.validation.ListFieldValidator;
-import com.pietschy.gwt.pectin.client.validation.IndexedValidationHandler;
-import com.pietschy.gwt.pectin.client.validation.IndexedValidationEvent;
-import com.pietschy.gwt.pectin.client.validation.HasValidationResult;
 import com.google.gwt.user.client.ui.UIObject;
+import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
+import com.pietschy.gwt.pectin.client.validation.*;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 
 
 /**
@@ -42,21 +35,21 @@ implements ValidationHandler, IndexedValidationHandler
 {
    private HasValidationResult validator;
    private UIObject widget;
-   private StyleApplicator styleApplicator;
+   private ValidationStyles validationStyles;
 
-   public ValidationStyleBinding(FieldValidator<?> validator, UIObject widget, StyleApplicator applicator)
+   public ValidationStyleBinding(FieldValidator<?> validator, UIObject widget, ValidationStyles applicator)
    {
       this.validator = validator;
       this.widget = widget;
-      styleApplicator = applicator;
+      validationStyles = applicator;
       registerHandler(validator.addValidationHandler(this));
    }
 
-   public ValidationStyleBinding(ListFieldValidator<?> validator, UIObject widget, StyleApplicator applicator)
+   public ValidationStyleBinding(ListFieldValidator<?> validator, UIObject widget, ValidationStyles applicator)
    {
       this.validator = validator;
       this.widget = widget;
-      styleApplicator = applicator;
+      validationStyles = applicator;
       registerHandler(validator.addValidationHandler(this));
    }
 
@@ -72,7 +65,7 @@ implements ValidationHandler, IndexedValidationHandler
 
    private void updateStyles(ValidationResult result)
    {
-      styleApplicator.applyStyles(widget, result);
+      validationStyles.applyStyle(widget, result);
    }
 
    public void onValidate(ValidationEvent event)

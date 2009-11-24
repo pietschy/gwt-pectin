@@ -16,29 +16,22 @@
 
 package com.pietschy.gwt.pectin.client.components;
 
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.UIObject;
-import com.google.gwt.user.client.ui.FocusWidget;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.BlurEvent;
-import com.pietschy.gwt.pectin.client.list.ListModel;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.list.ArrayListModel;
-import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
+import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
-import com.pietschy.gwt.pectin.client.validation.ValidationResult;
+import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
 import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
+import com.pietschy.gwt.pectin.client.validation.ValidationResult;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -235,8 +228,8 @@ implements HasValue<T>, HasEnabled, ValidationDisplay
 
    public void setValidationResult(ValidationResult result)
    {
-      StyleApplicator.defaultInstance().applyStyles(comboBox, result);
-      StyleApplicator.defaultInstance().applyStyles((UIObject) otherEditor, result);
+      ValidationStyles.defaultInstance().applyStyle(comboBox, result);
+      ValidationStyles.defaultInstance().applyStyle((UIObject) otherEditor, result);
    }
 
    public HandlerRegistration addValueChangeHandler(ValueChangeHandler<T> handler)

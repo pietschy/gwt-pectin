@@ -38,9 +38,10 @@ public class ValidationDemo extends AbstractDemo
       addBlurbParagraph("This demo shows the use of the ValidationPlugin.  The nick name " +
                         "and wine list only validate when their corresponding checkboxes " +
                         "are selected.");
-      addBlurbParagraph("Most of the components have been extended to implement ValidationDisplay and " +
-                        "automatically update thier style based on the validation state using the " +
-                        "StyleApplicator class.");
+      addBlurbParagraph("Validation messages are displayed using the ValidationDisplayLabel and " +
+                        "ValidationDisplayPanel.  In addition most of the components have been extended " +
+                        "to implement ValidationDisplay and automatically update thier style using " +
+                        "the ValidationStyles class.");
 
       addLinkToModel(model);
       addLinkToView(form);

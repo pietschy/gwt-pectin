@@ -16,14 +16,14 @@
 
 package com.pietschy.gwt.pectin.client.components;
 
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
+import com.google.gwt.user.client.ui.TextArea;
 import com.pietschy.gwt.pectin.client.validation.ValidationResult;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,7 +36,7 @@ public class EnhancedTextArea
 extends TextArea implements ValidationDisplay
 {
    private boolean fireValueChangeOnEdit = false;
-   private StyleApplicator styleApplicator = StyleApplicator.defaultInstance();
+   private ValidationStyles validationStyles = ValidationStyles.defaultInstance();
    
    public EnhancedTextArea()
    {
@@ -83,6 +83,6 @@ extends TextArea implements ValidationDisplay
 
    public void setValidationResult(ValidationResult result)
    {
-       styleApplicator.applyStyles(this, result);
+       validationStyles.applyStyle(this, result);
    }
 }

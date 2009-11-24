@@ -33,7 +33,7 @@ public class WatermarkBinding
    extends AbstractBinding
    implements BlurHandler, FocusHandler, ValueChangeHandler<String>
 {
-   private static final String WATERMARK_STYLE = "watermark";
+   private static final String WATERMARK_STYLE = "pectin-Watermark";
    private ValueModel<String> valueModel;
    private ValueModel<String> watermarkModel;
    private TextBox textBox;

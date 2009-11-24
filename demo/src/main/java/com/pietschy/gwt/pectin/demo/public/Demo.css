@@ -1,16 +1,8 @@
-select.validation-error,
-   input.validation-error {
+select.validationError,
+input.validationError,
+.gwt-pectin-ComboBoxWithOther.validationError input,
+.gwt-pectin-ComboBoxWithOther.validationError td select {
    background-color: lightcoral;
-}
-
-.gwt-pectin-ComboBoxWithOther.validation-error input,
-   .gwt-pectin-ComboBoxWithOther.validation-error td select {
-   background-color: lightcoral;
-}
-
-.gwt-pectin-ValidationMessageDisplay {
-   color: #333333;
-   font-size: 80%;
 }
 
 .AbstractDemo-Content {
@@ -75,17 +67,13 @@ select.validation-error,
    background-color:black;
 }
 
-.VerySimpleForm-Label .validation-error {
+.VerySimpleForm-Label .validationError {
    color: red;
 }
-.VerySimpleForm-Label .validation-error:before {
+.VerySimpleForm-Label .validationError:before {
    content: "* ";
 }
 
 .VerySimpleForm-Label .disabled {
    color: #bbbbbb;
-}
-
-input.watermark {
-   color: #999999;
 }

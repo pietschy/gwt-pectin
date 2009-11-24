@@ -36,7 +36,9 @@ implements Comparable<Severity>
    public int
    compareTo(Severity o)
    {
-      return this.level == o.level ? 0 : this.level < o.level ? -1 : 1;
+      // The default sort order is reversed so the first entry in a SortedSet
+      // is the highest severity.
+      return this.level == o.level ? 0 : this.level > o.level ? -1 : 1;
    }
 
    public boolean

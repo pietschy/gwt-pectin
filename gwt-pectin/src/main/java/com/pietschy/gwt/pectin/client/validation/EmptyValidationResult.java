@@ -20,6 +20,8 @@ import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +32,8 @@ import java.util.List;
  */
 public class EmptyValidationResult implements ValidationResult
 {
-   public static final ValidationResult INSTANCE = new EmptyValidationResult(); 
+   public static final ValidationResult INSTANCE = new EmptyValidationResult();
+   private static final SortedSet<Severity> EMPTY_SEVERITIES = new TreeSet<Severity>();
 
    public boolean isEmpty()
    {
@@ -50,5 +53,10 @@ public class EmptyValidationResult implements ValidationResult
    public List<ValidationMessage> getMessages(Severity severity)
    {
       return Collections.emptyList();
+   }
+
+   public SortedSet<Severity> getSeverities()
+   {
+      return EMPTY_SEVERITIES;
    }
 }

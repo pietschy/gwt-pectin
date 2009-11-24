@@ -19,7 +19,7 @@ package com.pietschy.gwt.pectin.client.validation.binding;
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.validation.ListFieldValidator;
 import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,13 +32,13 @@ public class IndexedValidationBindingBuider
 {
    private ListFieldValidator<?> validator;
    private ValidationBinder binder;
-   private StyleApplicator styleApplicator;
+   private ValidationStyles validationStyles;
 
-   public IndexedValidationBindingBuider(ValidationBinder binder, ListFieldValidator<?> validator, StyleApplicator styleApplicator)
+   public IndexedValidationBindingBuider(ValidationBinder binder, ListFieldValidator<?> validator, ValidationStyles validationStyles)
    {
       this.binder = binder;
       this.validator = validator;
-      this.styleApplicator = styleApplicator;
+      this.validationStyles = validationStyles;
    }
    
    public void to(final IndexedValidationDisplay validationDisplay)
@@ -48,7 +48,7 @@ public class IndexedValidationBindingBuider
    
    public void toStyle(UIObject widget)
    {
-      binder.registerAndInitialiseBinding(new ValidationStyleBinding(validator, widget, styleApplicator));
+      binder.registerAndInitialiseBinding(new ValidationStyleBinding(validator, widget, validationStyles));
    }
    
    

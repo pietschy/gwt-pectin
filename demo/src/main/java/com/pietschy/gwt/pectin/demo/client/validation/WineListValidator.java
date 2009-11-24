@@ -16,9 +16,11 @@
 
 package com.pietschy.gwt.pectin.demo.client.validation;
 
-import com.pietschy.gwt.pectin.client.validation.ListValidator;
 import com.pietschy.gwt.pectin.client.validation.IndexedValidationResultCollector;
+import com.pietschy.gwt.pectin.client.validation.ListValidator;
 import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
+import com.pietschy.gwt.pectin.client.validation.message.InfoMessage;
+import com.pietschy.gwt.pectin.client.validation.message.WarningMessage;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 
 import java.util.List;
@@ -37,6 +39,14 @@ public class WineListValidator implements ListValidator<Wine>
       if (values.size() < 1)
       {
          results.add(new ErrorMessage("Please select at least one wine"));
+      }
+      if (values.size() == 1)
+      {
+         results.add(new InfoMessage("Only one favorite?"));
+      }
+      if (values.size() > 2)
+      {
+         results.add(new WarningMessage("Having so many favorites could get expensive."));
       }
    }
 }

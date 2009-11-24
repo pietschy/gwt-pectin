@@ -18,11 +18,7 @@ package com.pietschy.gwt.pectin.client.validation;
 
 import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * 
@@ -31,7 +27,7 @@ public class ValidationResultImpl
 implements ValidationResult, ValidationResultCollector
 {
    private ArrayList<ValidationMessage> results = new ArrayList<ValidationMessage>();
-   private HashMap<Severity, List<ValidationMessage>> severityMap = new HashMap<Severity, List<ValidationMessage>>();
+   private TreeMap<Severity, List<ValidationMessage>> severityMap = new TreeMap<Severity, List<ValidationMessage>>();
 
    public ValidationResultImpl()
    {
@@ -75,6 +71,12 @@ implements ValidationResult, ValidationResultCollector
    getMessages(Severity severity)
    {
       return Collections.unmodifiableList(prepareSeverityList(severity));
+   }
+
+   public SortedSet<Severity>
+   getSeverities()
+   {
+      return new TreeSet<Severity>(severityMap.keySet());
    }
 
    protected List<ValidationMessage>

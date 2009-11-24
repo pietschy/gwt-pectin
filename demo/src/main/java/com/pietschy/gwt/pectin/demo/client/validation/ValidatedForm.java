@@ -16,26 +16,26 @@
 
 package com.pietschy.gwt.pectin.demo.client.validation;
 
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationMessageDisplay;
-import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
-import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
-import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
-import com.pietschy.gwt.pectin.client.components.ComboBox;
-import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
-import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
+import com.pietschy.gwt.pectin.client.components.ComboBox;
+import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
+import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
+import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
+import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplayLabel;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplayPanel;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
+import com.pietschy.gwt.pectin.demo.client.misc.GenderRenderer;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
-import com.pietschy.gwt.pectin.demo.client.misc.GenderRenderer;
 
 /**
  *
@@ -79,16 +79,17 @@ public class ValidatedForm extends VerySimpleForm
       binder.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
       binder.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
-      addRow("Given name", givenName, createValidationDisplay(model.givenName));
-      addRow("Surname", surname, createValidationDisplay(model.surname));
-      addRow("Age", age, createValidationDisplay(model.age));
-      addRow("Gender", genderCombo, createValidationDisplay(model.gender));
+      addRow("Given name", givenName, createValidationLabel(model.givenName));
+      addRow("Surname", surname, createValidationLabel(model.surname));
+      addRow("Age", age, createValidationLabel(model.age));
+      addRow("Gender", genderCombo, createValidationLabel(model.gender));
       addGap();
       addRow("", hasNickName);
-      addRow("Nick name", nickName, createValidationDisplay(model.nickName));
+      addRow("Nick name", nickName, createValidationLabel(model.nickName));
       addGap();
       addRow("", wineLoverCheckBox);
-      addRow("Favorite wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox, createValidationDisplay(model.favoriteWines));
+      addRow("Favorite wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
+      addRow("", createValidationPanel(model.favoriteWines));
       addGap();
       addRow("", validateButton);
 
@@ -103,23 +104,23 @@ public class ValidatedForm extends VerySimpleForm
 
    }
 
-   private ValidationMessageDisplay createValidationDisplay(FieldModel<?> field)
+   private ValidationDisplayLabel createValidationLabel(FieldModel<?> field)
    {
-      ValidationMessageDisplay display = new ValidationMessageDisplay();
+      ValidationDisplayLabel display = new ValidationDisplayLabel();
       validation.bindValidationOf(field).to(display);
       return display;
    }
 
-   private ValidationMessageDisplay createValidationDisplay(FormattedFieldModel<?> field)
+   private ValidationDisplayLabel createValidationLabel(FormattedFieldModel<?> field)
    {
-      ValidationMessageDisplay display = new ValidationMessageDisplay();
+      ValidationDisplayLabel display = new ValidationDisplayLabel();
       validation.bindValidationOf(field).to(display);
       return display;
    }
 
-   private Widget createValidationDisplay(ListFieldModel<Wine> field)
+   private ValidationDisplayPanel createValidationPanel(ListFieldModel<Wine> field)
    {
-      ValidationMessageDisplay display = new ValidationMessageDisplay();
+      ValidationDisplayPanel display = new ValidationDisplayPanel();
       validation.bindValidationOf(field).to(display);
       return display;
    }

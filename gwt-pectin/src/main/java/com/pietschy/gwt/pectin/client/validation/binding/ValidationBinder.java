@@ -18,56 +18,62 @@ package com.pietschy.gwt.pectin.client.validation.binding;
 
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
+import com.pietschy.gwt.pectin.client.FormattedListFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
 import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
-import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 
 /**
  * ValidationBinder binds the validation status of a given field to arbitrary widgets.
- * @see ValidationDisplay
+ * @see com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay
  */
 public class ValidationBinder
 extends AbstractBinder
 {
-   private StyleApplicator styleApplicator;
+   private ValidationStyles validationStyles;
 
    /**
     * Creates a new binder instance.
     */
    public ValidationBinder()
    {
-      this(StyleApplicator.defaultInstance());
+      this(ValidationStyles.defaultInstance());
    }
 
    /**
-    * Creates a new instance that uses the specified {@link StyleApplicator} to apply styles
+    * Creates a new instance that uses the specified {@link com.pietschy.gwt.pectin.client.validation.component.ValidationStyles} to apply styles
     * to widgets.
-    * @param styleApplicator the StyleApplicator to use.
+    * @param validationStyles the StyleApplicator to use.
     */
-   public ValidationBinder(StyleApplicator styleApplicator)
+   public ValidationBinder(ValidationStyles validationStyles)
    {
-      if (styleApplicator == null)
+      if (validationStyles == null)
       {
          throw new NullPointerException("styleApplicator is null");
       }
-      this.styleApplicator = styleApplicator;
+      this.validationStyles = validationStyles;
    }
 
    
    public ValidationBindingBuider bindValidationOf(FieldModel<?> field)
    {
-      return new ValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), styleApplicator);
+      return new ValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), validationStyles);
    }
    
    public ValidationBindingBuider bindValidationOf(FormattedFieldModel<?> field)
    {
-      return new ValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), styleApplicator);
+      return new ValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), validationStyles);
    }
    
    public IndexedValidationBindingBuider bindValidationOf(ListFieldModel<?> field)
    {
-      return new IndexedValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), styleApplicator);
+      return new IndexedValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), validationStyles);
+   }
+
+   public IndexedValidationBindingBuider bindValidationOf(FormattedListFieldModel<?> field)
+   {
+      return new IndexedValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), validationStyles);
    }
 
 }

@@ -29,8 +29,8 @@ import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
 import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
 import com.pietschy.gwt.pectin.client.validation.ValidationResult;
-import com.pietschy.gwt.pectin.client.validation.component.StyleApplicator;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
+import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -205,7 +205,7 @@ implements HasValue<T>, HasEnabled, Focusable, HasFocusHandlers, HasBlurHandlers
 
    public void setValidationResult(ValidationResult result)
    {
-      StyleApplicator.defaultInstance().applyStyles(listBox, result);
+      ValidationStyles.defaultInstance().applyStyle(listBox, result);
    }
 
    private void fireValueChanged(T value)

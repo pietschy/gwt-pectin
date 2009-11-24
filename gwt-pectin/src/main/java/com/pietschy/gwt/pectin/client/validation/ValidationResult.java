@@ -20,6 +20,7 @@ package com.pietschy.gwt.pectin.client.validation;
 import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * ValidationResult is a container for {@link ValidationMessage}s. 
@@ -54,4 +55,7 @@ public interface ValidationResult extends HasValidationMessages
     * @return all the messages contain in this result.  
     */
    List<ValidationMessage> getMessages(Severity severity);
+
+   SortedSet<Severity>
+   getSeverities();
 }

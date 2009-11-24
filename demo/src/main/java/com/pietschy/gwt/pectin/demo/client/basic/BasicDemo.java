@@ -37,8 +37,6 @@ public class BasicDemo extends AbstractDemo
 
    public BasicDemo()
    {
-
-
       // throw a person together...
       Person person = new Person();
       person.setGivenName("Joe");
@@ -57,9 +55,9 @@ public class BasicDemo extends AbstractDemo
                         "It also contains a computed field (letters in name) and a list field bound to " +
                         "checkboxes (favorite wines).");
       
-      addBlurbParagraph("The save button is bound to the dirty state of the model.  So if you change " +
-                        "a value it will enable.  Clicking save will commit the changes and save will " +
-                        "again disable.");
+      addBlurbParagraph("The save button is bound to the dirty state of the model.  Changing any value " +
+                        "will enable the button, reverting the value will disable it.  Clicking save " +
+                        "commits the changes and concequently disables the button.");
 
       
       addLinkToModel(model);

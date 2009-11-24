@@ -18,9 +18,9 @@ package com.pietschy.gwt.pectin.client.validation;
 
 import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 
 /**
@@ -30,6 +30,7 @@ public class IndexedValidationResultImpl
    implements IndexedValidationResult, IndexedValidationResultCollector
 {
    private static final int UNINDEXED_MESSAGE_INDEX = -1;
+   private ValidationResultImpl allMessages = new ValidationResultImpl();
    private TreeMap<Integer, ValidationResult> results = new TreeMap<Integer, ValidationResult>();
 
    public IndexedValidationResultImpl()
@@ -38,12 +39,14 @@ public class IndexedValidationResultImpl
 
    public void add(ValidationMessage message)
    {
+      allMessages.add(message);
       prepareIndexedResult(UNINDEXED_MESSAGE_INDEX).add(message);
    }
 
    public void
    add(int index, ValidationMessage message)
    {
+      allMessages.add(message);
       prepareIndexedResult(index).add(message);
    }
 
@@ -55,41 +58,28 @@ public class IndexedValidationResultImpl
    public boolean
    isEmpty()
    {
-      return results.isEmpty();
+      return allMessages.isEmpty();
    }
 
    public List<ValidationMessage> getMessages()
    {
-      ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
-      for (ValidationResult result : results.values())
-      {
-         messages.addAll(result.getMessages());
-      }
-      return messages;
+      return allMessages.getMessages();
    }
 
    public List<ValidationMessage> getMessages(Severity severity)
    {
-      ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
-      for (ValidationResult result : results.values())
-      {
-         messages.addAll(result.getMessages(severity));
-      }
-      return messages;
+      return allMessages.getMessages(severity);
    }
 
    public boolean
    contains(Severity severity)
    {
-      for (ValidationResult result : results.values())
-      {
-         if (result.contains(severity))
-         {
-            return true;
-         }
-      }
+      return allMessages.contains(severity);
+   }
 
-      return false;
+   public SortedSet<Severity> getSeverities()
+   {
+      return allMessages.getSeverities();
    }
 
    public Set<Integer> getResultIndicies()

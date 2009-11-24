@@ -14,28 +14,28 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.demo.client.misc;
+package com.pietschy.gwt.pectin.client.validation.message;
 
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.TextBox;
-import com.pietschy.gwt.pectin.client.components.AbstractComboBoxWithOther;
+import com.pietschy.gwt.pectin.client.validation.Severity;
 
 /**
  * Created by IntelliJ IDEA.
-* User: andrew
-* Date: Aug 7, 2009
-* Time: 10:43:36 AM
-* To change this template use File | Settings | File Templates.
-*/
-public class NickNameEditor extends AbstractComboBoxWithOther<String> 
+ * User: andrew
+ * Date: Jul 13, 2009
+ * Time: 11:11:24 AM
+ * To change this template use File | Settings | File Templates.
+ */
+public class InfoMessage extends ValidationMessageImpl
 {
-   public NickNameEditor()
+
+   public InfoMessage(String message)
    {
-      super("Bazza", "Shazza", "Davo", "Damo", "Wayno");
+      super(Severity.INFO, message);
    }
 
-   protected HasValue<String> createOtherEditor()
+   public InfoMessage(String message, String additionalInfo)
    {
-      return new TextBox();
+      super(Severity.INFO, message, additionalInfo);
    }
+
 }
