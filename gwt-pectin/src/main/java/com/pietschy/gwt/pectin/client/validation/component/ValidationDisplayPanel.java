@@ -29,17 +29,17 @@ import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
  * <p>
  * <b>CSS</b>
  * <pre>
- * .pectin-ValidationDisplayPanel
- * .pectin-ValidationDisplayPanel .message
- * .pectin-ValidationDisplayPanel .validationError
- * .pectin-ValidationDisplayPanel .validationWarning
- * .pectin-ValidationDisplayPanel .validationInfo
+ * div.pectin-ValidationDisplayPanel
+ * div.pectin-ValidationDisplayPanel div.Message
+ * div.pectin-ValidationDisplayPanel div.Message-validationError
+ * div.pectin-ValidationDisplayPanel div.Message-validationWarning
+ * div.pectin-ValidationDisplayPanel div.Message-validationInfo
  * </pre>
  */
 public class ValidationDisplayPanel
 extends Composite implements ValidationDisplay, IndexedValidationDisplay
 {
-   private ValidationStyles validationStyles = ValidationStyles.defaultInstance();
+   private ValidationStyles validationStyles = ValidationStyles.defaultDependentStyleNameInstance();
 
    private FlowPanel content = new FlowPanel();
    private int displayCount = 1;
@@ -76,7 +76,7 @@ extends Composite implements ValidationDisplay, IndexedValidationDisplay
                }
                
                Label label = new Label(message.getMessage());
-               label.setStylePrimaryName("message");
+               label.setStylePrimaryName("Message");
                validationStyles.applyStyle(label, message.getSeverity());
                content.add(label);
                count++;

@@ -1,18 +1,18 @@
 .pectin-ValidationDisplayPanel {}
-.pectin-ValidationDisplayPanel .message,
+.pectin-ValidationDisplayPanel .Message,
 .pectin-ValidationDisplayLabel {
    font-size: 90%;
    font-style:italic;
 }
-.pectin-ValidationDisplayPanel .validationError,
+.pectin-ValidationDisplayPanel .Message-validationError,
 .pectin-ValidationDisplayLabel-validationError {
    color: #D8000C;
 }
-.pectin-ValidationDisplayPanel .validationWarning,
+.pectin-ValidationDisplayPanel .Message-validationWarning,
 .pectin-ValidationDisplayLabel-validationWarning {
    color: #9F9f00;
 }
-.pectin-ValidationDisplayPanel .validationInfo,
+.pectin-ValidationDisplayPanel .Message-validationInfo,
 .pectin-ValidationDisplayLabel-validationInfo {
    color: #00529B;   
 }
