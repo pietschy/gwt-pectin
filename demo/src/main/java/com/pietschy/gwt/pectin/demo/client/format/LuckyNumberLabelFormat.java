@@ -37,7 +37,7 @@ class LuckyNumberLabelFormat implements ListDisplayFormat<Integer>
       }
       else if (values.size() == 1)
       {
-         return "Your luck number is " + values.iterator().next() + ".";
+         return "Your lucky number is " + values.iterator().next() + ".";
       }
       else
       {
