@@ -70,20 +70,22 @@ public class MetadataFormModel extends FormModel
       watermark(surname).with("Enter your last name");
 
 
-      // now create our protocol fields..
+      // now create our protocol fields.  This example is a bit more complex as the watermark and
+      // default port values are derived from another field that can be changed by the user.
       protocol = fieldOfType(Protocol.class).createWithValue(Protocol.FTP);
       port = formattedFieldOfType(Integer.class).using(new IntegerFormat()).create();
 
       // the default port field is computed from the currently selected protocol.
       defaultPort = fieldOfType(Integer.class).computedFrom(protocol).using(new ProtocolToPortFunction());
 
-      // now we create a value model to compute the port watermark.
+      // now we create a value model to compute the port watermark.  It's just a string version of
+      // the port in this case.
       portWatermark = fieldOfType(String.class).computedFrom(defaultPort).using(new ToStringFunction());
 
-      // now we've created all our values we configure our metadata.
+      // only allow editing of the port when a protocol is selected.
       enable(port).when(valueOf(protocol).isNotNull());
 
-      // and we use the computed value model for the port watermark.
+      // and we use the computed field for the port watermark.
       watermark(port).with(portWatermark);
 
       // only display the default port if the user has entered a non null value that isn't the default.
