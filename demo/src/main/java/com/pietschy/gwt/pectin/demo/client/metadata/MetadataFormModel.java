@@ -75,7 +75,7 @@ public class MetadataFormModel extends FormModel
       port = formattedFieldOfType(Integer.class).using(new IntegerFormat()).create();
 
       // the default port field is computed from the currently selected protocol.
-      defaultPort = fieldOfType(Integer.class).computedFrom(protocol).using(new DefaultPortExtractor());
+      defaultPort = fieldOfType(Integer.class).computedFrom(protocol).using(new ProtocolToPortFunction());
 
       // now we create a value model to compute the port watermark.
       portWatermark = fieldOfType(String.class).computedFrom(defaultPort).using(new ToStringFunction());
@@ -111,7 +111,7 @@ public class MetadataFormModel extends FormModel
       personProvider.setBean(person);
    }
 
-   private static class DefaultPortExtractor implements Function<Integer, Protocol>
+   private static class ProtocolToPortFunction implements Function<Integer, Protocol>
    {
       public Integer compute(Protocol source)
       {
