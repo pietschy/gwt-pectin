@@ -26,7 +26,6 @@ import static com.pietschy.gwt.pectin.client.condition.Conditions.is;
 import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
 import com.pietschy.gwt.pectin.client.format.IntegerFormat;
 import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.*;
-import com.pietschy.gwt.pectin.client.value.ComputedValueModel;
 import com.pietschy.gwt.pectin.client.value.Function;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Protocol;
@@ -53,7 +52,7 @@ public class MetadataFormModel extends FormModel
    protected final FieldModel<Protocol> protocol;
    protected final FormattedFieldModel<Integer> port;
    protected final FieldModel<Integer> defaultPort;
-   private ComputedValueModel<String, Integer> portWatermark;
+   protected final FieldModel<String> portWatermark;
 
 
    public static abstract class PersonProvider extends BeanModelProvider<Person> {}
@@ -70,34 +69,35 @@ public class MetadataFormModel extends FormModel
       watermark(givenName).with("Enter your first name");
       watermark(surname).with("Enter your last name");
 
+
       // now create our protocol fields..
       protocol = fieldOfType(Protocol.class).createWithValue(Protocol.FTP);
       port = formattedFieldOfType(Integer.class).using(new IntegerFormat()).create();
-      // the default port field tracks the protocol and extracts the default port.
-      defaultPort = fieldOfType(Integer.class)
-               .computedFrom(protocol)
-               .using(new DefaultPortExtractor());
 
-      // now we create a value model to use as the port watermark.   We could have used
-      // a computed field like above, but we don't expose this to the view so we can use
-      // a regular value model.
-      portWatermark = new ComputedValueModel<String, Integer>(defaultPort, new PortToStringFunction());
+      // the default port field is computed from the currently selected protocol.
+      defaultPort = fieldOfType(Integer.class).computedFrom(protocol).using(new DefaultPortExtractor());
 
+      // now we create a value model to compute the port watermark.
+      portWatermark = fieldOfType(String.class).computedFrom(defaultPort).using(new IntegerToStringFunction());
+
+      // now we've created all our values we configure our metadata.
       enable(port).when(valueOf(protocol).isNotNull());
+
       // and we use the computed value model for the port watermark.
       watermark(port).with(portWatermark);
 
-      // we'll only display the default port on the UI if the user has entered a
-      // non null value that isn't the default.
+      // only display the default port if the user has entered a non null value that isn't the default.
       hide(defaultPort).when(valueOf(port).isNull().or(valueOf(port).isSameAs(defaultPort)));
 
 
+      // now configure our nick name
       hasNickName = fieldOfType(Boolean.class).createWithValue(false);
       nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
 
       enable(nickName).when(hasNickName);
 
 
+      // and our wine lists
       wineLover = fieldOfType(Boolean.class).boundTo(personProvider, "wineLover");
       hasFavoriteWines = fieldOfType(Boolean.class).createWithValue(false);
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
@@ -119,7 +119,7 @@ public class MetadataFormModel extends FormModel
       }
    }
 
-   private static class PortToStringFunction implements Function<String, Integer>
+   private static class IntegerToStringFunction implements Function<String, Integer>
    {
       public String compute(Integer port)
       {
