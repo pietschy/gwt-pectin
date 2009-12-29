@@ -40,7 +40,7 @@ public class ComputedFieldBuilder<T, S>
       this.source = model;
    }
 
-   public FieldModel<T> using(Function<T, S> function)
+   public FieldModel<T> using(Function<T, ? super S> function)
    {
       ComputedValueModel<T, S> valueModel = new ComputedValueModel<T, S>(source, function);
       return formModel.createFieldModel(valueModel, valueType);

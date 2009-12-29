@@ -78,7 +78,7 @@ public class MetadataFormModel extends FormModel
       defaultPort = fieldOfType(Integer.class).computedFrom(protocol).using(new DefaultPortExtractor());
 
       // now we create a value model to compute the port watermark.
-      portWatermark = fieldOfType(String.class).computedFrom(defaultPort).using(new IntegerToStringFunction());
+      portWatermark = fieldOfType(String.class).computedFrom(defaultPort).using(new ToStringFunction());
 
       // now we've created all our values we configure our metadata.
       enable(port).when(valueOf(protocol).isNotNull());
@@ -119,11 +119,11 @@ public class MetadataFormModel extends FormModel
       }
    }
 
-   private static class IntegerToStringFunction implements Function<String, Integer>
+   private static class ToStringFunction implements Function<String, Object>
    {
-      public String compute(Integer port)
+      public String compute(Object value)
       {
-         return port != null ? Integer.toString(port) : null;
+         return value != null ? value.toString() : null;
       }
    }
 }

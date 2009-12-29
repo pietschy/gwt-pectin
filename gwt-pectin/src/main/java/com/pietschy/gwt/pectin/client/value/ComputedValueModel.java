@@ -25,9 +25,9 @@ package com.pietschy.gwt.pectin.client.value;
  */
 public class ComputedValueModel<T,S> extends AbstractComputedValueModel<T,S>
 {
-   private Function<T,S> function;
+   private Function<T,? super S> function;
 
-   public ComputedValueModel(ValueModel<S> source, Function<T,S> function)
+   public ComputedValueModel(ValueModel<S> source, Function<T,? super S> function)
    {
       super(source);
 
