@@ -16,25 +16,18 @@
 
 package com.pietschy.gwt.pectin.client.components;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -234,7 +227,7 @@ extends Composite implements HasValue<Collection<T>>
       return (Widget) getRow(index).getComponent();
    }
 
-   private class Row extends HorizontalPanel
+   public class Row extends HorizontalPanel
    implements ClickHandler
    {
       private HasValue<T> component;
