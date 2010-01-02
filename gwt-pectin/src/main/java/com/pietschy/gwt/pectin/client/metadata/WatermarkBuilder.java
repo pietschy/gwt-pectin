@@ -43,4 +43,9 @@ public class WatermarkBuilder
    {
       metadata.setWatermarkModel(model);
    }
+
+   public <T> WatermarkFormatBuilder<T> withValueOf(ValueModel<T> model)
+   {
+      return new WatermarkFormatBuilder<T>(metadata, model);
+   }
 }
