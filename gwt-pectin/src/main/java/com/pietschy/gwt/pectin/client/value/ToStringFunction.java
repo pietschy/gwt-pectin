@@ -17,11 +17,7 @@
 package com.pietschy.gwt.pectin.client.value;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jan 2, 2010
- * Time: 4:48:27 PM
- * To change this template use File | Settings | File Templates.
+ * A simple Function that converts any object to a String using it's toString method.
  */
 public class ToStringFunction implements Function<String, Object>
 {
