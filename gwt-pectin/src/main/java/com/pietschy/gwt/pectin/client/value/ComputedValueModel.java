@@ -44,4 +44,15 @@ public class ComputedValueModel<T,S> extends AbstractComputedValueModel<T,S>
    {
       return function.compute(value);
    }
+
+   public Function<T, ? super S> getFunction()
+   {
+      return function;
+   }
+
+   public void setFunction(Function<T, ? super S> function)
+   {
+      this.function = function;
+      fireValueChangeEvent(getValue());
+   }
 }
