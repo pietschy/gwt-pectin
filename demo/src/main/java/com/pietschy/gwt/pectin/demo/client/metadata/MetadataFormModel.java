@@ -52,8 +52,6 @@ public class MetadataFormModel extends FormModel
    protected final FieldModel<Protocol> protocol;
    protected final FormattedFieldModel<Integer> port;
    protected final FieldModel<Integer> defaultPort;
-   protected final FieldModel<String> portWatermark;
-
 
    public static abstract class PersonProvider extends BeanModelProvider<Person> {}
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
@@ -78,15 +76,12 @@ public class MetadataFormModel extends FormModel
       // the default port field is computed from the currently selected protocol.
       defaultPort = fieldOfType(Integer.class).computedFrom(protocol).using(new ProtocolToPortFunction());
 
-      // now we create a value model to compute the port watermark.  It's just a string version of
-      // the port in this case.
-      portWatermark = fieldOfType(String.class).computedFrom(defaultPort).using(new ToStringFunction());
-
       // only allow editing of the port when a protocol is selected.
       enable(port).when(valueOf(protocol).isNotNull());
 
-      // and we use the computed field for the port watermark.
-      watermark(port).with(portWatermark);
+      // and we use the default port as the watermark.  If we need special formatting we could
+      // use withValueOf(defaultPort).formattedBy(..).
+      watermark(port).withValueOf(defaultPort);
 
       // only display the default port if the user has entered a non null value that isn't the default.
       hide(defaultPort).when(valueOf(port).isNull().or(valueOf(port).isSameAs(defaultPort)));
@@ -121,11 +116,4 @@ public class MetadataFormModel extends FormModel
       }
    }
 
-   private static class ToStringFunction implements Function<String, Object>
-   {
-      public String compute(Object value)
-      {
-         return value != null ? value.toString() : null;
-      }
-   }
 }
