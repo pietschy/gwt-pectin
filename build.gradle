@@ -7,7 +7,7 @@ buildscript {
    dependencies {
       // this provides the plugins used to build pectin, most notably
       // the GwtLibPlugin and GwtAppPlugin and associated tasks
-      classpath "com.pietschy.gradle:plugins:0.8-2-SNAPSHOT"
+      classpath "com.pietschy.gradle:plugins:0.8-3-SNAPSHOT"
    }
 }
 
@@ -16,12 +16,17 @@ allprojects {
    group = 'com.pietschy.gwt'
 
    usePlugin('java')
+   usePlugin('maven')
    usePlugin(com.pietschy.gradle.plugin.IdePlugin)
 
    sourceCompatibility = 1.5
    targetCompatibility = 1.5
 
+   def localMavenRepo = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+   
    repositories {
+      // todo: remove the local repo     
+      mavenRepo urls: localMavenRepo
       mavenRepo urls: 'http://maven.pietschy.com'
       mavenCentral()
    }

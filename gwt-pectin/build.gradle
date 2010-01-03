@@ -1,9 +1,9 @@
 usePlugin(com.pietschy.gradle.plugin.gwt.GwtLibPlugin)
+usePlugin('maven')
 
-version = "0.1.${buildNumber}"
+version = "0.${buildNumber}"
 
-gwtVersion = '1.7.1'
-
+gwtVersion = '2.0.0'
 
 dependencies {
 

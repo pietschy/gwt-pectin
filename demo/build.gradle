@@ -1,10 +1,8 @@
-import com.pietschy.gradle.plugin.gwt.task.Style
-
 usePlugin(com.pietschy.gradle.plugin.gwt.GwtAppPlugin)
 
 version = "0.1.${buildNumber}"
 
-gwtVersion = '1.7.1'
+gwtVersion = '2.0.0'
 
 defaultTasks "demo"
 
