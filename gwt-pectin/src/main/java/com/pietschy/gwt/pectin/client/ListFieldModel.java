@@ -20,9 +20,9 @@ package com.pietschy.gwt.pectin.client;
 /**
  * Basic type for fields that contain a list of values.  This type exists to allow the API to cleanly
  * separate (in a code completion context) between the various types.  I.e. the api can
- * use the type {@link ListField} if it applies to both {@link ListFieldModel}s and {@link FormattedListFieldModel}s
+ * use the type {@link ListFieldModelBase} if it applies to both {@link ListFieldModel}s and {@link FormattedListFieldModel}s
  * or it can reference the types explicitly.
  */
-public interface ListFieldModel<T> extends ListField<T>
+public interface ListFieldModel<T> extends ListFieldModelBase<T>
 {
 }

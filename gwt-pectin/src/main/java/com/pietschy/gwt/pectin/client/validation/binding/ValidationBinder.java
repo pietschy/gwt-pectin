@@ -16,9 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.validation.binding;
 
+import com.pietschy.gwt.pectin.client.FieldModelBase;
 import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.ListField;
-import com.pietschy.gwt.pectin.client.ScalarField;
+import com.pietschy.gwt.pectin.client.ListFieldModelBase;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
 import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
@@ -62,14 +62,14 @@ extends AbstractBinder
                                          validationStyles);
    }
 
-   public ValidationBindingBuider bindValidationOf(ScalarField<?> field)
+   public ValidationBindingBuider bindValidationOf(FieldModelBase<?> field)
    {
       return new ValidationBindingBuider(this,
                                          ValidationPlugin.getFieldValidator(field),
                                          validationStyles);
    }
 
-   public IndexedValidationBindingBuider bindValidationOf(ListField<?> field)
+   public IndexedValidationBindingBuider bindValidationOf(ListFieldModelBase<?> field)
    {
       return new IndexedValidationBindingBuider(this,
                                                 ValidationPlugin.getFieldValidator(field),

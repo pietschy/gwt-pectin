@@ -33,14 +33,14 @@ import java.util.List;
  * Time: 11:29:50 AM
  * To change this template use File | Settings | File Templates.
  */
-public class AbstractListField<T> 
+public class AbstractListFieldModelBase<T>
 extends AbstractField<T>
-implements ListField<T>
+implements ListFieldModelBase<T>
 {
    private ListModel<T> source;
    private SourceListener<T> sourceListener = new SourceListener<T>();
 
-   public AbstractListField(FormModel formModel, ListModel<T> source, Class<T> valueType)
+   public AbstractListFieldModelBase(FormModel formModel, ListModel<T> source, Class<T> valueType)
    {
       super(formModel, valueType);
       this.source = source;

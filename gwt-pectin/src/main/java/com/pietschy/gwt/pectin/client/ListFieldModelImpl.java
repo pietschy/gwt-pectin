@@ -26,7 +26,7 @@ import com.pietschy.gwt.pectin.client.list.ListModel;
  * To change this template use File | Settings | File Templates.
  */
 public class ListFieldModelImpl<T> 
-extends AbstractListField<T>
+extends AbstractListFieldModelBase<T>
 implements ListFieldModel<T>
 {
    public ListFieldModelImpl(FormModel formModel, ListModel<T> source, Class<T> valueType)

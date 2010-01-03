@@ -26,7 +26,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public class FieldModelImpl<T>
-extends AbstractScalarField<T>
+extends AbstractFieldModelBase<T>
 implements FieldModel<T>
 {
    public FieldModelImpl(FormModel formModel, ValueModel<T> source, Class<T> valueType)

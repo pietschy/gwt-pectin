@@ -26,7 +26,7 @@ import com.pietschy.gwt.pectin.client.value.MutableValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public interface FormattedFieldModel<T>
-extends ScalarField<T>, HasFormat<T>
+extends FieldModelBase<T>, HasFormat<T>
 {
    MutableValueModel<String> getTextModel();
 }

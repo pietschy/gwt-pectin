@@ -29,15 +29,15 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * Time: 7:32:15 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AbstractScalarField<T>
+public class AbstractFieldModelBase<T>
 extends AbstractField<T>
-implements ScalarField<T>
+implements FieldModelBase<T>
 {
    private SourceModelListener sourceListener = new SourceModelListener();
    private ValueModel<T> source;
    private T cachedValue;
 
-   public AbstractScalarField(FormModel formModel, ValueModel<T> source, Class<T> valueType)
+   public AbstractFieldModelBase(FormModel formModel, ValueModel<T> source, Class<T> valueType)
    {
       super(formModel, valueType);
       this.source = source;

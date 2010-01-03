@@ -16,14 +16,15 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.list.MutableListModel;
+import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
+import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 
 /**
- * ScalarField provides a base type for {@link ListFieldModel} and {@link FormattedListFieldModel}.  This allows
+ * ScalarField provides a base type for {@link FieldModel} and {@link FormattedFieldModel}.  This allows
  * plugins that aren't interested in formatted fields to treat both the same way while other plugins
  * can safely distinguish between the two since neither is an instance of the other.
  */
-public interface ListField<T>
-extends Field<T>, MutableListModel<T>
+public interface FieldModelBase<T>
+extends Field<T>, MutableValueModel<T>, HasValueChangeHandlers<T>
 {
 }

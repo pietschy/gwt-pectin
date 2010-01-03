@@ -33,7 +33,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public class FormattedFieldModelImpl<T>
-extends AbstractScalarField<T>
+extends AbstractFieldModelBase<T>
 implements FormattedFieldModel<T>
 {
    private Format<T> format;

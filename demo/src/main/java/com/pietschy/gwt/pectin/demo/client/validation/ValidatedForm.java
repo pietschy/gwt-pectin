@@ -20,9 +20,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.pietschy.gwt.pectin.client.FieldModelBase;
 import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.ListField;
-import com.pietschy.gwt.pectin.client.ScalarField;
+import com.pietschy.gwt.pectin.client.ListFieldModelBase;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.ComboBox;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
@@ -111,14 +111,14 @@ public class ValidatedForm extends VerySimpleForm
 
    }
 
-   private ValidationDisplayLabel createValidationLabel(ScalarField<?> field)
+   private ValidationDisplayLabel createValidationLabel(FieldModelBase<?> field)
    {
       ValidationDisplayLabel label = new ValidationDisplayLabel();
       validation.bindValidationOf(field).to(label);
       return label;
    }
 
-   private ValidationDisplayLabel createValidationLabel(ListField<?> field)
+   private ValidationDisplayLabel createValidationLabel(ListFieldModelBase<?> field)
    {
       ValidationDisplayLabel label = new ValidationDisplayLabel();
       validation.bindValidationOf(field).to(label);

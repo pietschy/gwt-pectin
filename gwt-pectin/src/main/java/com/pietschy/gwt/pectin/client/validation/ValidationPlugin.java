@@ -49,12 +49,12 @@ public class ValidationPlugin
       return new FormattedListFieldValidationBuilder<T>(getValidationManager(field.getFormModel()), field);
    }
 
-   public static HasValidation getFieldValidator(ScalarField<?> field)
+   public static HasValidation getFieldValidator(FieldModelBase<?> field)
    {
       return getValidationManager(field.getFormModel()).getValidator(field);
    }
 
-   public static HasIndexedValidation getFieldValidator(ListField<?> field)
+   public static HasIndexedValidation getFieldValidator(ListFieldModelBase<?> field)
    {
       return getValidationManager(field.getFormModel()).getIndexedValidator(field);
    }
