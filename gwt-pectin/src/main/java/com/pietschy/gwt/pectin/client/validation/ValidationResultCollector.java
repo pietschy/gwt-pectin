@@ -34,4 +34,12 @@ public interface ValidationResultCollector
     */
    void 
    add(ValidationMessage message);
+
+   /**
+    * Checks if the result contains one or messages of the specified severity.
+    * @param severity the severity of interest.
+    * @return <code>true</code> if the result contains messages with the specified severity, <code>false</code> otherwise.
+    */
+   boolean contains(Severity severity);
+
 }

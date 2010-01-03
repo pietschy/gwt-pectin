@@ -18,7 +18,6 @@ package com.pietschy.gwt.pectin.client.validation;
 
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
-import com.pietschy.gwt.pectin.client.condition.DelegatingCondition;
 
 
 /**
@@ -39,7 +38,7 @@ public class ListFieldValidationBuilder<T>
 
    public ListFieldValidationBuilder(ValidationManager validationManager, ListFieldModel<T> field)
    {
-      fieldValidator = validationManager.getFieldValidator(field, true);
+      fieldValidator = validationManager.getFormValidator().getFieldValidator(field, true);
    }
    
    public ConditionBuilder using(ListValidator<T> validator, ListValidator<T>... others)

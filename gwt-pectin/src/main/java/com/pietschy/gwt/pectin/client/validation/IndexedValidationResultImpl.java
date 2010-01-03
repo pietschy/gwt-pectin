@@ -132,5 +132,10 @@ public class IndexedValidationResultImpl
       {
          IndexedValidationResultImpl.this.add(index, message);
       }
+
+      public boolean contains(Severity severity)
+      {
+         return getIndexedResult(index).contains(severity);
+      }
    }
 }

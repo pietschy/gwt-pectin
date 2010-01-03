@@ -132,6 +132,7 @@ public class ListFieldValidatorImpl<T> extends AbstractFieldValidator implements
    private void fireValidationChanged()
    {
       IndexedValidationEvent.fire(this, validationResult);
+      ValidationEvent.fire(this, validationResult);
    }
 
    public HandlerRegistration addValidationHandler(IndexedValidationHandler handler)
@@ -139,4 +140,8 @@ public class ListFieldValidatorImpl<T> extends AbstractFieldValidator implements
       return addHandler(IndexedValidationEvent.getType(), handler);
    }
 
+   public HandlerRegistration addValidationHandler(ValidationHandler handler)
+   {
+      return addHandler(ValidationEvent.getType(), handler);
+   }
 }

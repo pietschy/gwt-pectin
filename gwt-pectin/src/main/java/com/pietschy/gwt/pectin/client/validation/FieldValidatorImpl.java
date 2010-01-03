@@ -36,7 +36,7 @@ public class FieldValidatorImpl<T> extends AbstractFieldValidator implements Fie
    private FieldModel<T> fieldModel;
 
    private LinkedHashMap<Validator<? super T>, ValueModel<Boolean>> validators = new LinkedHashMap<Validator<? super T>, ValueModel<Boolean>>();
-   
+
    private ValidationResultImpl validationResult = new ValidationResultImpl();
 
    public FieldValidatorImpl(FieldModel<T> fieldModel)
@@ -45,7 +45,7 @@ public class FieldValidatorImpl<T> extends AbstractFieldValidator implements Fie
       {
          throw new NullPointerException("fieldModel is null");
       }
-      
+
       this.fieldModel = fieldModel;
    }
 
@@ -54,19 +54,19 @@ public class FieldValidatorImpl<T> extends AbstractFieldValidator implements Fie
       return fieldModel;
    }
 
-   public void 
+   public void
    addValidator(Validator<? super T> validator, ValueModel<Boolean> condition)
    {
       if (validator == null)
       {
          throw new NullPointerException("validator is null");
       }
-      
+
       if (condition == null)
       {
          throw new NullPointerException("condition is null");
       }
-      
+
       validators.put(validator, condition);
    }
 
@@ -103,27 +103,6 @@ public class FieldValidatorImpl<T> extends AbstractFieldValidator implements Fie
       }
    }
 
-   public ValidationResult getValidationResult()
-   {
-      return validationResult;
-   }
-
-   private void setValidationResult(ValidationResultImpl result)
-   {
-      if (result == null)
-      {
-         throw new NullPointerException("validationResult is null");
-      }
-      
-      this.validationResult = result;
-      fireValidationChanged();
-   }
-
-   private void fireValidationChanged()
-   {
-      ValidationEvent.fire(this, validationResult);
-   }
-
 
    public void addExternalMessage(ValidationMessage message)
    {
@@ -135,7 +114,29 @@ public class FieldValidatorImpl<T> extends AbstractFieldValidator implements Fie
    {
       setValidationResult(new ValidationResultImpl());
    }
-   
+
+   public ValidationResult getValidationResult()
+   {
+      return validationResult;
+   }
+
+   private void setValidationResult(ValidationResultImpl result)
+   {
+      if (result == null)
+      {
+         throw new NullPointerException("validationResult is null");
+      }
+
+      this.validationResult = result;
+      fireValidationChanged();
+   }
+
+   private void fireValidationChanged()
+   {
+      ValidationEvent.fire(this, validationResult);
+   }
+
+
    public HandlerRegistration addValidationHandler(ValidationHandler handler)
    {
       return addHandler(ValidationEvent.getType(), handler);

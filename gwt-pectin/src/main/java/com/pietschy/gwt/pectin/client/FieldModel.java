@@ -16,14 +16,13 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
-
 /**
- * FieldModel extends {@link MutableValueModel} and provides access to the 
- * {@link FormModel} to which it belongs.
+ * Basic type for fields that hold a single value.  This type exists to allow the API to cleanly
+ * separate (in a code completion context) between the various field types.  I.e. the api can
+ * use the type {@link ScalarField} if it applies to both {@link FieldModel}s and {@link FormattedFieldModel}s
+ * or it can reference each type explicitly.
  */
 public interface FieldModel<T>
-extends Field<T>, MutableValueModel<T>, HasValueChangeHandlers<T>
+extends ScalarField<T>
 {
 }

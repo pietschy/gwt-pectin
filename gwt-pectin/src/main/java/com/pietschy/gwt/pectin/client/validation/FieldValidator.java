@@ -25,17 +25,8 @@ import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
  * Time: 9:01:36 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface FieldValidator<T> extends HasValidationResult, HasValidationHandlers 
+public interface FieldValidator<T> extends HasValidation
 {
-
-   /**
-    * Runs all the validators and updates the validation result.  If any widgets are bound
-    * to the result then they will also update.
-    * @return <code>false</code> if any validation message has {@link Severity#ERROR}, <code>true</code> 
-    * otherwise.
-    * @see #runValidators(ValidationResultCollector) 
-    */
-   boolean validate();
 
    /**
     * Runs all the validator and stores the result in the specified collector.  The validation result
@@ -53,9 +44,4 @@ public interface FieldValidator<T> extends HasValidationResult, HasValidationHan
     */
    void addExternalMessage(ValidationMessage message);
 
-   /**
-    * Clears the validation result for this validator.
-    */
-   void clear();
-   
 }

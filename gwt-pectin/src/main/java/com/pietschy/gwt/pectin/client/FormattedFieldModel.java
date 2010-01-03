@@ -16,7 +16,6 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 
 /**
@@ -27,8 +26,7 @@ import com.pietschy.gwt.pectin.client.value.MutableValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public interface FormattedFieldModel<T>
-extends Field<T>, MutableValueModel<T>, HasValueChangeHandlers<T>, HasFormat<T>
+extends ScalarField<T>, HasFormat<T>
 {
    MutableValueModel<String> getTextModel();
-
 }

@@ -33,7 +33,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public class FormattedFieldModelImpl<T>
-extends FieldModelImpl<T>
+extends AbstractScalarField<T>
 implements FormattedFieldModel<T>
 {
    private Format<T> format;
@@ -42,7 +42,7 @@ implements FormattedFieldModel<T>
    {
       public void onFormatException(FormattedFieldModel<T> model, FormatException e)
       {
-         
+         // do nothing.
       }
    };
 

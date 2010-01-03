@@ -33,13 +33,13 @@ public class FormattedListFieldValidationBuilder<T>
    private FormattedListFieldValidatorImpl<T> fieldValidator;
 
    // create a delegating condition since we don't know if we're going to get one.  The
-   // delegate returns true if there's no delegate (i.e. we alwasy validate if there's no
-   // delegate
+   // delegate returns true if there's no delegate (i.e. we always validate if there's no
+   // condition)
    private DelegatingValueModel<Boolean> conditionDelegate = new DelegatingValueModel<Boolean>(true);
 
    public FormattedListFieldValidationBuilder(ValidationManager validationManager, FormattedListFieldModel<T> field)
    {
-      fieldValidator = validationManager.getFieldValidator(field, true);
+      fieldValidator = validationManager.getFormValidator().getFieldValidator(field, true);
    }
 
    public ConditionBuilder usingFieldFormat()

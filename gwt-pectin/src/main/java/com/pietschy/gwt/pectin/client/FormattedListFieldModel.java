@@ -26,7 +26,7 @@ import com.pietschy.gwt.pectin.client.list.MutableListModel;
  * To change this template use File | Settings | File Templates.
  */
 public interface FormattedListFieldModel<T>
-extends Field<T>, MutableListModel<T>, HasFormat<T>
+extends ListField<T>, HasFormat<T>
 {
    MutableListModel<String> getTextModel();
 }

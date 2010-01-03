@@ -90,6 +90,8 @@ public class FormModel
    /**
     * Returns all the fields in this form model at the time this method is called.  Fields added
     * after this method is invoked will not be included in the collection.
+    * <p>
+    * Fields are in the order they are added to the form.
     *
     * @return a collection of the fields in this model.
     */

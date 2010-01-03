@@ -49,24 +49,14 @@ public class ValidationPlugin
       return new FormattedListFieldValidationBuilder<T>(getValidationManager(field.getFormModel()), field);
    }
 
-   public static <T> FieldValidator<T> getFieldValidator(FieldModel<T> field)
+   public static HasValidation getFieldValidator(ScalarField<?> field)
    {
-      return getValidationManager(field.getFormModel()).getFieldValidator(field, true);
+      return getValidationManager(field.getFormModel()).getValidator(field);
    }
 
-   public static <T> FieldValidator<T> getFieldValidator(FormattedFieldModel<T> field)
+   public static HasIndexedValidation getFieldValidator(ListField<?> field)
    {
-      return getValidationManager(field.getFormModel()).getFieldValidator(field, true);
-   }
-
-   public static <T> ListFieldValidator<T> getFieldValidator(ListFieldModel<T> field)
-   {
-      return getValidationManager(field.getFormModel()).getFieldValidator(field, true);
-   }
-
-   public static <T> FormattedListFieldValidator<T> getFieldValidator(FormattedListFieldModel<T> field)
-   {
-      return getValidationManager(field.getFormModel()).getFieldValidator(field, true);
+      return getValidationManager(field.getFormModel()).getIndexedValidator(field);
    }
 
    public static ValidationManager getValidationManager(FormModel form)
@@ -74,7 +64,7 @@ public class ValidationPlugin
       ValidationManager manager = (ValidationManager) form.getProperty(ValidationManager.class);
       if (manager == null)
       {
-         manager = new ValidationManager();
+         manager = new ValidationManager(form);
          form.putProperty(ValidationManager.class, manager);
          form.addBindingCallback(manager);
       }

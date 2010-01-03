@@ -24,8 +24,6 @@ import com.pietschy.gwt.pectin.client.validation.binding.ValidationDisplayBindin
 import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
 
-import java.util.HashMap;
-
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -36,146 +34,46 @@ import java.util.HashMap;
 public class ValidationManager
 implements BindingCallback
 {
-   private HashMap<FieldModel<?>, FieldValidatorImpl<?>> fieldValidators = new HashMap<FieldModel<?>, FieldValidatorImpl<?>>();
-   
-   private HashMap<FormattedFieldModel<?>, FormattedFieldValidatorImpl<?>> formattedFieldValidators = new HashMap<FormattedFieldModel<?>, FormattedFieldValidatorImpl<?>>();
-   
-   private HashMap<ListFieldModel<?>, ListFieldValidatorImpl<?>> listFieldValidators = new HashMap<ListFieldModel<?>, ListFieldValidatorImpl<?>>();
+   private FormValidator formValidator;
 
-   private HashMap<FormattedListFieldModel<?>, FormattedListFieldValidatorImpl<?>> formattedListFieldValidators = new HashMap<FormattedListFieldModel<?>, FormattedListFieldValidatorImpl<?>>();
-
-   
-   @SuppressWarnings("unchecked")
-   public <T> FieldValidatorImpl<T> getFieldValidator(FieldModel<T> field, boolean create)
+   public ValidationManager(FormModel form)
    {
-      FieldValidatorImpl<T> validator = (FieldValidatorImpl<T>) fieldValidators.get(field);
-      
-      if (validator == null && create)
-      {
-         validator = new FieldValidatorImpl<T>(field);
-         fieldValidators.put(field, validator);
-      }
-      
-      return validator;
-   }
-   
-   @SuppressWarnings("unchecked")
-   public <T> FormattedFieldValidatorImpl<T> getFieldValidator(FormattedFieldModel<T> field, boolean create)
-   {
-      FormattedFieldValidatorImpl<T> validator = (FormattedFieldValidatorImpl<T>) formattedFieldValidators.get(field);
-      
-      if (validator == null && create)
-      {
-         validator = new FormattedFieldValidatorImpl<T>(field);
-         formattedFieldValidators.put(field, validator);
-      }
-      
-      return validator;
-   }
-   
-
-   @SuppressWarnings("unchecked")
-   public <T> ListFieldValidatorImpl<T> getFieldValidator(ListFieldModel<T> field, boolean create)
-   {
-      ListFieldValidatorImpl<T> validator = (ListFieldValidatorImpl<T>) listFieldValidators.get(field);
-      
-      if (validator == null && create)
-      {
-         validator = new ListFieldValidatorImpl<T>(field);
-         listFieldValidators.put(field, validator);
-      }
-      
-      return validator;
+      formValidator = new FormValidator(form);
    }
 
-   @SuppressWarnings("unchecked")
-   public <T> FormattedListFieldValidatorImpl<T> getFieldValidator(FormattedListFieldModel<T> field, boolean create)
+   public HasValidation getValidator(ScalarField<?> field)
    {
-      FormattedListFieldValidatorImpl<T> validator = (FormattedListFieldValidatorImpl<T>) formattedListFieldValidators.get(field);
+      return getFormValidator().getValidator(field);
+   }
 
-      if (validator == null && create)
-      {
-         validator = new FormattedListFieldValidatorImpl<T>(field);
-         formattedListFieldValidators.put(field, validator);
-      }
-
-      return validator;
+   public HasIndexedValidation getIndexedValidator(ListField<?> field)
+   {
+      return getFormValidator().getIndexedValidator(field);
    }
    
    public boolean validate()
    {
-      boolean valid = true;
-
-      for (FieldValidatorImpl<?> validator : fieldValidators.values())
-      {
-         validator.validate();
-         if (validator.getValidationResult().contains(Severity.ERROR))
-         {
-            valid = false;
-         }
-      }
-
-      for (FormattedFieldValidatorImpl<?> validator : formattedFieldValidators.values())
-      {
-         validator.validate();
-         if (validator.getValidationResult().contains(Severity.ERROR))
-         {
-            valid = false;
-         }
-      }
-
-      for (ListFieldValidatorImpl<?> validator : listFieldValidators.values())
-      {
-         validator.validate();
-         if (validator.getValidationResult().contains(Severity.ERROR))
-         {
-            valid = false;
-         }
-      }
-
-      for (FormattedListFieldValidatorImpl<?> validator : formattedListFieldValidators.values())
-      {
-         validator.validate();
-         if (validator.getValidationResult().contains(Severity.ERROR))
-         {
-            valid = false;
-         }
-      }
-
-      return valid;
+      return getFormValidator().validate();
    }
-   
-   public void clearValidation()
+
+   public void clear()
    {
-      for (FieldValidatorImpl<?> validator : fieldValidators.values())
-      {
-         validator.clear();
-      }
-
-      for (FormattedFieldValidatorImpl<?> validator : formattedFieldValidators.values())
-      {
-         validator.clear();
-      }
-
-      for (ListFieldValidatorImpl<?> validator : listFieldValidators.values())
-      {
-         validator.clear();
-      }
-
-      for (FormattedListFieldValidatorImpl<?> validator : formattedListFieldValidators.values())
-      {
-         validator.clear();
-      }
+      getFormValidator().clear();
    }
-   
+
+   public FormValidator getFormValidator()
+   {
+      return formValidator;
+   }
+
    public <T> void onWidgetBinding(final AbstractFieldBinding<T> binding, FieldModel<T> field, Object target)
    {
-      doBinding(binding, target, getFieldValidator(field, false));
+      doBinding(binding, target, getFormValidator().getFieldValidator(field, false));
    }
 
    public <T> void onWidgetBinding(AbstractFormattedBinding<T> binding, FormattedFieldModel<T> field, Object target)
    {
-      doBinding(binding, target, getFieldValidator(field, false));
+      doBinding(binding, target, getFormValidator().getFieldValidator(field, false));
    }
 
    private <T> void doBinding(BindingContainer binding, Object target, FieldValidator<T> fieldValidator)
@@ -194,7 +92,7 @@ implements BindingCallback
 
    public <T> void onWidgetBinding(AbstractListBinding binding, ListFieldModel<T> field, Object target)
    {
-      ListFieldValidator<T> fieldValidator = getFieldValidator(field, false);
+      ListFieldValidator<T> fieldValidator = getFormValidator().getFieldValidator(field, false);
 
       if (fieldValidator != null)
       {
@@ -209,7 +107,7 @@ implements BindingCallback
 
    public <T> void onWidgetBinding(AbstractFormattedListBinding<T> binding, FormattedListFieldModel<T> field, Object target)
    {
-      ListFieldValidator<T> fieldValidator = getFieldValidator(field, false);
+      ListFieldValidator<T> fieldValidator = getFormValidator().getFieldValidator(field, false);
 
       if (fieldValidator != null)
       {
@@ -221,5 +119,4 @@ implements BindingCallback
          }
       }
    }
-
 }

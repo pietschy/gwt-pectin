@@ -16,10 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.validation.binding;
 
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.FormattedListFieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.FormModel;
+import com.pietschy.gwt.pectin.client.ListField;
+import com.pietschy.gwt.pectin.client.ScalarField;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
 import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
@@ -50,30 +49,31 @@ extends AbstractBinder
    {
       if (validationStyles == null)
       {
-         throw new NullPointerException("styleApplicator is null");
+         throw new NullPointerException("validationStyles is null");
       }
       this.validationStyles = validationStyles;
    }
 
-   
-   public ValidationBindingBuider bindValidationOf(FieldModel<?> field)
+
+   public ValidationBindingBuider bindValidationOf(FormModel form)
    {
-      return new ValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), validationStyles);
-   }
-   
-   public ValidationBindingBuider bindValidationOf(FormattedFieldModel<?> field)
-   {
-      return new ValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), validationStyles);
-   }
-   
-   public IndexedValidationBindingBuider bindValidationOf(ListFieldModel<?> field)
-   {
-      return new IndexedValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), validationStyles);
+      return new ValidationBindingBuider(this,
+                                         ValidationPlugin.getValidationManager(form).getFormValidator(),
+                                         validationStyles);
    }
 
-   public IndexedValidationBindingBuider bindValidationOf(FormattedListFieldModel<?> field)
+   public ValidationBindingBuider bindValidationOf(ScalarField<?> field)
    {
-      return new IndexedValidationBindingBuider(this, ValidationPlugin.getFieldValidator(field), validationStyles);
+      return new ValidationBindingBuider(this,
+                                         ValidationPlugin.getFieldValidator(field),
+                                         validationStyles);
+   }
+
+   public IndexedValidationBindingBuider bindValidationOf(ListField<?> field)
+   {
+      return new IndexedValidationBindingBuider(this,
+                                                ValidationPlugin.getFieldValidator(field),
+                                                validationStyles);
    }
 
 }

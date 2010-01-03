@@ -21,12 +21,10 @@ import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.show;
-import com.pietschy.gwt.pectin.client.metadata.MetadataPlugin;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
 import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.getValidationManager;
+import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
 import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
 import com.pietschy.gwt.pectin.client.validation.validator.NotNullValidator;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
@@ -56,14 +54,14 @@ public class ValidatedFormModel extends FormModel
    {
       givenName = fieldOfType(String.class).boundTo(personProvider, "givenName");
       surname = fieldOfType(String.class).boundTo(personProvider, "surname");
-      nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
-      hasNickName = fieldOfType(Boolean.class).createWithValue(false);
-      gender = fieldOfType(Gender.class).boundTo(personProvider, "gender");
-
       age = formattedFieldOfType(Integer.class)
          .using(new AgeFormat())
          .boundTo(personProvider, "age");
-
+      gender = fieldOfType(Gender.class).boundTo(personProvider, "gender");
+      
+      hasNickName = fieldOfType(Boolean.class).createWithValue(false);
+      nickName = fieldOfType(String.class).boundTo(personProvider, "nickName");
+      
       wineLover = fieldOfType(Boolean.class).boundTo(personProvider, "wineLover");
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
       

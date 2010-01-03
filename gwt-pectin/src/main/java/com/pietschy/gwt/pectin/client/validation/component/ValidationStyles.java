@@ -25,11 +25,11 @@ import java.util.TreeMap;
 
 /**
  * Created by IntelliJ IDEA.
-* User: andrew
-* Date: Jul 13, 2009
-* Time: 11:39:45 AM
-* To change this template use File | Settings | File Templates.
-*/
+ * User: andrew
+ * Date: Jul 13, 2009
+ * Time: 11:39:45 AM
+ * To change this template use File | Settings | File Templates.
+ */
 public abstract class ValidationStyles
 {
    private static final ValidationStyles DEFAULT_INSTANCE = new ValidationStyles()
@@ -57,11 +57,11 @@ public abstract class ValidationStyles
          widget.addStyleDependentName(name);
       }
    };
-   
+
    public static final String ERROR_STYLE = "validationError";
    public static final String WARNING_STYLE = "validationWarning";
    public static final String INFO_STYLE = "validationInfo";
-   
+
    private TreeMap<Severity, String> styleNames = new TreeMap<Severity, String>();
 
    public ValidationStyles()
@@ -81,11 +81,6 @@ public abstract class ValidationStyles
       styleNames.put(severity, styleName);
    }
 
-   public void clearStyleNames()
-   {
-      styleNames.clear();
-   }
-
    public void applyStyle(UIObject widget, ValidationResult result)
    {
       clearStyles(widget);
@@ -98,6 +93,8 @@ public abstract class ValidationStyles
 
    public void applyStyle(UIObject widget, Severity severity)
    {
+      clearStyles(widget);
+
       addStyle(widget, styleNames.get(severity));
    }
 
@@ -128,7 +125,8 @@ public abstract class ValidationStyles
 
    /**
     * Gets the applicator that applies the style using {@link UIObject#addStyleName(String)}.
-    * @return an applicator that applies the style using {@link UIObject#addStyleName(String)}. 
+    *
+    * @return an applicator that applies the style using {@link UIObject#addStyleName(String)}.
     */
    public static ValidationStyles defaultInstance()
    {
@@ -137,6 +135,7 @@ public abstract class ValidationStyles
 
    /**
     * Gets the applicator that applies the style using {@link UIObject#addStyleDependentName(String)}.
+    *
     * @return an applicator that applies the style using {@link UIObject#addStyleDependentName(String)}.
     */
    public static ValidationStyles defaultDependentStyleNameInstance()

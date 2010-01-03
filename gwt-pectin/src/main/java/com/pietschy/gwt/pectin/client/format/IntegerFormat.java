@@ -58,7 +58,7 @@ public class IntegerFormat implements Format<Integer>
     */
    protected FormatException toFormatException(NumberFormatException e, String text)
    {
-      return new FormatException(text + " is not a valid integer", e);
+      return new FormatException("'" + text + "' is not a valid integer", e);
    }
 
    /**

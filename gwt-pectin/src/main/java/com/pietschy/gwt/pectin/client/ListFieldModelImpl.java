@@ -16,15 +16,7 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.list.ListModel;
-import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
-import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
-import com.pietschy.gwt.pectin.client.list.MutableListModel;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,96 +26,11 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ListFieldModelImpl<T> 
-extends AbstractField<T>
+extends AbstractListField<T>
 implements ListFieldModel<T>
 {
-   private ListModel<T> source;
-   private SourceListener<T> sourceListener = new SourceListener<T>();
-
    public ListFieldModelImpl(FormModel formModel, ListModel<T> source, Class<T> valueType)
    {
-      super(formModel, valueType);
-      this.source = source;
-      source.addListModelChangedHandler(sourceListener);
-   }
-
-   public void add(T element)
-   {
-      getMutableSource().add(element);
-   }
-
-   public void remove(T element)
-   {
-      getMutableSource().remove(element);
-   }
-
-   public void setElements(Collection<? extends T> elements)
-   {
-      getMutableSource().setElements(elements);
-   }
-
-   public int size()
-   {
-      return getSource().size();
-   }
-
-   public boolean isEmpty()
-   {
-      return getSource().isEmpty();
-   }
-
-   public T get(int index)
-   {
-      return getSource().get(index);
-   }
-
-   public boolean contains(T element)
-   {
-      return getSource().contains(element);  
-   }
-
-   public List<T> asUnmodifiableList()
-   {
-      return getSource().asUnmodifiableList();
-   }
-
-   public int indexOf(T value)
-   {
-      return getSource().indexOf(value);
-   }
-
-   public Iterator<T> iterator()
-   {
-      return getSource().iterator();  
-   }
-
-   public HandlerRegistration addListModelChangedHandler(ListModelChangedHandler<T> handler)
-   {
-      return addHandler(handler, ListModelChangedEvent.getType());
-   }
-
-   public boolean 
-   isMutableSource()
-   {
-      return source instanceof MutableListModel;
-   }
-
-   public ListModel<T> getSource()
-   {
-      return source;
-   }
-
-   protected MutableListModel<T> getMutableSource()
-   {
-      verifyMutableSource();
-      return (MutableListModel<T>) getSource();
-   }
-
-   private class SourceListener<T> implements ListModelChangedHandler<T>
-   {
-      public void onListDataChanged(ListModelChangedEvent<T> event)
-      {
-         fireEvent(event);
-      }
+      super(formModel, source, valueType);
    }
 }

@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.pietschy.gwt.pectin.demo.client.basic.BasicDemo;
 import com.pietschy.gwt.pectin.demo.client.format.FormattedFieldDemo;
 import com.pietschy.gwt.pectin.demo.client.metadata.MetadataDemo;
@@ -39,19 +40,29 @@ public class DemoEntryPoint
    implements EntryPoint
 {
    private RootPanel rootPanel;
-   private SimpleHistoryTabs tabs = new SimpleHistoryTabs();
+
+   // history is buggered on ie...
+//   private SimpleHistoryTabs tabs = new SimpleHistoryTabs();
+   private TabPanel tabs = new TabPanel();
 
    public void onModuleLoad()
    {
       rootPanel = RootPanel.get("demo-target");
       
-      tabs.add(new BasicDemo(), "Basic", "basic");
-      tabs.add(new FormattedFieldDemo(), "Formatted Fields", "formattedFields");
-      tabs.add(new MetadataDemo(), "Metadata Plugin", "metadata");
-      tabs.add(new ValidationDemo(), "Validation Plugin", "validation");
-      tabs.add(new StyleDemo(), "Style Bindings", "style");
-      tabs.initialiseSelectionFromHistory();
+//      tabs.add(new BasicDemo(), "Basic", "basic");
+//      tabs.add(new FormattedFieldDemo(), "Formatted Fields", "formattedFields");
+//      tabs.add(new MetadataDemo(), "Metadata Plugin", "metadata");
+//      tabs.add(new ValidationDemo(), "Validation Plugin", "validation");
+//      tabs.add(new StyleDemo(), "Style Bindings", "style");
+//      tabs.initialiseSelectionFromHistory();
 
+      tabs.add(new BasicDemo(), "Basic");
+      tabs.add(new FormattedFieldDemo(), "Formatted Fields");
+      tabs.add(new MetadataDemo(), "Metadata Plugin");
+      tabs.add(new ValidationDemo(), "Validation Plugin");
+      tabs.add(new StyleDemo(), "Style Bindings");
+      tabs.selectTab(0);
+      
       rootPanel.add(tabs);
 
       Window.enableScrolling(true);

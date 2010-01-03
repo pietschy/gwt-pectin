@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.validation.binding;
 
 import com.google.gwt.user.client.ui.UIObject;
-import com.pietschy.gwt.pectin.client.validation.ListFieldValidator;
+import com.pietschy.gwt.pectin.client.validation.HasIndexedValidation;
 import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 
@@ -30,11 +30,11 @@ import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 */
 public class IndexedValidationBindingBuider 
 {
-   private ListFieldValidator<?> validator;
+   private HasIndexedValidation validator;
    private ValidationBinder binder;
    private ValidationStyles validationStyles;
 
-   public IndexedValidationBindingBuider(ValidationBinder binder, ListFieldValidator<?> validator, ValidationStyles validationStyles)
+   public IndexedValidationBindingBuider(ValidationBinder binder, HasIndexedValidation validator, ValidationStyles validationStyles)
    {
       this.binder = binder;
       this.validator = validator;

@@ -39,6 +39,8 @@ public class FormattedFieldValidatorImpl<T> extends AbstractFieldValidator imple
    
    private ValidationResultImpl validationResult = new ValidationResultImpl();
 
+   private boolean alwaysValidateValue = false;
+
    public FormattedFieldValidatorImpl(FormattedFieldModel<T> fieldModel)
    {
       if (fieldModel == null)
@@ -95,11 +97,25 @@ public class FormattedFieldValidatorImpl<T> extends AbstractFieldValidator imple
       return !result.contains(Severity.ERROR);
    }
 
-   
+   public boolean isAlwaysValidateValue()
+   {
+      return alwaysValidateValue;
+   }
+
+   public void setAlwaysValidateValue(boolean alwaysValidateValue)
+   {
+      this.alwaysValidateValue = alwaysValidateValue;
+   }
+
    public void runValidators(ValidationResultCollector collector)
    {
+      // text validators run first so they're first in any error list.
       runTextValidators(collector);
-      runValueValidators(collector);
+      // conditionaly validate the value.
+      if (alwaysValidateValue || !collector.contains(Severity.ERROR))
+      {
+         runValueValidators(collector);
+      }
    }
 
    public void runValueValidators(ValidationResultCollector collector)
@@ -113,7 +129,6 @@ public class FormattedFieldValidatorImpl<T> extends AbstractFieldValidator imple
       {
          ValueModel<Boolean> condition = entry.getValue();
          Validator<? super T> validator = entry.getKey();
-
          if (condition.getValue())
          {
             validator.validate(value, collector);

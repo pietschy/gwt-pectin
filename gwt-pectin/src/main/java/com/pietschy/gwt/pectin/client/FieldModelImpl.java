@@ -16,10 +16,6 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
@@ -30,116 +26,11 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public class FieldModelImpl<T>
-extends AbstractField<T>
+extends AbstractScalarField<T>
 implements FieldModel<T>
 {
-   private SourceModelListener sourceListener = new SourceModelListener();
-   private ValueModel<T> source;
-   private T cachedValue;
-
    public FieldModelImpl(FormModel formModel, ValueModel<T> source, Class<T> valueType)
    {
-      super(formModel, valueType);
-      this.source = source;
-      
-      source.addValueChangeHandler(sourceListener);
-      // read our state from our source.
-      onSourceModelChange(source.getValue());
-   }
-
-   protected T readFromSource()
-   {
-      return getSource().getValue();
-   }
-
-   protected void writeToSource(T value)
-   {
-      try
-      {
-         sourceListener.setIgnoreEvents(true);
-         
-         getMutableSource().setValue(value);
-      }
-      finally
-      {
-         sourceListener.setIgnoreEvents(false);
-      }
-   }
-
-   protected void 
-   onSourceModelChange(T value)
-   {
-      cachedValue = value;
-      fireValueChangeEvent(value);
-   }
-
-   public T getValue()
-   {
-      return cachedValue;
-   }
-
-   public void setValue(T value)
-   {
-      T oldValue = cachedValue;
-      
-      cachedValue = value;
-      writeToSource(value);
-      
-      fireValueChangeEvent(oldValue, value);
-   }
-
-   public boolean 
-   isMutableSource()
-   {
-      return getSource() instanceof MutableValueModel;
-   }
-
-   public ValueModel<T> getSource()
-   {
-      return source;
-   }
-
-   public MutableValueModel<T> getMutableSource()
-   {
-      verifyMutableSource();
-      return (MutableValueModel<T>) source;
-   }
-
-   protected void 
-   fireValueChangeEvent(T newValue)
-   {
-      ValueChangeEvent.fire(this, newValue);
-   }
-   
-   protected void 
-   fireValueChangeEvent(T oldValue, T newValue)
-   {
-      ValueChangeEvent.fireIfNotEqual(this, oldValue, newValue);
-   }
-   
-   public HandlerRegistration addValueChangeHandler(ValueChangeHandler<T> handler)
-   {
-      return addHandler(handler, ValueChangeEvent.getType());
-   }
-
-   /**
-    * Probably nice to move this to a buffer strategy.
-    */
-   private class SourceModelListener implements ValueChangeHandler<T>
-   {
-      private boolean ignoreEvents = false;
-      
-      public void onValueChange(ValueChangeEvent<T> event)
-      {
-         if (!ignoreEvents)
-         {
-            onSourceModelChange(event.getValue());
-         }
-      }
-
-      public void setIgnoreEvents(boolean ignoreEvents)
-      {
-         this.ignoreEvents = ignoreEvents;
-      }
+      super(formModel, source, valueType);
    }
 }

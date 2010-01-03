@@ -25,18 +25,8 @@ import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
  * Time: 9:01:36 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface ListFieldValidator<T> extends HasValidationResult, HasIndexedValidationHandlers
+public interface ListFieldValidator<T> extends HasIndexedValidation
 {
-   IndexedValidationResult getValidationResult();
-
-   /**
-    * Runs all the validators and updates the validation result.  If any widgets are bound
-    * to the result then they will also update.
-    * @return <code>false</code> if any validation message has {@link Severity#ERROR}, <code>true</code> 
-    * otherwise.
-    * @see #runValidators(IndexedValidationResultCollector) 
-    */
-   boolean validate();
 
    /**
     * Runs all the validator and stores the result in the specified collector.  The validation result
@@ -57,12 +47,8 @@ public interface ListFieldValidator<T> extends HasValidationResult, HasIndexedVa
    /**
     * Adds a 'non-indexed' external validation message.
     * @param message the validation message.
-    * @see IndexedValidationResultCollector#add(ValidationMessage) 
+    * @see IndexedValidationResultCollector#add(ValidationMessage)
     */
    void addExternalMessage(ValidationMessage message);
 
-   /**
-    * Clears all validation messages.
-    */
-   void clear();
 }

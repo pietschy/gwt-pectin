@@ -32,7 +32,9 @@ import java.util.Map;
  * Time: 9:47:41 AM
  * To change this template use File | Settings | File Templates.
  */
-public class FormattedListFieldValidatorImpl<T> extends AbstractFieldValidator implements FormattedListFieldValidator<T>
+public class FormattedListFieldValidatorImpl<T>
+   extends AbstractFieldValidator
+   implements FormattedListFieldValidator<T>
 {
 
    private FormattedListFieldModel<T> fieldModel;
@@ -51,6 +53,7 @@ public class FormattedListFieldValidatorImpl<T> extends AbstractFieldValidator i
 
       this.fieldModel = fieldModel;
    }
+
 
    public void addValidator(ListValidator<? super T> validator, ValueModel<Boolean> condition)
    {
@@ -189,6 +192,11 @@ public class FormattedListFieldValidatorImpl<T> extends AbstractFieldValidator i
    private void fireValidationChanged()
    {
       IndexedValidationEvent.fire(this, validationResult);
+   }
+
+   public HandlerRegistration addValidationHandler(ValidationHandler handler)
+   {
+      return addHandler(ValidationEvent.getType(), handler);
    }
 
    public HandlerRegistration addValidationHandler(IndexedValidationHandler handler)

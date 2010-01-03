@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Andrew Pietsch 
+ * Copyright 2010 Andrew Pietsch
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you 
  * may not use this file except in compliance with the License. You may 
@@ -16,13 +16,14 @@
 
 package com.pietschy.gwt.pectin.client;
 
+import com.pietschy.gwt.pectin.client.list.MutableListModel;
 
 /**
- * Basic type for fields that contain a list of values.  This type exists to allow the API to cleanly
- * separate (in a code completion context) between the various types.  I.e. the api can
- * use the type {@link ListField} if it applies to both {@link ListFieldModel}s and {@link FormattedListFieldModel}s
- * or it can reference the types explicitly.
+ * ScalarField provides a base type for {@link ListFieldModel} and {@link FormattedListFieldModel}.  This allows
+ * plugins that aren't interested in formatted fields to treat both the same way while other plugins
+ * can safely distinguish between the two since neither is an instance of the other.
  */
-public interface ListFieldModel<T> extends ListField<T>
+public interface ListField<T>
+extends Field<T>, MutableListModel<T>
 {
 }
