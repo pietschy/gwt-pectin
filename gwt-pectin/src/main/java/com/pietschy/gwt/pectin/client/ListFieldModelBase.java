@@ -19,7 +19,7 @@ package com.pietschy.gwt.pectin.client;
 import com.pietschy.gwt.pectin.client.list.MutableListModel;
 
 /**
- * ScalarField provides a base type for {@link ListFieldModel} and {@link FormattedListFieldModel}.  This allows
+ * ListFieldModelBase provides a base type for {@link ListFieldModel} and {@link FormattedListFieldModel}.  This allows
  * plugins that aren't interested in formatted fields to treat both the same way while other plugins
  * can safely distinguish between the two since neither is an instance of the other.
  */

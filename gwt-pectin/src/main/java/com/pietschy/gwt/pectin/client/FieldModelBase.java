@@ -20,7 +20,7 @@ import com.google.gwt.event.logical.shared.HasValueChangeHandlers;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 
 /**
- * ScalarField provides a base type for {@link FieldModel} and {@link FormattedFieldModel}.  This allows
+ * FieldModelBase provides a base type for {@link FieldModel} and {@link FormattedFieldModel}.  This allows
  * plugins that aren't interested in formatted fields to treat both the same way while other plugins
  * can safely distinguish between the two since neither is an instance of the other.
  */
