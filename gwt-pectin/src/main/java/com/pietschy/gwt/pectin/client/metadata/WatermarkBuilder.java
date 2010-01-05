@@ -18,6 +18,9 @@ package com.pietschy.gwt.pectin.client.metadata;
 
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -27,25 +30,36 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  */
 public class WatermarkBuilder
 {
-   private Metadata metadata;
+   private Collection<Metadata> allMetadata;
 
    protected WatermarkBuilder(Metadata metadata)
    {
-      this.metadata = metadata;
+      this(Arrays.asList(metadata));
+   }
+   
+   protected WatermarkBuilder(Collection<Metadata> metadata)
+   {
+      this.allMetadata = metadata;
    }
 
    public void with(String watermark)
    {
-      metadata.setWatermark(watermark);
+      for (Metadata metadata : allMetadata)
+      {
+         metadata.setWatermark(watermark);
+      }
    }
 
    public void with(ValueModel<String> model)
    {
-      metadata.setWatermarkModel(model);
+      for (Metadata metadata : allMetadata)
+      {
+         metadata.setWatermarkModel(model);
+      }
    }
 
    public <T> WatermarkFormatBuilder<T> withValueOf(ValueModel<T> model)
    {
-      return new WatermarkFormatBuilder<T>(metadata, model);
+      return new WatermarkFormatBuilder<T>(allMetadata, model);
    }
 }

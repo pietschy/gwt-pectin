@@ -96,17 +96,14 @@ public class MetadataPlugin
       });
    }
 
-   private static <T> Collection<Field<?>> toCollection(Field<?> field, Field<?>... others)
-   {
-      ArrayList<Field<?>> fields = new ArrayList<Field<?>>();
-      fields.add(field);
-      fields.addAll(Arrays.asList(others));
-      return fields;
-   }
-
    public static WatermarkBuilder watermark(FieldModel<String> field)
    {
       return new WatermarkBuilder(getMetadata(field));
+   }
+
+   public static WatermarkBuilder watermark(FieldModel<String> field, FieldModel<String>... others)
+   {
+      return new WatermarkBuilder(getAllMetadata(toCollection(field, others)));
    }
 
    public static WatermarkBuilder watermark(FormattedFieldModel<?> field)
@@ -114,11 +111,35 @@ public class MetadataPlugin
       return new WatermarkBuilder(getMetadata(field));
    }
 
+   public static WatermarkBuilder watermark(FormattedFieldModel<?> field, FormattedFieldModel<?>... others)
+   {
+      return new WatermarkBuilder(getAllMetadata(toCollection(field, others)));
+   }
+
    public static MetadataConditionBuidler metadataOf(Field field)
    {
       return new MetadataConditionBuidler(getMetadata(field));
    }
-   
+
+   private static Collection<Field<?>> toCollection(Field<?> field, Field<?>... others)
+     {
+        ArrayList<Field<?>> fields = new ArrayList<Field<?>>();
+        fields.add(field);
+        fields.addAll(Arrays.asList(others));
+        return fields;
+     }
+
+   private static Collection<Metadata> getAllMetadata(Collection<Field<?>> fields)
+   {
+      ArrayList<Metadata> result = new ArrayList<Metadata>();
+      for (Field other : fields)
+      {
+         result.add(getMetadata(other));
+      }
+
+      return result;
+   }
+
    public static Metadata getMetadata(Field field)
    {
       return getMetadataManager(field.getFormModel()).getMetadata(field);

@@ -22,6 +22,8 @@ import com.pietschy.gwt.pectin.client.value.Function;
 import com.pietschy.gwt.pectin.client.value.ToStringFunction;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
+import java.util.Collection;
+
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -33,10 +35,13 @@ public class WatermarkFormatBuilder<T>
 {
    private ComputedValueModel<String, T> model;
 
-   public WatermarkFormatBuilder(Metadata metadata, ValueModel<T> model)
+   public WatermarkFormatBuilder(Collection<Metadata> allMetadata, ValueModel<T> model)
    {
       this.model = new ComputedValueModel<String, T>(model, new ToStringFunction());
-      metadata.setWatermarkModel(this.model);
+      for (Metadata metadata : allMetadata)
+      {
+         metadata.setWatermarkModel(this.model);
+      }
    }
 
    public void formattedBy(Function<String, ? super T> format)
