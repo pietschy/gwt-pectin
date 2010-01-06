@@ -76,7 +76,7 @@ extends Composite implements HasValue<Collection<T>>
    addNewRow()
    {
       Row row = createRemovableRow();
-      addRows(row);
+      addRows(Arrays.asList(row));
       return row;
    }
 
@@ -93,12 +93,6 @@ extends Composite implements HasValue<Collection<T>>
    }
 
    private void
-   addRows(Row... rows)
-   {
-      addRows(Arrays.asList(rows));
-   }
-
-   private void
    addRows(List<Row> rows)
    {
       for (Row row : rows)
@@ -111,7 +105,7 @@ extends Composite implements HasValue<Collection<T>>
    }
 
    private void
-   removeRows(Row... rows)
+   removeRows(List<Row> rows)
    {
       for (Row row : rows)
       {
@@ -261,7 +255,7 @@ extends Composite implements HasValue<Collection<T>>
 
       public void onClick(ClickEvent event)
       {
-         removeRows(this);
+         removeRows(Arrays.asList(this));
       }
 
       public HasValue<T>
