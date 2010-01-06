@@ -32,7 +32,12 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 public class MetadataBinder
 extends AbstractBinder
 {
-   
+
+   /** Binds all the metadata of the specific field to a widget.  The metadata will only be applied
+    * if the widget has a supported binding.  No errors will be thrown if it doesn't.
+    * @param field the field that has the metadata.
+    * @return a builder to apply the styles to a widget.
+    */
    public AllMetadataBindingBuilder bindMetadataOf(Field field)
    {
       return new AllMetadataBindingBuilder(this, MetadataPlugin.getMetadata(field));
