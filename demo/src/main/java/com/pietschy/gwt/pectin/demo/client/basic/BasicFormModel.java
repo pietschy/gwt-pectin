@@ -43,6 +43,7 @@ public class BasicFormModel extends FormModel
    protected final FieldModel<Integer> lettersInName;
    protected final FieldModel<Gender> gender;
    protected final ListFieldModel<Wine> favoriteWines;
+   protected final ListFieldModel<String> favoriteCheeses;
 
    protected final ValueModel<Boolean> dirty;
 
@@ -53,8 +54,9 @@ public class BasicFormModel extends FormModel
       surname = fieldOfType(String.class).boundTo(personProvider, "surname");
       gender = fieldOfType(Gender.class).boundTo(personProvider, "gender");
       
-      // a list field
+      // some list fields
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
+      favoriteCheeses = listOfType(String.class).boundTo(personProvider, "favoriteCheeses");
       
       // a computed field
       lettersInName = fieldOfType(Integer.class)

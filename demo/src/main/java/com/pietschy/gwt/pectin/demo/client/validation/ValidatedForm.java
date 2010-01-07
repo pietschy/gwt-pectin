@@ -85,19 +85,20 @@ public class ValidatedForm extends VerySimpleForm
       addRow("Gender", genderCombo, createValidationLabel(model.gender));
       addGap();
 
+      addNote("This demonstrates a conditional validation.  The validation is only run if the checkbox is selected.");
       addRow("", hasNickName);
       addRow("Nick name", nickName, createValidationLabel(model.nickName));
       addGap();
 
+      addNote("This is conditional validation on a ListFieldModel<T> that shows info and warning messages.");
       addRow("", wineLoverCheckBox);
       addRow("Favorite wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
       addRow("", createValidationLabel(model.favoriteWines));
-      addGap();
 
-      addNote("We'll also display the validation message for all the fields below.  Click the Validate button to see them.");
+      addNote("We'll also display the validation message for the whole form below.  Click the Validate button to see them.");
       addRow("", createValidationPanel(model));
-      addGap();
 
+      addGap();
       addRow("", validateButton);
 
 

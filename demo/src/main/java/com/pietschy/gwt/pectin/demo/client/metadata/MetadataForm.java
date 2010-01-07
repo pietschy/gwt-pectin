@@ -17,13 +17,16 @@
 package com.pietschy.gwt.pectin.demo.client.metadata;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
+import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.ComboBox;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
+import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.demo.client.domain.Protocol;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
@@ -54,8 +57,18 @@ public class MetadataForm extends VerySimpleForm
    private CheckBox cabSavCheckBox = new CheckBox("Cab Sav");
    private CheckBox merlotCheckBox = new CheckBox("Merlot");
    private CheckBox shirazCheckBox = new CheckBox("Shiraz");
+
+   private CheckBox cheeseLover = new NullSafeCheckBox("I like cheese");
+   private AbstractDynamicList<String> favoriteCheeses = new AbstractDynamicList<String>("Add Cheese")
+   {
+      protected HasValue<String> createWidget()
+      {
+         return new TextBox();
+      }
+   };
    
    private WidgetBinder widgets = new WidgetBinder();
+   private MetadataBinder metadata = new MetadataBinder();
 
 
    public MetadataForm(MetadataFormModel model)
@@ -80,6 +93,9 @@ public class MetadataForm extends VerySimpleForm
       widgets.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
       widgets.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
+      widgets.bind(model.cheeseLover).to(cheeseLover);
+      widgets.bind(model.favoriteCheeses).to(favoriteCheeses);
+
 
       addRow("First Name", givenName, "The first two fields use a plain text watermark");
       addRow("Last Name", surname);
@@ -95,10 +111,22 @@ public class MetadataForm extends VerySimpleForm
       addRow("", hasNickName);
       addRow("Nick name", nickName);
       addGap();
-      addRow("", wineLover);
+      addNote("The favorites list is only enabled only if you're a wine lover with favorites.");
+      addRow("Wine", wineLover);
       addRow("", hasFavoriteWines);
-      addRow("Favorite Wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
-      
+      addRow("Favorites", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
+
+      addGap();
+      addNote("Now we'll show and hide a field based on the checkbox value.");
+      addRow("Cheese", cheeseLover);
+      Row favoriteCheeseRow = addTallRow("Favorites", favoriteCheeses);
+
+      // Now lets hide the whole row based on the metadata for the field.
+      metadata.bindVisibilityOf(model.favoriteCheeses).to(favoriteCheeseRow);
+      // Please Nte: Normally if I was hiding the whole row like above I'd probably
+      // use metadata.bindValueOf(cheeseLover).toVisibilityOf(favoriteCheeseRow) and
+      // not bother using show/hide at all.
+
    }
 
    private static class ProtocolRenderer implements ComboBox.Renderer<Protocol>

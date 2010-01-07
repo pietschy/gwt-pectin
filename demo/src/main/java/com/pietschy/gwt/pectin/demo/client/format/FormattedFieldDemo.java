@@ -35,7 +35,7 @@ extends AbstractDemo
    {
       addBlurbParagraph("Formatted field models let you bind non-string models to string/text based widgets.  " +
                         "Using a format you can bind a FormattedFieldModel&lt;T&gt; to a HasValue&lt;String&gt; " +
-                        "widget and a FormattedListField&lt;T&gt; to HasValue&lt;Collection&lt;String&gt;&gt;.");
+                        "widget and a FormattedListFieldModel&lt;T&gt; to HasValue&lt;Collection&lt;String&gt;&gt;.");
 
       addBlurbParagraph("Plugins can also access both the string values " +
                         "and the formatted values.  This allows the validation plugin to support validators that " +

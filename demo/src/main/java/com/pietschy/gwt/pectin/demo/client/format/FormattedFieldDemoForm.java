@@ -16,9 +16,11 @@
 
 package com.pietschy.gwt.pectin.demo.client.format;
 
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
+import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.TextSplitter;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
@@ -38,10 +40,17 @@ extends VerySimpleForm
    private TextBox age = new EnhancedTextBox();
    private TextBox ageInDogYears = new EnhancedTextBox();
 
+   private Label luckyNumberLabel = new Label();
    // The TextSplitter turns any TextBoxBase into a HasValue<Collection<String>> that
    // can the be bound to a formatted list.
    private TextSplitter luckyNumbers = new TextSplitter(new EnhancedTextBox());
-   private Label luckyNumberLabel = new Label();
+   private AbstractDynamicList<String> luckyNumbersAgain = new AbstractDynamicList<String>("Add lucky number")
+   {
+      protected HasValue<String> createWidget()
+      {
+         return new TextBox();
+      }
+   };
 
    private WidgetBinder binder = new WidgetBinder();
 
@@ -59,21 +68,26 @@ extends VerySimpleForm
       // has to deal with integer values.
       binder.bind(model.luckyNumbers).toLabel(luckyNumberLabel, new LuckyNumberLabelFormat());
 
+      // we'll show a second binding for our lucky numbers.
+      binder.bind(model.luckyNumbers).to(luckyNumbersAgain);
+
       age.setVisibleLength(5);
       ageInDogYears.setVisibleLength(5);
-      
+
+      addNote("This shows two formatted fields, one of which is converted from the other.");
       addRow("Age", age);
       addRow("Age (in dog years)", ageInDogYears);
 
       addGap();
-
-      addNote("The following binds a list of integers to the value of a comma separated text box.");
+      addNote("This is a FormattedListFieldModel example bound to a comma separated text box.");
       addNote("Type your lucky numbers separated by a comma.");
-      addRow("Lucky numbers", luckyNumbers);
+      addRow("Lucky numbers", luckyNumbers, luckyNumberLabel);
 
       addGap();
+      addNote("And here are your lucky numbers bound to a HasValue<Collection<String>>");
+      addTallRow("Lucky Numbers", luckyNumbersAgain);
 
-      addRow("", luckyNumberLabel);
+
 
 
    }

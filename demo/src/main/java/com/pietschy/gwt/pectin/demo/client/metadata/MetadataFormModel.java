@@ -48,6 +48,8 @@ public class MetadataFormModel extends FormModel
    protected final FieldModel<Boolean> wineLover;
    protected final ListFieldModel<Wine> favoriteWines;
    protected final FieldModel<Boolean> hasFavoriteWines;
+   protected final ListFieldModel<String> favoriteCheeses;
+   protected final FieldModel<Boolean> cheeseLover;
 
    protected final FieldModel<Protocol> protocol;
    protected final FormattedFieldModel<Integer> port;
@@ -101,6 +103,11 @@ public class MetadataFormModel extends FormModel
 
       enable(hasFavoriteWines).when(wineLover);
       enable(favoriteWines).when(is(wineLover).and(hasFavoriteWines));
+
+      cheeseLover = fieldOfType(Boolean.class).boundTo(personProvider, "cheeseLover");
+      favoriteCheeses = listOfType(String.class).boundTo(personProvider, "favoriteCheeses");
+
+      show(favoriteCheeses).when(cheeseLover);
    }
    
    public void setPerson(Person person)

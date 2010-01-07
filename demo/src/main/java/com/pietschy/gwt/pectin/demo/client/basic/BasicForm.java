@@ -19,11 +19,9 @@ package com.pietschy.gwt.pectin.demo.client.basic;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
+import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
@@ -50,6 +48,14 @@ public class BasicForm extends VerySimpleForm
    private CheckBox cabSavCheckBox = new CheckBox("Cab Sav");
    private CheckBox merlotCheckBox = new CheckBox("Merlot");
    private CheckBox shirazCheckBox = new CheckBox("Shiraz");
+
+   private AbstractDynamicList<String> favoriteCheeses = new AbstractDynamicList<String>("Add Cheese")
+   {
+      protected HasValue<String> createWidget()
+      {
+         return new TextBox();
+      }
+   };
 
    private Button saveButton = new Button("Save");
    
@@ -84,6 +90,9 @@ public class BasicForm extends VerySimpleForm
       widgets.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
       widgets.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
+      // and a list model to a HasValue<Collection<T>>
+      widgets.bind(model.favoriteCheeses).to(favoriteCheeses);
+
       saveButton.addClickHandler(new SaveHandler());
       metadata.bindValueOf(model.dirty).toEnablednessOf(saveButton);
 
@@ -91,12 +100,18 @@ public class BasicForm extends VerySimpleForm
       // now layout the form
       addRow("Given Name", givenName);
       addRow("Surname", surname);
-      addRow("Letters in name", lettersInName);
+      addRow("Letters in name", lettersInName, "A value computed from the previous two fields");
       addGap();
+      addNote("This binds a FieldModel<T> to a collection of HasValue<Boolean>");
       addRow("Gender", maleRadio, femaleRadio);
       addGap();
+      addNote("This binds a ListFieldModel<T> to a collection of HasValue<Boolean>");
       addRow("Favorite Wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
       addGap();
+      addNote("This binds a ListFieldModel<T> to a HasValue<Collection<T>> widget.");
+      addTallRow("Favorite Cheeses", favoriteCheeses);
+      addGap();
+      addNote("The save button is disabled if the form is in sync with the bean.");
       addRow("", saveButton);
    }
 

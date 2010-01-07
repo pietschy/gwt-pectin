@@ -49,13 +49,18 @@ input.validationError,
    padding-right: 0.5em;
 }
 
+.verticalAlignTop {
+   vertical-align:top;
+   padding-top: 0.2em;
+}
+
 .VerySimpleForm-GapRow {
-   height: 0.4em;
-   font-size: 10%;
+   height: 0.8em;
+   font-size: 20%;
 }
 
 .VerySimpleForm-Note {
-   color: #333333;
+   color: #999999;
 }
 
 .VerySimpleForm-Hint {

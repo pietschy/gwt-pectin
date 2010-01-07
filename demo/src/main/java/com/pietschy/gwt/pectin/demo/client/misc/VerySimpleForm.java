@@ -72,6 +72,13 @@ extends Composite
       return addRow(label, hp(widget, others));
    }
 
+   protected Row addTallRow(String label, Widget widget)
+   {
+      VerySimpleForm.Row row = addRow(label, widget);
+      cellFormatter.addStyleName(row.getRowIndex(), 0, "verticalAlignTop");
+      return row;
+   }
+
    private void styleLabel(int row)
    {
       cellFormatter.addStyleName(row, 0, "VerySimpleForm-Label");
@@ -93,6 +100,7 @@ extends Composite
       return widget;
    }
 
+
    protected Row addNote(String text)
    {
       int rowIndex = table.getRowCount();
@@ -110,7 +118,6 @@ extends Composite
       cellFormatter.setStylePrimaryName(rowIndex, 0, "VerySimpleForm-GapRow");
       return new Row(rowIndex);
    }
-
 
    protected Widget hp(Widget first, Widget... others)
    {
@@ -139,6 +146,11 @@ extends Composite
          this.rowIndex = rowIndex;
       }
 
+      public int getRowIndex()
+      {
+         return rowIndex;
+      }
+
       public void setVisible(boolean visible)
       {
          table.getRowFormatter().setVisible(rowIndex, visible);
@@ -148,6 +160,9 @@ extends Composite
       {
          return table.getRowFormatter().isVisible(rowIndex);
       }
+
+
+
    }
 
 }

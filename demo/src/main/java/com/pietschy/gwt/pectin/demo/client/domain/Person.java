@@ -36,6 +36,9 @@ public class Person
    private ArrayList<Wine> favoriteWines = new ArrayList<Wine>();
    private boolean wineLover = false;
 
+   private ArrayList<String> favoriteCheeses= new ArrayList<String>();
+   private boolean cheeseLover = false;
+
    public Person()
    {
    }
@@ -108,5 +111,25 @@ public class Person
    public void setWineLover(boolean wineLover)
    {
       this.wineLover = wineLover;
+   }
+
+   public List<String> getFavoriteCheeses()
+   {
+      return new ArrayList<String>(favoriteCheeses);
+   }
+
+   public void setFavoriteCheeses(List<String> favoriteCheeses)
+   {
+      this.favoriteCheeses = new ArrayList<String>(favoriteCheeses);
+   }
+
+   public boolean isCheeseLover()
+   {
+      return cheeseLover;
+   }
+
+   public void setCheeseLover(boolean cheeseLover)
+   {
+      this.cheeseLover = cheeseLover;
    }
 }
