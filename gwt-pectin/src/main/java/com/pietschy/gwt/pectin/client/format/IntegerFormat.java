@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.format;
 
 /**
- * 
+ *
  */
 public class IntegerFormat implements Format<Integer>
 {
@@ -52,20 +52,36 @@ public class IntegerFormat implements Format<Integer>
    /**
     * This method is called to create a FormatException whenever a NumberFormatException is
     * thrown.  Subclasses can override this method to create more meaningful messages.
-    * @param e the exectption that was thrown.
+    *
+    * @param e    the exectption that was thrown.
     * @param text the text the was being parsed.
     * @return a new FormatException that will be thrown by the parse method.
+    *
+    * @deprecated override {@link #toNumberFormatMessage(String, NumberFormatException)} instead.
     */
-   protected FormatException toFormatException(NumberFormatException e, String text)
+   protected final FormatException toFormatException(NumberFormatException e, String text)
    {
-      return new FormatException("'" + text + "' is not a valid integer", e);
+      return new FormatException(toNumberFormatMessage(text, e), e);
+   }
+
+   /**
+    * This method is called to create the message for the format exception thrown when
+    * <code>Integer.parseInt</code> throws a {@link NumberFormatException}.
+    *
+    * @param text the text the was being parsed.
+    * @param e    the exectption that was thrown.
+    * @return a new FormatException that will be thrown by the parse method.
+    */
+   protected String toNumberFormatMessage(String text, NumberFormatException e)
+   {
+      return "'" + text + "' is not a valid integer";
    }
 
    /**
     * This method is invoked once the text has been successfully parsed into an integer.  Subclasses
     * can override this method to apply additional constraints to the integer value by throwing a
     * FormatException if the value is outside any desired limits.
-    * <p>
+    * <p/>
     * The default implementation does nothing.
     *
     * @param integer the integer value

@@ -30,6 +30,20 @@ allprojects {
       mavenRepo urls: 'http://maven.pietschy.com'
       mavenCentral()
    }
+
+/* offline support */
+//   repositories {
+//      if (rootProject.hasProperty('offline')) {
+//          add(new FileSystemResolver()) {
+//              name = 'gradleCache'
+//              addArtifactPattern("${gradle.gradleUserHomeDir}/cache/${ResolverContainer.DEFAULT_CACHE_ARTIFACT_PATTERN}")
+//              addIvyPattern("${gradle.gradleUserHomeDir}/cache/${ResolverContainer.DEFAULT_CACHE_IVY_PATTERN}")
+//          }
+//      }
+//      else {
+//          repositories { mavenCentral() }
+//      }
+//  }
 }
 
 // define some generic functions for use by other project builds
