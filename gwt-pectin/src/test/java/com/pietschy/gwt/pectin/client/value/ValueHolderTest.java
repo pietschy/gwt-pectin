@@ -17,12 +17,12 @@
 package com.pietschy.gwt.pectin.client.value;
 
 
-import org.testng.annotations.*;
-import org.testng.Assert;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;import static org.mockito.Mockito.times;
-import static org.mockito.Matchers.argThat;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.*;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * ValueHolder Tester.
@@ -56,7 +56,7 @@ public class ValueHolderTest
    
    @Test
    @SuppressWarnings("unchecked")
-   public void setValueFiresChangeEvent()
+   public void firesChangeEventForDifferentValues()
    {
       ValueChangeHandler<String> changeHandler = mock(ValueChangeHandler.class);
 
@@ -68,10 +68,26 @@ public class ValueHolderTest
       verify(changeHandler).onValueChange(argThat(new IsValueChangeEventWithValue<String>("abc")));
       verify(changeHandler).onValueChange(argThat(new IsValueChangeEventWithValue<String>("123")));
    }
+
+   @Test
+   @SuppressWarnings("unchecked")
+   public void firesChangeEventForDifferentValuesWhenNotAlwaysFiresEvents()
+   {
+      ValueChangeHandler<String> changeHandler = mock(ValueChangeHandler.class);
+      subject.setFireEventsEvenWhenValuesEqual(false);
+
+      subject.addValueChangeHandler(changeHandler);
+
+      subject.setValue("abc");
+      subject.setValue("123");
+
+      verify(changeHandler).onValueChange(argThat(new IsValueChangeEventWithValue<String>("abc")));
+      verify(changeHandler).onValueChange(argThat(new IsValueChangeEventWithValue<String>("123")));
+   }
    
    @Test
    @SuppressWarnings("unchecked")
-   public void setValueDoesFireChangeEventOnDuplicate()
+   public void firesChangeEventForSameValueWhenAlwasyFiresEvents()
    {
       ValueChangeHandler<String> changeHandler = mock(ValueChangeHandler.class);
 
@@ -81,6 +97,21 @@ public class ValueHolderTest
       subject.setValue("abc");
 
       verify(changeHandler, times(2)).onValueChange(argThat(new IsValueChangeEventWithValue<String>("abc")));
+   }
+
+   @Test
+   @SuppressWarnings("unchecked")
+   public void doesntFireChangeEventForSameValueWhenNotAlwasyFiresEvents()
+   {
+      ValueChangeHandler<String> changeHandler = mock(ValueChangeHandler.class);
+      subject.setFireEventsEvenWhenValuesEqual(false);
+
+      subject.setValue("abc");
+
+      subject.addValueChangeHandler(changeHandler);
+      subject.setValue("abc");
+
+      verify(changeHandler, times(0)).onValueChange(argThat(new IsValueChangeEventWithValue<String>("abc")));
    }
 
 }
