@@ -67,7 +67,7 @@ public class EditContactViewModelTest
    }
 
    /**
-    * An example of testing the validation.
+    * An example of testing the validation of a specific field.
     */
    @Test(dataProvider = "firstNameValidationData")
    public void validateFirstName(String value, boolean valid)
