@@ -6,7 +6,8 @@ import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.watermark;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.getValidationManager;
+import com.pietschy.gwt.pectin.client.validation.ValidationManager;
+import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
 import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
 import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
 
@@ -19,9 +20,12 @@ import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
  */
 public class EditContactViewModel extends FormModel
 {
+
    // create our bindings to our bean
    public abstract static class ContactProvider extends BeanModelProvider<Contact> {}
-   private ContactProvider contactProvider = GWT.create(ContactProvider.class);
+
+   // we're using the base type so we can use a refection variant in our JVM tests.
+   private BeanModelProvider<Contact> contactProvider;
 
    protected final FieldModel<String> firstName;
    protected final FieldModel<String> lastName;
@@ -29,6 +33,16 @@ public class EditContactViewModel extends FormModel
 
    public EditContactViewModel()
    {
+      this((ContactProvider) GWT.create(ContactProvider.class));
+   }
+
+   /**
+    * This constructor is provided for in our tests.
+    */
+   protected EditContactViewModel(BeanModelProvider<Contact> contactProvider)
+   {
+      this.contactProvider = contactProvider;
+
       // create our fields and bind to our bean
       firstName = fieldOfType(String.class).boundTo(contactProvider, "firstName");
       lastName = fieldOfType(String.class).boundTo(contactProvider, "lastName");
@@ -46,7 +60,7 @@ public class EditContactViewModel extends FormModel
    public void setContact(Contact contact)
    {
       // clear any previous validation state.
-      getValidationManager(this).clear();
+      getValidationManager().clear();
       // and update all our value models
       contactProvider.setBean(contact);
    }
@@ -58,6 +72,14 @@ public class EditContactViewModel extends FormModel
 
    public boolean validate()
    {
-      return getValidationManager(this).validate();
+      return getValidationManager().validate();
+   }
+
+   /**
+    * Exposed for testing.
+    */
+   ValidationManager getValidationManager()
+   {
+      return ValidationPlugin.getValidationManager(this);
    }
 }
