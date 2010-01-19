@@ -42,12 +42,20 @@ extends Composite implements HasValue<Collection<T>>
    private AddButtonListener listener = new AddButtonListener();
    private boolean allowEmpty;
 
+   private String removeLinkText;
+
+
    public AbstractDynamicList(String addLinkText)
    {
       this(addLinkText, true);
    }
 
    public AbstractDynamicList(String addLinkText, boolean allowEmpty)
+   {
+      this(addLinkText, "Remove", allowEmpty);
+   }
+
+   public AbstractDynamicList(String addLinkText, String removeLinkText, boolean allowEmpty)
    {
       layout.setHorizontalAlignment(VerticalPanel.ALIGN_LEFT);
       layout.setSpacing(0);
@@ -61,6 +69,7 @@ extends Composite implements HasValue<Collection<T>>
          list.add(new Row(createWidget()));
       }
 
+      this.removeLinkText = removeLinkText;
       Hyperlink add = new Hyperlink(addLinkText, "");
       add.addClickHandler(listener);
 
@@ -245,7 +254,7 @@ extends Composite implements HasValue<Collection<T>>
          if (enableRemove)
          {
             HTML gap = new HTML("&nbsp;");
-            Hyperlink remove = new Hyperlink("Remove", "");
+            Hyperlink remove = new Hyperlink(removeLinkText, "");
             add(gap);
             add(remove);
 
