@@ -24,7 +24,7 @@ public class EditContactViewModel extends FormModel
    // create our bindings to our bean
    public abstract static class ContactProvider extends BeanModelProvider<Contact> {}
 
-   // we're using the base type so we can use a refection variant in our JVM tests.
+   // we're using the base type so we can use a refection variant in our JRE tests.
    private BeanModelProvider<Contact> contactProvider;
 
    protected final FieldModel<String> firstName;
@@ -37,7 +37,7 @@ public class EditContactViewModel extends FormModel
    }
 
    /**
-    * This constructor is provided for in our tests.
+    * This constructor is provided our testing.
     */
    protected EditContactViewModel(BeanModelProvider<Contact> contactProvider)
    {

@@ -3,6 +3,8 @@ package com.google.gwt.sample.contacts.client.view;
 
 import com.google.gwt.sample.contacts.shared.Contact;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.metadata.Metadata;
+import com.pietschy.gwt.pectin.client.metadata.MetadataPlugin;
 import com.pietschy.gwt.pectin.client.validation.HasValidation;
 import com.pietschy.gwt.pectin.util.TestUtil;
 import static org.testng.Assert.assertEquals;
@@ -63,19 +65,14 @@ public class EditContactViewModelTest
       assertEquals(contact.getFirstName(), "Joseph");
       assertEquals(contact.getLastName(), "Blogs-Smith");
       assertEquals(contact.getEmailAddress(), "joseph@blogsmithy.com");
-
    }
 
-   /**
-    * An example of testing the validation of a specific field.
-    */
+   // An example of testing the validation of a specific field.
    @Test(dataProvider = "firstNameValidationData")
    public void validateFirstName(String value, boolean valid)
    {
       model.firstName.setValue(value);
-
       HasValidation validator = model.getValidationManager().getValidator(model.firstName);
-
       assertEquals(validator.validate(), valid);
    }
 
@@ -91,5 +88,15 @@ public class EditContactViewModelTest
          };
    }
 
+
+   @Test
+   public void waterMarkMetadataIsConfigured()
+   {
+      // and example of using the plugin to fetch the metadata for testing. 
+      Metadata metadata = MetadataPlugin.getMetadata(model.firstName);
+
+      assertEquals(metadata.getWatermark(), "Required");
+
+   }
 
 }
