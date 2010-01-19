@@ -21,6 +21,7 @@ import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 /**
  * This class provides an implementation of {@link com.pietschy.gwt.pectin.client.bean.BeanModelProvider}
@@ -30,6 +31,8 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
 {
    private Class<B> clazz;
 
+   HashMap<Class<?>, Class<?>> primitives = new HashMap<Class<?>, Class<?>>();
+
    public static <B> ReflectionBeanModelProvider<B> newInstance(Class<B> clazz)
    {
       return new ReflectionBeanModelProvider<B>(clazz);
@@ -38,15 +41,35 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
    public ReflectionBeanModelProvider(Class<B> clazz)
    {
       this.clazz = clazz;
+
+      primitives.put(boolean.class, Boolean.class);
+      primitives.put(char.class, Character.class);
+      primitives.put(byte.class, Byte.class);
+      primitives.put(short.class, Short.class);
+      primitives.put(int.class, Integer.class);
+      primitives.put(long.class, Long.class);
+      primitives.put(float.class, Float.class);
+      primitives.put(double.class, Double.class);
+
    }
 
    protected Class getPropertyType(String property) throws UnknownPropertyException
+   {
+      Class<?> type = getBeanPropertyType(property);
+
+      return type.isPrimitive() ? primitives.get(type): type;
+
+   }
+
+   private Class<?> getBeanPropertyType(String property)
    {
       return getGetter(property).getReturnType();
    }
 
    protected Object readValue(String property) throws UnknownPropertyException
    {
+      Method getter = getGetter(property);
+
       if (getBean() == null)
       {
          return null;
@@ -54,7 +77,7 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
 
       try
       {
-         return getGetter(property).invoke(getBean());
+         return getter.invoke(getBean());
       }
       catch (IllegalAccessException e)
       {
@@ -68,6 +91,8 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
 
    protected void writeValue(String property, Object value) throws UnknownPropertyException
    {
+      Method setter = getSetter(property);
+
       if (getBean() == null)
       {
          throw new IllegalStateException("Bean is null");
@@ -75,7 +100,7 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
 
       try
       {
-         getSetter(property).invoke(getBean(), value);
+         setter.invoke(getBean(), value);
       }
       catch (IllegalAccessException e)
       {
@@ -111,7 +136,7 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
    {
       try
       {
-         return clazz.getMethod("set" + capitalise(property), getPropertyType(property));
+         return clazz.getMethod("set" + capitalise(property), getBeanPropertyType(property));
       }
       catch (NoSuchMethodException e)
       {
