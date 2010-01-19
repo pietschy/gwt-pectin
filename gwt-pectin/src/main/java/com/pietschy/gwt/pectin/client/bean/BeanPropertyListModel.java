@@ -43,6 +43,7 @@ extends ArrayListModel<T>
       this.provider = provider;
       this.propertyName = propertyName;
       this.listConverter = listConverter;
+      dirtyModel.setFireEventsEvenWhenValuesEqual(false);
    }
 
    public void setElements(Collection<? extends T> elements)

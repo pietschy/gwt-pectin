@@ -35,6 +35,7 @@ extends AbstractMutableValueModel<T>
    {
       this.provider = provider;
       this.propertyName = propertyName;
+      dirtyModel.setFireEventsEvenWhenValuesEqual(false);
    }
 
    public void setValue(T value)
