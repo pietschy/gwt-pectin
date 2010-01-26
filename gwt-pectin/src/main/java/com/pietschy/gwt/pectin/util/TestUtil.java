@@ -24,7 +24,7 @@ import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 public class TestUtil
 {
    /**
-    * Creates a bean model provider that can be used in JVM based tests. i.e. without
+    * Creates a bean model provider that can be used in JRE based tests. i.e. without
     * calling GWT.create(...).
     * <p/>
     * The provider returned by this class <b>can not be used in client code</b>.
