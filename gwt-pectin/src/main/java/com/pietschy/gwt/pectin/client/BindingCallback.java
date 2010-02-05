@@ -16,7 +16,8 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.binding.*;
+import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
+import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 
 /**
  * BindingCallbacks can be added to {@link FormModel}s by plugins to be notified when new
@@ -25,11 +26,11 @@ import com.pietschy.gwt.pectin.client.binding.*;
  */
 public interface BindingCallback
 {
-   <T> void onWidgetBinding(AbstractFieldBinding<T> binding, FieldModel<T> model, Object target);
+   <T> void onWidgetBinding(AbstractBinding binding, FieldModel<T> model, Object target);
 
-   <T> void onWidgetBinding(AbstractFormattedBinding<T> binding, FormattedFieldModel<T> model, Object target);
+   <T> void onWidgetBinding(AbstractBinding binding, FormattedFieldModel<T> model, Object target);
 
-   <T> void onWidgetBinding(AbstractListBinding binding, ListFieldModel<T> model, Object target);
+   <T> void onWidgetBinding(AbstractBinding binding, ListFieldModel<T> model, Object target);
 
-   <T> void onWidgetBinding(AbstractFormattedListBinding<T> binding, FormattedListFieldModel<T> fieldModel, Object target);
+   <T> void onWidgetBinding(AbstractBinding binding, FormattedListFieldModel<T> fieldModel, Object target);
 }

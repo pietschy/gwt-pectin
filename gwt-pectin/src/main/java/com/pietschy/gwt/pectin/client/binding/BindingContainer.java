@@ -26,7 +26,13 @@ package com.pietschy.gwt.pectin.client.binding;
 public interface BindingContainer
 {
 
-   void registerAndInitialiseBinding(AbstractBinding binding);
+   /**
+    * Registers the binding with the container and ensures {@link com.pietschy.gwt.pectin.client.binding.AbstractBinding#updateTarget()}
+    * is invoked.
+    *  
+    * @param binding the binding to register
+    */
+   void registerBindingAndUpdateTarget(AbstractBinding binding);
 
    void dispose();
 }

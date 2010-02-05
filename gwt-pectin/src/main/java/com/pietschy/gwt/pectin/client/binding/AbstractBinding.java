@@ -39,7 +39,7 @@ implements BindingContainer
    }
    
    
-   public void registerAndInitialiseBinding(AbstractBinding binding)
+   public void registerBindingAndUpdateTarget(AbstractBinding binding)
    {
       binding.updateTarget();
       childBindings.add(binding);

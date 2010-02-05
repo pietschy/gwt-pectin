@@ -22,7 +22,7 @@ import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +32,7 @@ import java.util.Collection;
  * To change this template use File | Settings | File Templates.
  */
 public class ListFieldToHasTextBinding<T>
-extends AbstractBinding
+extends AbstractBinding implements HasListDisplayFormat<T>
 {
    private HasText widget;
    private ListModel<T> field;
@@ -57,9 +57,20 @@ extends AbstractBinding
       updateTarget(field.asUnmodifiableList());
    }
 
-   protected void updateTarget(Collection<T> values)
+   protected void updateTarget(List<T> values)
    {
       getTarget().setText(format.format(values));
+   }
+
+   public ListDisplayFormat<T> getFormat()
+   {
+      return format;
+   }
+
+
+   public void setFormat(ListDisplayFormat<T> format)
+   {
+      this.format = format;
    }
 
    private class FieldMonitor implements ListModelChangedHandler<T>
@@ -69,5 +80,4 @@ extends AbstractBinding
          updateTarget();
       }
    }
-
 }

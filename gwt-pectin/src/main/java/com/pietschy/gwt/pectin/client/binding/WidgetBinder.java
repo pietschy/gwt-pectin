@@ -46,43 +46,43 @@ extends AbstractBinder
       return new FormattedListFieldBindingBuilder<T>(this, formattedList);
    }
 
-   protected <T> void registerBinding(AbstractFieldBinding<T> binding)
+   protected <T> void registerBinding(AbstractBinding binding, FieldModel<T> fieldModel, Object target)
    {
-      super.registerAndInitialiseBinding(binding);
+      super.registerBindingAndUpdateTarget(binding);
 
-      for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
+      for (BindingCallback callback : fieldModel.getFormModel().getBindingCallbacks())
       {
-         callback.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
+         callback.onWidgetBinding(binding, fieldModel, target);
       }
    }
 
-   protected <T> void registerBinding(AbstractFormattedBinding<T> binding)
+   protected <T> void registerBinding(AbstractBinding binding, FormattedFieldModel<T> fieldModel, Object target)
    {
-      super.registerAndInitialiseBinding(binding);
+      super.registerBindingAndUpdateTarget(binding);
 
-      for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
+      for (BindingCallback callback : fieldModel.getFormModel().getBindingCallbacks())
       {
-         callback.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
+         callback.onWidgetBinding(binding, fieldModel, target);
       }
    }
 
-   protected <T> void registerBinding(AbstractListBinding<T> binding)
+   protected <T> void registerBinding(AbstractBinding binding, ListFieldModel<T> fieldModel, Object target)
    {
-      super.registerAndInitialiseBinding(binding);
+      super.registerBindingAndUpdateTarget(binding);
 
-      for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
+      for (BindingCallback callback : fieldModel.getFormModel().getBindingCallbacks())
       {
-         callback.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
+         callback.onWidgetBinding(binding, fieldModel, target);
       }
    }
 
-   protected <T> void registerBinding(AbstractFormattedListBinding<T> binding)
+   protected <T> void registerBinding(AbstractBinding binding, FormattedListFieldModel<T> fieldModel, Object target)
    {
-      super.registerAndInitialiseBinding(binding);
+      super.registerBindingAndUpdateTarget(binding);
 
-      for (BindingCallback callback : binding.getFieldModel().getFormModel().getBindingCallbacks())
+      for (BindingCallback callback : fieldModel.getFormModel().getBindingCallbacks())
       {
-         callback.onWidgetBinding(binding, binding.getFieldModel(), binding.getTarget());
+         callback.onWidgetBinding(binding, fieldModel, target);
       }
    }
 }

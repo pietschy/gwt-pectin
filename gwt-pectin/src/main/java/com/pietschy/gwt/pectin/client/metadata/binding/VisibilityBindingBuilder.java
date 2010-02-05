@@ -47,7 +47,7 @@ public class VisibilityBindingBuilder
     */
    public void to(UIObject widget)
    {
-      container.registerAndInitialiseBinding(new VisibleBinding(model, widget));
+      container.registerBindingAndUpdateTarget(new VisibleBinding(model, widget));
    }
 
    /**
@@ -58,7 +58,7 @@ public class VisibilityBindingBuilder
     */
    public void to(UIObject widget, UIObject... others)
    {
-      container.registerAndInitialiseBinding(new VisibleBinding(model, widget, others));
+      container.registerBindingAndUpdateTarget(new VisibleBinding(model, widget, others));
    }
 
 
@@ -70,7 +70,7 @@ public class VisibilityBindingBuilder
     */
    public void to(Element element)
    {
-      container.registerAndInitialiseBinding(new ElementVisibleBinding(model, element));
+      container.registerBindingAndUpdateTarget(new ElementVisibleBinding(model, element));
    }
 
    /**
@@ -82,7 +82,7 @@ public class VisibilityBindingBuilder
     */
    public void to(Element element, Element... others)
    {
-      container.registerAndInitialiseBinding(new ElementVisibleBinding(model, element, others));
+      container.registerBindingAndUpdateTarget(new ElementVisibleBinding(model, element, others));
    }
 
    /**
@@ -92,7 +92,7 @@ public class VisibilityBindingBuilder
     */
    public void to(HasVisible widget)
    {
-      container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget));
+      container.registerBindingAndUpdateTarget(new HasVisibleBinding(model, widget));
    }
 
    /**
@@ -103,7 +103,7 @@ public class VisibilityBindingBuilder
     */
    public void to(HasVisible widget, HasVisible... others)
    {
-      container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget, others));
+      container.registerBindingAndUpdateTarget(new HasVisibleBinding(model, widget, others));
    }
 
 

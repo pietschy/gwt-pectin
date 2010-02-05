@@ -49,7 +49,7 @@ public class ValueOfBindingBuilder
     */
    public void toVisibilityOf(UIObject widget)
    {
-      container.registerAndInitialiseBinding(new VisibleBinding(model, widget));
+      container.registerBindingAndUpdateTarget(new VisibleBinding(model, widget));
    }
 
    /**
@@ -60,7 +60,7 @@ public class ValueOfBindingBuilder
     */
    public void toVisibilityOf(UIObject widget, UIObject... others)
    {
-      container.registerAndInitialiseBinding(new VisibleBinding(model, widget, others));
+      container.registerBindingAndUpdateTarget(new VisibleBinding(model, widget, others));
    }
 
    /**
@@ -70,7 +70,7 @@ public class ValueOfBindingBuilder
     */
    public void toVisibilityOf(Element widget)
    {
-      container.registerAndInitialiseBinding(new ElementVisibleBinding(model, widget));
+      container.registerBindingAndUpdateTarget(new ElementVisibleBinding(model, widget));
    }
 
    /**
@@ -81,7 +81,7 @@ public class ValueOfBindingBuilder
     */
    public void toVisibilityOf(Element widget, Element... others)
    {
-      container.registerAndInitialiseBinding(new ElementVisibleBinding(model, widget, others));
+      container.registerBindingAndUpdateTarget(new ElementVisibleBinding(model, widget, others));
    }
 
    /**
@@ -91,7 +91,7 @@ public class ValueOfBindingBuilder
     */
    public void toVisibilityOf(HasVisible widget)
    {
-      container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget));
+      container.registerBindingAndUpdateTarget(new HasVisibleBinding(model, widget));
    }
 
    /**
@@ -102,7 +102,7 @@ public class ValueOfBindingBuilder
     */
    public void toVisibilityOf(HasVisible widget, HasVisible... others)
    {
-      container.registerAndInitialiseBinding(new HasVisibleBinding(model, widget, others));
+      container.registerBindingAndUpdateTarget(new HasVisibleBinding(model, widget, others));
    }
 
    /**
@@ -112,7 +112,7 @@ public class ValueOfBindingBuilder
     */
    public void toEnablednessOf(FocusWidget widget)
    {
-      container.registerAndInitialiseBinding(new FocusWidgetEnabledBinding(model, widget));
+      container.registerBindingAndUpdateTarget(new FocusWidgetEnabledBinding(model, widget));
    }
 
    /**
@@ -122,6 +122,6 @@ public class ValueOfBindingBuilder
     */
    public void toEnablednessOf(HasEnabled widget)
    {
-      container.registerAndInitialiseBinding(new HasEnabledBinding(model, widget));
+      container.registerBindingAndUpdateTarget(new HasEnabledBinding(model, widget));
    }
 }

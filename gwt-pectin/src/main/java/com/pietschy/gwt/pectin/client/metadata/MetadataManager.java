@@ -18,10 +18,7 @@ package com.pietschy.gwt.pectin.client.metadata;
 
 import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.*;
-import com.pietschy.gwt.pectin.client.binding.AbstractFieldBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractFormattedBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractFormattedListBinding;
-import com.pietschy.gwt.pectin.client.binding.AbstractListBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
 import com.pietschy.gwt.pectin.client.metadata.binding.AllMetadataBindingBuilder;
 import com.pietschy.gwt.pectin.client.metadata.binding.WatermarkBinding;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
@@ -53,25 +50,25 @@ public class MetadataManager
       return metadata;
    }
 
-   public <T> void onWidgetBinding(AbstractFieldBinding<T> binding, FieldModel<T> model, Object target)
+   public <T> void onWidgetBinding(AbstractBinding binding, FieldModel<T> model, Object target)
    {
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
 
       // if we're a FieldModel<String> bound to a text box then apply the water mark.
       if (String.class.getName().equals(model.getValueClass().getName()) && target instanceof TextBox)
       {
-         binding.registerAndInitialiseBinding(new WatermarkBinding((ValueModel<String>) model,
+         binding.registerBindingAndUpdateTarget(new WatermarkBinding((ValueModel<String>) model,
                                                                    getMetadata(model).getWatermarkModel(),
                                                                    (TextBox) target));
       }
 
    }
 
-   public <T> void onWidgetBinding(AbstractFormattedBinding<T> binding, FormattedFieldModel<T> model, Object target)
+   public <T> void onWidgetBinding(AbstractBinding binding, FormattedFieldModel<T> model, Object target)
    {
       if (target instanceof TextBox)
       {
-         binding.registerAndInitialiseBinding(new WatermarkBinding(model.getTextModel(),
+         binding.registerBindingAndUpdateTarget(new WatermarkBinding(model.getTextModel(),
                                                                    getMetadata(model).getWatermarkModel(),
                                                                    (TextBox) target));
       }
@@ -79,12 +76,12 @@ public class MetadataManager
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
    }
 
-   public <T> void onWidgetBinding(AbstractListBinding binding, ListFieldModel<T> model, Object target)
+   public <T> void onWidgetBinding(AbstractBinding binding, ListFieldModel<T> model, Object target)
    {
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
    }
 
-   public <T> void onWidgetBinding(AbstractFormattedListBinding<T> binding, FormattedListFieldModel<T> model, Object target)
+   public <T> void onWidgetBinding(AbstractBinding binding, FormattedListFieldModel<T> model, Object target)
    {
       // todo: should really support water marks here too....
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);

@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
+import com.pietschy.gwt.pectin.client.format.ToStringFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,31 +42,21 @@ public class FormattedFieldBindingBuilder<T>
    
    public void to(HasValue<String> widget)
    {
-      binder.registerBinding(new FormattedFieldToHasValueBinding<T>(field, widget));
+      binder.registerBinding(new FormattedFieldToHasValueBinding<T>(field, widget), field, widget);
    }
    
-   public void toLabel(HasText label)
+   public DisplayFormatBuilder<T> toLabel(HasText label)
    {
-      toLabel(label, new ToStringFormat<T>());
+      FormattedFieldToHasTextBinding<T> binding = new FormattedFieldToHasTextBinding<T>(field, label, ToStringFormat.defaultInstance());
+      binder.registerBinding(binding, field, label);
+      return new DisplayFormatBuilder<T>(binding);
    }
-   
+
+   /**
+    * @deprecated use toLabel(label).withFormat(format) instead.
+    */
    public void toLabel(HasText label, DisplayFormat<? super T> format)
    {
-      binder.registerAndInitialiseBinding(new FormattedFieldToHasTextBinding<T>(field, label, format));
-   }
-   
-   public class FormattedFieldBuilder 
-   {
-      protected DisplayFormat<T> format;
-
-      public FormattedFieldBuilder(DisplayFormat<T> format)
-      {
-         this.format = format;
-      }
-      
-      public void to(HasValue<String> widget)
-      {
-         binder.registerBinding(new FormattedFieldToHasValueBinding<T>(field, widget));
-      }
+      toLabel(label).withFormat(format);
    }
 }

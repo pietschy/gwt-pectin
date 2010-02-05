@@ -43,11 +43,11 @@ public class ValidationBindingBuider
    
    public void to(final ValidationDisplay validationDisplay)
    {
-      binder.registerAndInitialiseBinding(new ValidationDisplayBinding(validator, validationDisplay));
+      binder.registerBindingAndUpdateTarget(new ValidationDisplayBinding(validator, validationDisplay));
    }
    
    public void toStyleOf(UIObject widget)
    {
-      binder.registerAndInitialiseBinding(new ValidationStyleBinding(validator, widget, validationStyles));
+      binder.registerBindingAndUpdateTarget(new ValidationStyleBinding(validator, widget, validationStyles));
    }
 }

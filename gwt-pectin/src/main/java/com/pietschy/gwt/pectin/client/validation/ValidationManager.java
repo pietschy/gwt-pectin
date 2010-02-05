@@ -18,7 +18,8 @@ package com.pietschy.gwt.pectin.client.validation;
 
 
 import com.pietschy.gwt.pectin.client.*;
-import com.pietschy.gwt.pectin.client.binding.*;
+import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
+import com.pietschy.gwt.pectin.client.binding.BindingContainer;
 import com.pietschy.gwt.pectin.client.validation.binding.IndexedValidationDisplayBinding;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationDisplayBinding;
 import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
@@ -66,12 +67,12 @@ implements BindingCallback
       return formValidator;
    }
 
-   public <T> void onWidgetBinding(final AbstractFieldBinding<T> binding, FieldModel<T> field, Object target)
+   public <T> void onWidgetBinding(final AbstractBinding binding, FieldModel<T> field, Object target)
    {
       doBinding(binding, target, getFormValidator().getFieldValidator(field, false));
    }
 
-   public <T> void onWidgetBinding(AbstractFormattedBinding<T> binding, FormattedFieldModel<T> field, Object target)
+   public <T> void onWidgetBinding(AbstractBinding binding, FormattedFieldModel<T> field, Object target)
    {
       doBinding(binding, target, getFormValidator().getFieldValidator(field, false));
    }
@@ -85,12 +86,12 @@ implements BindingCallback
             ValidationDisplayBinding validationBinding = new ValidationDisplayBinding(fieldValidator, (ValidationDisplay) target);
             validationBinding.updateTarget();
 
-            binding.registerAndInitialiseBinding(validationBinding);
+            binding.registerBindingAndUpdateTarget(validationBinding);
          }
       }
    }
 
-   public <T> void onWidgetBinding(AbstractListBinding binding, ListFieldModel<T> field, Object target)
+   public <T> void onWidgetBinding(AbstractBinding binding, ListFieldModel<T> field, Object target)
    {
       ListFieldValidator<T> fieldValidator = getFormValidator().getFieldValidator(field, false);
 
@@ -100,12 +101,12 @@ implements BindingCallback
          {
             IndexedValidationDisplayBinding validationBinding = new IndexedValidationDisplayBinding(fieldValidator, (IndexedValidationDisplay) target);
             validationBinding.updateTarget();
-            binding.registerAndInitialiseBinding(validationBinding);
+            binding.registerBindingAndUpdateTarget(validationBinding);
          }
       }
    }
 
-   public <T> void onWidgetBinding(AbstractFormattedListBinding<T> binding, FormattedListFieldModel<T> field, Object target)
+   public <T> void onWidgetBinding(AbstractBinding binding, FormattedListFieldModel<T> field, Object target)
    {
       ListFieldValidator<T> fieldValidator = getFormValidator().getFieldValidator(field, false);
 
@@ -115,7 +116,7 @@ implements BindingCallback
          {
             IndexedValidationDisplayBinding validationBinding = new IndexedValidationDisplayBinding(fieldValidator, (IndexedValidationDisplay) target);
             validationBinding.updateTarget();
-            binding.registerAndInitialiseBinding(validationBinding);
+            binding.registerBindingAndUpdateTarget(validationBinding);
          }
       }
    }

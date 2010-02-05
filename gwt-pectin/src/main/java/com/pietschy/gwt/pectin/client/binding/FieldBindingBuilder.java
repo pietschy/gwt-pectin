@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
+import com.pietschy.gwt.pectin.client.format.ToStringFormat;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,36 +42,43 @@ public class FieldBindingBuilder<T>
    
    public void to(HasValue<T> widget)
    {
-      binder.registerBinding(new FieldToHasValueBinding<T>(field, widget));
+      final FieldToHasValueBinding<T> tFieldToHasValueBinding = new FieldToHasValueBinding<T>(field, widget);
+      binder.registerBinding(tFieldToHasValueBinding, tFieldToHasValueBinding.getFieldModel(), tFieldToHasValueBinding.getTarget());
    }
    
-   public void toLabel(HasText label)
+   public DisplayFormatBuilder<T> toLabel(HasText label)
    {
-      toLabel(label, new ToStringFormat<T>());
+      FieldToHasTextBinding<T> binding = new FieldToHasTextBinding<T>(field, label, ToStringFormat.defaultInstance());
+      binder.registerBinding(binding, binding.getFieldModel(), binding.getTarget());
+      return new DisplayFormatBuilder<T>(binding);
    }
-   
+
+   /**
+    * @deprecated use toLabel(label).withFormat(format) instead.
+    */
    public void toLabel(HasText label, DisplayFormat<? super T> format)
    {
-      binder.registerBinding(new FieldToHasTextBinding<T>(field, label, format));
+      toLabel(label).withFormat(format);
    }
    
-   public WithValueBulider withValue(T value)
+   public WithValueBuilder withValue(T value)
    {
-       return new WithValueBulider(value);
+       return new WithValueBuilder(value);
    }
    
-   public class WithValueBulider
+   public class WithValueBuilder
    {
       private T selectedValue;
 
-      public WithValueBulider(T selectedValue)
+      public WithValueBuilder(T selectedValue)
       {
          this.selectedValue = selectedValue;
       }
 
       public void to(HasValue<Boolean> selectable)
       {
-         binder.registerBinding(new FieldWithValueBinding<T>(field, selectable, selectedValue));
+         final FieldWithValueBinding<T> tFieldWithValueBinding = new FieldWithValueBinding<T>(field, selectable, selectedValue);
+         binder.registerBinding(tFieldWithValueBinding, tFieldWithValueBinding.getFieldModel(), tFieldWithValueBinding.getTarget());
       }
    }
 

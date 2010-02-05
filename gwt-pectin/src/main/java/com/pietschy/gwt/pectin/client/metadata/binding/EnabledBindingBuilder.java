@@ -46,7 +46,7 @@ public class EnabledBindingBuilder
     */
    public void to(HasEnabled widget) 
    {
-      container.registerAndInitialiseBinding(new HasEnabledBinding(field, widget));
+      container.registerBindingAndUpdateTarget(new HasEnabledBinding(field, widget));
    }
    
    /**
@@ -56,7 +56,7 @@ public class EnabledBindingBuilder
     */
    public void to(FocusWidget widget) 
    {
-      container.registerAndInitialiseBinding(new FocusWidgetEnabledBinding(field, widget));
+      container.registerBindingAndUpdateTarget(new FocusWidgetEnabledBinding(field, widget));
    }
    
 }

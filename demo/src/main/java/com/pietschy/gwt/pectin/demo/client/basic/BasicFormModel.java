@@ -34,12 +34,15 @@ import java.util.List;
  */
 public class BasicFormModel extends FormModel
 {
+
+
    public static abstract class PersonProvider extends BeanModelProvider<Person> {}
 
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
 
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
+   protected final FieldModel<String> fullName;
    protected final FieldModel<Integer> lettersInName;
    protected final FieldModel<Gender> gender;
    protected final ListFieldModel<Wine> favoriteWines;
@@ -59,6 +62,10 @@ public class BasicFormModel extends FormModel
       favoriteCheeses = listOfType(String.class).boundTo(personProvider, "favoriteCheeses");
       
       // a computed field
+      fullName = fieldOfType(String.class)
+         .computedFrom(givenName, surname)
+         .using(new Join(" "));
+
       lettersInName = fieldOfType(Integer.class)
          .computedFrom(givenName, surname)
          .using(new CharacterCounter());
@@ -107,4 +114,32 @@ public class BasicFormModel extends FormModel
    }
 
 
+   private static class Join implements Reduce<String, String>
+   {
+      private String separator;
+
+      public Join(String separator)
+      {
+         this.separator = separator;
+      }
+
+      public String compute(List<String> source)
+      {
+         StringBuilder buf = null;
+         for (String value : source)
+         {
+            if (buf == null)
+            {
+               buf = new StringBuilder();
+            }
+            else
+            {
+               buf.append(separator);
+            }
+
+            buf.append(value);
+         }
+         return buf != null ? buf.toString() :"";
+      }
+   }
 }

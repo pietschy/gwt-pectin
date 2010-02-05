@@ -44,6 +44,6 @@ public class WidgetStyleBindingBuilder
 
    public void when(ValueModel<Boolean> condition)
    {
-      builder.registerAndInitialiseBinding(new StyleBinding(condition, widgets, styleName));
+      builder.registerBindingAndUpdateTarget(new StyleBinding(condition, widgets, styleName));
    }
 }

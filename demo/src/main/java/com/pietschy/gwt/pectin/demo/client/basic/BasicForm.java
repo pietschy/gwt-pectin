@@ -39,7 +39,8 @@ public class BasicForm extends VerySimpleForm
    // you type, much more exciting for the demo (c:
    private TextBox givenName = new EnhancedTextBox();
    private TextBox surname = new EnhancedTextBox();
-   private TextBox lettersInName = new TextBox();
+   private Label fullName = new Label();
+   private Label lettersInName = new Label();
    
    private String buttonGroupId = DOM.createUniqueId();
    private RadioButton maleRadio = new RadioButton(buttonGroupId, "Male");
@@ -67,9 +68,6 @@ public class BasicForm extends VerySimpleForm
    public BasicForm(BasicFormModel model)
    {
       this.model = model;
-      // see the metadata demo to see how you can control
-      // enabledness in the model.
-      lettersInName.setEnabled(false);
 
       // bind our widgets to our model.  In normal practice I'd combine the
       // binding, wiget creation and form layout into some nice reusable methods.
@@ -79,6 +77,7 @@ public class BasicForm extends VerySimpleForm
       // here we're binding field to a staic display (HasText).  We can also use
       // a DisplayFormat here if we need to.  In this case the default ToStringFormat
       // will be used.
+      widgets.bind(model.fullName).toLabel(fullName);
       widgets.bind(model.lettersInName).toLabel(lettersInName);
 
       // now lets bind a value using radio buttons
@@ -100,7 +99,9 @@ public class BasicForm extends VerySimpleForm
       // now layout the form
       addRow("Given Name", givenName);
       addRow("Surname", surname);
-      addRow("Letters in name", lettersInName, "A value computed from the previous two fields");
+      addNote("The following two fields are computed from the above.");
+      addRow("Full name", fullName);
+      addRow("Letters in name", lettersInName);
       addGap();
       addNote("This binds a FieldModel<T> to a collection of HasValue<Boolean>");
       addRow("Gender", maleRadio, femaleRadio);

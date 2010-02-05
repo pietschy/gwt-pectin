@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.format;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,5 +27,5 @@ import java.util.Collection;
  */
 public interface ListDisplayFormat<T>
 {
-   String format(Collection<T> values);
+   String format(List<T> values);
 }

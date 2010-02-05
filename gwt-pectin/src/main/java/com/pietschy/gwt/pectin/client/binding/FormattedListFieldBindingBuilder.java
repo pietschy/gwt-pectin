@@ -19,6 +19,7 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.FormattedListFieldModel;
+import com.pietschy.gwt.pectin.client.format.CollectionToStringFormat;
 import com.pietschy.gwt.pectin.client.format.ListDisplayFormat;
 
 import java.util.Collection;
@@ -43,16 +44,25 @@ public class FormattedListFieldBindingBuilder<T>
 
    public void to(HasValue<Collection<String>> widget)
    {
-      binder.registerBinding(new FormattedListFieldToHasValueBinding<T>(field, widget));
+      binder.registerBinding(new FormattedListFieldToHasValueBinding<T>(field, widget), field, widget);
    }
 
-   public void toLabel(HasText label)
+   public ListDisplayFormatBuilder<T> toLabel(HasText label)
    {
-      toLabel(label, new CollectionToStringFormat<T>());
+      CollectionToStringFormat<T> format = CollectionToStringFormat.defaultInstance();
+
+      ListFieldToHasTextBinding<T> binding = new ListFieldToHasTextBinding<T>(field, label, format);
+
+      binder.registerBinding(binding, field, label);
+
+      return new ListDisplayFormatBuilder<T>(binding);
    }
 
+   /**
+    * @deprecated use toLabel(label).withFormat(format) instead.
+    */
    public void toLabel(HasText label, ListDisplayFormat<T> format)
    {
-      binder.registerAndInitialiseBinding(new ListFieldToHasTextBinding(field, label, format));
+      toLabel(label).withFormat(format);
    }
 }

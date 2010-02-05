@@ -14,9 +14,7 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.binding;
-
-import com.pietschy.gwt.pectin.client.format.DisplayFormat;
+package com.pietschy.gwt.pectin.client.format;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,8 +25,23 @@ import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 */
 public class ToStringFormat<T> implements DisplayFormat<T>
 {
+   private static final String EMPTY_STRING = "";
+   private static final ToStringFormat<Object> DEFAULT_INSTANCE = new ToStringFormat<Object>(EMPTY_STRING);
+
+   public static ToStringFormat<Object> defaultInstance()
+   {
+      return DEFAULT_INSTANCE;
+   }
+
+   private String nullValue;
+
+   public ToStringFormat(String nullText)
+   {
+      this.nullValue = nullText;
+   }
+
    public String format(T value)
    {
-      return value != null ? value.toString() : "";
+      return value != null ? value.toString() : nullValue;
    }
 }

@@ -18,7 +18,7 @@ package com.pietschy.gwt.pectin.demo.client.format;
 
 import com.pietschy.gwt.pectin.client.format.ListDisplayFormat;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,7 +29,7 @@ import java.util.Collection;
  */
 class LuckyNumberLabelFormat implements ListDisplayFormat<Integer>
 {
-   public String format(Collection<Integer> values)
+   public String format(List<Integer> values)
    {
       if (values.size() == 0)
       {

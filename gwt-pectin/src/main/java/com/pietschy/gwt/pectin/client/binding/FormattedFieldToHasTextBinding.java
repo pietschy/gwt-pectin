@@ -30,7 +30,7 @@ import com.pietschy.gwt.pectin.client.format.DisplayFormat;
  * To change this template use File | Settings | File Templates.
  */
 public class FormattedFieldToHasTextBinding<T>
-extends AbstractBinding
+extends AbstractBinding implements HasDisplayFormat<T>
 {
    private HasText widget;
    private FormattedFieldModel<T> field;
@@ -74,4 +74,13 @@ extends AbstractBinding
       }
    }
 
+   public DisplayFormat<? super T> getFormat()
+   {
+      return format;
+   }
+
+   public void setFormat(DisplayFormat<? super T> format)
+   {
+      this.format = format;
+   }
 }

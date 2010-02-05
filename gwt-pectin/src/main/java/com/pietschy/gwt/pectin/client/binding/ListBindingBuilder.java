@@ -19,6 +19,7 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.format.CollectionToStringFormat;
 import com.pietschy.gwt.pectin.client.format.ListDisplayFormat;
 
 import java.util.Collection;
@@ -43,36 +44,44 @@ public class ListBindingBuilder<T>
    
    public void to(HasValue<Collection<T>> widget)
    {
-      binder.registerBinding(new ListToHasValueBinding<T>(field, widget));
+      final ListToHasValueBinding<T> tListToHasValueBinding = new ListToHasValueBinding<T>(field, widget);
+      binder.registerBinding(tListToHasValueBinding, tListToHasValueBinding.getFieldModel(), tListToHasValueBinding.getTarget());
    }
 
-   public void toLabel(HasText label)
+   public ListDisplayFormatBuilder<T> toLabel(HasText label)
    {
-      toLabel(label, new CollectionToStringFormat<T>());
+      CollectionToStringFormat<T> format = CollectionToStringFormat.defaultInstance();
+      ListFieldToHasTextBinding<T> binding = new ListFieldToHasTextBinding<T>(field, label, format);
+      binder.registerBinding(binding, field, label);
+      return new ListDisplayFormatBuilder<T>(binding);
    }
 
+   /**
+    * @deprecated use toLabel(label).withFormat(format) instead.
+    */
    public void toLabel(HasText label, ListDisplayFormat<T> format)
    {
-      binder.registerAndInitialiseBinding(new ListFieldToHasTextBinding(field, label, format));
+      toLabel(label).withFormat(format);
    }
    
-   public ContainingValueBulider containingValue(T value)
+   public ContainingValueBuilder containingValue(T value)
    {
-       return new ContainingValueBulider(value);
+       return new ContainingValueBuilder(value);
    }
    
-   public class ContainingValueBulider
+   public class ContainingValueBuilder
    {
       private T selectedValue;
 
-      public ContainingValueBulider(T selectedValue)
+      public ContainingValueBuilder(T selectedValue)
       {
          this.selectedValue = selectedValue;
       }
 
       public void to(HasValue<Boolean> selectable)
       {
-         binder.registerBinding(new ListContainsValueBinding<T>(field, selectable, selectedValue));
+         final ListContainsValueBinding<T> tListContainsValueBinding = new ListContainsValueBinding<T>(field, selectable, selectedValue);
+         binder.registerBinding(tListContainsValueBinding, tListContainsValueBinding.getFieldModel(), tListContainsValueBinding.getTarget());
       }
       
    }

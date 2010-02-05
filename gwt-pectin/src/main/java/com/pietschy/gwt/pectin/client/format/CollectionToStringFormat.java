@@ -14,22 +14,25 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.binding;
+package com.pietschy.gwt.pectin.client.format;
 
-import com.pietschy.gwt.pectin.client.format.ListDisplayFormat;
-
-import java.util.Collection;
+import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
-* User: andrew
-* Date: Aug 17, 2009
-* Time: 1:18:27 PM
-* To change this template use File | Settings | File Templates.
-*/
+ * This class isn't i18n safe.
+ */
 public class CollectionToStringFormat<T> implements ListDisplayFormat<T>
 {
-   public static final String DEFAULT_JOIN_STRING = ", ";
+   private static final String DEFAULT_JOIN_STRING = ", ";
+
+   private static final CollectionToStringFormat<Object> DEFAULT_INSTANCE = new CollectionToStringFormat<Object>();
+
+   @SuppressWarnings("unchecked")
+   public static final <T> CollectionToStringFormat<T> defaultInstance()
+   {
+      return (CollectionToStringFormat<T>) DEFAULT_INSTANCE;
+   }
+
    private String joinString;
 
    public CollectionToStringFormat()
@@ -47,7 +50,7 @@ public class CollectionToStringFormat<T> implements ListDisplayFormat<T>
       this.joinString = joinString;
    }
 
-   public String format(Collection<T> values)
+   public String format(List<T> values)
    {
       StringBuilder buf = null;
       for (Object value : values)
