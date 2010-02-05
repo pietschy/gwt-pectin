@@ -3,8 +3,6 @@ package com.pietschy.gwt.pectin.util;
 
 import com.pietschy.gwt.pectin.client.bean.BeanPropertyValueModel;
 import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
-import com.pietschy.gwt.pectin.client.bean.test.TestBean;
-import static org.testng.Assert.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -12,6 +10,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+
+import static org.testng.Assert.*;
 
 /**
  * ReflectionBeanModelProvider Tester.
