@@ -30,7 +30,7 @@ task shell(type: com.pietschy.gradle.plugin.gwt.task.GwtDevelopmentShell) {
 
 task run(dependsOn: ['classes', 'shell'])
 
-// create a zip of the demo so we can upload it
+// build the demo so we can upload it
 task dist(overwrite: true, dependsOn: ['classes', 'compileGwt'])
 dist << {
 
