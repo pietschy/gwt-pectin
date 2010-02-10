@@ -1,5 +1,5 @@
 <Module>
-<ModulePrefs author_email="andrew@pietschy.com" author="Andrew Pietsch" author_link="http://pietschy.com" description="Thanks for your support" preferred_height="20" title="Donate" title_url="http://pietschy.com/"/>
+<ModulePrefs author_email="andrew@pietschy.com" author="Andrew Pietsch" author_link="http://pietschy.com" description="Thanks for your support" height="25" title="Donate" title_url="http://pietschy.com/"/>
 <Content type="html">
     <![CDATA[
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
