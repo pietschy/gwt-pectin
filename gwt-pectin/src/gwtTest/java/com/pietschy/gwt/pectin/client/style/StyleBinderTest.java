@@ -19,7 +19,7 @@ public class StyleBinderTest extends GWTTestCase
 
    public String getModuleName()
    {
-      return "com.pietschy.gwt.pectin.Pectin";
+      return "com.pietschy.gwt.pectin.PectinTest";
    }
 
    public void testStyle()
