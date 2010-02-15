@@ -64,11 +64,6 @@ implements MutableListModel<T>
 
    public void setElements(Collection<? extends T> elements)
    {
-      setElementsInternal(elements);
-   }
-
-   protected void setElementsInternal(Collection<? extends T> elements)
-   {
       internalList.clear();
       internalList.addAll(elements);
       fireListChanged();
