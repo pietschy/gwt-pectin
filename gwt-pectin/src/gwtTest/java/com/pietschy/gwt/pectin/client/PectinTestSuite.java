@@ -17,9 +17,8 @@
 package com.pietschy.gwt.pectin.client;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
+import com.pietschy.gwt.pectin.client.bean.AbstractBeanModelProviderTest;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProviderTest;
-import com.pietschy.gwt.pectin.client.bean.BeanPropertyListModelTest;
-import com.pietschy.gwt.pectin.client.bean.BeanPropertyValueModelTest;
 import com.pietschy.gwt.pectin.client.style.StyleBinderTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -40,10 +39,17 @@ public class PectinTestSuite extends GWTTestSuite
    public static Test suite()
    {
       TestSuite gwtTestSuite = new GWTTestSuite("Testing Pectin");
+
+      // bean tests
+      gwtTestSuite.addTestSuite(AbstractBeanModelProviderTest.class);
       gwtTestSuite.addTestSuite(BeanModelProviderTest.class);
-      gwtTestSuite.addTestSuite(BeanPropertyValueModelTest.class);
-      gwtTestSuite.addTestSuite(BeanPropertyListModelTest.class);
+
+      // style tests
       gwtTestSuite.addTestSuite(StyleBinderTest.class);
+
+      // form model tests
+      gwtTestSuite.addTestSuite(MissingPropertiesFormModelTest.class);
+      
       return gwtTestSuite;
    }
 
