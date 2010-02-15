@@ -29,7 +29,7 @@ import java.util.List;
  */
 class LuckyNumberLabelFormat implements ListDisplayFormat<Integer>
 {
-   public String format(List<Integer> values)
+   public String format(List<? extends Integer> values)
    {
       if (values.size() == 0)
       {

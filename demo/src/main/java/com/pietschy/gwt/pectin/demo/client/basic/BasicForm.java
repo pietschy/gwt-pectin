@@ -54,7 +54,7 @@ public class BasicForm extends VerySimpleForm
    {
       protected HasValue<String> createWidget()
       {
-         return new TextBox();
+         return new EnhancedTextBox();
       }
    };
 

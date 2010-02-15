@@ -15,6 +15,7 @@ dependencies {
 clean.dependsOn(':gwt-pectin:clean')
 
 compileGwt {
+   compileReport = true
    modules('com.pietschy.gwt.pectin.demo.PectinDemo')
 }
  
@@ -25,7 +26,19 @@ task shell(type: com.pietschy.gradle.plugin.gwt.task.GwtDevelopmentShell) {
 
 task demo(dependsOn: ['classes', 'shell'])
 
+// build the demo so we can upload it
+task dist(overwrite: true, dependsOn: ['classes', 'compileGwt'])
+dist << {
 
+   File compileOutput = compileGwt.destinationDir;
+   File webAppDir = project.webAppDir;
+
+   File dest = new File((File)project.buildDir, 'web')
+   ant.copy(toDir: dest) {
+      fileset(dir: compileOutput)
+      fileset(dir: webAppDir, excludes: 'WEB-INF/**')
+   }
+}
 
 // Task for creating the gradle wrapper for this project.
 task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {

@@ -18,13 +18,14 @@ package com.pietschy.gwt.pectin.demo.client.validation;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.pietschy.gwt.pectin.client.FieldModelBase;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.ListFieldModelBase;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
-import com.pietschy.gwt.pectin.client.components.ComboBox;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
@@ -33,7 +34,6 @@ import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplayLabe
 import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplayPanel;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
-import com.pietschy.gwt.pectin.demo.client.misc.GenderRenderer;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 
@@ -48,7 +48,10 @@ public class ValidatedForm extends VerySimpleForm
    private NickNameEditor nickName = new NickNameEditor();
 
    private CheckBox hasNickName = new CheckBox("I have a nick name");
-   private ComboBox<Gender> genderCombo = new ComboBox<Gender>(Gender.values());
+   private String buttonGroupId = DOM.createUniqueId();
+   private RadioButton maleRadio = new RadioButton(buttonGroupId, "Male");
+   private RadioButton femaleRadio = new RadioButton(buttonGroupId, "Female");
+
 
    // checkboxes bound to beans can get nulls so we use a null safe version..
    private CheckBox wineLoverCheckBox = new NullSafeCheckBox("I like wine");
@@ -66,12 +69,11 @@ public class ValidatedForm extends VerySimpleForm
 
    public ValidatedForm(final ValidatedFormModel model)
    {
-      genderCombo.setRenderer(new GenderRenderer());
-
       binder.bind(model.givenName).to(givenName);
       binder.bind(model.surname).to(surname);
       binder.bind(model.age).to(age);
-      binder.bind(model.gender).to(genderCombo);
+      binder.bind(model.gender).withValue(Gender.MALE).to(maleRadio);
+      binder.bind(model.gender).withValue(Gender.FEMALE).to(femaleRadio);
       binder.bind(model.hasNickName).to(hasNickName);
       binder.bind(model.nickName).to(nickName);
       binder.bind(model.wineLover).to(wineLoverCheckBox);
@@ -82,7 +84,7 @@ public class ValidatedForm extends VerySimpleForm
       addRow("Given name", givenName, createValidationLabel(model.givenName));
       addRow("Surname", surname, createValidationLabel(model.surname));
       addRow("Age", age, createValidationLabel(model.age));
-      addRow("Gender", genderCombo, createValidationLabel(model.gender));
+      addRow("Gender", maleRadio, femaleRadio, createValidationLabel(model.gender));
       addGap();
 
       addNote("This demonstrates a conditional validation.  The validation is only run if the checkbox is selected.");

@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class LoginNameGenerator implements Reduce<String, String>
 {
-   public String compute(List<String> source)
+   public String compute(List<? extends String> source)
    {
       String login = "";
       for (String value : source)

@@ -81,7 +81,13 @@ public class MetadataForm extends VerySimpleForm
 
       widgets.bind(model.protocol).to(protocol);
       widgets.bind(model.port).to(port);
-      widgets.bind(model.defaultPort).toLabel(defaultPortLabel, new DefaultPortFormat());
+      widgets.bind(model.defaultPort).toLabel(defaultPortLabel).withFormat(new DisplayFormat<Integer>()
+      {
+         public String format(Integer port)
+         {
+            return port != null ? "(the default is " + port + ")" : "";
+         }
+      });
 
       widgets.bind(model.hasNickName).to(hasNickName);
       widgets.bind(model.nickName).to(nickName);
@@ -131,17 +137,9 @@ public class MetadataForm extends VerySimpleForm
 
    private static class ProtocolRenderer implements ComboBox.Renderer<Protocol>
    {
-      public String toDisplayString(Protocol value)
+      public String toDisplayString(Protocol protocol)
       {
-         return value != null ? value.getDisplayName() : "";
-      }
-   }
-
-   private static class DefaultPortFormat implements DisplayFormat<Integer>
-   {
-      public String format(Integer value)
-      {
-         return value != null ? "(the default is " + value + ")" : "";
+         return protocol != null ? protocol.getDisplayName() : "";
       }
    }
 }

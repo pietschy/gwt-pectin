@@ -96,7 +96,7 @@ public class BasicFormModel extends FormModel
 
    private static class CharacterCounter implements Reduce<Integer, String>
    {
-      public Integer compute(List<String> source)
+      public Integer compute(List<? extends String> source)
       {
          int total = 0;
          for (String name : source)
@@ -123,7 +123,7 @@ public class BasicFormModel extends FormModel
          this.separator = separator;
       }
 
-      public String compute(List<String> source)
+      public String compute(List<? extends String> source)
       {
          StringBuilder buf = null;
          for (String value : source)
