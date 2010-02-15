@@ -16,27 +16,44 @@
 
 package com.pietschy.gwt.pectin.client.bean.test;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.*;
 
 /**
  * 
  */
 public class TestBean
 {
+   private Object object;
    private String string;
-   private int primativeInt;
+   private int primitiveInt;
    private Integer objectInteger;
    
-   private boolean primativeBoolean;
+   private boolean primitiveBoolean;
    private Boolean objectBoolean;
    
-   private Collection collection;
-   private Set set;
-   private List list;
-   private SortedSet sortedSet;
+   private Collection<String> collection;
+   private Set<String> set;
+   private List<String> list;
+   private SortedSet<String> sortedSet;
+
+   private Collection untypedCollection;
+
+   private Object readOnlyObject = "read only object";
+   private int readOnlyPrimitive = 42;
+   private Collection<String> readOnlyCollection = Arrays.asList("abc", "def", "ghi");
+   private Collection readOnlyUntypedCollection = Arrays.asList("abc", "def", "ghi");;
+
+
+
+   public Object getObject()
+   {
+      return object;
+   }
+
+   public void setObject(Object object)
+   {
+      this.object = object;
+   }
 
    public String getString()
    {
@@ -49,14 +66,14 @@ public class TestBean
    }
 
 
-   public int getPrimativeInt()
+   public int getPrimitiveInt()
    {
-      return primativeInt;
+      return primitiveInt;
    }
 
-   public void setPrimativeInt(int primativeInt)
+   public void setPrimitiveInt(int primitiveInt)
    {
-      this.primativeInt = primativeInt;
+      this.primitiveInt = primitiveInt;
    }
 
    public Integer getObjectInteger()
@@ -69,14 +86,14 @@ public class TestBean
       this.objectInteger = objectInteger;
    }
 
-   public boolean isPrimativeBoolean()
+   public boolean isPrimitiveBoolean()
    {
-      return primativeBoolean;
+      return primitiveBoolean;
    }
 
-   public void setPrimativeBoolean(boolean primativeBoolean)
+   public void setPrimitiveBoolean(boolean primitiveBoolean)
    {
-      this.primativeBoolean = primativeBoolean;
+      this.primitiveBoolean = primitiveBoolean;
    }
 
    public Boolean getObjectBoolean()
@@ -89,43 +106,73 @@ public class TestBean
       this.objectBoolean = objectBoolean;
    }
 
-   public Collection getCollection()
+   public Collection<String> getCollection()
    {
       return collection;
    }
 
-   public void setCollection(Collection collection)
+   public void setCollection(Collection<String> collection)
    {
       this.collection = collection;
    }
 
-   public Set getSet()
+   public Set<String> getSet()
    {
       return set;
    }
 
-   public void setSet(Set set)
+   public void setSet(Set<String> set)
    {
       this.set = set;
    }
 
-   public List getList()
+   public List<String> getList()
    {
       return list;
    }
 
-   public void setList(List list)
+   public void setList(List<String> list)
    {
       this.list = list;
    }
 
-   public SortedSet getSortedSet()
+   public SortedSet<String> getSortedSet()
    {
       return sortedSet;
    }
 
-   public void setSortedSet(SortedSet sortedSet)
+   public void setSortedSet(SortedSet<String> sortedSet)
    {
       this.sortedSet = sortedSet;
+   }
+
+   public Collection getUntypedCollection()
+   {
+      return untypedCollection;
+   }
+
+   public void setUntypedCollection(Collection untypedCollection)
+   {
+      this.untypedCollection = untypedCollection;
+   }
+
+   public Object getReadOnlyObject()
+   {
+      return readOnlyObject;
+   }
+
+   public int getReadOnlyPrimitive()
+   {
+      return readOnlyPrimitive;
+   }
+
+   public Collection<String> getReadOnlyCollection()
+   {
+      return readOnlyCollection;
+   }
+
+   public Collection getReadOnlyUntypedCollection()
+   {
+      return readOnlyUntypedCollection;
    }
 }
