@@ -74,13 +74,9 @@ extends AbstractBinding implements HasDisplayFormat<T>
       }
    }
 
-   public DisplayFormat<? super T> getFormat()
-   {
-      return format;
-   }
-
    public void setFormat(DisplayFormat<? super T> format)
    {
       this.format = format;
+      updateTarget();
    }
 }

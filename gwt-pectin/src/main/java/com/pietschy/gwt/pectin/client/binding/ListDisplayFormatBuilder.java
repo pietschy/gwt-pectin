@@ -37,16 +37,16 @@ public class ListDisplayFormatBuilder<T>
       this.binding = binding;
    }
 
-   public void withFormat(ListDisplayFormat<T> format)
+   public void withFormat(ListDisplayFormat<? super T> format)
    {
       binding.setFormat(format);
    }
 
-   public void withFormat(final Reduce<String, T> format)
+   public void withFormat(final Reduce<String, ? super T> format)
    {
       withFormat(new ListDisplayFormat<T>()
       {
-         public String format(List<T> values)
+         public String format(List<? extends T> values)
          {
             return format.compute(values);
          }

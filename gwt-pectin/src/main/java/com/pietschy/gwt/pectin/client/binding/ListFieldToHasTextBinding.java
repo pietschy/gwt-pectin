@@ -36,9 +36,9 @@ extends AbstractBinding implements HasListDisplayFormat<T>
 {
    private HasText widget;
    private ListModel<T> field;
-   private ListDisplayFormat<T> format;
+   private ListDisplayFormat<? super T> format;
 
-   public ListFieldToHasTextBinding(ListModel<T> field, HasText widget, ListDisplayFormat<T> format)
+   public ListFieldToHasTextBinding(ListModel<T> field, HasText widget, ListDisplayFormat<? super T> format)
    {
       this.field = field;
       this.widget = widget;
@@ -62,15 +62,11 @@ extends AbstractBinding implements HasListDisplayFormat<T>
       getTarget().setText(format.format(values));
    }
 
-   public ListDisplayFormat<T> getFormat()
-   {
-      return format;
-   }
 
-
-   public void setFormat(ListDisplayFormat<T> format)
+   public void setFormat(ListDisplayFormat<? super T> format)
    {
       this.format = format;
+      updateTarget();
    }
 
    private class FieldMonitor implements ListModelChangedHandler<T>

@@ -27,7 +27,5 @@ import com.pietschy.gwt.pectin.client.format.ListDisplayFormat;
  */
 public interface HasListDisplayFormat<T>
 {
-   ListDisplayFormat<T> getFormat();
-
-   void setFormat(ListDisplayFormat<T> format);
+   void setFormat(ListDisplayFormat<? super T> format);
 }

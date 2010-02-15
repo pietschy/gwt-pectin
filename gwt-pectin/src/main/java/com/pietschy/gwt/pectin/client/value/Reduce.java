@@ -27,5 +27,5 @@ import java.util.List;
  */
 public interface Reduce<T,S>
 {
-   T compute(List<S> source);
+   T compute(List<? extends S> source);
 }

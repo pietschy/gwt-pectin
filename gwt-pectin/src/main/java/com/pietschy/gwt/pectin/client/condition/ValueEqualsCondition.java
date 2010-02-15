@@ -55,7 +55,7 @@ implements Condition
 
    private static class EqualsFunction<T> implements Reduce<Boolean, T>
    {
-      public Boolean compute(List<T> source)
+      public Boolean compute(List<? extends T> source)
       {
          T a = source.get(0);
          T b = source.get(1);

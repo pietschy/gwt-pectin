@@ -49,9 +49,7 @@ public class FormattedListFieldBindingBuilder<T>
 
    public ListDisplayFormatBuilder<T> toLabel(HasText label)
    {
-      CollectionToStringFormat<T> format = CollectionToStringFormat.defaultInstance();
-
-      ListFieldToHasTextBinding<T> binding = new ListFieldToHasTextBinding<T>(field, label, format);
+      ListFieldToHasTextBinding<T> binding = new ListFieldToHasTextBinding<T>(field, label, CollectionToStringFormat.DEFAULT_INSTANCE);
 
       binder.registerBinding(binding, field, label);
 

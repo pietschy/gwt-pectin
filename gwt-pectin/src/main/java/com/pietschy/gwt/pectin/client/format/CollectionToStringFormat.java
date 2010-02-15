@@ -25,13 +25,7 @@ public class CollectionToStringFormat<T> implements ListDisplayFormat<T>
 {
    private static final String DEFAULT_JOIN_STRING = ", ";
 
-   private static final CollectionToStringFormat<Object> DEFAULT_INSTANCE = new CollectionToStringFormat<Object>();
-
-   @SuppressWarnings("unchecked")
-   public static final <T> CollectionToStringFormat<T> defaultInstance()
-   {
-      return (CollectionToStringFormat<T>) DEFAULT_INSTANCE;
-   }
+   public static final CollectionToStringFormat<Object> DEFAULT_INSTANCE = new CollectionToStringFormat<Object>();
 
    private String joinString;
 
@@ -50,7 +44,7 @@ public class CollectionToStringFormat<T> implements ListDisplayFormat<T>
       this.joinString = joinString;
    }
 
-   public String format(List<T> values)
+   public String format(List<? extends T> values)
    {
       StringBuilder buf = null;
       for (Object value : values)

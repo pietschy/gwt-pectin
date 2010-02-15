@@ -27,5 +27,5 @@ import java.util.List;
  */
 public interface ListDisplayFormat<T>
 {
-   String format(List<T> values);
+   String format(List<? extends T> values);
 }

@@ -50,8 +50,7 @@ public class ListBindingBuilder<T>
 
    public ListDisplayFormatBuilder<T> toLabel(HasText label)
    {
-      CollectionToStringFormat<T> format = CollectionToStringFormat.defaultInstance();
-      ListFieldToHasTextBinding<T> binding = new ListFieldToHasTextBinding<T>(field, label, format);
+      ListFieldToHasTextBinding<T> binding = new ListFieldToHasTextBinding<T>(field, label, CollectionToStringFormat.DEFAULT_INSTANCE);
       binder.registerBinding(binding, field, label);
       return new ListDisplayFormatBuilder<T>(binding);
    }
@@ -59,7 +58,7 @@ public class ListBindingBuilder<T>
    /**
     * @deprecated use toLabel(label).withFormat(format) instead.
     */
-   public void toLabel(HasText label, ListDisplayFormat<T> format)
+   public void toLabel(HasText label, ListDisplayFormat<? super T> format)
    {
       toLabel(label).withFormat(format);
    }

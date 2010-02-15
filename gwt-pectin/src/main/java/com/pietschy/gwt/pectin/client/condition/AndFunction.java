@@ -30,7 +30,7 @@ import java.util.List;
 public class AndFunction
 implements Reduce<Boolean, Boolean>
 {
-   public Boolean compute(List<Boolean> source)
+   public Boolean compute(List<? extends Boolean> source)
    {
       for (Boolean value : source)
       {
