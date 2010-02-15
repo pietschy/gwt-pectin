@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.util;
 
-import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.AutoCommitBeanModelProvider;
 import com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException;
 import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
 
@@ -24,11 +24,11 @@ import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
  * This class provides an implementation of {@link com.pietschy.gwt.pectin.client.bean.BeanModelProvider}
  * that can be used in JVM based tests.  This class <b>can not</b> be used withing client code as it uses reflection.
  */
-class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
+class ReflectionAutoCommitBeanModelProvider<B> extends AutoCommitBeanModelProvider<B>
 {
    private ProviderSupport<B> support;
 
-   public ReflectionBeanModelProvider(Class<B> clazz)
+   public ReflectionAutoCommitBeanModelProvider(Class<B> clazz)
    {
       support = new ProviderSupport<B>(clazz);
 
@@ -37,9 +37,8 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
    public Class getPropertyType(String property) throws UnknownPropertyException
    {
       return support.getPropertyType(property);
-
    }
-   
+
    public Object readProperty(B bean, String property) throws UnknownPropertyException
    {
       return support.readProperty(bean, property);
@@ -49,7 +48,7 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
    {
       support.writeProperty(bean, property, value);
    }
-
+   
    public Class getElementType(String property) throws UnknownPropertyException, NotCollectionPropertyException
    {
       return support.getElementType(property);

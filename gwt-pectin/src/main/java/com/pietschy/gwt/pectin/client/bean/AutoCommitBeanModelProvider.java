@@ -19,14 +19,14 @@ package com.pietschy.gwt.pectin.client.bean;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.pietschy.gwt.pectin.client.list.ListModel;
+import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
+import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 
 /**
- * BeanModelProvider is a factory for creating {@link ValueModel}s and {@link ListModel}s from
+ * BeanModelProvider is a factory for creating {@link com.pietschy.gwt.pectin.client.value.ValueModel}s and {@link com.pietschy.gwt.pectin.client.list.ListModel}s from
  * Java Bean properties.  This class is created using <code>GWT.create(...)</code>.
  * <p/>
  * An example:
@@ -49,8 +49,9 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * <p/>
  * </pre>
  */
-public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B>
+public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelProvider<B>
 {
+
    private MutableValueModel<B> beanSource;
 
    private HandlerRegistration beanChangeRegistration;
@@ -63,10 +64,94 @@ public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B>
       }
    };
 
+   private boolean disableCommit = false;
 
-   protected BeanModelProvider()
+
+   protected AutoCommitBeanModelProvider()
    {
       setBeanSource(new ValueHolder<B>());
+   }
+
+   @Override
+   protected <T> BeanPropertyValueModel<B, T> createValueModel(String propertyName)
+   {
+      // create models that are never dirty
+      final BeanPropertyValueModel<B, T> model = new BeanPropertyValueModel<B, T>(this, propertyName)
+      {
+         @Override
+         boolean computeDirty()
+         {
+            return false;
+         }
+      };
+
+      // initialise the model if the bean has already been configured
+      if (getBean() != null)
+      {
+         model.readFrom(getBean());
+      }
+
+      // and track changes for committing.
+      model.addValueChangeHandler(new ValueChangeHandler<T>()
+      {
+         public void onValueChange(ValueChangeEvent<T> event)
+         {
+            doCommit(model);
+         }
+      });
+      return model;
+   }
+
+   @Override
+   protected <T> BeanPropertyListModel<B, T> createListValueModel(String propertyName, CollectionConverter converter)
+   {
+      // create models that are never dirty
+      final BeanPropertyListModel<B, T> model = new BeanPropertyListModel<B, T>(this, propertyName, converter)
+      {
+         @Override
+         protected boolean computeDirty()
+         {
+            return false;
+         }
+      };
+
+      // initialise the model if the bean has already been configured
+      if (getBean() != null)
+      {
+         model.readFrom(getBean());
+      }
+
+      // and track changes for committing.
+      model.addListModelChangedHandler(new ListModelChangedHandler<T>()
+      {
+         public void onListDataChanged(ListModelChangedEvent<T> event)
+         {
+            doCommit(model);
+         }
+      });
+
+
+
+      return model;
+   }
+
+
+   void doCommit(BeanPropertyValueModel<B, ?> valueModel)
+   {
+      // we only commit if we've been changed outside of a call to readFrom(Bean)
+      if (!disableCommit)
+      {
+         valueModel.copyTo(getBean(), true);
+      }
+   }
+
+   void doCommit(BeanPropertyListModel<B, ?> listModel)
+   {
+      // we only commit if we've been changed outside of a call to readFrom(Bean)
+      if (!disableCommit)
+      {
+         listModel.copyTo(getBean(), true);
+      }
    }
 
    /**
@@ -92,10 +177,10 @@ public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B>
 
 
    /**
-    * Sets the {@link ValueModel} to be used as the source of this provider.  All changes to the source
+    * Sets the {@link com.pietschy.gwt.pectin.client.value.ValueModel} to be used as the source of this provider.  All changes to the source
     * model will be tracked.
     *
-    * @param source the {@link ValueModel} containing the source bean.
+    * @param source the {@link com.pietschy.gwt.pectin.client.value.ValueModel} containing the source bean.
     */
    public void setBeanSource(MutableValueModel<B> source)
    {
@@ -116,45 +201,20 @@ public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B>
       readFrom(getBean());
    }
 
-   /**
-    * Writes the values of all models the the current bean.
-    */
-   public void commit()
-   {
-      copyTo(getBean(), true);
-   }
-
-   /**
-    * Reverts all models back to the state of the current bean.
-    */
-   public void revert()
-   {
-      readFrom(getBean());
-   }
-
    @Override
-   protected <T> BeanPropertyListModel<B, T> createListValueModel(String propertyName, CollectionConverter converter)
+   protected void readFrom(B bean)
    {
-      // we intercept the creation process to ensure the model has been initialised if
-      // we already have a bean configured.
-      BeanPropertyListModel<B, T> model = super.createListValueModel(propertyName, converter);
-      if (getBean() != null)
+      // storing the old value makes us re-entrant
+      // just in case.
+      boolean old = disableCommit;
+      try
       {
-         model.readFrom(getBean());
+         disableCommit = true;
+         super.readFrom(bean);
       }
-      return model;
-   }
-
-   @Override
-   protected <T> BeanPropertyValueModel<B, T> createValueModel(String propertyName)
-   {
-      // we intercept the creation process to ensure the model has been initialised if
-      // we already have a bean configured.
-      BeanPropertyValueModel<B, T> model = super.createValueModel(propertyName);
-      if (getBean() != null)
+      finally
       {
-         model.readFrom(getBean());
+         disableCommit = old;
       }
-      return model;
    }
 }

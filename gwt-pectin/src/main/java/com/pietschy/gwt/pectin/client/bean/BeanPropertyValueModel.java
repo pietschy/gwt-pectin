@@ -23,32 +23,31 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 /**
  * 
  */
-public class BeanPropertyValueModel<T>
+public class BeanPropertyValueModel<B,T>
 extends AbstractMutableValueModel<T>
 {
-   private BeanModelProvider provider;
+   private BeanPropertyAdapter<B> provider;
    private String propertyName;
+   private T checkpointValue;
    private T bufferedValue;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
 
-   public BeanPropertyValueModel(BeanModelProvider provider, String propertyName)
+   public BeanPropertyValueModel(BeanPropertyAdapter<B> provider, String propertyName)
    {
       this.provider = provider;
       this.propertyName = propertyName;
       dirtyModel.setFireEventsEvenWhenValuesEqual(false);
    }
 
+   public String getPropertyName()
+   {
+      return propertyName;
+   }
+
    public void setValue(T value)
    {
       bufferedValue = value;
-      if (provider.isAutoCommit())
-      {
-         commit();
-      }
-      else
-      {
-         updateDirtyState();
-      }
+      updateDirtyState();
       fireValueChangeEvent(value);
    }
 
@@ -57,25 +56,43 @@ extends AbstractMutableValueModel<T>
    {
       return bufferedValue;
    }
-   
-   @SuppressWarnings("unchecked")
-   public Class<T> getValueType()
+
+   public void copyTo(B bean, boolean clearDirtyState)
    {
-      return (Class<T>) provider.getPropertyType(propertyName);
-   }
-   
-   @SuppressWarnings("unchecked")
-   public void revert()
-   {
-      bufferedValue = (T) provider.readValue(propertyName);
-      dirtyModel.setValue(false);
-      fireValueChangeEvent(bufferedValue);
+      T value = getValue();
+      provider.writeProperty(bean, getPropertyName(), value);
+      if (clearDirtyState)
+      {
+         checkpoint();
+      }
    }
 
-   public void commit()
+   @SuppressWarnings("unchecked")
+   public void readFrom(B bean)
    {
-      provider.writeValue(propertyName, getValue());
+      checkpointValue = (T) provider.readProperty(bean, getPropertyName());
+      setValue(checkpointValue);
+   }
+
+   /**
+    * Checkpoints the models dirty state to the current value of the model.  After calling this
+    * method the dirty state will be <code>false</code>.
+    *
+    * @see revertToCheckpoint()
+    */
+   public void checkpoint()
+   {
+      checkpointValue = getValue();
       dirtyModel.setValue(false);
+   }
+
+   /**
+    * Reverts the value of this model to the previous checkpoint.  If checkpoint hasn't been called
+    * then it will revert to the last call to readFrom.
+    */
+   public void revertToCheckpoint()
+   {
+      setValue(checkpointValue);
    }
 
    public ValueModel<Boolean> getDirtyModel()
@@ -85,12 +102,11 @@ extends AbstractMutableValueModel<T>
 
    void updateDirtyState()
    {
-      Object beanValue = provider.readValue(propertyName);
-      dirtyModel.setValue(!areEqual(bufferedValue, beanValue));
+      dirtyModel.setValue(computeDirty());
    }
 
-   boolean areEqual(T bufferedValue, Object beanValue)
+   boolean computeDirty()
    {
-      return bufferedValue == null ? beanValue == null : bufferedValue.equals(beanValue);
+      return bufferedValue == null ? checkpointValue != null : !bufferedValue.equals(checkpointValue);
    }
 }

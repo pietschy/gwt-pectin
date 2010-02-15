@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.util;
 
-import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.CopyingBeanModelProvider;
 import com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException;
 import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
 
@@ -24,11 +24,11 @@ import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
  * This class provides an implementation of {@link com.pietschy.gwt.pectin.client.bean.BeanModelProvider}
  * that can be used in JVM based tests.  This class <b>can not</b> be used withing client code as it uses reflection.
  */
-class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
+class ReflectionCopyingBeanModelProvider<B> extends CopyingBeanModelProvider<B>
 {
    private ProviderSupport<B> support;
 
-   public ReflectionBeanModelProvider(Class<B> clazz)
+   public ReflectionCopyingBeanModelProvider(Class<B> clazz)
    {
       support = new ProviderSupport<B>(clazz);
 
@@ -39,7 +39,7 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
       return support.getPropertyType(property);
 
    }
-   
+
    public Object readProperty(B bean, String property) throws UnknownPropertyException
    {
       return support.readProperty(bean, property);

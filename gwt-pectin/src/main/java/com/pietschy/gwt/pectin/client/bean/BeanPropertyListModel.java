@@ -20,25 +20,27 @@ import com.pietschy.gwt.pectin.client.list.ArrayListModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * 
+ *
  */
-public class BeanPropertyListModel<T>
-extends ArrayListModel<T>
+public class BeanPropertyListModel<B, T>
+   extends ArrayListModel<T>
 {
    private List<T> EMPTY_LIST = Collections.emptyList();
-   
-   private BeanModelProvider provider;
+
    private String propertyName;
+   private Collection<T> checkpointValue = null;
    private CollectionConverter listConverter;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
+   private BeanPropertyAdapter<B> provider;
 
 
-   public BeanPropertyListModel(BeanModelProvider provider, String propertyName, CollectionConverter listConverter)
+   public BeanPropertyListModel(BeanPropertyAdapter<B> provider, String propertyName, CollectionConverter listConverter)
    {
       this.provider = provider;
       this.propertyName = propertyName;
@@ -46,22 +48,27 @@ extends ArrayListModel<T>
       dirtyModel.setFireEventsEvenWhenValuesEqual(false);
    }
 
+   public String getPropertyName()
+   {
+      return propertyName;
+   }
+
    public void setElements(Collection<? extends T> elements)
    {
       super.setElements(elements);
-      onMutation();
+      updateDirtyState();
    }
 
    public void add(T element)
    {
       super.add(element);
-      onMutation();
+      updateDirtyState();
    }
 
    public void remove(T element)
    {
       super.remove(element);
-      onMutation();
+      updateDirtyState();
    }
 
    public ValueModel<Boolean> getDirtyModel()
@@ -69,55 +76,65 @@ extends ArrayListModel<T>
       return dirtyModel;
    }
 
-   private void onMutation()
+   @SuppressWarnings("unchecked")
+   protected void readFrom(B bean)
    {
-      if (provider.isAutoCommit())
+      checkpointValue = listConverter.fromBean(provider.readProperty(bean, getPropertyName()));
+      revertToCheckpoint();
+   }
+
+   public void copyTo(B bean, boolean clearDirtyState)
+   {
+      provider.writeProperty(bean, getPropertyName(), listConverter.toBean(asUnmodifiableList()));
+      if (clearDirtyState)
       {
-         commit();
-      }
-      else
-      {
-         updateDirtyState();
+         checkpoint();
       }
    }
 
-   @SuppressWarnings("unchecked")
-   protected void revert()
+   /**
+    * Checkpoints the models dirty state to the current value of the model.  After calling this
+    * method the dirty state will be <code>false</code>.
+    *
+    * @see revertToCheckpoint()
+    */
+   public void checkpoint()
    {
-      Collection<T> collection = (Collection<T>) provider.readValue(propertyName);
-      // invoke setElementInternal() so we don't trigger onMutation() and write the value
-      // back down to the bean again.
-      setElementsInternal(collection != null ? collection : EMPTY_LIST);
-      dirtyModel.setValue(false);
+      // we copy so mutations don't affect us.
+      checkpointValue = new ArrayList<T>(asUnmodifiableList());
+      updateDirtyState();
    }
-   
-   @SuppressWarnings("unchecked")
-   protected void commit()
+
+   /**
+    * Reverts the value of this model to the previous checkpoint.  If checkpoint hasn't been called
+    * then it will revert to the last call to readFrom.
+    */
+   public void revertToCheckpoint()
    {
-      provider.writeValue(propertyName, listConverter.toBean(asUnmodifiableList()));
-      dirtyModel.setValue(false);      
+      // we copy so mutations don't affect us.
+      setElements(checkpointValue != null ? checkpointValue : EMPTY_LIST);
    }
 
    @SuppressWarnings("unchecked")
    void updateDirtyState()
    {
-      Collection<T> beanCollection = (Collection<T>) provider.readValue(propertyName);
+      dirtyModel.setValue(computeDirty());
+   }
 
-      if (beanCollection == null)
+   protected boolean computeDirty()
+   {
+      if (checkpointValue == null)
       {
-         dirtyModel.setValue(size() != 0);
+         return size() != 0;
+      }
+      else if (size() != checkpointValue.size())
+      {
+         return true;
       }
       else
       {
-         if (size() != beanCollection.size())
-         {
-            dirtyModel.setValue(true);
-         }
-         else
-         {
-            dirtyModel.setValue(!containsAll(beanCollection));
-         }
+         // the sizes are equal so we check the contents are the same.
+         return !containsAll(checkpointValue);
       }
    }
-
 }

@@ -16,7 +16,9 @@
 
 package com.pietschy.gwt.pectin.util;
 
+import com.pietschy.gwt.pectin.client.bean.AutoCommitBeanModelProvider;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.CopyingBeanModelProvider;
 
 /**
  * Utilities for testing.
@@ -35,5 +37,33 @@ public class TestUtil
    public static <T> BeanModelProvider<T> reflectionBeanModelProvider(Class<T> clazz)
    {
       return new ReflectionBeanModelProvider<T>(clazz);
+   }
+
+   /**
+    * Creates a bean model provider that can be used in JRE based tests. i.e. without
+    * calling GWT.create(...).
+    * <p/>
+    * The provider returned by this class <b>can not be used in client code</b>.
+    *
+    * @param clazz the class wrapped by the provider.
+    * @return a reflection based provider for JVM tests.
+    */
+   public static <T> AutoCommitBeanModelProvider<T> reflectionAutoCommitBeanModelProvider(Class<T> clazz)
+   {
+      return new ReflectionAutoCommitBeanModelProvider<T>(clazz);
+   }
+
+   /**
+    * Creates a bean model provider that can be used in JRE based tests. i.e. without
+    * calling GWT.create(...).
+    * <p/>
+    * The provider returned by this class <b>can not be used in client code</b>.
+    *
+    * @param clazz the class wrapped by the provider.
+    * @return a reflection based provider for JVM tests.
+    */
+   public static <T> CopyingBeanModelProvider<T> reflectionCopyingBeanModelProvider(Class<T> clazz)
+   {
+      return new ReflectionCopyingBeanModelProvider<T>(clazz);
    }
 }
