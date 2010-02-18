@@ -56,11 +56,11 @@ public class DemoEntryPoint
 //      tabs.add(new StyleDemo(), "Style Bindings", "style");
 //      tabs.initialiseSelectionFromHistory();
 
-      tabs.add(new BasicDemo(), "Basic");
-      tabs.add(new FormattedFieldDemo(), "Formatted Fields");
-      tabs.add(new MetadataDemo(), "Metadata Plugin");
-      tabs.add(new ValidationDemo(), "Validation Plugin");
-      tabs.add(new StyleDemo(), "Style Bindings");
+      tabs.add(new BasicDemo(), "Basic Form");
+      tabs.add(new MetadataDemo(), "Enabled/Visible/Watermarks");
+      tabs.add(new FormattedFieldDemo(), "Formatted fields");      
+      tabs.add(new ValidationDemo(), "Validation");
+      tabs.add(new StyleDemo(), "Style bindings");
       tabs.selectTab(0);
       
       rootPanel.add(tabs);
