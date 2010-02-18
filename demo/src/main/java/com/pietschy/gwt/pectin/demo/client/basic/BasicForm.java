@@ -70,11 +70,11 @@ public class BasicForm extends VerySimpleForm
       this.model = model;
 
       // bind our widgets to our model.  In normal practice I'd combine the
-      // binding, wiget creation and form layout into some nice reusable methods.
+      // binding, widget creation and form layout into some nice reusable methods.
       widgets.bind(model.givenName).to(givenName);
       widgets.bind(model.surname).to(surname);
 
-      // here we're binding field to a staic display (HasText).  We can also use
+      // here we're binding field to a static display (HasText).  We can also use
       // a DisplayFormat here if we need to.  In this case the default ToStringFormat
       // will be used.
       widgets.bind(model.fullName).toLabel(fullName);
