@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * ValueModelFunction is a value model whose value is derived from collection of source
  * {@link ValueModel}s and a {@link Reduce}.  Changes in any of the source models result in
- * the funcion being re-evaluated and the value updating.
+ * the function being re-evaluated and the value updating.
  */
 public class ReducingValueModel<T, S> extends AbstractValueModel<T>
 {
