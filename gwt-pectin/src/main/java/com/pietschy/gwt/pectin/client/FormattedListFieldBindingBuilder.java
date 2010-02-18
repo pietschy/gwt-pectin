@@ -57,9 +57,17 @@ public class FormattedListFieldBindingBuilder<T>
       return formModel.createFormattedListFieldModel(source, formatter, valueType);
    }
 
-   public FormattedListFieldModel<T> boundTo(ListModelProvider provider, String propertyName)
+   /**
+    * Binds the field to the specified provider using the specified key.  The type
+    * of the key is determined by the provider.  I.e. a ListModelProvider&lt;String&gt;
+    * will require a string key.
+    * @param provider the ValueModelProvider to use.
+    * @param key the key of the value (that will be passed to the provider).
+    * @return a new field model bound to the provider using the specified key.
+    */
+   public <K> FormattedListFieldModel<T> boundTo(ListModelProvider<K> provider, K key)
    {
-      return boundTo(provider.getListModel(propertyName, valueType));
+      return boundTo(provider.getListModel(key, valueType));
    }
 
 //   public <S> ConvertedFormattedFieldBuilder<T,S> convertedFrom(ValueModel<S> source)

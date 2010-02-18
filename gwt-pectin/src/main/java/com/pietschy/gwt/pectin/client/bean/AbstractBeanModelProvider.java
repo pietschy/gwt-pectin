@@ -12,7 +12,7 @@ import java.util.HashMap;
  * AbstractBeanModelProvider provides common behaviour for all variants that provide value and
  * list models from bean properties.
  */
-public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapter<B>, ValueModelProvider, ListModelProvider
+public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapter<B>, ValueModelProvider<String>, ListModelProvider<String>
 {
    private HashMap<Key<?>, BeanPropertyValueModel<B, ?>> valueModels = new HashMap<Key<?>, BeanPropertyValueModel<B, ?>>();
    private HashMap<Key<?>, BeanPropertyListModel<B, ?>> listModels = new HashMap<Key<?>, BeanPropertyListModel<B, ?>>();

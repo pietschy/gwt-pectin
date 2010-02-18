@@ -23,13 +23,13 @@ import com.pietschy.gwt.pectin.client.list.ListModel;
  * a simple name and type.  This interface is typically used to obtain list models
  * from sources such as bean properties.
  */
-public interface ListModelProvider
+public interface ListModelProvider<K>
 {
    /**
     * Gets the {@link ListModel} containing the specified type and identified by 'name'.
-    * @param name the name used to identify the list model.
+    * @param key the key used to identify the list model.
     * @param valueType the type held by the list model.
     * @return a list model for the specified name and type.
     */
-   <T> ListModel<T> getListModel(String name, Class<T> valueType);
+   <T> ListModel<T> getListModel(K key, Class<T> valueType);
 }

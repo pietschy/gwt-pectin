@@ -46,9 +46,17 @@ public class ListFieldBindingBuilder<T>
    {
       return formModel.createListModel(source, type);
    }
-   
-   public ListFieldModel<T> boundTo(ListModelProvider provider, String propertyName)
+
+   /**
+    * Binds the field to the specified provider using the specified key.  The type
+    * of the key is determined by the provider.  I.e. a ListModelProvider&lt;String&gt;
+    * will require a string key.
+    * @param provider the ValueModelProvider to use.
+    * @param key the key of the value (that will be passed to the provider).
+    * @return a new field model bound to the provider using the specified key.
+    */
+   public <K> ListFieldModel<T> boundTo(ListModelProvider<K> provider, K key)
    {
-      return formModel.createListModel(provider.getListModel(propertyName, type), type);
+      return formModel.createListModel(provider.getListModel(key, type), type);
    }
 }

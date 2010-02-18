@@ -23,13 +23,13 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * a simple name and type.  This interface is typically used to obtain value models
  * from sources such as bean properties.
  */
-public interface ValueModelProvider
+public interface ValueModelProvider<K>
 {
    /**
     * Gets the {@link ValueModel} of the specified type and identified by  'name'.
-    * @param name the name used to identify the value model.
+    * @param key the key used to identify the value model.
     * @param valueType the type held by the value model.
     * @return a value model for the specified name and type.
     */
-   <T> ValueModel<T> getValueModel(String name, Class<T> valueType);
+   <T> ValueModel<T> getValueModel(K key, Class<T> valueType);
 }
