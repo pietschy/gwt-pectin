@@ -106,7 +106,7 @@ public class FormValidator extends AbstractHasHandlers implements HasValidation,
    }
 
    @SuppressWarnings("unchecked")
-   public HasValidation getValidator(FieldModelBase<?> field)
+   public FieldValidator getValidator(FieldModelBase<?> field)
    {
       if (field instanceof FieldModel)
       {
@@ -123,7 +123,7 @@ public class FormValidator extends AbstractHasHandlers implements HasValidation,
    }
 
    @SuppressWarnings("unchecked")
-   public HasIndexedValidation getIndexedValidator(ListFieldModelBase<?> field)
+   public ListFieldValidator getIndexedValidator(ListFieldModelBase<?> field)
    {
       if (field instanceof ListFieldModel)
       {

@@ -42,12 +42,12 @@ implements BindingCallback
       formValidator = new FormValidator(form);
    }
 
-   public HasValidation getValidator(FieldModelBase<?> field)
+   public FieldValidator getValidator(FieldModelBase<?> field)
    {
       return getFormValidator().getValidator(field);
    }
 
-   public HasIndexedValidation getIndexedValidator(ListFieldModelBase<?> field)
+   public ListFieldValidator getIndexedValidator(ListFieldModelBase<?> field)
    {
       return getFormValidator().getIndexedValidator(field);
    }
