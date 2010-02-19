@@ -16,8 +16,6 @@
 
 package com.pietschy.gwt.pectin.demo.client.validation;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -61,6 +59,8 @@ public class ValidatedForm extends VerySimpleForm
 
 
    private Button validateButton = new Button("Validate");
+   private Button clearButton = new Button("Clear");
+   private Button fakeSererErrorButton = new Button("Fake a Server Validation Error");
 
    WidgetBinder binder = new WidgetBinder();
    ValidationBinder validation = new ValidationBinder();
@@ -80,6 +80,10 @@ public class ValidatedForm extends VerySimpleForm
       binder.bind(model.favoriteWines).containingValue(Wine.CAB_SAV).to(cabSavCheckBox);
       binder.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
       binder.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
+
+      validateButton.addClickHandler(model.validateHandler);
+      clearButton.addClickHandler(model.clearHandler);
+      fakeSererErrorButton.addClickHandler(model.fakeServerErrorHandler);
 
       addRow("Given name", givenName, createValidationLabel(model.givenName));
       addRow("Surname", surname, createValidationLabel(model.surname));
@@ -101,17 +105,9 @@ public class ValidatedForm extends VerySimpleForm
       addRow("", createValidationPanel(model));
 
       addGap();
-      addRow("", validateButton);
-
-
-      validateButton.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            model.validate();
-         }
-      });
-
+      addRow("", validateButton, clearButton);
+      addNote("Pectin can also handle errors from external sources, click the button to inject an error for the name field.");
+      addRow("", fakeSererErrorButton);
    }
 
    private ValidationDisplayLabel createValidationLabel(FieldModelBase<?> field)
