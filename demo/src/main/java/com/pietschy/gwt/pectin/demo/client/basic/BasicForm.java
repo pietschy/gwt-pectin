@@ -16,8 +16,6 @@
 
 package com.pietschy.gwt.pectin.demo.client.basic;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
@@ -59,7 +57,8 @@ public class BasicForm extends VerySimpleForm
    };
 
    private Button saveButton = new Button("Save");
-   
+   private Button revertButton = new Button("Revert");
+
    private WidgetBinder widgets = new WidgetBinder();
    private MetadataBinder metadata = new MetadataBinder();
 
@@ -92,8 +91,14 @@ public class BasicForm extends VerySimpleForm
       // and a list model to a HasValue<Collection<T>>
       widgets.bind(model.favoriteCheeses).to(favoriteCheeses);
 
-      saveButton.addClickHandler(new SaveHandler());
+      saveButton.addClickHandler(model.saveHandler);
+      revertButton.addClickHandler(model.revertHandler);
+
+      // should really make toEnablednessOf use var-args.. I'd also like to have
+      // a swing action equivalent (or preferably better) here so the enabled/disabled
+      // state is defined in the presentation model.
       metadata.bindValueOf(model.dirty).toEnablednessOf(saveButton);
+      metadata.bindValueOf(model.dirty).toEnablednessOf(revertButton);
 
 
       // now layout the form
@@ -112,15 +117,9 @@ public class BasicForm extends VerySimpleForm
       addNote("This binds a ListFieldModel<T> to a HasValue<Collection<T>> widget.");
       addTallRow("Favorite Cheeses", favoriteCheeses);
       addGap();
-      addNote("The save button is disabled if the form is in sync with the bean.");
-      addRow("", saveButton);
+      addNote("The save & revert buttons are disabled if the form is in sync with the bean.");
+      addRow("", saveButton, revertButton);
    }
 
-   private class SaveHandler implements ClickHandler
-   {
-      public void onClick(ClickEvent event)
-      {
-         model.commit();
-      }
-   }
+
 }

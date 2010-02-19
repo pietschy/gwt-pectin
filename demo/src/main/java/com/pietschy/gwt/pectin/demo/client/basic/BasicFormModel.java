@@ -17,6 +17,8 @@
 package com.pietschy.gwt.pectin.demo.client.basic;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
@@ -50,6 +52,12 @@ public class BasicFormModel extends FormModel
 
    protected final ValueModel<Boolean> dirty;
 
+   // one day I'll get around to writing a proper gui-action for these but
+   // until now we'll just use a click handler.
+   protected final ClickHandler saveHandler = new SaveHandler();
+   protected final ClickHandler revertHandler = new RevertHandler();
+
+
    public BasicFormModel()
    {
       // Create our models...
@@ -74,24 +82,27 @@ public class BasicFormModel extends FormModel
 
    }
 
-   public void commit()
-   {
-      personProvider.commit();      
-   }
-
-   public void revert()
-   {
-      personProvider.revert();
-   }
-
    public void setPerson(Person person)
    {
       personProvider.setBean(person);
    }
-   
-   public Person getPerson()
+
+   // I'd prefer to use a proper gui-action here, but for now we'll
+   // just use click handlers.
+   private class SaveHandler implements ClickHandler
    {
-      return personProvider.getBean();
+      public void onClick(ClickEvent event)
+      {
+         personProvider.commit();
+      }
+   }
+   
+   private class RevertHandler implements ClickHandler
+   {
+      public void onClick(ClickEvent event)
+      {
+         personProvider.revert();
+      }
    }
 
    private static class CharacterCounter implements Reduce<Integer, String>
