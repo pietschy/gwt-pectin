@@ -33,7 +33,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class FormattedListFieldModelImpl<T>
-   extends ListFieldModelImpl<T>
+   extends AbstractListFieldModelBase<T>
    implements FormattedListFieldModel<T>
 {
    private Format<T> format;
