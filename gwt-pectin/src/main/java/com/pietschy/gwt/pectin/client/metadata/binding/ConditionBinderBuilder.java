@@ -19,7 +19,6 @@ public class ConditionBinderBuilder<T>
    private T target;
    private ConditionBinderWidgetAction<T> action;
    private ConditionBinderMetadateAction<T> metadataAction;
-   private ValueModel<Boolean> condition;
 
    public ConditionBinderBuilder(T target, ConditionBinderMetadateAction<T> metadateAction, ConditionBinderWidgetAction<T> action)
    {
