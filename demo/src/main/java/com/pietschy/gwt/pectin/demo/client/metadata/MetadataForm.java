@@ -68,7 +68,7 @@ public class MetadataForm extends VerySimpleForm
    };
    
    private WidgetBinder widgets = new WidgetBinder();
-   private MetadataBinder metadata = new MetadataBinder();
+   private MetadataBinder metadataBinder = new MetadataBinder();
 
 
    public MetadataForm(MetadataFormModel model)
@@ -128,10 +128,11 @@ public class MetadataForm extends VerySimpleForm
       Row favoriteCheeseRow = addTallRow("Favorites", favoriteCheeses);
 
       // Now lets hide the whole row based on the metadata for the field.
-      metadata.bindVisibilityOf(model.favoriteCheeses).to(favoriteCheeseRow);
+      metadataBinder.show(favoriteCheeseRow).usingMetadataOf(model.favoriteCheeses);
+
       // Please Nte: Normally if I was hiding the whole row like above I'd probably
-      // use metadata.bindValueOf(cheeseLover).toVisibilityOf(favoriteCheeseRow) and
-      // not bother using show/hide at all.
+      // use metadataBinder.show(favoriteCheeseRow).when(cheeseLover) and
+      // not bother using metadata at all.
 
    }
 

@@ -16,9 +16,14 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
+import com.google.gwt.user.client.ui.FocusWidget;
+import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.Field;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
 import com.pietschy.gwt.pectin.client.condition.Conditions;
+import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
+import com.pietschy.gwt.pectin.client.metadata.HasVisible;
+import com.pietschy.gwt.pectin.client.metadata.Metadata;
 import com.pietschy.gwt.pectin.client.metadata.MetadataPlugin;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
@@ -30,11 +35,20 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public class MetadataBinder
-extends AbstractBinder
+   extends AbstractBinder
 {
+   protected MetadataEnabledAction enableUsingMetadataAction = new MetadataEnabledAction();
+   protected MetadataVisibleAction showUsingMetadataAction = new MetadataVisibleAction();
 
-   /** Binds all the metadata of the specific field to a widget.  The metadata will only be applied
+   protected ShowWhenAction showWhenAction = new ShowWhenAction();
+   protected HideWhenAction hideWhenAction = new HideWhenAction();
+   protected EnableWhenAction enableAction = new EnableWhenAction();
+   protected DisableWhenAction disableAction = new DisableWhenAction();
+
+   /**
+    * Binds all the metadata of the specific field to a widget.  The metadata will only be applied
     * if the widget has a supported binding.  No errors will be thrown if it doesn't.
+    *
     * @param field the field that has the metadata.
     * @return a builder to apply the styles to a widget.
     */
@@ -42,17 +56,23 @@ extends AbstractBinder
    {
       return new AllMetadataBindingBuilder(this, MetadataPlugin.getMetadata(field));
    }
-   
+
+   @Deprecated
    public VisibilityBindingBuilder bindVisibilityOf(Field field)
    {
       return new VisibilityBindingBuilder(this, MetadataPlugin.getMetadata(field).getVisibleModel());
    }
-   
+
+   @Deprecated
    public EnabledBindingBuilder bindEnabledOf(Field field)
    {
       return new EnabledBindingBuilder(this, MetadataPlugin.getMetadata(field).getEnabledModel());
    }
-   
+
+   /**
+    * @deprecated use show/hide enable/disable instead.
+    */
+   @Deprecated
    public EnabledBindingBuilder bindDisabledOf(Field field)
    {
       return new EnabledBindingBuilder(this, Conditions.isNot(MetadataPlugin.getMetadata(field).getEnabledModel()));
@@ -61,12 +81,155 @@ extends AbstractBinder
    /**
     * Binds the value of an arbitrary boolean model to the enabledness and/or visibility of
     * component.
+    *
     * @param model the value model to bind to.
-    * @return the
+    * @deprecated use show/hide enable/disable instead.
     */
+   @Deprecated
    public ValueOfBindingBuilder bindValueOf(ValueModel<Boolean> model)
    {
       return new ValueOfBindingBuilder(this, model);
    }
 
+
+   public ConditionBinderBuilder<?> show(HasVisible uiObject)
+   {
+      return new ConditionBinderBuilder<HasVisible>(uiObject, showUsingMetadataAction, showWhenAction);
+   }
+
+   public ConditionBinderBuilder<?> hide(HasVisible uiObject)
+   {
+      return new ConditionBinderBuilder<HasVisible>(uiObject, showUsingMetadataAction, hideWhenAction);
+   }
+
+   public ConditionBinderBuilder<?> show(UIObject uiObject)
+   {
+      return show(new HasVisibleUiObjectAdapter(uiObject));
+   }
+
+   public ConditionBinderBuilder<?> hide(UIObject uiObject)
+   {
+      return hide(new HasVisibleUiObjectAdapter(uiObject));
+   }
+
+   public ConditionBinderBuilder<?> enable(HasEnabled widget)
+   {
+      return new ConditionBinderBuilder<HasEnabled>(widget, enableUsingMetadataAction, enableAction);
+   }
+
+   public ConditionBinderBuilder<?> enable(final FocusWidget widget)
+   {
+      // hoping this will all get optimised away...
+      return enable(new EnabledFocusWidgetAdapter(widget));
+   }
+
+   public ConditionBinderBuilder<?> disable(HasEnabled widget)
+   {
+      return new ConditionBinderBuilder<HasEnabled>(widget, enableUsingMetadataAction, disableAction);
+   }
+
+   public ConditionBinderBuilder<?> disable(final FocusWidget widget)
+   {
+      // hoping this will all get optimised away...
+      return disable(new EnabledFocusWidgetAdapter(widget));
+   }
+
+
+   private static class EnabledFocusWidgetAdapter implements HasEnabled
+   {
+      private final FocusWidget widget;
+
+      public EnabledFocusWidgetAdapter(FocusWidget widget)
+      {
+         this.widget = widget;
+      }
+
+      public void setEnabled(boolean enabled)
+      {
+         widget.setEnabled(enabled);
+      }
+
+      public boolean isEnabled()
+      {
+         return widget.isEnabled();
+      }
+   }
+
+   private static class HasVisibleUiObjectAdapter implements HasVisible
+   {
+      private final UIObject widget;
+
+      public HasVisibleUiObjectAdapter(UIObject widget)
+      {
+         this.widget = widget;
+      }
+
+      public void setVisible(boolean visible)
+      {
+         widget.setVisible(visible);
+      }
+
+      public boolean isVisible()
+      {
+         return widget.isVisible();
+      }
+   }
+
+   private static class MetadataEnabledAction implements ConditionBinderMetadateAction<HasEnabled>
+   {
+      public ValueModel<Boolean> getModel(Metadata metadata)
+      {
+         return metadata.getEnabledModel();
+      }
+
+      public void apply(HasEnabled widget, boolean enabled)
+      {
+         widget.setEnabled(enabled);
+      }
+   }
+
+   private static class MetadataVisibleAction implements ConditionBinderMetadateAction<HasVisible>
+   {
+      public ValueModel<Boolean> getModel(Metadata metadata)
+      {
+         return metadata.getVisibleModel();
+      }
+
+      public void apply(HasVisible widget, boolean visible)
+      {
+         widget.setVisible(visible);
+      }
+   }
+
+   private static class ShowWhenAction implements ConditionBinderWidgetAction<HasVisible>
+   {
+      public void apply(HasVisible target, boolean visible)
+      {
+         target.setVisible(visible);
+      }
+   }
+
+   private static class HideWhenAction implements ConditionBinderWidgetAction<HasVisible>
+   {
+      public void apply(HasVisible target, boolean hidden)
+      {
+         target.setVisible(!hidden);
+      }
+   }
+
+   private static class EnableWhenAction implements ConditionBinderWidgetAction<HasEnabled>
+   {
+      public void apply(HasEnabled target, boolean enabled)
+      {
+         target.setEnabled(enabled);
+      }
+   }
+
+   private static class DisableWhenAction implements ConditionBinderWidgetAction<HasEnabled>
+   {
+      public void apply(HasEnabled target, boolean disabled)
+      {
+         target.setEnabled(!disabled);
+      }
+   }
 }

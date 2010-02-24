@@ -94,11 +94,9 @@ public class BasicForm extends VerySimpleForm
       saveButton.addClickHandler(model.saveHandler);
       revertButton.addClickHandler(model.revertHandler);
 
-      // should really make toEnablednessOf use var-args.. I'd also like to have
-      // a swing action equivalent (or preferably better) here so the enabled/disabled
-      // state is defined in the presentation model.
-      metadata.bindValueOf(model.dirty).toEnablednessOf(saveButton);
-      metadata.bindValueOf(model.dirty).toEnablednessOf(revertButton);
+      // should really make enable/disable use var-args.. 
+      metadata.enable(saveButton).when(model.dirty);
+      metadata.enable(revertButton).when(model.dirty);
 
 
       // now layout the form
