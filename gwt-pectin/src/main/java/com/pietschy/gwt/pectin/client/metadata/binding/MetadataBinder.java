@@ -175,7 +175,7 @@ public class MetadataBinder
       }
    }
 
-   private static class MetadataEnabledAction implements ConditionBinderMetadateAction<HasEnabled>
+   private static class MetadataEnabledAction implements ConditionBinderMetadataAction<HasEnabled>
    {
       public ValueModel<Boolean> getModel(Metadata metadata)
       {
@@ -188,7 +188,7 @@ public class MetadataBinder
       }
    }
 
-   private static class MetadataVisibleAction implements ConditionBinderMetadateAction<HasVisible>
+   private static class MetadataVisibleAction implements ConditionBinderMetadataAction<HasVisible>
    {
       public ValueModel<Boolean> getModel(Metadata metadata)
       {

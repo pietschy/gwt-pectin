@@ -18,12 +18,12 @@ public class ConditionBinderBuilder<T>
 {
    private T target;
    private ConditionBinderWidgetAction<T> action;
-   private ConditionBinderMetadateAction<T> metadataAction;
+   private ConditionBinderMetadataAction<T> metadataAction;
 
-   public ConditionBinderBuilder(T target, ConditionBinderMetadateAction<T> metadateAction, ConditionBinderWidgetAction<T> action)
+   public ConditionBinderBuilder(T target, ConditionBinderMetadataAction<T> metadataAction, ConditionBinderWidgetAction<T> action)
    {
       this.target = target;
-      this.metadataAction = metadateAction;
+      this.metadataAction = metadataAction;
       this.action = action;
    }
 
