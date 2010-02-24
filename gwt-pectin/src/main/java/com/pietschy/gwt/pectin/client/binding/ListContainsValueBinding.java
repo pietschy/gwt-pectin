@@ -34,7 +34,6 @@ extends AbstractListBinding<T>
 {
    private HasValue<Boolean> widget;
 
-   private WidgetMonitor widgetMonitor = new WidgetMonitor();
    private T value;
 
    public ListContainsValueBinding(ListFieldModel<T> field, HasValue<Boolean> widget, T value)
@@ -42,7 +41,7 @@ extends AbstractListBinding<T>
       super(field);
       this.widget = widget;
       this.value = value;
-      registerHandler(widget.addValueChangeHandler(widgetMonitor));
+      registerHandler(widget.addValueChangeHandler(new WidgetMonitor()));
    }
 
    public void updateTarget()
