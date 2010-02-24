@@ -57,8 +57,8 @@ public class BeanPropertyListModelTest
    public void readFrom()
    {
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               "set",
-                                                                                               CollectionConverters.SET_CONVERTER);
+                                                                                "set",
+                                                                                CollectionConverters.SET_CONVERTER);
 
 
       when(propertyAdapter.readProperty(bean, "set"))
@@ -73,8 +73,8 @@ public class BeanPropertyListModelTest
    public void copyToButWithoutResettingDirty()
    {
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               "set",
-                                                                                               CollectionConverters.SET_CONVERTER);
+                                                                                "set",
+                                                                                CollectionConverters.SET_CONVERTER);
       assertEquals(lm.size(), 0);
 
       final List<String> values = Arrays.asList("abc", "def");
@@ -102,8 +102,8 @@ public class BeanPropertyListModelTest
    public void copyToAndResetDirty()
    {
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               "set",
-                                                                                               CollectionConverters.SET_CONVERTER);
+                                                                                "set",
+                                                                                CollectionConverters.SET_CONVERTER);
       assertEquals(lm.size(), 0);
 
       final List<String> values = Arrays.asList("abc", "def");
@@ -133,8 +133,8 @@ public class BeanPropertyListModelTest
    public void resetDirty()
    {
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               "set",
-                                                                                               CollectionConverters.SET_CONVERTER);
+                                                                                "set",
+                                                                                CollectionConverters.SET_CONVERTER);
 
 
       when(propertyAdapter.readProperty(bean, "set"))
@@ -156,8 +156,8 @@ public class BeanPropertyListModelTest
    public void getWithNullCollection()
    {
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               "set",
-                                                                                               CollectionConverters.SET_CONVERTER);
+                                                                                "set",
+                                                                                CollectionConverters.SET_CONVERTER);
 
       when(propertyAdapter.readProperty(bean, "set")).thenReturn(null);
       lm.readFrom(bean);
@@ -166,74 +166,9 @@ public class BeanPropertyListModelTest
       assertFalse(lm.getDirtyModel().getValue());
    }
 
-//
-//   public void testCollectionSetValue()
-//   {
-//      BeanPropertyListModel<TestBean, String> lm = propertyAdapter.getListModel("set", String.class);
-//
-//      propertyAdapter.setBean(bean);
-//      assertFalse(lm.getDirtyModel().getValue());
-//
-//      lm.add("abc");
-//      assertNull(bean.getSet());
-//      assertTrue(lm.getDirtyModel().getValue());
-//
-//      propertyAdapter.commit();
-//      assertContentEquals(bean.getSet(), "abc");
-//      assertFalse(lm.getDirtyModel().getValue());
-//
-//      lm.add("def");
-//      assertContentEquals(bean.getSet(), "abc");
-//      assertTrue(lm.getDirtyModel().getValue());
-//      propertyAdapter.commit();
-//      assertContentEquals(bean.getSet(), "abc", "def");
-//      assertFalse(lm.getDirtyModel().getValue());
-//
-//      lm.remove("abc");
-//      assertContentEquals(bean.getSet(), "abc", "def");
-//      assertTrue(lm.getDirtyModel().getValue());
-//      propertyAdapter.commit();
-//      assertContentEquals(bean.getSet(), "def");
-//      assertFalse(lm.getDirtyModel().getValue());
-//
-//      lm.setElements(Arrays.asList("abc", "xyz"));
-//      assertContentEquals(bean.getSet(), "def");
-//      assertTrue(lm.getDirtyModel().getValue());
-//      propertyAdapter.commit();
-//      assertContentEquals(bean.getSet(), "abc", "xyz");
-//      assertFalse(lm.getDirtyModel().getValue());
-//
-//   }
-//
-////   public void testSetCollectionValueWithAutoCommit()
-////   {
-////      provider.setAutoCommit(true);
-////
-////      BeanPropertyListModel<TestBean, String> lm = provider.getListModel("set", String.class);
-////
-////      provider.setBean(bean);
-////
-////      assertNull("bean value is null", bean.getSet());
-////      lm.add("abc");
-////      assertContentEquals(bean.getSet(), "abc");
-////      assertFalse("not dirty after add", lm.getDirtyModel().getValue());
-////
-////      lm.add("def");
-////      assertContentEquals(bean.getSet(), "abc", "def");
-////      assertFalse("not dirty after second add", lm.getDirtyModel().getValue());
-////
-////      lm.remove("abc");
-////      assertContentEquals(bean.getSet(), "def");
-////      assertFalse("not dirty after remove", lm.getDirtyModel().getValue());
-////
-////      lm.setElements(Arrays.asList("abc", "xyz"));
-////      assertContentEquals(bean.getSet(), "abc", "xyz");
-////      assertFalse("not dirty after setElements", lm.getDirtyModel().getValue());
-////   }
-//
 
    @Test
-   public void dirtyIgnoresCollectionOrder()
+   public void dirtyChecksCollectionOrder()
    {
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
                                                                                                "list",
@@ -243,8 +178,23 @@ public class BeanPropertyListModelTest
       // make sure our dirty state is based on the above values
       lm.checkpoint();
       lm.setElements(Arrays.asList("qbt", "def", "abc"));
-      
-      assertFalse(lm.getDirtyModel().getValue());
+
+      assertTrue(lm.getDirtyModel().getValue());
+   }
+
+   @Test
+   public void dirtyIsNotFooledByDuplicateEntries()
+   {
+      BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
+                                                                                               "list",
+                                                                                               CollectionConverters.LIST_CONVERTER);
+
+      lm.setElements(Arrays.asList("abc", "abc", "def"));
+      // make sure our dirty state is based on the above values
+      lm.checkpoint();
+      lm.setElements(Arrays.asList("abc", "def", "abc"));
+
+      assertTrue(lm.getDirtyModel().getValue());
    }
 
 

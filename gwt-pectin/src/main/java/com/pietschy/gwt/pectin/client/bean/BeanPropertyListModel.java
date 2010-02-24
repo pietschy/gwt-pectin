@@ -34,7 +34,7 @@ public class BeanPropertyListModel<B, T>
    private List<T> EMPTY_LIST = Collections.emptyList();
 
    private String propertyName;
-   private Collection<T> checkpointValue = null;
+   private List<T> checkpointValue = null;
    private CollectionConverter listConverter;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
    private BeanPropertyAdapter<B> provider;
@@ -79,8 +79,27 @@ public class BeanPropertyListModel<B, T>
    @SuppressWarnings("unchecked")
    protected void readFrom(B bean)
    {
-      checkpointValue = listConverter.fromBean(provider.readProperty(bean, getPropertyName()));
+      safelySetCheckpoint(listConverter.fromBean(provider.readProperty(bean, getPropertyName())));
       revertToCheckpoint();
+   }
+
+   /**
+    * This method handles the case where the source is null.  It doesn't recompute
+    * @param source
+    */
+   private void safelySetCheckpoint(Collection<T> source)
+   {
+      checkpointValue = source != null ? new ArrayList<T>(source) : EMPTY_LIST;
+      updateDirtyState();
+   }
+
+   /**
+    *
+    * @return
+    */
+   private List<T> safelyGetCheckpoint()
+   {
+      return checkpointValue != null ? checkpointValue : EMPTY_LIST;
    }
 
    public void copyTo(B bean, boolean clearDirtyState)
@@ -101,8 +120,7 @@ public class BeanPropertyListModel<B, T>
    public void checkpoint()
    {
       // we copy so mutations don't affect us.
-      checkpointValue = new ArrayList<T>(asUnmodifiableList());
-      updateDirtyState();
+      safelySetCheckpoint(asUnmodifiableList());
    }
 
    /**
@@ -111,8 +129,9 @@ public class BeanPropertyListModel<B, T>
     */
    public void revertToCheckpoint()
    {
-      // we copy so mutations don't affect us.
-      setElements(checkpointValue != null ? checkpointValue : EMPTY_LIST);
+      // set elements makes a copy of the data (i.e it doesn't maintain a reference
+      // to the list so we don't need copy it passing in.
+      setElements(safelyGetCheckpoint());
    }
 
    @SuppressWarnings("unchecked")
@@ -134,7 +153,14 @@ public class BeanPropertyListModel<B, T>
       else
       {
          // the sizes are equal so we check the contents are the same.
-         return !containsAll(checkpointValue);
+         for (int i = 0; i < checkpointValue.size(); i++)
+         {
+            if (!areEqual(get(i), checkpointValue.get(i)))
+            {
+               return true;
+            }
+         }
+         return false;
       }
    }
 }
