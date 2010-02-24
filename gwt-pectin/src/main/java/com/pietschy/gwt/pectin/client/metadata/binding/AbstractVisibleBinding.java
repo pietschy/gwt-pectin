@@ -17,12 +17,10 @@
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
 import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
+import com.pietschy.gwt.pectin.client.util.VarArgUtil;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,12 +36,12 @@ extends AbstractValueBinding<Boolean>
 
    public AbstractVisibleBinding(ValueModel<Boolean> model, T target)
    {
-      this(model, asList(target));
+      this(model, VarArgUtil.asList(target));
    }
 
    public AbstractVisibleBinding(ValueModel<Boolean> model, T target, T... others)
    {
-      this(model, asList(target, others));
+      this(model, VarArgUtil.asList(target, others));
    }
 
    public AbstractVisibleBinding(ValueModel<Boolean> model, Collection<T> target)
@@ -67,14 +65,4 @@ extends AbstractValueBinding<Boolean>
 
    protected abstract void updateVisibility(T target, boolean visible);
 
-   private static <T> List<T> asList(T first, T... others)
-   {
-      ArrayList<T> list = new ArrayList<T>();
-      list.add(first);
-      if (others.length > 0)
-      {
-         list.addAll(Arrays.asList(others));
-      }
-      return list;
-   }
 }

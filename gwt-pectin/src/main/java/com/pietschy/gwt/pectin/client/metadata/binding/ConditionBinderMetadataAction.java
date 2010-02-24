@@ -10,9 +10,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 * Time: 4:16:14 PM
 * To change this template use File | Settings | File Templates.
 */
-public interface ConditionBinderMetadataAction<T>
+public interface ConditionBinderMetadataAction<T>  extends ConditionBinderWidgetAction<T>
 {
-   public void apply(T widget, boolean value);
-
    ValueModel<Boolean> getModel(Metadata metadata);
 }

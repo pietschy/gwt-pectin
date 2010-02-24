@@ -1,17 +1,17 @@
 /*
- * Copyright 2009 Andrew Pietsch 
+ * Copyright 2009 Andrew Pietsch
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- *      
- *      http://www.apache.org/licenses/LICENSE-2.0 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
- * implied. See the License for the specific language governing permissions 
- * and limitations under the License. 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
@@ -37,13 +37,13 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 public class MetadataBinder
    extends AbstractBinder
 {
-   protected MetadataEnabledAction enableUsingMetadataAction = new MetadataEnabledAction();
-   protected MetadataVisibleAction showUsingMetadataAction = new MetadataVisibleAction();
+   private static final MetadataEnabledAction enableUsingMetadataAction = new MetadataEnabledAction();
+   private static final MetadataVisibleAction showUsingMetadataAction = new MetadataVisibleAction();
 
-   protected ShowWhenAction showWhenAction = new ShowWhenAction();
-   protected HideWhenAction hideWhenAction = new HideWhenAction();
-   protected EnableWhenAction enableAction = new EnableWhenAction();
-   protected DisableWhenAction disableAction = new DisableWhenAction();
+   private static final ShowWhenAction showWhenAction = new ShowWhenAction();
+   private static final HideWhenAction hideWhenAction = new HideWhenAction();
+   private static final EnableWhenAction enableAction = new EnableWhenAction();
+   private static final DisableWhenAction disableAction = new DisableWhenAction();
 
    /**
     * Binds all the metadata of the specific field to a widget.  The metadata will only be applied
@@ -94,12 +94,12 @@ public class MetadataBinder
 
    public ConditionBinderBuilder<?> show(HasVisible uiObject)
    {
-      return new ConditionBinderBuilder<HasVisible>(uiObject, showUsingMetadataAction, showWhenAction);
+      return new ConditionBinderBuilder<HasVisible>(this, uiObject, showUsingMetadataAction, showWhenAction);
    }
 
    public ConditionBinderBuilder<?> hide(HasVisible uiObject)
    {
-      return new ConditionBinderBuilder<HasVisible>(uiObject, showUsingMetadataAction, hideWhenAction);
+      return new ConditionBinderBuilder<HasVisible>(this, uiObject, showUsingMetadataAction, hideWhenAction);
    }
 
    public ConditionBinderBuilder<?> show(UIObject uiObject)
@@ -114,7 +114,7 @@ public class MetadataBinder
 
    public ConditionBinderBuilder<?> enable(HasEnabled widget)
    {
-      return new ConditionBinderBuilder<HasEnabled>(widget, enableUsingMetadataAction, enableAction);
+      return new ConditionBinderBuilder<HasEnabled>(this, widget, enableUsingMetadataAction, enableAction);
    }
 
    public ConditionBinderBuilder<?> enable(final FocusWidget widget)
@@ -125,7 +125,7 @@ public class MetadataBinder
 
    public ConditionBinderBuilder<?> disable(HasEnabled widget)
    {
-      return new ConditionBinderBuilder<HasEnabled>(widget, enableUsingMetadataAction, disableAction);
+      return new ConditionBinderBuilder<HasEnabled>(this, widget, enableUsingMetadataAction, disableAction);
    }
 
    public ConditionBinderBuilder<?> disable(final FocusWidget widget)
