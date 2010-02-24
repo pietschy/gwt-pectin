@@ -8,12 +8,12 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.getMetadata;
 
 /**
-* Created by IntelliJ IDEA.
-* User: andrew
-* Date: Feb 24, 2010
-* Time: 1:23:47 PM
-* To change this template use File | Settings | File Templates.
-*/
+ * Created by IntelliJ IDEA.
+ * User: andrew
+ * Date: Feb 24, 2010
+ * Time: 1:23:47 PM
+ * To change this template use File | Settings | File Templates.
+ */
 public class ConditionBinderBuilder<T>
 {
    private T target;
@@ -50,6 +50,7 @@ public class ConditionBinderBuilder<T>
             metadataAction.apply(target, event.getValue());
          }
       });
+      metadataAction.apply(target, condition.getValue());
    }
 
 

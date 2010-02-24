@@ -18,7 +18,7 @@ import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.show;
  */
 public class MetadataBinderTest extends GWTTestCase
 {
-   protected ValueHolder<Boolean> whenCondition;
+   protected ValueHolder<Boolean> condition;
    protected ValueHolder<Boolean> fieldVisible;
    private ValueHolder<Boolean> fieldEnabled;
    protected FormModel form;
@@ -32,7 +32,7 @@ public class MetadataBinderTest extends GWTTestCase
    {
       binder = new MetadataBinder();
 
-      whenCondition = new ValueHolder<Boolean>(false);
+      condition = new ValueHolder<Boolean>(false);
       fieldVisible = new ValueHolder<Boolean>(false);
       fieldEnabled = new ValueHolder<Boolean>(false);
 
@@ -52,96 +52,96 @@ public class MetadataBinderTest extends GWTTestCase
 
    public void testShowWhen() throws Exception
    {
-      binder.show(button).when(whenCondition);
+      binder.show(button).when(condition);
 
-      assertEquals(whenCondition, button.isVisible());
+      assertEquals("showWhen-a", condition, button.isVisible());
 
-      whenCondition.setValue(!whenCondition.getValue());
+      condition.setValue(!condition.getValue());
 
-      assertEquals(whenCondition, button.isVisible());
+      assertEquals("showWhen-b", condition, button.isVisible());
    }
 
    public void testHideWhen() throws Exception
    {
-      binder.show(button).when(whenCondition);
+      binder.hide(button).when(condition);
 
-      assertEquals(whenCondition, !button.isVisible());
+      assertEquals("hideWhen-a", condition, !button.isVisible());
 
-      whenCondition.setValue(!whenCondition.getValue());
+      condition.setValue(!condition.getValue());
 
-      assertEquals(whenCondition, !button.isVisible());
+      assertEquals("hideWhen-b", condition, !button.isVisible());
    }
 
-   public void testShowAlongWith() throws Exception
+   public void testShowUsingMetadataOf() throws Exception
    {
       binder.show(button).usingMetadataOf(field);
 
-      assertEquals(fieldVisible, button.isVisible());
+      assertEquals("showUsingMetadataOf-a", fieldVisible, button.isVisible());
 
       fieldVisible.setValue(!fieldVisible.getValue());
 
-      assertEquals(fieldVisible, button.isVisible());
+      assertEquals("showUsingMetadataOf-b", fieldVisible, button.isVisible());
    }
 
-   public void testHideAlongWith() throws Exception
+   public void testHideUsingMetadataOf() throws Exception
    {
       binder.hide(button).usingMetadataOf(field);
 
-      assertEquals(fieldVisible, button.isVisible());
+      assertEquals("hideUsingMetadataOf-a", fieldVisible, button.isVisible());
 
       fieldVisible.setValue(!fieldVisible.getValue());
 
-      assertEquals(fieldVisible, button.isVisible());
+      assertEquals("hideUsingMetadataOf-b", fieldVisible, button.isVisible());
 
    }
 
    public void testEnableWhen() throws Exception
    {
-      binder.enable(button).when(whenCondition);
+      binder.enable(button).when(condition);
 
-      assertEquals(whenCondition, button.isEnabled());
+      assertEquals("enableWhen-a", condition, button.isEnabled());
 
-      whenCondition.setValue(!whenCondition.getValue());
+      condition.setValue(!condition.getValue());
 
-      assertEquals(whenCondition, button.isEnabled());
+      assertEquals("enableWhen-b", condition, button.isEnabled());
    }
 
    public void testDisableWhen() throws Exception
    {
-      binder.disable(button).when(whenCondition);
+      binder.disable(button).when(condition);
 
-      assertEquals(whenCondition, !button.isEnabled());
+      assertEquals("disableWhen-a", condition, !button.isEnabled());
 
-      whenCondition.setValue(!whenCondition.getValue());
+      condition.setValue(!condition.getValue());
 
-      assertEquals(whenCondition, !button.isEnabled());
+      assertEquals("disableWhen-b", condition, !button.isEnabled());
    }
 
-   public void testEnableAlongWith() throws Exception
+   public void testEnableUsingMetadataOf() throws Exception
    {
       binder.enable(button).usingMetadataOf(field);
 
-      assertEquals(fieldEnabled, button.isVisible());
+      assertEquals("enableUsingMetadataOf-a", fieldEnabled, button.isEnabled());
 
       fieldEnabled.setValue(!fieldEnabled.getValue());
 
-      assertEquals(fieldEnabled, button.isVisible());
+      assertEquals("enableUsingMetadataOf-b", fieldEnabled, button.isEnabled());
    }
 
-   public void testDisableAlongWith() throws Exception
+   public void testDisableUsingMetadataOf() throws Exception
    {
       binder.disable(button).usingMetadataOf(field);
 
-      assertEquals(fieldEnabled, button.isVisible());
+      assertEquals("disableUsingMetadataOf-a",fieldEnabled, button.isEnabled());
 
       fieldEnabled.setValue(!fieldEnabled.getValue());
 
-      assertEquals(fieldEnabled, button.isVisible());
+      assertEquals("disableUsingMetadataOf-b", fieldEnabled, button.isEnabled());
    }
 
-   private void assertEquals(ValueHolder<Boolean> condition, boolean value)
+   private void assertEquals(String message, ValueHolder<Boolean> condition, boolean value)
    {
-      assertEquals((boolean) condition.getValue(), value);
+      assertEquals(message, (boolean) condition.getValue(), value);
    }
 
 }
