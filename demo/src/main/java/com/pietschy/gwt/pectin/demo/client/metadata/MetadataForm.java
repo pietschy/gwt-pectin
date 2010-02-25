@@ -129,8 +129,7 @@ public class MetadataForm extends VerySimpleForm
 
       // Now lets hide the whole row based on the metadata for the field.
       metadataBinder.show(favoriteCheeseRow).usingMetadataOf(model.favoriteCheeses);
-
-      // Please Nte: Normally if I was hiding the whole row like above I'd probably
+      // Please Note: Normally if I was hiding the whole row like above I'd probably
       // use metadataBinder.show(favoriteCheeseRow).when(cheeseLover) and
       // not bother using metadata at all.
 
