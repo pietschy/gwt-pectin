@@ -53,6 +53,20 @@ public class AbstractBeanModelProviderTest extends GWTTestCase
       assertEquals(bean.getString(), name);
    }
 
+   @Test
+   public void testWriteValueWithNullBean()
+   {
+      String name = "abc";
+      try
+      {
+         provider.writeProperty(null, "string", name);
+         fail("expected TargetBeanIsNullException");
+      }
+      catch (TargetBeanIsNullException e)
+      {
+         // this should happen
+      }
+   }
 
    @Test
    public void testWriteValueToImmutable()
@@ -341,6 +355,12 @@ public class AbstractBeanModelProviderTest extends GWTTestCase
       assertFalse(stringValue.getDirtyModel().getValue());
       assertFalse(stringValue.getDirtyModel().getValue());
       assertFalse(stringValue.getDirtyModel().getValue());
+   }
+
+   @Test
+   public void testWritingNullToPrimitiveProperties()
+   {
+      
    }
 
 }

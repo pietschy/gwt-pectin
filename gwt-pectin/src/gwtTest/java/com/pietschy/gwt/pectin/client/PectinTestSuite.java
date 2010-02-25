@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.client;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
 import com.pietschy.gwt.pectin.client.bean.AbstractBeanModelProviderTest;
+import com.pietschy.gwt.pectin.client.bean.AutoCommitBeanModelProviderTest;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProviderTest;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinderTest;
 import com.pietschy.gwt.pectin.client.style.StyleBinderTest;
@@ -43,6 +44,7 @@ public class PectinTestSuite extends GWTTestSuite
 
       // bean tests
       gwtTestSuite.addTestSuite(AbstractBeanModelProviderTest.class);
+      gwtTestSuite.addTestSuite(AutoCommitBeanModelProviderTest.class);
       gwtTestSuite.addTestSuite(BeanModelProviderTest.class);
 
       // metadata tests

@@ -132,6 +132,10 @@ public class BeanModelProviderCreator
       // create the set attribute method
       source.println("public void writeProperty(" + beanInfo.getTypeName() + " bean, String property, Object value) {");
       source.indent();
+      source.println("if (bean == null) {");
+      source.println("   throw new com.pietschy.gwt.pectin.client.bean.TargetBeanIsNullException(" + beanInfo.getTypeName() + ".class);");
+      source.println("}");
+      source.println("");
       for (PropertyInfo property : beanInfo)
       {
          source.println("if (property.equals(\"" + property.getName() + "\")) { ");

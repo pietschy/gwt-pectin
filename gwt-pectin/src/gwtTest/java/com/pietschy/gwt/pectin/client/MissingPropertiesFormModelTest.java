@@ -7,12 +7,8 @@ import com.pietschy.gwt.pectin.client.bean.test.TestBeanModelProvider;
 
 
 /**
- * StyleBinder Tester.
- *
- * @author  andrew
- * @version $Revision$, $Date$
- * @created November 6, 2009
- * @since   1.0
+ * These test should really be moved to AbstractBeanModelProviderTest since it's responsible
+ * for throwing the actual exception.
  */
 public class MissingPropertiesFormModelTest extends GWTTestCase
 {
