@@ -17,6 +17,7 @@
 package com.pietschy.gwt.pectin.util;
 
 import com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException;
+import com.pietschy.gwt.pectin.client.bean.TargetBeanIsNullException;
 import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,13 +33,13 @@ import java.util.HashMap;
  */
 class ProviderSupport<B>
 {
-   private Class<B> clazz;
+   private Class<B> beanClass;
 
    HashMap<Class<?>, Class<?>> primitives = new HashMap<Class<?>, Class<?>>();
 
-   public ProviderSupport(Class<B> clazz)
+   public ProviderSupport(Class<B> beanClass)
    {
-      this.clazz = clazz;
+      this.beanClass = beanClass;
 
       primitives.put(boolean.class, Boolean.class);
       primitives.put(char.class, Character.class);
@@ -113,13 +114,13 @@ class ProviderSupport<B>
 
    public void writeProperty(B bean, String property, Object value) throws UnknownPropertyException
    {
-      Method setter = getSetter(property);
-
       if (bean == null)
       {
-         throw new IllegalStateException("Bean is null");
+         throw new TargetBeanIsNullException(beanClass);
       }
 
+      Method setter = getSetter(property);
+      
       try
       {
          setter.invoke(bean, value);
@@ -138,14 +139,14 @@ class ProviderSupport<B>
    {
       try
       {
-         return clazz.getMethod("get" + capitalise(property));
+         return beanClass.getMethod("get" + capitalise(property));
       }
       catch (NoSuchMethodException e)
       {
          try
          {
             // should really test it's return type is boolean...
-            return clazz.getMethod("is" + capitalise(property));
+            return beanClass.getMethod("is" + capitalise(property));
          }
          catch (NoSuchMethodException e1)
          {
@@ -158,7 +159,7 @@ class ProviderSupport<B>
    {
       try
       {
-         return clazz.getMethod("set" + capitalise(property), getBeanPropertyType(property));
+         return beanClass.getMethod("set" + capitalise(property), getBeanPropertyType(property));
       }
       catch (NoSuchMethodException e)
       {

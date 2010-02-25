@@ -2,6 +2,7 @@ package com.pietschy.gwt.pectin.util;
 
 
 import com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException;
+import com.pietschy.gwt.pectin.client.bean.TargetBeanIsNullException;
 import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -48,6 +49,12 @@ public class ProviderSupportTest
       String name = "abc";
       provider.writeProperty(bean, "string", name);
       assertEquals(bean.getString(), name);
+   }
+
+   @Test(expectedExceptions = TargetBeanIsNullException.class)
+   public void writeValueToNullBean()
+   {
+      provider.writeProperty(null, "string", "abc");
    }
 
    @Test
