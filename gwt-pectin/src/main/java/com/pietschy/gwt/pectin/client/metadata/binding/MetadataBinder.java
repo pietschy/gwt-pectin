@@ -16,6 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.Field;
@@ -112,6 +113,16 @@ public class MetadataBinder
       return hide(new HasVisibleUiObjectAdapter(uiObject));
    }
 
+   public ConditionBinderBuilder<?> show(Element element)
+   {
+      return show(new HasVisibleElementAdapter(element));
+   }
+
+   public ConditionBinderBuilder<?> hide(Element element)
+   {
+      return hide(new HasVisibleElementAdapter(element));
+   }
+
    public ConditionBinderBuilder<?> enable(HasEnabled widget)
    {
       return new ConditionBinderBuilder<HasEnabled>(this, widget, enableUsingMetadataAction, enableAction);
@@ -152,26 +163,6 @@ public class MetadataBinder
       public boolean isEnabled()
       {
          return widget.isEnabled();
-      }
-   }
-
-   private static class HasVisibleUiObjectAdapter implements HasVisible
-   {
-      private final UIObject widget;
-
-      public HasVisibleUiObjectAdapter(UIObject widget)
-      {
-         this.widget = widget;
-      }
-
-      public void setVisible(boolean visible)
-      {
-         widget.setVisible(visible);
-      }
-
-      public boolean isVisible()
-      {
-         return widget.isVisible();
       }
    }
 
@@ -230,6 +221,48 @@ public class MetadataBinder
       public void apply(HasEnabled target, boolean disabled)
       {
          target.setEnabled(!disabled);
+      }
+   }
+
+   private static class HasVisibleUiObjectAdapter implements HasVisible
+   {
+      private final UIObject widget;
+
+      public HasVisibleUiObjectAdapter(UIObject widget)
+      {
+         this.widget = widget;
+      }
+
+      public void setVisible(boolean visible)
+      {
+         widget.setVisible(visible);
+      }
+
+      public boolean isVisible()
+      {
+         return widget.isVisible();
+      }
+   }
+
+
+   private static class HasVisibleElementAdapter implements HasVisible
+   {
+      protected Element element;
+
+      public HasVisibleElementAdapter(Element element)
+      {
+         this.element = element;
+      }
+
+
+      public void setVisible(boolean visible)
+      {
+         UIObject.setVisible(element, visible);
+      }
+
+      public boolean isVisible()
+      {
+         return UIObject.isVisible(element);
       }
    }
 }
