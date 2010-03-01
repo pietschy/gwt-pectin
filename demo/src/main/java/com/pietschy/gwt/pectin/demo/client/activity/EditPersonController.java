@@ -23,7 +23,7 @@ public class EditPersonController
       editModel.readFrom(person);
 
       SaveActivity saveActivity = new SaveActivity(editModel, saveService);
-      Activity cancelActivity = new CancelCommand(editModel);
+      Activity cancelActivity = new CancelActivity(editModel);
 
       editPersonForm = new EditPersonForm(editModel, saveActivity, cancelActivity);
    }
@@ -39,11 +39,11 @@ public class EditPersonController
       destination.remove(editPersonForm);
    }
 
-   private static class CancelCommand extends AbstractActivity
+   private static class CancelActivity extends AbstractActivity
    {
       private EditPersonModel model;
 
-      public CancelCommand(EditPersonModel model)
+      public CancelActivity(EditPersonModel model)
       {
          this.model = model;
       }
