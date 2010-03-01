@@ -48,7 +48,7 @@ public class ActivityDemo extends AbstractDemo
                         "calling an async service.");
 
       addLinkToSource("Show Controller Source", EditPersonController.class);
-      addLinkToSource("Show Save Activity Source", EditPersonController.class);
+      addLinkToSource("Show Save Activity Source", SaveActivity.class);
       addLinkToModel(EditPersonModel.class);
       addLinkToView(EditPersonForm.class);
 
