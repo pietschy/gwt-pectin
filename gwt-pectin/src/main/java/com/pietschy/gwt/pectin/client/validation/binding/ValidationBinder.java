@@ -55,16 +55,16 @@ extends AbstractBinder
    }
 
 
-   public ValidationBindingBuider bindValidationOf(FormModel form)
+   public ValidationBindingBuilder bindValidationOf(FormModel form)
    {
-      return new ValidationBindingBuider(this,
+      return new ValidationBindingBuilder(this,
                                          ValidationPlugin.getValidationManager(form).getFormValidator(),
                                          validationStyles);
    }
 
-   public ValidationBindingBuider bindValidationOf(FieldModelBase<?> field)
+   public ValidationBindingBuilder bindValidationOf(FieldModelBase<?> field)
    {
-      return new ValidationBindingBuider(this,
+      return new ValidationBindingBuilder(this,
                                          ValidationPlugin.getFieldValidator(field),
                                          validationStyles);
    }

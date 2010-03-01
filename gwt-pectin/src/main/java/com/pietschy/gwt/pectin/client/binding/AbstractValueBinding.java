@@ -29,8 +29,8 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  */
 public abstract class AbstractValueBinding<T> extends AbstractBinding
 {
-   protected ValueModel<T> model;
-   protected ValueMonitor valueMonitor = new ValueMonitor();
+   private ValueModel<T> model;
+   private ValueMonitor valueMonitor = new ValueMonitor();
 
    public AbstractValueBinding(ValueModel<T> valueModel)
    {

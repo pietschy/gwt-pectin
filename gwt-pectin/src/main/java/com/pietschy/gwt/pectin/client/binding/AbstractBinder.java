@@ -16,6 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -25,6 +27,9 @@ import java.util.Iterator;
 public class AbstractBinder implements BindingContainer
 {
    private ArrayList<AbstractBinding> bindings = new ArrayList<AbstractBinding>();
+   private ArrayList<Disposable> disposables = new ArrayList<Disposable>();
+   private ArrayList<HandlerRegistration> handlers = new  ArrayList<HandlerRegistration>();
+
 
    /**
     * Registers a binding with this binder.  The binding will be disposed when this binder
@@ -35,7 +40,23 @@ public class AbstractBinder implements BindingContainer
    public void registerBindingAndUpdateTarget(AbstractBinding binding)
    {
       binding.updateTarget();
-      bindings.add(binding);
+      disposables.add(binding);
+   }
+
+   /**
+    * Registers a HandlerRegistration with this container.  The handler will be unregistered
+    * when this binder is disposed.
+    *
+    * @param handlerRegistration the handler registration to register.
+    */
+   public void registerHandler(HandlerRegistration handlerRegistration)
+   {
+      handlers.add(handlerRegistration);
+   }
+
+   public void registerDisposable(Disposable disposable)
+   {
+      disposables.add(disposable);
    }
 
    /**
@@ -49,6 +70,18 @@ public class AbstractBinder implements BindingContainer
          binding.dispose();
       }
       bindings.clear();
+
+      for (Disposable disposable : disposables)
+      {
+         disposable.dispose();
+      }
+      disposables.clear();
+
+      for (HandlerRegistration handler : handlers)
+      {
+         handler.removeHandler();
+      }
+      handlers.clear();
    }
 
    /**

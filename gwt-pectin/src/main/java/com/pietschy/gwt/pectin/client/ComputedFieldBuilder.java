@@ -16,8 +16,8 @@
 
 package com.pietschy.gwt.pectin.client;
 
+import com.pietschy.gwt.pectin.client.function.Function;
 import com.pietschy.gwt.pectin.client.value.ComputedValueModel;
-import com.pietschy.gwt.pectin.client.value.Function;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**

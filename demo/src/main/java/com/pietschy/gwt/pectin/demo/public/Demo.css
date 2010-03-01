@@ -41,21 +41,27 @@ input.validationError,
    color: #333333;
 }
 
+.VerySimpleForm-Widgets {
+   padding-bottom: 4px;
+}
+
 .VerySimpleForm-Label {
    color: #666666;
    font-weight:bold;
    font-size: 75%;
    text-align: right;
    padding-right: 0.5em;
+   padding-bottom: 4px;
 }
 
 .verticalAlignTop {
    vertical-align:top;
-   padding-top: 0.2em;
+   padding-top: 3px;
 }
 
 .VerySimpleForm-GapRow {
-   height: 0.8em;
+    /* eeeek.. just awful...*/
+   height: 8px;
    font-size: 20%;
 }
 

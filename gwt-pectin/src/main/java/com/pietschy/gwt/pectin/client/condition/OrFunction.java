@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
-import com.pietschy.gwt.pectin.client.value.Reduce;
+import com.pietschy.gwt.pectin.client.function.Reduce;
 
 import java.util.List;
 

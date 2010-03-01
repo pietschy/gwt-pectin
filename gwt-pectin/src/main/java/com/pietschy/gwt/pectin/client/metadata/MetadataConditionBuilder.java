@@ -16,9 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.metadata;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.client.condition.Condition;
 import com.pietschy.gwt.pectin.client.condition.ValueIsCondition;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,11 +27,11 @@ import com.pietschy.gwt.pectin.client.condition.ValueIsCondition;
  * Time: 4:19:08 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MetadataConditionBuidler
+public class MetadataConditionBuilder
 {
-   protected Metadata metadata;
+   private Metadata metadata;
 
-   public MetadataConditionBuidler(Metadata metadata)
+   public MetadataConditionBuilder(Metadata metadata)
    {
       this.metadata = metadata;
    }

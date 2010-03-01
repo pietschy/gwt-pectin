@@ -50,10 +50,10 @@ public class AbstractDemo extends Composite
       initWidget(dock);
    }
 
-   private void showSource(Object target)
+   private void showSource(Class<?> clazz)
    {
       String url = "http://code.google.com/p/gwt-pectin/source/browse/trunk/demo/src/main/java/" +
-                   target.getClass().getName().replace('.', '/') + ".java";
+                   clazz.getName().replace('.', '/') + ".java";
       
       Window.open(url, "PectinSource", "");
    }
@@ -73,25 +73,36 @@ public class AbstractDemo extends Composite
    {
       blurbPanel.add(new HTML("<p>" + blurb + "</p>"));
    }
-   
+
+
    protected void addLinkToModel(FormModel model)
    {
-      addLinkToSource("Show Model Source", model);
-   }
-   
-   protected void addLinkToView(Widget view)
-   {
-      addLinkToSource("Show View Source", view);
+      addLinkToModel(model.getClass());
    }
 
-   protected void addLinkToSource(String linkName, final Object object)
+   protected void addLinkToModel(Class<?> model)
+   {
+      addLinkToSource("Show Model Source", model.getClass());
+   }
+
+   protected void addLinkToView(Widget view)
+   {
+      addLinkToView(view.getClass());
+   }
+
+   protected void addLinkToView(Class<?> clazz)
+   {
+      addLinkToSource("Show View Source", clazz);
+   }
+
+   protected void addLinkToSource(String linkName, final Class<?> clazz)
    {
       Anchor link = new Anchor(linkName);
       link.addClickHandler(new ClickHandler()
       {
          public void onClick(ClickEvent event)
          {
-            showSource(object);
+            showSource(clazz);
          }
       });
       

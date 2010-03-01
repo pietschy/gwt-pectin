@@ -73,14 +73,12 @@ implements ValidationResult, ValidationResultCollector
       return Collections.unmodifiableList(prepareSeverityList(severity));
    }
 
-   public SortedSet<Severity>
-   getSeverities()
+   public SortedSet<Severity> getSeverities()
    {
       return new TreeSet<Severity>(severityMap.keySet());
    }
 
-   protected List<ValidationMessage>
-   prepareSeverityList(Severity severity)
+   protected List<ValidationMessage> prepareSeverityList(Severity severity)
    {
       List<ValidationMessage> list = severityMap.get(severity);
       

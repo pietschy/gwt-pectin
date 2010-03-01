@@ -16,6 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.value;
 
+import com.pietschy.gwt.pectin.client.function.Function;
+
 /**
  * Created by IntelliJ IDEA.
  * User: andrew

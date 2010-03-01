@@ -36,7 +36,7 @@ extends AbstractBinding
 implements IndexedValidationHandler
 {
    private IndexedValidationDisplay display;
-   protected HasIndexedValidation fieldValidator;
+   private HasIndexedValidation fieldValidator;
 
    public IndexedValidationDisplayBinding(HasIndexedValidation fieldValidator, IndexedValidationDisplay display)
    {

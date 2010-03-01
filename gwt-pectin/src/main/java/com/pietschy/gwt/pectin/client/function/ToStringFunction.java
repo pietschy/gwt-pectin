@@ -14,7 +14,7 @@
  * and limitations under the License.
  */
 
-package com.pietschy.gwt.pectin.client.value;
+package com.pietschy.gwt.pectin.client.function;
 
 /**
  * A simple Function that converts any object to a String using it's toString method.

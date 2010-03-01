@@ -44,7 +44,7 @@ public class TextSplitter extends Composite implements HasValue<Collection<Strin
    private static final String DEFAULT_SPLIT_REGEX = ",";
    private static final String DEFAULT_JOIN_TEXT = ", ";
 
-   protected GuardedValueChangeHandler<String> textChangeHandler = new GuardedValueChangeHandler<String>() {
+   private GuardedValueChangeHandler<String> textChangeHandler = new GuardedValueChangeHandler<String>() {
       public void onGuardedValueChanged(ValueChangeEvent<String> event)
       {
          fireValueChanged(getValue());

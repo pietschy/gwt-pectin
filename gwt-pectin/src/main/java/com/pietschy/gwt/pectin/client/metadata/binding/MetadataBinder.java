@@ -247,7 +247,7 @@ public class MetadataBinder
 
    private static class HasVisibleElementAdapter implements HasVisible
    {
-      protected Element element;
+      private Element element;
 
       public HasVisibleElementAdapter(Element element)
       {

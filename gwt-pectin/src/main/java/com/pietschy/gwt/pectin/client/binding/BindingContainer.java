@@ -23,7 +23,7 @@ package com.pietschy.gwt.pectin.client.binding;
  * Time: 1:43:55 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface BindingContainer
+public interface BindingContainer extends Disposable
 {
 
    /**
@@ -33,6 +33,4 @@ public interface BindingContainer
     * @param binding the binding to register
     */
    void registerBindingAndUpdateTarget(AbstractBinding binding);
-
-   void dispose();
 }

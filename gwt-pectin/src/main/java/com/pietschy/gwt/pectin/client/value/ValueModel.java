@@ -23,13 +23,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
  * ValueModels provide a standard interface for obtaining values and being notified when that
  * value changes.  Mutation of the value is supported by {@link MutableValueModel}.
  */
-public interface ValueModel<T>
+public interface ValueModel<T> extends ValueSource<T>
 {
-   /**
-    * Gets the value held by this model.
-    * @return the value held by this model.
-    */
-   T getValue();
 
    /**
     * Adds a handler that will be notified when ever this models value changes.

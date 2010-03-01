@@ -23,6 +23,7 @@ import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueSource;
 
 
 /**
@@ -114,6 +115,20 @@ public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B>
       beanChangeRegistration = beanSource.addValueChangeHandler(beanChangeHandler);
 
       readFrom(getBean());
+   }
+
+   public ValueSource<B> asValueSource()
+   {
+      // we return a new instance that invokes get bean so that
+      // we aren't affected by someone calling setBeanSource after
+      // this method has been called.
+      return new ValueSource<B>()
+      {
+         public B getValue()
+         {
+            return getBean();
+         }
+      };
    }
 
    /**

@@ -22,14 +22,15 @@ import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import static com.pietschy.gwt.pectin.client.condition.Conditions.is;
-import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
 import com.pietschy.gwt.pectin.client.format.IntegerFormat;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.*;
-import com.pietschy.gwt.pectin.client.value.Function;
+import com.pietschy.gwt.pectin.client.function.Function;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Protocol;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
+
+import static com.pietschy.gwt.pectin.client.condition.Conditions.is;
+import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.*;
 
 
 /**

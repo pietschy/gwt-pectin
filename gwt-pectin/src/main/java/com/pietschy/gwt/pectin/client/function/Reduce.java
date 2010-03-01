@@ -14,7 +14,7 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.value;
+package com.pietschy.gwt.pectin.client.function;
 
 import java.util.List;
 

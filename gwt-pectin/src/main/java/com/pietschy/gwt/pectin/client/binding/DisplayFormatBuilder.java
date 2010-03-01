@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.binding;
 
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
-import com.pietschy.gwt.pectin.client.value.Function;
+import com.pietschy.gwt.pectin.client.function.Function;
 
 /**
  * Created by IntelliJ IDEA.

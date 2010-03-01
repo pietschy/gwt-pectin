@@ -15,7 +15,7 @@ import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.getMetadata
  */
 public class ConditionBinderBuilder<T>
 {
-   protected MetadataBinder binder;
+   private MetadataBinder binder;
    private T target;
    private ConditionBinderWidgetAction<T> action;
    private ConditionBinderMetadataAction<T> metadataAction;

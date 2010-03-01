@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.client.value;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.pietschy.gwt.pectin.client.function.Reduce;
 
 import java.util.ArrayList;
 import java.util.Arrays;

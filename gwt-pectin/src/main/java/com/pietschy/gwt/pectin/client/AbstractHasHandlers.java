@@ -16,10 +16,10 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.EventHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +30,7 @@ import com.google.gwt.event.shared.HandlerManager;
  */
 public class AbstractHasHandlers
 {
-   protected HandlerManager handlers = new HandlerManager(this);
+   private HandlerManager handlers = new HandlerManager(this);
 
    protected boolean areEqual(Object a, Object b)
    {

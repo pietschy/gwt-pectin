@@ -38,8 +38,8 @@ public abstract class AbstractFormattedBinding<T> extends AbstractBinding
       }
    };
 
-   protected FormattedFieldModel<T> field;
-   protected MutableValueModel<String> textModel;
+   private FormattedFieldModel<T> field;
+   private MutableValueModel<String> textModel;
 
    public AbstractFormattedBinding(FormattedFieldModel<T> field)
    {

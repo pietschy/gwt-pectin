@@ -116,9 +116,9 @@ public class MetadataPlugin
       return new WatermarkBuilder(getAllMetadata(toCollection(field, others)));
    }
 
-   public static MetadataConditionBuidler metadataOf(Field field)
+   public static MetadataConditionBuilder metadataOf(Field field)
    {
-      return new MetadataConditionBuidler(getMetadata(field));
+      return new MetadataConditionBuilder(getMetadata(field));
    }
 
    private static Collection<Field<?>> toCollection(Field<?> field, Field<?>... others)

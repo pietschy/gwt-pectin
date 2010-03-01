@@ -17,9 +17,9 @@
 package com.pietschy.gwt.pectin.client.metadata;
 
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
+import com.pietschy.gwt.pectin.client.function.Function;
+import com.pietschy.gwt.pectin.client.function.ToStringFunction;
 import com.pietschy.gwt.pectin.client.value.ComputedValueModel;
-import com.pietschy.gwt.pectin.client.value.Function;
-import com.pietschy.gwt.pectin.client.value.ToStringFunction;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.Collection;

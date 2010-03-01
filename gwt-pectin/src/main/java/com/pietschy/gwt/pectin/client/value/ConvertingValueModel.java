@@ -16,8 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.value;
 
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,8 +29,8 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 public class ConvertingValueModel<T, S>
 extends AbstractValueModel<T>
 {
-   protected Converter<T,S> converter;
-   protected ValueModel<S> source;
+   private Converter<T,S> converter;
+   private ValueModel<S> source;
    
    private ValueChangeHandler<S> changeMonitor = new ValueChangeHandler<S>()
    {
@@ -58,6 +58,15 @@ extends AbstractValueModel<T>
       this.source.addValueChangeHandler(changeMonitor);
    }
 
+   protected ValueModel<S> getSource()
+   {
+      return source;
+   }
+
+   protected Converter<T, S> getConverter()
+   {
+      return converter;
+   }
 
    public T getValue()
    {

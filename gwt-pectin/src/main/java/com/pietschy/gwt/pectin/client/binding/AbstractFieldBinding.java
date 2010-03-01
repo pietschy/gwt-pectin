@@ -16,8 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.FieldModel;
 
 /**
@@ -29,8 +29,8 @@ import com.pietschy.gwt.pectin.client.FieldModel;
  */
 public abstract class AbstractFieldBinding<T> extends AbstractBinding
 {
-   protected FieldModel<T> field;
-   protected FieldMonitor fieldMonitor = new FieldMonitor();
+   private FieldModel<T> field;
+   private FieldMonitor fieldMonitor = new FieldMonitor();
 
    public AbstractFieldBinding(FieldModel<T> field)
    {

@@ -49,7 +49,7 @@ implements HasValue<T>, HasEnabled, ValidationDisplay
    private HasValue<T> otherEditor;
 
    private HTML textFieldGap = new HTML("&nbsp;");
-   protected FocusMonitor focusMonitor = new FocusMonitor();
+   private FocusMonitor focusMonitor = new FocusMonitor();
 
    protected AbstractComboBoxWithOther(T... values)
    {

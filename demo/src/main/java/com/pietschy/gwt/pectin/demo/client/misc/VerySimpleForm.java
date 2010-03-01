@@ -35,6 +35,7 @@ extends Composite
    public VerySimpleForm()
    {
       initWidget(table);
+      setStylePrimaryName("VerySimpleForm");
    }
    
    public Row addRow(String label, Widget widget)
@@ -44,6 +45,7 @@ extends Composite
       table.getFlexCellFormatter().setWordWrap(rowIndex, 0, false);
       styleLabel(rowIndex);
       table.setWidget(rowIndex, 1, widget);
+      styleWidgets(rowIndex);
       return new Row(rowIndex);
    }
 
@@ -82,6 +84,11 @@ extends Composite
    private void styleLabel(int row)
    {
       cellFormatter.addStyleName(row, 0, "VerySimpleForm-Label");
+   }
+
+   private void styleWidgets(int row)
+   {
+      cellFormatter.addStyleName(row, 1, "VerySimpleForm-Widgets");
    }
 
    protected Label createHint()
@@ -131,7 +138,25 @@ extends Composite
       p.add(first);
       for (Widget other : others)
       {
+         // mmmm.. hacky.
          p.add(new HTML("&nbsp;&nbsp;"));
+         p.add(other);
+      }
+      return p;
+   }
+
+   protected Widget hpWithNoGap(Widget first, Widget... others)
+   {
+      if (others.length == 0)
+      {
+         return first;
+      }
+
+      HorizontalPanel p = new HorizontalPanel();
+      p.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
+      p.add(first);
+      for (Widget other : others)
+      {
          p.add(other);
       }
       return p;

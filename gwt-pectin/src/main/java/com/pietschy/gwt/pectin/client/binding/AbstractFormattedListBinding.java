@@ -40,8 +40,8 @@ public abstract class AbstractFormattedListBinding<T> extends AbstractBinding
       }
    };
 
-   protected FormattedListFieldModel<T> list;
-   protected MutableListModel<String> textList;
+   private FormattedListFieldModel<T> list;
+   private MutableListModel<String> textList;
 
    public AbstractFormattedListBinding(FormattedListFieldModel<T> field)
    {

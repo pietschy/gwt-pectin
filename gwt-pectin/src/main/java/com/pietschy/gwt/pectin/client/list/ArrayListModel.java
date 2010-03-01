@@ -16,7 +16,6 @@
 
 package com.pietschy.gwt.pectin.client.list;
 
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.AbstractHasHandlers;
 
@@ -33,7 +32,6 @@ public class ArrayListModel<T>
 extends AbstractHasHandlers
 implements MutableListModel<T>
 {
-   protected HandlerManager handlers = new HandlerManager(this);
    private ArrayList<T> internalList = new ArrayList<T>();
 
    public ArrayListModel()
@@ -119,8 +117,7 @@ implements MutableListModel<T>
       return addHandler(handler, ListModelChangedEvent.getType());
    }
 
-   protected boolean 
-   isMutableSource()
+   protected boolean isMutableSource()
    {
       return true;
    }

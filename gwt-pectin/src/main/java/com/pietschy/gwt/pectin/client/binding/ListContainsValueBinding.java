@@ -46,7 +46,7 @@ extends AbstractListBinding<T>
 
    public void updateTarget()
    {
-      widget.setValue(model.contains(value), false);
+      widget.setValue(getModel().contains(value), false);
    }
 
    public HasValue<Boolean> getTarget()

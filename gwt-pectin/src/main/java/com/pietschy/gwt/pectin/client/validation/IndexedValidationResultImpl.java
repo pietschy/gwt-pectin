@@ -106,8 +106,7 @@ public class IndexedValidationResultImpl
       return results.size();
    }
 
-   protected ValidationResultImpl
-   prepareIndexedResult(int index)
+   protected ValidationResultImpl prepareIndexedResult(int index)
    {
       ValidationResultImpl result = (ValidationResultImpl) results.get(index);
       if (result == null)

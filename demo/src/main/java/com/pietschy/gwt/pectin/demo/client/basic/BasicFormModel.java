@@ -23,7 +23,8 @@ import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import com.pietschy.gwt.pectin.client.value.Reduce;
+import com.pietschy.gwt.pectin.client.function.Join;
+import com.pietschy.gwt.pectin.client.function.Reduce;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
@@ -121,36 +122,6 @@ public class BasicFormModel extends FormModel
          }
          
          return total;
-      }
-   }
-
-
-   private static class Join implements Reduce<String, String>
-   {
-      private String separator;
-
-      public Join(String separator)
-      {
-         this.separator = separator;
-      }
-
-      public String compute(List<? extends String> source)
-      {
-         StringBuilder buf = null;
-         for (String value : source)
-         {
-            if (buf == null)
-            {
-               buf = new StringBuilder();
-            }
-            else
-            {
-               buf.append(separator);
-            }
-
-            buf.append(value);
-         }
-         return buf != null ? buf.toString() :"";
       }
    }
 }

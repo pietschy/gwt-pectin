@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.client.value;
 
 
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.pietschy.gwt.pectin.client.function.Reduce;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

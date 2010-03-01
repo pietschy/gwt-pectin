@@ -34,7 +34,7 @@ import java.util.List;
 public class FieldFormatValidator<T> implements Validator<String>, ListValidator<String>
 {
 
-   protected HasFormat<T> model;
+   private HasFormat<T> model;
 
    public FieldFormatValidator(HasFormat<T> model)
    {

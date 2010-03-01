@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.binding;
 
 import com.pietschy.gwt.pectin.client.format.ListDisplayFormat;
-import com.pietschy.gwt.pectin.client.value.Reduce;
+import com.pietschy.gwt.pectin.client.function.Reduce;
 
 import java.util.List;
 

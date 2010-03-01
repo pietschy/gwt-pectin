@@ -28,13 +28,13 @@ import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 * Time: 12:09:38 PM
 * To change this template use File | Settings | File Templates.
 */
-public class ValidationBindingBuider 
+public class ValidationBindingBuilder
 {
-   protected HasValidation validator;
+   private HasValidation validator;
    private ValidationBinder binder;
    private ValidationStyles validationStyles;
 
-   public ValidationBindingBuider(ValidationBinder binder, HasValidation validator, ValidationStyles validationStyles)
+   public ValidationBindingBuilder(ValidationBinder binder, HasValidation validator, ValidationStyles validationStyles)
    {
       this.binder = binder;
       this.validator = validator;

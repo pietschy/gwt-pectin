@@ -37,9 +37,14 @@ implements MutableValueModel<T>
       // we could improve performance by disabling the change monitor
       // and firing the change event ourselves (to avoid a double conversion), 
       // but we'd need to disable the monitor while setting the soruce value.
-      ((MutableValueModel<S>) source).setValue(converter.toSource(value));
+      getSource().setValue(getConverter().toSource(value));
    }
-   
-   
+
+   protected MutableValueModel<S> getSource()
+   {
+      return (MutableValueModel<S>) super.getSource();
+   }
+
+
 }
 

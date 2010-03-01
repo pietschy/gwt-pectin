@@ -33,7 +33,7 @@ import com.pietschy.gwt.pectin.client.metadata.Metadata;
 public class AllMetadataBindingBuilder 
 {
    private BindingContainer container;
-   protected Metadata metadata;
+   private Metadata metadata;
 
    public AllMetadataBindingBuilder(BindingContainer container, Metadata metadata)
    {

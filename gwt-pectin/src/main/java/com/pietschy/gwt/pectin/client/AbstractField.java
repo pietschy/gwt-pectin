@@ -27,7 +27,7 @@ public abstract class AbstractField<T>
 extends AbstractHasHandlers
 implements Field<T>
 {
-   protected FormModel formModel;
+   private FormModel formModel;
    private Class<T> valueClass;
 
    public AbstractField(FormModel formModel, Class<T> valueClass)

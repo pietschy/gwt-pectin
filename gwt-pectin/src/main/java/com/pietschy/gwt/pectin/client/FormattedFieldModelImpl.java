@@ -62,7 +62,7 @@ implements FormattedFieldModel<T>
       }
    };
    
-   protected ValueChangeHandler<Format<T>> formatMonitor = new ValueChangeHandler<Format<T>>()
+   private ValueChangeHandler<Format<T>> formatMonitor = new ValueChangeHandler<Format<T>>()
    {
       public void onValueChange(ValueChangeEvent<Format<T>> event)
       {

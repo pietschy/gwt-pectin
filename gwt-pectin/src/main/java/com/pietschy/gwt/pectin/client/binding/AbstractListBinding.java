@@ -16,10 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
-import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
-import com.pietschy.gwt.pectin.client.list.MutableListModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
+import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
+import com.pietschy.gwt.pectin.client.list.MutableListModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,8 +32,8 @@ public abstract class AbstractListBinding<T>
 extends AbstractBinding 
 implements Disposable
 {
-   protected ListFieldModel<T> model;
-   protected ListMonitor listMonitor = new ListMonitor();
+   private ListFieldModel<T> model;
+   private ListMonitor listMonitor = new ListMonitor();
 
    public AbstractListBinding(ListFieldModel<T> field)
    {
@@ -41,7 +41,7 @@ implements Disposable
       registerHandler(field.addListModelChangedHandler(listMonitor));
    }
    
-   public ListFieldModel<T> getFieldModel()
+   public ListFieldModel<T> getModel()
    {
       return model;
    }

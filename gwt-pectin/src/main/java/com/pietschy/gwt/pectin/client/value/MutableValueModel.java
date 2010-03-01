@@ -20,12 +20,6 @@ package com.pietschy.gwt.pectin.client.value;
  * MutableValueModel represents a value model whose value change can be changed by external actors.
  */
 public interface MutableValueModel<T> 
-extends ValueModel<T>
+extends ValueModel<T>, MutableValue<T>
 {
-   /**
-    * Sets the value of this model to the specified value.  All handlers will be notified of
-    * the change.
-    * @param value the new value.
-    */
-   void setValue(T value);
 }

@@ -16,7 +16,6 @@
 
 package com.pietschy.gwt.pectin.client.validation.message;
 
-import com.pietschy.gwt.pectin.client.validation.message.ValidationMessage;
 import com.pietschy.gwt.pectin.client.validation.Severity;
 
 /**
@@ -29,8 +28,8 @@ import com.pietschy.gwt.pectin.client.validation.Severity;
 public class ValidationMessageImpl implements ValidationMessage
 {
    private Severity severity = Severity.ERROR;
-   protected String message;
-   protected String additionalInfo;
+   private String message;
+   private String additionalInfo;
 
    public ValidationMessageImpl(Severity severity, String message, String additionalInfo)
    {

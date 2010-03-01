@@ -22,8 +22,8 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.list.MutableListModel;
 
-import java.util.Collection;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,7 +48,7 @@ extends AbstractListBinding<T>
 
    public void updateTarget()
    {
-      widget.setValue(new ArrayList<T>(getFieldModel().asUnmodifiableList()));
+      widget.setValue(new ArrayList<T>(getModel().asUnmodifiableList()));
    }
 
    public HasValue<Collection<T>> getTarget()
