@@ -80,9 +80,9 @@ public class AbstractDemo extends Composite
       addLinkToModel(model.getClass());
    }
 
-   protected void addLinkToModel(Class<?> model)
+   protected void addLinkToModel(Class<?> clazz)
    {
-      addLinkToSource("Show Model Source", model.getClass());
+      addLinkToSource("Show Model Source", clazz);
    }
 
    protected void addLinkToView(Widget view)
