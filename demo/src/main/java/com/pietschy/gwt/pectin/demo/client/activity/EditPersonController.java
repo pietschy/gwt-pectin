@@ -6,11 +6,7 @@ import com.pietschy.gwt.pectin.client.activity.Activity;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Feb 27, 2010
- * Time: 10:49:15 AM
- * To change this template use File | Settings | File Templates.
+ * 
  */
 public class EditPersonController
 {
@@ -19,12 +15,15 @@ public class EditPersonController
 
    public EditPersonController(final Person person, SaveServiceAsync saveService)
    {
+      // create our model and initialise it from the person
       EditPersonModel editModel = new EditPersonModel();
       editModel.readFrom(person);
 
+      // now create the activities that will be displayed on the form.
       SaveActivity saveActivity = new SaveActivity(editModel, saveService);
       Activity cancelActivity = new CancelActivity(editModel);
 
+      // and finally create the form passing in the model and activities.
       editPersonForm = new EditPersonForm(editModel, saveActivity, cancelActivity);
    }
 
