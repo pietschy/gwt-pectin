@@ -125,6 +125,7 @@ public class EditPersonForm extends VerySimpleForm
       addTallRow("Favorite Cheeses", favoriteCheeses);
       addRow("",createValidationLabel(model.favoriteCheeses));
       addGap();
+      addNote("Our buttons are bound to our activities");
       addRow("", saveButton, cancelButton);      
 
    }
