@@ -15,16 +15,23 @@ public class EditPersonController
 
    public EditPersonController(final Person person, SaveServiceAsync saveService)
    {
-      // create our model and initialise it from the person
+      // create our editor model
       EditPersonModel editModel = new EditPersonModel();
-      editModel.readFrom(person);
 
-      // now create the activities that will be displayed on the form.
+      // now create the activities.  In this case I'm having them operate directly
+      // on the model, but they could operate on a Display type interface was well.
       SaveActivity saveActivity = new SaveActivity(editModel, saveService);
       Activity cancelActivity = new CancelActivity(editModel);
 
+      // initialise the model
+      editModel.readFrom(person);
+
       // and finally create the form passing in the model and activities.
       editPersonForm = new EditPersonForm(editModel, saveActivity, cancelActivity);
+
+      // if our controller needed to hook into the activities (such as to fire an
+      // and editFinished event) then we could do something like..
+      //    saveActivity.onSuccessExecute(...);
    }
 
    public void go(HasWidgets container)

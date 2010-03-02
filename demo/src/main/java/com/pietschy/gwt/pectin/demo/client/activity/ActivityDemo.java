@@ -44,8 +44,10 @@ public class ActivityDemo extends AbstractDemo
       FlowPanel panel = new FlowPanel();
       editController.go(panel);
 
-      addBlurbParagraph("This is a \"putting it all together\" example using Activities with validated FormModels " +
-                        "calling an async service.");
+      addBlurbParagraph("Activities are an async command pattern that can be bound to buttons (should I call them UiCommands or UiActions?).");
+      addBlurbParagraph("This example combines Activities (Save & Cancel) with a validated FormModel and " +
+                        "and backed by an async service.");
+      addBlurbParagraph("Activities are a bit experimental and are only in SVN at this point in time.");
 
       addLinkToSource("Show Controller Source", EditPersonController.class);
       addLinkToSource("Show Save Activity Source", SaveActivity.class);
