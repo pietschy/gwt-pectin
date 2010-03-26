@@ -77,12 +77,24 @@ public class BeanInfo implements Iterable<PropertyInfo>
    ArrayList<MethodInfo> getMethods(JClassType beanType)
    {
       ArrayList<MethodInfo> result = new ArrayList<MethodInfo>();
+      extractMethods(beanType, result);
+
+      beanType = beanType.getSuperclass();
+      while(beanType != null)
+      {
+         extractMethods(beanType, result);
+         beanType = beanType.getSuperclass();
+      }
+      
+      return result;
+   }
+
+   private void extractMethods(JClassType beanType, ArrayList<MethodInfo> result)
+   {
       for (JMethod method : beanType.getMethods())
       {
          result.add(new MethodInfo(method));
       }
-
-      return result;
    }
 
 }

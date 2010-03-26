@@ -54,11 +54,17 @@ public class DelegatingValueModel<T> implements MutableValueModel<T>, HasValueCh
       if (registration != null)
       {
          registration.removeHandler();
+         // we have to nuke it as we don't create a new one if the delegate
+         // is null, and calling removeHandler() twice will barf.
+         registration = null;
       }
       
       this.delegate = delegate;
 
-      registration = delegate.addValueChangeHandler(delegateChangeMonitor);
+      if (this.delegate != null)
+      {
+         registration = delegate.addValueChangeHandler(delegateChangeMonitor);
+      }
 
       fireValueChanged();
    }

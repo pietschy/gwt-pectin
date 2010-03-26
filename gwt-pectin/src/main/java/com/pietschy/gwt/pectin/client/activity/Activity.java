@@ -4,13 +4,19 @@ import com.google.gwt.user.client.Command;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Feb 23, 2010
- * Time: 11:22:45 AM
- * To change this template use File | Settings | File Templates.
+ * An Activity is a {@link Command} that also knows it's enabled state.
+ * @see #enabled()
+ * @see TemporalActivity
+ * @see AsyncActivity
+ * @see AbstractActivity
+ * @see AbstractIncrementalActivity
+ * @see DelegatingActivity
  */
 public interface Activity extends Command
 {
-   ValueModel<Boolean> isEnabled();
+   /**
+    * Returns a ValueModel representing the enabled state of this activity.
+    * @return a ValueModel representing the enabled state of this activity.
+    */
+   ValueModel<Boolean> enabled();
 }

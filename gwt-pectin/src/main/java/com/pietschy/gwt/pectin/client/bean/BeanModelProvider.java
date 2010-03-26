@@ -20,10 +20,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.list.ListModel;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
-import com.pietschy.gwt.pectin.client.value.ValueHolder;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.value.ValueSource;
+import com.pietschy.gwt.pectin.client.value.*;
 
 
 /**
@@ -50,7 +47,7 @@ import com.pietschy.gwt.pectin.client.value.ValueSource;
  * <p/>
  * </pre>
  */
-public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B>
+public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B> implements ValueSource<B>, MutableValue<B>
 {
    private MutableValueModel<B> beanSource;
 
@@ -117,18 +114,14 @@ public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B>
       readFrom(getBean());
    }
 
-   public ValueSource<B> asValueSource()
+   public B getValue()
    {
-      // we return a new instance that invokes get bean so that
-      // we aren't affected by someone calling setBeanSource after
-      // this method has been called.
-      return new ValueSource<B>()
-      {
-         public B getValue()
-         {
-            return getBean();
-         }
-      };
+      return getBean();
+   }
+
+   public void setValue(B value)
+   {
+      setBean(value);
    }
 
    /**

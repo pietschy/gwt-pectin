@@ -44,6 +44,9 @@ public class MetadataFormModel extends FormModel
 {
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
+   protected final FieldModel<String> password;
+   protected final FieldModel<Boolean> revealPassword;
+
    protected final FieldModel<String> nickName;
    protected final FieldModel<Boolean> hasNickName;
    protected final FieldModel<Boolean> wineLover;
@@ -65,6 +68,8 @@ public class MetadataFormModel extends FormModel
       // Create our field models..
       givenName = fieldOfType(String.class).boundTo(personProvider, "givenName");
       surname = fieldOfType(String.class).boundTo(personProvider, "surname");
+      password = fieldOfType(String.class).createWithValue("secret");
+      revealPassword = fieldOfType(Boolean.class).createWithValue(false);
 
       // now the static watermarks
       watermark(givenName).with("Enter your first name");

@@ -3,7 +3,7 @@ usePlugin('maven')
 
 version = "0.${buildNumber}"
 
-gwtVersion = '2.0.0'
+gwtVersion = '2.0.3'
 
 dependencies {
 
@@ -22,9 +22,9 @@ gradle.taskGraph.whenReady {taskGraph ->
 
 test {
    useTestNG()
-   dependsOn 'testGwt'
 }
 
+check.dependsOn('testGwt')
 
 // Creates the release and increments the build number when finished.
 task release << {

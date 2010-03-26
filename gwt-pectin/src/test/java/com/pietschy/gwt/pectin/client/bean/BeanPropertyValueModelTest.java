@@ -62,11 +62,15 @@ public class BeanPropertyValueModelTest
    @Test
    public void valueChangesAreReflectedByDirtyModel()
    {
-      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, "primitiveInt");
+
+      String propertyName = "primitiveInt";
+      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+
+      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, propertyName);
       assertNull(vm.getValue());
-      when(propertyAdapter.readProperty(bean, "primitiveInt")).thenReturn(5);
+      when(propertyAdapter.readProperty(bean, propertyName)).thenReturn(5);
       vm.readFrom(bean);
-      verify(propertyAdapter, times(1)).readProperty(isA(TestBean.class), eq("primitiveInt"));
+      verify(propertyAdapter, times(1)).readProperty(isA(TestBean.class), eq(propertyName));
       assertEquals(vm.getValue(), new Integer(5));
       assertFalse(vm.getDirtyModel().getValue());
 
@@ -85,8 +89,11 @@ public class BeanPropertyValueModelTest
    @Test
    public void resetDirtyModel()
    {
-      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, "primitiveInt");
-      when(propertyAdapter.readProperty(bean, "primitiveInt")).thenReturn(5);
+
+      String propertyName = "primitiveInt";
+      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, propertyName);
+      when(propertyAdapter.readProperty(bean, propertyName)).thenReturn(5);
       vm.readFrom(bean);
 
       vm.setValue(6);
@@ -102,7 +109,7 @@ public class BeanPropertyValueModelTest
    @Test
    public void computeDirty()
    {
-      BeanPropertyValueModel<TestBean, Object> vm = new BeanPropertyValueModel<TestBean, Object>(propertyAdapter, "object");
+      BeanPropertyValueModel<TestBean, Object> vm = new BeanPropertyValueModel<TestBean, Object>(propertyAdapter, "primitiveInt");
       when(propertyAdapter.readProperty(bean, "primitiveInt")).thenReturn(5);
       vm.readFrom(bean);
 
@@ -112,9 +119,11 @@ public class BeanPropertyValueModelTest
    @Test
    public void copyPrimitiveInt()
    {
-      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, "primitiveInt");
+      String propertyName = "primitiveInt";
+      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, propertyName);
 
-      when(propertyAdapter.readProperty(bean, "primitiveInt")).thenReturn(5);
+      when(propertyAdapter.readProperty(bean, propertyName)).thenReturn(5);
       vm.readFrom(bean);
       assertEquals(vm.getValue(), new Integer(5));
       assertFalse(vm.getDirtyModel().getValue());
@@ -124,17 +133,19 @@ public class BeanPropertyValueModelTest
       assertTrue(vm.getDirtyModel().getValue());
 
       vm.copyTo(bean, false);
-      verify(propertyAdapter, times(1)).writeProperty(isA(TestBean.class), eq("primitiveInt"), eq(8));
+      verify(propertyAdapter, times(1)).writeProperty(isA(TestBean.class), eq(propertyName), eq(8));
       assertTrue(vm.getDirtyModel().getValue());
    }
 
    @Test
    public void copyPrimitiveIntAndResetDirty()
    {
-      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, "primitiveInt");
+      String propertyName = "primitiveInt";
+      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, propertyName);
       assertNull(vm.getValue());
 
-      when(propertyAdapter.readProperty(bean, "primitiveInt")).thenReturn(5);
+      when(propertyAdapter.readProperty(bean, propertyName)).thenReturn(5);
       vm.readFrom(bean);
       assertEquals(vm.getValue(), new Integer(5));
       assertFalse(vm.getDirtyModel().getValue());
@@ -144,8 +155,33 @@ public class BeanPropertyValueModelTest
       assertTrue(vm.getDirtyModel().getValue());
 
       vm.copyTo(bean, true);
-      verify(propertyAdapter, times(1)).writeProperty(isA(TestBean.class), eq("primitiveInt"), eq(8));
+      verify(propertyAdapter, times(1)).writeProperty(isA(TestBean.class), eq(propertyName), eq(8));
       assertFalse(vm.getDirtyModel().getValue());
+   }
+
+
+   @Test(expectedExceptions = IllegalStateException.class)
+   public void copyImmutableObjectBarfs()
+   {
+      when(propertyAdapter.isMutable("readOnlyObject")).thenReturn(false);
+
+      BeanPropertyValueModel<TestBean, Object> vm = new BeanPropertyValueModel<TestBean, Object>(propertyAdapter, "readOnlyObject");
+
+      vm.setValue(new Object());
+   }
+
+   @Test
+   public void normalPropertyIsMutable()
+   {
+      when(propertyAdapter.isMutable("primitiveInt")).thenReturn(true);
+      assertTrue(new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, "primitiveInt").isMutable());
+   }
+
+   @Test
+   public void readOnlyPropertyIsNotMutable()
+   {
+      when(propertyAdapter.isMutable("readOnlyObject")).thenReturn(false);
+      assertFalse(new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, "primitiveInt").isMutable());
    }
 
 //   public void testSetValue()
@@ -197,4 +233,5 @@ public class BeanPropertyValueModelTest
 //
 //   }
 
+   
 }

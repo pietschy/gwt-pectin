@@ -21,12 +21,12 @@ import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.FieldModelBase;
 import com.pietschy.gwt.pectin.client.ListFieldModelBase;
 import com.pietschy.gwt.pectin.client.activity.Activity;
-import com.pietschy.gwt.pectin.client.activity.binding.ActivityBinder;
+import com.pietschy.gwt.pectin.client.activity.AsyncActivity;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
+import com.pietschy.gwt.pectin.client.channel.Channel;
+import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
-import com.pietschy.gwt.pectin.client.format.DisplayFormat;
-import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplayLabel;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
@@ -64,60 +64,43 @@ public class EditPersonForm extends VerySimpleForm
    private Button saveButton = new Button("Save");
    private Button cancelButton = new Button("Cancel");
 
-   private Label savingMessage = new Label("Saving.... (I'm faking an errors based on Random.nextBoolean())");
-   private HTML statusMessage = new HTML();
+   private NotificationDisplay notificationDisplay = new NotificationDisplay();
 
-   private WidgetBinder widgets = new WidgetBinder();
-   private MetadataBinder metadata = new MetadataBinder();
+   private WidgetBinder binder = new WidgetBinder();
    private ValidationBinder validation = new ValidationBinder();
-   private ActivityBinder activities = new ActivityBinder();
 
 
-   public EditPersonForm(EditPersonModel model,  SaveActivity save, Activity cancel)
+   public EditPersonForm(EditPersonModel model, Channel<String> notifications, AsyncActivity<?, ?> save, Activity cancel)
    {
       this.model = model;
 
       // bind our widgets to our model.  In normal practice I'd combine the
       // binding, widget creation and form layout into some nice reusable methods.
-      widgets.bind(model.givenName).to(givenName);
-      widgets.bind(model.surname).to(surname);
+      binder.bind(model.givenName).to(givenName);
+      binder.bind(model.surname).to(surname);
 
       // now lets bind a value using radio buttons
-      widgets.bind(model.gender).withValue(Gender.MALE).to(maleRadio);
-      widgets.bind(model.gender).withValue(Gender.FEMALE).to(femaleRadio);
+      binder.bind(model.gender).withValue(Gender.MALE).to(maleRadio);
+      binder.bind(model.gender).withValue(Gender.FEMALE).to(femaleRadio);
 
       // and a list model to a collection of check boxes
-      widgets.bind(model.favoriteWines).containingValue(Wine.CAB_SAV).to(cabSavCheckBox);
-      widgets.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
-      widgets.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
+      binder.bind(model.favoriteWines).containingValue(Wine.CAB_SAV).to(cabSavCheckBox);
+      binder.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
+      binder.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
       // and a list model to a HasValue<Collection<T>>
-      widgets.bind(model.favoriteCheeses).to(favoriteCheeses);
+      binder.bind(model.favoriteCheeses).to(favoriteCheeses);
 
       // we're using an activity for our save behaviour
-      activities.bind(save).to(saveButton);
-      activities.bind(cancel).to(cancelButton);
+      binder.bind(save).to(saveButton);
+      binder.bind(cancel).to(cancelButton);
 
       // and when it works we'll show a little status message.. normally you'd send this to
       // a NotificationArea that would display if with nice colors and make it fade after
       // a few seconds.
-      activities.sendResultOf(save)
-         .formattedWith(new StaticMessage("The save worked!"))
-         .to(statusMessage);
+      binder.send(notifications).to(notificationDisplay);
 
-      // and we'd do something better with the errors.
-      activities.sendErrorOf(save)
-         .formattedWith(new StaticMessage("Arrggghhh, the save failed!!!"))
-         .to(statusMessage);
-
-      // and lets display a message while we're saving... it's a bit of a hack, I'd
-      // rather use a proper NotificationArea...
-      metadata.show(savingMessage).when(save.isActive());
-      metadata.hide(statusMessage).when(save.isActive());
-
-      // putting two messages on the same line is a little ugly, have I mentioned that
-      // I'd like to be use a NotificationArea???...
-      addRow("", hpWithNoGap(savingMessage, statusMessage));
+      addRow("", notificationDisplay);
       addRow("Given Name", givenName, createValidationLabel(model.givenName));
       addRow("Surname", surname, createValidationLabel(model.surname));
       addRow("Gender", maleRadio, femaleRadio, createValidationLabel(model.gender));
@@ -144,18 +127,11 @@ public class EditPersonForm extends VerySimpleForm
       return label;
    }
 
-   private static class StaticMessage implements DisplayFormat<Object>
+   private static class NotificationDisplay extends Label implements Destination<String>
    {
-      private String text;
-
-      public StaticMessage(String text)
+      public void receive(String value)
       {
-         this.text = text;
-      }
-
-      public String format(Object value)
-      {
-         return text;
+         setText(value);
       }
    }
 }

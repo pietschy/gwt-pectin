@@ -17,11 +17,12 @@
 package com.pietschy.gwt.pectin.client.value;
 
 
-import org.testng.annotations.*;
-import org.testng.Assert;
-import static org.testng.Assert.*;
-import static org.mockito.Mockito.*;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * DelegatingValueModel Tester.
@@ -104,5 +105,20 @@ public class DelegatingValueModelTest
       assertEquals(subject.getValue(), "abc");
       subject.setDelegate(new ValueHolder<String>("123"));
       assertEquals(subject.getValue(), "123");
+   }
+
+   @Test
+   public void delegateHandlerRegistrationDoesNotLingerAfterNullDelegate()
+   {
+      ValueHolder<String> delegate = new ValueHolder<String>("123");
+      DelegatingValueModel<String> subject = new DelegatingValueModel<String>("abc");
+
+      subject.setDelegate(delegate);
+
+      // this should clear out handler registration but not assign a new one.
+      subject.setDelegate(null);
+
+      // this would barf if the handler wasn't set to null in the previous call.
+      subject.setDelegate(delegate);
    }
 }

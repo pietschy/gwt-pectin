@@ -54,4 +54,9 @@ class ReflectionCopyingBeanModelProvider<B> extends CopyingBeanModelProvider<B>
    {
       return support.getElementType(property);
    }
+
+   public boolean isMutable(String propertyName)
+   {
+      return support.isMutable(propertyName); 
+   }
 }

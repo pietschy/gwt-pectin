@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.client.list;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.AbstractHasHandlers;
+import com.pietschy.gwt.pectin.client.channel.Destination;
 
 import java.util.*;
 
@@ -65,6 +66,30 @@ implements MutableListModel<T>
       internalList.clear();
       internalList.addAll(elements);
       fireListChanged();
+   }
+
+   public void setElements(T[] elements)
+   {
+      setElements(Arrays.asList(elements));
+   }
+
+   /**
+    * Returns a {@link Destination} allowing the contents of a {@link Channel} to be
+    * injected directly into the list.
+    * <pre>
+    * channel.sendTo(myList.asDestination());
+    * </pre>
+    * @return a {@link Destination} for this list.
+    */
+   public Destination<T[]> asDestination()
+   {
+      return new Destination<T[]>()
+      {
+         public void receive(T[] values)
+         {
+            setElements(values);
+         }
+      };
    }
 
    protected void fireListChanged()

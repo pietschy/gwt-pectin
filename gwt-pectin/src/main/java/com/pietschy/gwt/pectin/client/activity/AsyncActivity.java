@@ -1,7 +1,6 @@
 package com.pietschy.gwt.pectin.client.activity;
 
-import com.google.gwt.user.client.Command;
-import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.channel.Channel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,22 +9,11 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * Time: 11:22:45 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface AsyncActivity<R,E> extends Activity
+public interface AsyncActivity<R,E> extends HasInterceptors, HasAsyncEvents<R,E>, TemporalActivity
 {
-
-   ValueModel<Boolean> isActive();
-
-   AsyncActivity<R, E> intercept(Interceptor interceptor);
 
    Channel<R> getResults();
 
    Channel<E> getErrors();
 
-   ChannelRegistration onSuccessExecute(Command command);
-
-   ChannelRegistration onSuccessCall(Callback<R> callback);
-
-   ChannelRegistration onErrorExecute(Command command);
-
-   ChannelRegistration onErrorCall(Callback<E> callback);
 }

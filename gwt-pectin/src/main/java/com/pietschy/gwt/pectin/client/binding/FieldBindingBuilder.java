@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 import com.pietschy.gwt.pectin.client.format.ToStringFormat;
+import com.pietschy.gwt.pectin.client.value.MutableValue;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,10 +43,16 @@ public class FieldBindingBuilder<T>
    
    public void to(HasValue<T> widget)
    {
-      final FieldToHasValueBinding<T> tFieldToHasValueBinding = new FieldToHasValueBinding<T>(field, widget);
-      binder.registerBinding(tFieldToHasValueBinding, tFieldToHasValueBinding.getFieldModel(), tFieldToHasValueBinding.getTarget());
+      final FieldToHasValueBinding<T> binding = new FieldToHasValueBinding<T>(field, widget);
+      binder.registerBinding(binding, binding.getFieldModel(), binding.getTarget());
    }
-   
+
+   public void to(MutableValue<T> widget)
+   {
+      final FieldToStaticValueBinding<T> binding = new FieldToStaticValueBinding<T>(field, widget);
+      binder.registerBinding(binding, binding.getFieldModel(), binding.getTarget());
+   }
+
    public DisplayFormatBuilder<T> toLabel(HasText label)
    {
       FieldToHasTextBinding<T> binding = new FieldToHasTextBinding<T>(field, label, ToStringFormat.defaultInstance());
@@ -77,8 +84,8 @@ public class FieldBindingBuilder<T>
 
       public void to(HasValue<Boolean> selectable)
       {
-         final FieldWithValueBinding<T> tFieldWithValueBinding = new FieldWithValueBinding<T>(field, selectable, selectedValue);
-         binder.registerBinding(tFieldWithValueBinding, tFieldWithValueBinding.getFieldModel(), tFieldWithValueBinding.getTarget());
+         final FieldWithValueBinding<T> binding = new FieldWithValueBinding<T>(field, selectable, selectedValue);
+         binder.registerBinding(binding, binding.getFieldModel(), binding.getTarget());
       }
    }
 

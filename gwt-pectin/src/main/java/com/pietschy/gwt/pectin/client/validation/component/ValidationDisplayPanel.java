@@ -70,7 +70,7 @@ extends Composite implements ValidationDisplay, IndexedValidationDisplay
          {
             for (ValidationMessage message : validationResult.getMessages(severity))
             {
-               if (++count > displayCount)
+               if (count++ > displayCount)
                {
                   return;
                }

@@ -43,7 +43,7 @@ public class AllMetadataBindingBuilder
 
    /**
     * Binds the visible and enabled properties to the speicified widget.  For the
-    * enabled bindigns to work the widget must extend either FocusWidget or implement
+    * enabled bindings to work the widget must extend either FocusWidget or implement
     * the {@link HasEnabled} interface.
     * 
     * @param target the widget to bind to.

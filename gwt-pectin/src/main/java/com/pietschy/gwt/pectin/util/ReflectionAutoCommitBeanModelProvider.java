@@ -53,4 +53,9 @@ class ReflectionAutoCommitBeanModelProvider<B> extends AutoCommitBeanModelProvid
    {
       return support.getElementType(property);
    }
+
+   public boolean isMutable(String propertyName)
+   {
+      return support.isMutable(propertyName);
+   }
 }

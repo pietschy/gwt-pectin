@@ -58,12 +58,18 @@ public class MetadataBinder
       return new AllMetadataBindingBuilder(this, MetadataPlugin.getMetadata(field));
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    @Deprecated
    public VisibilityBindingBuilder bindVisibilityOf(Field field)
    {
       return new VisibilityBindingBuilder(this, MetadataPlugin.getMetadata(field).getVisibleModel());
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    @Deprecated
    public EnabledBindingBuilder bindEnabledOf(Field field)
    {
@@ -71,7 +77,7 @@ public class MetadataBinder
    }
 
    /**
-    * @deprecated use show/hide enable/disable instead.
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
     */
    @Deprecated
    public EnabledBindingBuilder bindDisabledOf(Field field)
@@ -93,52 +99,82 @@ public class MetadataBinder
    }
 
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> show(HasVisible uiObject)
    {
       return new ConditionBinderBuilder<HasVisible>(this, uiObject, showUsingMetadataAction, showWhenAction);
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> hide(HasVisible uiObject)
    {
       return new ConditionBinderBuilder<HasVisible>(this, uiObject, showUsingMetadataAction, hideWhenAction);
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> show(UIObject uiObject)
    {
       return show(new HasVisibleUiObjectAdapter(uiObject));
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> hide(UIObject uiObject)
    {
       return hide(new HasVisibleUiObjectAdapter(uiObject));
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> show(Element element)
    {
       return show(new HasVisibleElementAdapter(element));
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> hide(Element element)
    {
       return hide(new HasVisibleElementAdapter(element));
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> enable(HasEnabled widget)
    {
       return new ConditionBinderBuilder<HasEnabled>(this, widget, enableUsingMetadataAction, enableAction);
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> enable(final FocusWidget widget)
    {
       // hoping this will all get optimised away...
       return enable(new EnabledFocusWidgetAdapter(widget));
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> disable(HasEnabled widget)
    {
       return new ConditionBinderBuilder<HasEnabled>(this, widget, enableUsingMetadataAction, disableAction);
    }
 
+   /**
+    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    */
    public ConditionBinderBuilder<?> disable(final FocusWidget widget)
    {
       // hoping this will all get optimised away...

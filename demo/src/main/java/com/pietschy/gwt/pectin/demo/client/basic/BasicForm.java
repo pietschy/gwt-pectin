@@ -21,7 +21,6 @@ import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
-import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
@@ -59,8 +58,7 @@ public class BasicForm extends VerySimpleForm
    private Button saveButton = new Button("Save");
    private Button revertButton = new Button("Revert");
 
-   private WidgetBinder widgets = new WidgetBinder();
-   private MetadataBinder metadata = new MetadataBinder();
+   private WidgetBinder binder = new WidgetBinder();
 
 
 
@@ -70,34 +68,34 @@ public class BasicForm extends VerySimpleForm
 
       // bind our widgets to our model.  In normal practice I'd combine the
       // binding, widget creation and form layout into some nice reusable methods.
-      widgets.bind(model.givenName).to(givenName);
-      widgets.bind(model.surname).to(surname);
+      binder.bind(model.givenName).to(givenName);
+      binder.bind(model.surname).to(surname);
 
       // here we're binding field to a static display (HasText).  We can also use
       // a DisplayFormat here if we need to.  In this case the default ToStringFormat
       // will be used.
-      widgets.bind(model.fullName).toLabel(fullName);
-      widgets.bind(model.lettersInName).toLabel(lettersInName);
+      binder.bind(model.fullName).toLabel(fullName);
+      binder.bind(model.lettersInName).toLabel(lettersInName);
 
       // now lets bind a value using radio buttons
-      widgets.bind(model.gender).withValue(Gender.MALE).to(maleRadio);
-      widgets.bind(model.gender).withValue(Gender.FEMALE).to(femaleRadio);
+      binder.bind(model.gender).withValue(Gender.MALE).to(maleRadio);
+      binder.bind(model.gender).withValue(Gender.FEMALE).to(femaleRadio);
 
       // and a list model to a collection of check boxes
-      widgets.bind(model.favoriteWines).containingValue(Wine.CAB_SAV).to(cabSavCheckBox);
-      widgets.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
-      widgets.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
+      binder.bind(model.favoriteWines).containingValue(Wine.CAB_SAV).to(cabSavCheckBox);
+      binder.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
+      binder.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
       // and a list model to a HasValue<Collection<T>>
-      widgets.bind(model.favoriteCheeses).to(favoriteCheeses);
+      binder.bind(model.favoriteCheeses).to(favoriteCheeses);
 
+      // checkout the activities demo for a command style pattern for buttons.
       saveButton.addClickHandler(model.saveHandler);
       revertButton.addClickHandler(model.revertHandler);
 
       // should really make enable/disable use var-args.. 
-      metadata.enable(saveButton).when(model.dirty);
-      metadata.enable(revertButton).when(model.dirty);
-
+      binder.enable(saveButton).when(model.dirty);
+      binder.enable(revertButton).when(model.dirty);
 
       // now layout the form
       addRow("Given Name", givenName);

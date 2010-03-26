@@ -3,11 +3,12 @@ package com.pietschy.gwt.pectin.client.activity;
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Feb 23, 2010
- * Time: 10:05:44 AM
+ * Date: Feb 28, 2010
+ * Time: 10:20:29 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Destination<T>
+public interface ActivityCallback<R,E>
 {
-   public void receive(T value);
+   void publishSuccess(R result);
+   void publishError(E error);
 }

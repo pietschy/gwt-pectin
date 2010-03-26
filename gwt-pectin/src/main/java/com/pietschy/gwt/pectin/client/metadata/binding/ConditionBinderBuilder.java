@@ -33,6 +33,14 @@ public class ConditionBinderBuilder<T>
       binder.registerBindingAndUpdateTarget(new ConditionBinding<T>(target, condition, action));
    }
 
+   /**
+    * This method is deprecated, use {@link com.pietschy.gwt.pectin.client.metadata.MetadataPlugin#metadataOf(com.pietschy.gwt.pectin.client.Field)} instead.
+    * E.g. <pre>binder.show(someWidget).when(metadataOf(someField).isVisible());</pre>
+    * @deprecated use {@link com.pietschy.gwt.pectin.client.metadata.MetadataPlugin#metadataOf(com.pietschy.gwt.pectin.client.Field)} instead.
+    * E.g. <pre>binder.show(someWidget).when(metadataOf(someField).isVisible());</pre>
+    * @param field the field of interest.
+    */
+   @Deprecated
    public void usingMetadataOf(Field field)
    {
       ValueModel<Boolean> condition = metadataAction.getModel(getMetadata(field));
@@ -54,7 +62,7 @@ public class ConditionBinderBuilder<T>
       @Override
       protected void updateTarget(Boolean value)
       {
-         action.apply(target, value);
+         action.apply(target, value != null ? value : false);
       }
 
       @Override

@@ -17,5 +17,7 @@ public interface BeanPropertyAdapter<B>
 
    void writeProperty(B bean, String property, Object value) throws UnknownPropertyException, ImmutablePropertyException, TargetBeanIsNullException;
 
+   boolean isMutable(String propertyName);
+
 //   <T> BeanPropertyAdapter<T> getNestedAdapter(String propertyName, Class<T> beanType);
 }

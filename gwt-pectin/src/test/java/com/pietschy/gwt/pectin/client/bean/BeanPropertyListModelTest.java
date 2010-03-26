@@ -22,10 +22,7 @@ import org.mockito.ArgumentMatcher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.pietschy.gwt.pectin.util.AssertUtil.assertContentEquals;
 import static org.mockito.Mockito.*;
@@ -57,8 +54,8 @@ public class BeanPropertyListModelTest
    public void readFrom()
    {
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                "set",
-                                                                                CollectionConverters.SET_CONVERTER);
+                                                                                               "set",
+                                                                                               CollectionConverters.SET_CONVERTER);
 
 
       when(propertyAdapter.readProperty(bean, "set"))
@@ -72,9 +69,12 @@ public class BeanPropertyListModelTest
    @Test
    public void copyToButWithoutResettingDirty()
    {
+      String propertyName = "set";
+      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                "set",
-                                                                                CollectionConverters.SET_CONVERTER);
+                                                                                               propertyName,
+                                                                                               CollectionConverters.SET_CONVERTER);
       assertEquals(lm.size(), 0);
 
       final List<String> values = Arrays.asList("abc", "def");
@@ -101,9 +101,12 @@ public class BeanPropertyListModelTest
    @Test
    public void copyToAndResetDirty()
    {
+      String propertyName = "set";
+      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                "set",
-                                                                                CollectionConverters.SET_CONVERTER);
+                                                                                               propertyName,
+                                                                                               CollectionConverters.SET_CONVERTER);
       assertEquals(lm.size(), 0);
 
       final List<String> values = Arrays.asList("abc", "def");
@@ -115,7 +118,7 @@ public class BeanPropertyListModelTest
 
       assertFalse(lm.getDirtyModel().getValue());
 
-      verify(propertyAdapter, times(1)).writeProperty(eq(bean), eq("set"), argThat(new ArgumentMatcher<Set>()
+      verify(propertyAdapter, times(1)).writeProperty(eq(bean), eq(propertyName), argThat(new ArgumentMatcher<Set>()
       {
          @Override
          public boolean matches(Object o)
@@ -132,12 +135,14 @@ public class BeanPropertyListModelTest
    @Test
    public void resetDirty()
    {
+      String propertyName = "set";
+      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                "set",
-                                                                                CollectionConverters.SET_CONVERTER);
+                                                                                               propertyName,
+                                                                                               CollectionConverters.SET_CONVERTER);
 
 
-      when(propertyAdapter.readProperty(bean, "set"))
+      when(propertyAdapter.readProperty(bean, propertyName))
          .thenReturn(new HashSet<String>(Arrays.asList("abc", "def", "ghi")));
       lm.readFrom(bean);
 
@@ -170,9 +175,13 @@ public class BeanPropertyListModelTest
    @Test
    public void dirtyChecksCollectionOrder()
    {
+
+      String propertyName = "list";
+      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               "list",
-                                                                                               CollectionConverters.LIST_CONVERTER);
+                                                                                propertyName,
+                                                                                CollectionConverters.LIST_CONVERTER);
 
       lm.setElements(Arrays.asList("def", "abc", "qbt"));
       // make sure our dirty state is based on the above values
@@ -185,8 +194,11 @@ public class BeanPropertyListModelTest
    @Test
    public void dirtyIsNotFooledByDuplicateEntries()
    {
+      String propertyName = "list";
+      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+
       BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               "list",
+                                                                                               propertyName,
                                                                                                CollectionConverters.LIST_CONVERTER);
 
       lm.setElements(Arrays.asList("abc", "abc", "def"));
@@ -197,5 +209,60 @@ public class BeanPropertyListModelTest
       assertTrue(lm.getDirtyModel().getValue());
    }
 
+
+   @Test
+   public void copyImmutableObjectBarfs()
+   {
+      when(propertyAdapter.isMutable("readOnlyCollection")).thenReturn(false);
+
+      BeanPropertyListModel<TestBean, Object> vm = new BeanPropertyListModel<TestBean, Object>(propertyAdapter,
+                                                                                               "readOnlyCollection",
+                                                                                               CollectionConverters.COLLECTION_CONVERTER);
+
+      try
+      {
+         vm.setElements(new ArrayList<Object>());
+         fail("Expected IllegalStateException");
+      }
+      catch (IllegalStateException e)
+      {
+      }
+
+      try
+      {
+         vm.add(new Object());
+         fail("Expected IllegalStateException");
+      }
+      catch (IllegalStateException e)
+      {
+      }
+
+      try
+      {
+         vm.remove(new Object());
+         fail("Expected IllegalStateException");
+      }
+      catch (IllegalStateException e)
+      {
+      }
+   }
+
+   @Test
+   public void normalPropertyIsMutable()
+   {
+      when(propertyAdapter.isMutable("collection")).thenReturn(true);
+      assertTrue(new BeanPropertyListModel<TestBean, Integer>(propertyAdapter,
+                                                              "collection",
+                                                              CollectionConverters.COLLECTION_CONVERTER).isMutable());
+   }
+
+   @Test
+   public void readOnlyPropertyIsNotMutable()
+   {
+      when(propertyAdapter.isMutable("readOnlyCollection")).thenReturn(false);
+      assertFalse(new BeanPropertyListModel<TestBean, Integer>(propertyAdapter,
+                                                               "readOnlyCollection",
+                                                               CollectionConverters.COLLECTION_CONVERTER).isMutable());
+   }
 
 }

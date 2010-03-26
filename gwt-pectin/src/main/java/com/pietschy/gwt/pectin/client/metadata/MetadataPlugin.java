@@ -116,6 +116,15 @@ public class MetadataPlugin
       return new WatermarkBuilder(getAllMetadata(toCollection(field, others)));
    }
 
+   /**
+    * Gets a builder for creating {@link com.pietschy.gwt.pectin.client.value.ValueModel} for the various
+    * metadata states. E.g.
+    * <pre>
+    * binder.disable(someWidget).when(metadataOf(someField).isDisabled());
+    * </pre>
+    * @param field the field of interest.
+    * @return and new builder.
+    */
    public static MetadataConditionBuilder metadataOf(Field field)
    {
       return new MetadataConditionBuilder(getMetadata(field));

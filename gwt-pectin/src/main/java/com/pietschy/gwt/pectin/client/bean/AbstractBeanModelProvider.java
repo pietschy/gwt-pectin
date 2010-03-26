@@ -2,11 +2,7 @@ package com.pietschy.gwt.pectin.client.bean;
 
 import com.pietschy.gwt.pectin.client.ListModelProvider;
 import com.pietschy.gwt.pectin.client.ValueModelProvider;
-import com.pietschy.gwt.pectin.client.condition.OrFunction;
-import com.pietschy.gwt.pectin.client.value.ReducingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
-
-import java.util.HashMap;
 
 /**
  * AbstractBeanModelProvider provides common behaviour for all variants that provide value and
@@ -14,10 +10,7 @@ import java.util.HashMap;
  */
 public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapter<B>, ValueModelProvider<String>, ListModelProvider<String>
 {
-   private HashMap<Key<?>, BeanPropertyValueModel<B, ?>> valueModels = new HashMap<Key<?>, BeanPropertyValueModel<B, ?>>();
-   private HashMap<Key<?>, BeanPropertyListModel<B, ?>> listModels = new HashMap<Key<?>, BeanPropertyListModel<B, ?>>();
-
-   private ReducingValueModel<Boolean, Boolean> dirtyModel = new ReducingValueModel<Boolean, Boolean>(new OrFunction());
+   PropertyModelRegistry<B> registry = new PropertyModelRegistry<B>();
 
    private CollectionConverters collectionConverters = new CollectionConverters();
 
@@ -36,16 +29,14 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
    protected void copyTo(final B bean, final boolean clearDirtyState)
    {
       // performance could be improved here if the dirty model went deaf for a bit.
-      withEachModel(new ModelVisitor<B>()
+      registry.withEachModel(new PropertyModelVisitor<B>()
       {
-         public void visit(BeanPropertyValueModel<B, ?> model)
+         public void visit(BeanPropertyModelBase<B> model)
          {
-            model.copyTo(bean, clearDirtyState);
-         }
-
-         public void visit(BeanPropertyListModel<B, ?> listModel)
-         {
-            listModel.copyTo(bean, clearDirtyState);
+            if (model.isMutable())
+            {
+               model.copyTo(bean, clearDirtyState);
+            }
          }
       });
    }
@@ -58,16 +49,11 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
     */
    protected void readFrom(final B bean)
    {
-      withEachModel(new ModelVisitor<B>()
+      registry.withEachModel(new PropertyModelVisitor<B>()
       {
-         public void visit(BeanPropertyValueModel<B, ?> model)
+         public void visit(BeanPropertyModelBase<B> model)
          {
             model.readFrom(bean);
-         }
-
-         public void visit(BeanPropertyListModel<B, ?> listModel)
-         {
-            listModel.readFrom(bean);
          }
       });
    }
@@ -79,16 +65,11 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
     */
    protected void checkpoint()
    {
-      withEachModel(new ModelVisitor<B>()
+      registry.withEachModel(new PropertyModelVisitor<B>()
       {
-         public void visit(BeanPropertyValueModel<B, ?> model)
+         public void visit(BeanPropertyModelBase<B> model)
          {
             model.checkpoint();
-         }
-
-         public void visit(BeanPropertyListModel<B, ?> listModel)
-         {
-            listModel.checkpoint();
          }
       });
    }
@@ -99,45 +80,18 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
     */
    protected void revertToCheckpoint()
    {
-      withEachModel(new ModelVisitor<B>()
+      registry.withEachModel(new PropertyModelVisitor<B>()
       {
-         public void visit(BeanPropertyValueModel<B, ?> model)
+         public void visit(BeanPropertyModelBase<B> model)
          {
             model.revertToCheckpoint();
-         }
-
-         public void visit(BeanPropertyListModel<B, ?> listModel)
-         {
-            listModel.revertToCheckpoint();
          }
       });
    }
 
    public ValueModel<Boolean> getDirtyModel()
    {
-      return dirtyModel;
-   }
-
-   protected void withEachModel(final ModelVisitor<B> modelVisitor)
-   {
-      // we only update the dirty model after we've finished updating all
-      // the models, otherwise we'll get a lot of recomputing for nothing.
-      dirtyModel.recomputeAfterRunning(new Runnable()
-      {
-         public void run()
-         {
-            // performance could be improved here if the dirty model went deaf for a bit.
-            for (BeanPropertyValueModel<B, ?> model : valueModels.values())
-            {
-               modelVisitor.visit(model);
-            }
-
-            for (BeanPropertyListModel<B, ?> model : listModels.values())
-            {
-               modelVisitor.visit(model);
-            }
-         }
-      });
+      return registry.getDirtyModel();
    }
 
 
@@ -163,8 +117,8 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
       throws UnknownPropertyException, UnsupportedCollectionTypeException,
              IncorrectElementTypeException, NotCollectionPropertyException
    {
-      Key<T> key = new Key<T>(valueType, propertyName);
-      BeanPropertyListModel<B, T> listModel = (BeanPropertyListModel<B, T>) listModels.get(key);
+      PropertyKey<T> key = new PropertyKey<T>(valueType, propertyName);
+      BeanPropertyListModel<B, T> listModel = registry.getListModel(key);
 
       if (listModel == null)
       {
@@ -184,8 +138,8 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
          }
 
          listModel = createListValueModel(propertyName, converter);
-         listModels.put(key, listModel);
-         dirtyModel.addSourceModel(listModel.getDirtyModel());
+
+         registry.add(key, listModel);
       }
 
       return listModel;
@@ -217,14 +171,15 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
          throw new IncorrectPropertyTypeException(modelType, beanPropertyType);
       }
 
-      Key<T> key = new Key<T>(modelType, propertyName);
-      BeanPropertyValueModel<B, T> valueModel = (BeanPropertyValueModel<B, T>) valueModels.get(key);
+      PropertyKey<T> key = new PropertyKey<T>(modelType, propertyName);
+
+      BeanPropertyValueModel<B, T> valueModel = registry.getValueModel(key);
 
       if (valueModel == null)
       {
          valueModel = createValueModel(propertyName);
-         valueModels.put(key, valueModel);
-         dirtyModel.addSourceModel(valueModel.getDirtyModel());
+
+         registry.add(key, valueModel);
       }
 
       return valueModel;
@@ -249,57 +204,4 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
    }
 
 
-   private static class Key<T>
-   {
-      private Class<T> type;
-      private String propertyName;
-
-      private Key(Class<T> type, String propertyName)
-      {
-         this.type = type;
-         this.propertyName = propertyName;
-      }
-
-      @SuppressWarnings("unchecked")
-      public boolean equals(Object o)
-      {
-         if (this == o)
-         {
-            return true;
-         }
-         if (o == null || getClass() != o.getClass())
-         {
-            return false;
-         }
-
-         Key<T> key = (Key<T>) o;
-
-         if (propertyName != null ? !propertyName.equals(key.propertyName) : key.propertyName != null)
-         {
-            return false;
-         }
-
-         if (type != null ? !type.equals(key.type) : key.type != null)
-         {
-            return false;
-         }
-
-         return true;
-      }
-
-      public int hashCode()
-      {
-         int result;
-         result = (type != null ? type.hashCode() : 0);
-         result = 31 * result + (propertyName != null ? propertyName.hashCode() : 0);
-         return result;
-      }
-   }
-
-   static interface ModelVisitor<B>
-   {
-      public void visit(BeanPropertyValueModel<B, ?> model);
-
-      public void visit(BeanPropertyListModel<B, ?> model);
-   }
 }

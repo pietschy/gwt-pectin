@@ -16,23 +16,21 @@
 
 package com.pietschy.gwt.pectin.util;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.SortedSet;
 
 /**
  *
  */
-public class TestBean
+public class TestBean extends AbstractTestBean
 {
-   private Object object;
-   private String string;
-   private int primitiveInt;
    private Integer objectInteger;
 
-   private boolean primitiveBoolean;
    private Boolean objectBoolean;
 
    private Collection<String> collection;
-   private Set<String> set;
    private List<String> list;
    private SortedSet<String> sortedSet;
 
@@ -40,41 +38,8 @@ public class TestBean
 
    private Object readOnlyObject = "read only object";
    private int readOnlyPrimitive = 42;
-   private Collection<String> readOnlyCollection = Arrays.asList("abc", "def", "ghi");
    private Collection readOnlyUntypedCollection = Arrays.asList("abc", "def", "ghi");;
 
-
-
-   public Object getObject()
-   {
-      return object;
-   }
-
-   public void setObject(Object object)
-   {
-      this.object = object;
-   }
-
-   public String getString()
-   {
-      return string;
-   }
-
-   public void setString(String string)
-   {
-      this.string = string;
-   }
-
-
-   public int getPrimitiveInt()
-   {
-      return primitiveInt;
-   }
-
-   public void setPrimitiveInt(int primitiveInt)
-   {
-      this.primitiveInt = primitiveInt;
-   }
 
    public Integer getObjectInteger()
    {
@@ -84,16 +49,6 @@ public class TestBean
    public void setObjectInteger(Integer objectInteger)
    {
       this.objectInteger = objectInteger;
-   }
-
-   public boolean isPrimitiveBoolean()
-   {
-      return primitiveBoolean;
-   }
-
-   public void setPrimitiveBoolean(boolean primitiveBoolean)
-   {
-      this.primitiveBoolean = primitiveBoolean;
    }
 
    public Boolean getObjectBoolean()
@@ -114,16 +69,6 @@ public class TestBean
    public void setCollection(Collection<String> collection)
    {
       this.collection = collection;
-   }
-
-   public Set<String> getSet()
-   {
-      return set;
-   }
-
-   public void setSet(Set<String> set)
-   {
-      this.set = set;
    }
 
    public List<String> getList()
@@ -164,11 +109,6 @@ public class TestBean
    public int getReadOnlyPrimitive()
    {
       return readOnlyPrimitive;
-   }
-
-   public Collection<String> getReadOnlyCollection()
-   {
-      return readOnlyCollection;
    }
 
    public Collection getReadOnlyUntypedCollection()

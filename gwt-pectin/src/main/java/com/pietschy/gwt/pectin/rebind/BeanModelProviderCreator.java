@@ -91,6 +91,10 @@ public class BeanModelProviderCreator
 
             writer.println();
 
+            generateIsMutableMethod(writer, beanInfo);
+
+            writer.println();
+
             writer.commit(logger);
 
             return fullClassName;
@@ -147,6 +151,35 @@ public class BeanModelProviderCreator
          else
          {
             source.println("throw new com.pietschy.gwt.pectin.client.bean.ImmutablePropertyException(property);");
+         }
+         source.outdent();
+         source.print("} else ");
+      }
+      source.println("{");
+      source.indent();
+      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
+      source.outdent();
+      source.println("}");
+      source.outdent();
+      source.println("}");
+   }
+
+   private void generateIsMutableMethod(SourceWriter source, BeanInfo beanInfo)
+   {
+      // create the set attribute method
+      source.println("public boolean isMutable(String property) {");
+      source.indent();
+      for (PropertyInfo property : beanInfo)
+      {
+         source.println("if (property.equals(\"" + property.getName() + "\")) { ");
+         source.indent();
+         if (property.isMutable())
+         {
+            source.println("return true;");
+         }
+         else
+         {
+            source.println("return false;");
          }
          source.outdent();
          source.print("} else ");

@@ -1,0 +1,56 @@
+package com.pietschy.gwt.pectin.client.channel;
+
+import com.google.gwt.user.client.ui.HasValue;
+import com.pietschy.gwt.pectin.client.activity.ParameterisedCommand;
+import com.pietschy.gwt.pectin.client.function.Function;
+import com.pietschy.gwt.pectin.client.value.MutableValue;
+
+/**
+ * Channels allow objects to be passed between interested parties.  It's a similar concept to an event bus
+ * except that it doesn't require the creation of explicit event types.  On the flips side a single Channel
+ * is only suitable for simple notifications, i.e. to notify "customer updated" and "customer deleted" events
+ * you'd need two Channel&lt;Customer&gt; instances or a Channel&ltCustomerEvent&gt;.
+ * <p>
+ * The {@link #sendTo(Destination)} style methods bind the channel to the specified recipient.
+ */
+public interface Channel<T> extends Publisher<T>
+{
+   ChannelRegistration sendTo(Destination<? super T> destination);
+
+   ChannelRegistration sendTo(Publisher<? super T> destination);
+
+   ChannelRegistration sendTo(MutableValue<? super T> destination);
+
+   ChannelRegistration sendTo(HasValue<? super T> destination);
+
+   ChannelRegistration sendTo(ParameterisedCommand<? super T> destination);
+
+   /**
+    * Returns this Channel as a destination.
+    * @return this Channel as a destination.
+    */
+   Destination<T> asDestination();
+
+   /**
+    * Returns this Channel as a formatted destination.  This allows you to convert the
+    * output of one channel into the content for this channel.
+    *
+    * <pre>
+    * someChannel.sendTo(thisChannel.formattedWith(myFormat));
+    * </pre>
+    *
+    * @return this Channel as a formatted destination.
+    */
+   <S> Destination<S> formattedWith(Function<T,S> function);
+
+//   /**
+//    * Gets a Publisher instance that uses the specified function to convert the published
+//    * value into this channels type.
+//    * <pre>
+//    * someChannel.sendTo(thisChannel.usingFormat(myFormat));
+//    * </pre>
+//    * @param function the conversion function.
+//    * @return a Publisher instance that converts from the source type to this channels type.
+//    */
+//   <S> Publisher<S> formattedWith(Function<T, S> function);
+}

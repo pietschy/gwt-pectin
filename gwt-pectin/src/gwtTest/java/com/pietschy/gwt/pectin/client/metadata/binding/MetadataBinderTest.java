@@ -18,14 +18,14 @@ import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.show;
  */
 public class MetadataBinderTest extends GWTTestCase
 {
-   protected ValueHolder<Boolean> condition;
-   protected ValueHolder<Boolean> fieldVisible;
+   private ValueHolder<Boolean> condition;
+   private ValueHolder<Boolean> fieldVisible;
    private ValueHolder<Boolean> fieldEnabled;
-   protected FormModel form;
-   protected FieldModel<String> field;
+   private FormModel form;
+   private FieldModel<String> field;
 
-   protected Button button;
-   protected MetadataBinder binder;
+   private Button button;
+   private MetadataBinder binder;
 
    @Override
    protected void gwtSetUp() throws Exception

@@ -18,18 +18,12 @@ package com.pietschy.gwt.pectin.client.binding;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 /**
  * Base class for binders that provides the common registration and dispose methods.
  */
 public class AbstractBinder implements BindingContainer
 {
-   private ArrayList<AbstractBinding> bindings = new ArrayList<AbstractBinding>();
-   private ArrayList<Disposable> disposables = new ArrayList<Disposable>();
-   private ArrayList<HandlerRegistration> handlers = new  ArrayList<HandlerRegistration>();
-
+   private GarbageCollector gc = new GarbageCollector();
 
    /**
     * Registers a binding with this binder.  The binding will be disposed when this binder
@@ -40,7 +34,7 @@ public class AbstractBinder implements BindingContainer
    public void registerBindingAndUpdateTarget(AbstractBinding binding)
    {
       binding.updateTarget();
-      disposables.add(binding);
+      gc.add(binding);
    }
 
    /**
@@ -51,12 +45,12 @@ public class AbstractBinder implements BindingContainer
     */
    public void registerHandler(HandlerRegistration handlerRegistration)
    {
-      handlers.add(handlerRegistration);
+      gc.add(handlerRegistration);
    }
 
    public void registerDisposable(Disposable disposable)
    {
-      disposables.add(disposable);
+      gc.add(disposable);
    }
 
    /**
@@ -65,42 +59,6 @@ public class AbstractBinder implements BindingContainer
     */
    public void dispose()
    {
-      for (AbstractBinding binding : bindings)
-      {
-         binding.dispose();
-      }
-      bindings.clear();
-
-      for (Disposable disposable : disposables)
-      {
-         disposable.dispose();
-      }
-      disposables.clear();
-
-      for (HandlerRegistration handler : handlers)
-      {
-         handler.removeHandler();
-      }
-      handlers.clear();
+      gc.dispose();
    }
-
-   /**
-    * Disposes all bindings whose target (widget) is the specified target.
-    * @param target the target (widget) for which bindings are to be disposed.
-    */
-   public void disposeBindingFor(Object target)
-   {
-      Iterator<AbstractBinding> iter = bindings.iterator();
-      while (iter.hasNext())
-      {
-         AbstractBinding binding = iter.next();
-         if (binding.getTarget().equals(target))
-         {
-            binding.dispose();
-            iter.remove();
-         }
-      }
-   }
-
-
 }

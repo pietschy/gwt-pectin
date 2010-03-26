@@ -28,8 +28,7 @@ import java.util.List;
 /**
  *
  */
-public class BeanPropertyListModel<B, T>
-   extends ArrayListModel<T>
+public class BeanPropertyListModel<B, T> extends ArrayListModel<T> implements BeanPropertyModelBase<B>
 {
    private List<T> EMPTY_LIST = Collections.emptyList();
 
@@ -38,6 +37,7 @@ public class BeanPropertyListModel<B, T>
    private CollectionConverter listConverter;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
    private BeanPropertyAdapter<B> provider;
+   private ValueHolder<Boolean> mutableModel = new ValueHolder<Boolean>(false);
 
 
    public BeanPropertyListModel(BeanPropertyAdapter<B> provider, String propertyName, CollectionConverter listConverter)
@@ -46,6 +46,7 @@ public class BeanPropertyListModel<B, T>
       this.propertyName = propertyName;
       this.listConverter = listConverter;
       dirtyModel.setFireEventsEvenWhenValuesEqual(false);
+      updateMutableState();
    }
 
    public String getPropertyName()
@@ -53,7 +54,21 @@ public class BeanPropertyListModel<B, T>
       return propertyName;
    }
 
+   private void ensureMutable()
+   {
+      if (!isMutable())
+      {
+         throw new IllegalStateException("Underlying bean list property is read only: " + getPropertyName());
+      }
+   }
+
    public void setElements(Collection<? extends T> elements)
+   {
+      ensureMutable();
+      setElementsInternal(elements);
+   }
+
+   private void setElementsInternal(Collection<? extends T> elements)
    {
       super.setElements(elements);
       updateDirtyState();
@@ -61,12 +76,14 @@ public class BeanPropertyListModel<B, T>
 
    public void add(T element)
    {
+      ensureMutable();
       super.add(element);
       updateDirtyState();
    }
 
    public void remove(T element)
    {
+      ensureMutable();
       super.remove(element);
       updateDirtyState();
    }
@@ -77,9 +94,10 @@ public class BeanPropertyListModel<B, T>
    }
 
    @SuppressWarnings("unchecked")
-   protected void readFrom(B bean)
+   public void readFrom(B bean)
    {
       safelySetCheckpoint(listConverter.fromBean(provider.readProperty(bean, getPropertyName())));
+      updateMutableState();
       revertToCheckpoint();
    }
 
@@ -131,7 +149,7 @@ public class BeanPropertyListModel<B, T>
    {
       // set elements makes a copy of the data (i.e it doesn't maintain a reference
       // to the list so we don't need copy it passing in.
-      setElements(safelyGetCheckpoint());
+      setElementsInternal(safelyGetCheckpoint());
    }
 
    @SuppressWarnings("unchecked")
@@ -139,6 +157,22 @@ public class BeanPropertyListModel<B, T>
    {
       dirtyModel.setValue(computeDirty());
    }
+
+   public ValueModel<Boolean> getMutableModel()
+   {
+      return mutableModel;
+   }
+
+   public boolean isMutable()
+   {
+      return getMutableModel().getValue();
+   }
+
+   private void updateMutableState()
+   {
+      mutableModel.setValue(provider.isMutable(propertyName));
+   }
+
 
    protected boolean computeDirty()
    {

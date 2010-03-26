@@ -16,6 +16,7 @@
 
 package com.pietschy.gwt.pectin.util;
 
+import com.pietschy.gwt.pectin.client.bean.ImmutablePropertyException;
 import com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException;
 import com.pietschy.gwt.pectin.client.bean.TargetBeanIsNullException;
 import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
@@ -139,14 +140,14 @@ class ProviderSupport<B>
    {
       try
       {
-         return beanClass.getMethod("get" + capitalise(property));
+         return findMethod("get" + capitalise(property));
       }
       catch (NoSuchMethodException e)
       {
          try
          {
             // should really test it's return type is boolean...
-            return beanClass.getMethod("is" + capitalise(property));
+            return findMethod("is" + capitalise(property));
          }
          catch (NoSuchMethodException e1)
          {
@@ -155,15 +156,39 @@ class ProviderSupport<B>
       }
    }
 
-   private Method getSetter(String property) throws UnknownPropertyException
+   private Method findMethod(String methodName, Class... parameterTypes) throws NoSuchMethodException
    {
+      Class theClass = this.beanClass;
+      while (true)
+      {
+         try
+         {
+            return theClass.getMethod(methodName, parameterTypes);
+         }
+         catch (NoSuchMethodException e)
+         {
+            theClass = theClass.getSuperclass();
+            if (theClass == null)
+            {
+               throw new NoSuchMethodException();
+            }
+         }
+      }
+   }
+
+   private Method getSetter(String property) throws UnknownPropertyException, ImmutablePropertyException
+   {
+      // make sure it has a getter first to ensure it's a property.  This will
+      // throw an UnknownPropertyException if it doesn't exist.
+      getGetter(property);
+
       try
       {
          return beanClass.getMethod("set" + capitalise(property), getBeanPropertyType(property));
       }
       catch (NoSuchMethodException e)
       {
-         throw new UnknownPropertyException(property);
+        throw new ImmutablePropertyException(property);
       }
    }
 
@@ -173,4 +198,17 @@ class ProviderSupport<B>
    }
 
 
+   public boolean isMutable(String propertyName) throws UnknownPropertyException
+   {
+      // oh so hacky...
+      try
+      {
+         getSetter(propertyName);
+         return true;
+      }
+      catch (ImmutablePropertyException e)
+      {
+         return false;
+      }
+   }
 }

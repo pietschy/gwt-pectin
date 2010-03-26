@@ -2,7 +2,7 @@ usePlugin(com.pietschy.gradle.plugin.gwt.GwtAppPlugin)
 
 version = "0.1.${buildNumber}"
 
-gwtVersion = '2.0.0'
+gwtVersion = '2.0.3'
 
 defaultTasks "run"
 

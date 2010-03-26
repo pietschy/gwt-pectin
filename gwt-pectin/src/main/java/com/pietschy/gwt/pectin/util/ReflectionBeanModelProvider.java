@@ -16,9 +16,7 @@
 
 package com.pietschy.gwt.pectin.util;
 
-import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException;
-import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
+import com.pietschy.gwt.pectin.client.bean.*;
 
 /**
  * This class provides an implementation of {@link com.pietschy.gwt.pectin.client.bean.BeanModelProvider}
@@ -45,7 +43,7 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
       return support.readProperty(bean, property);
    }
 
-   public void writeProperty(B bean, String property, Object value) throws UnknownPropertyException
+   public void writeProperty(B bean, String property, Object value) throws UnknownPropertyException, ImmutablePropertyException, TargetBeanIsNullException
    {
       support.writeProperty(bean, property, value);
    }
@@ -53,5 +51,10 @@ class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
    public Class getElementType(String property) throws UnknownPropertyException, NotCollectionPropertyException
    {
       return support.getElementType(property);
+   }
+
+   public boolean isMutable(String propertyName)
+   {
+      return support.isMutable(propertyName);
    }
 }

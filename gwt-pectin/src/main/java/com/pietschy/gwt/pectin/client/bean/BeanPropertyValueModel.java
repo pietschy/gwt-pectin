@@ -21,23 +21,26 @@ import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
- * 
+ *
  */
-public class BeanPropertyValueModel<B,T>
-extends AbstractMutableValueModel<T>
+public class BeanPropertyValueModel<B, T>
+   extends AbstractMutableValueModel<T> implements BeanPropertyModelBase<B>
 {
    private BeanPropertyAdapter<B> provider;
    private String propertyName;
    private T checkpointValue;
    private T bufferedValue;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
+   private ValueHolder<Boolean> mutableModel = new ValueHolder<Boolean>(false);
 
    public BeanPropertyValueModel(BeanPropertyAdapter<B> provider, String propertyName)
    {
       this.provider = provider;
       this.propertyName = propertyName;
       dirtyModel.setFireEventsEvenWhenValuesEqual(false);
+      updateMutableState();
    }
+
 
    public String getPropertyName()
    {
@@ -45,6 +48,16 @@ extends AbstractMutableValueModel<T>
    }
 
    public void setValue(T value)
+   {
+      if (!isMutable())
+      {
+         throw new IllegalStateException("Underlying bean property is read only: " + getPropertyName());
+      }
+
+      setValueInternal(value);
+   }
+
+   private void setValueInternal(T value)
    {
       bufferedValue = value;
       updateDirtyState();
@@ -71,7 +84,8 @@ extends AbstractMutableValueModel<T>
    public void readFrom(B bean)
    {
       checkpointValue = (T) provider.readProperty(bean, getPropertyName());
-      setValue(checkpointValue);
+      updateMutableState();
+      setValueInternal(checkpointValue);
    }
 
    /**
@@ -92,8 +106,24 @@ extends AbstractMutableValueModel<T>
     */
    public void revertToCheckpoint()
    {
-      setValue(checkpointValue);
+      setValueInternal(checkpointValue);
    }
+
+   public ValueModel<Boolean> getMutableModel()
+   {
+      return mutableModel;
+   }
+
+   public boolean isMutable()
+   {
+      return getMutableModel().getValue();
+   }
+
+   private void updateMutableState()
+   {
+      mutableModel.setValue(provider.isMutable(propertyName));
+   }
+
 
    public ValueModel<Boolean> getDirtyModel()
    {

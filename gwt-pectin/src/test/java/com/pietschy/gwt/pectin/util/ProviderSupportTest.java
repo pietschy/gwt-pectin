@@ -84,6 +84,30 @@ public class ProviderSupportTest
    }
 
    @Test
+   public void testisMutable()
+   {
+      assertTrue(provider.isMutable("object"));
+      assertTrue(provider.isMutable("string"));
+      assertTrue(provider.isMutable("primitiveInt"));
+      assertTrue(provider.isMutable("objectInteger"));
+      assertTrue(provider.isMutable("primitiveBoolean"));
+      assertTrue(provider.isMutable("objectBoolean"));
+
+      assertTrue(provider.isMutable("list"));
+
+      assertTrue(provider.isMutable("set"));
+      assertTrue(provider.isMutable("sortedSet"));
+      assertTrue(provider.isMutable("collection"));
+      assertTrue(provider.isMutable("untypedCollection"));
+
+      assertFalse(provider.isMutable("readOnlyPrimitive"));
+      assertFalse(provider.isMutable("readOnlyObject"));
+      assertFalse(provider.isMutable("readOnlyUntypedCollection"));
+      assertFalse(provider.isMutable("readOnlyCollection"));
+   }
+
+
+   @Test
       public void testGetPropertyType()
       {
          assertEquals(provider.getPropertyType("object"), Object.class);

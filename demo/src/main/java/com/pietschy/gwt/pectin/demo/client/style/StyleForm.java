@@ -20,12 +20,13 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
-import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.metadataOf;
 import com.pietschy.gwt.pectin.client.style.StyleBinder;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
+
+import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
+import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.metadataOf;
 
 /**
  * Created by IntelliJ IDEA.
@@ -63,7 +64,7 @@ extends VerySimpleForm
       binder.bind(model.nickName).to(nickName);
 
       // Now change the title style when the magic value is entered.  I'd normally
-      // use this approach for booleans, but it works with any type.
+      // use this approach for boolean models, but it works with any type.
       style.style(title).with("LordVadar").when(valueOf(model.title).is("lord vadar"));
 
       // Here our nick name label has it's style configured from the metadata

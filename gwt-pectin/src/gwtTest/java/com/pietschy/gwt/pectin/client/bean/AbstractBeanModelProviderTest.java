@@ -144,6 +144,29 @@ public class AbstractBeanModelProviderTest extends GWTTestCase
       }
    }
 
+   @Test
+   public void testIsMutable()
+   {
+      assertTrue(provider.isMutable("object"));
+      assertTrue(provider.isMutable("string"));
+      assertTrue(provider.isMutable("primitiveInt"));
+      assertTrue(provider.isMutable("objectInteger"));
+      assertTrue(provider.isMutable("primitiveBoolean"));
+      assertTrue(provider.isMutable("objectBoolean"));
+
+      assertTrue(provider.isMutable("list"));
+
+      assertTrue(provider.isMutable("set"));
+      assertTrue(provider.isMutable("sortedSet"));
+      assertTrue(provider.isMutable("collection"));
+      assertTrue(provider.isMutable("untypedCollection"));
+
+      assertFalse(provider.isMutable("readOnlyPrimitive"));
+      assertFalse(provider.isMutable("readOnlyObject"));
+      assertFalse(provider.isMutable("readOnlyUntypedCollection"));
+      assertFalse(provider.isMutable("readOnlyCollection"));
+   }
+
 
 
    @Test
@@ -339,6 +362,7 @@ public class AbstractBeanModelProviderTest extends GWTTestCase
       intValue.setValue(42);
       stringList.add("jkl");
 
+      // and make sure we're now dirty
       assertTrue(stringValue.getDirtyModel().getValue());
       assertTrue(stringValue.getDirtyModel().getValue());
       assertTrue(stringValue.getDirtyModel().getValue());
@@ -346,7 +370,7 @@ public class AbstractBeanModelProviderTest extends GWTTestCase
       // now lets copy to the bean without resetting our dirty state.
       provider.copyTo(bean, true);
 
-      // teh bean should have the new values
+      // the bean should have the new values
       assertEquals(bean.getString(), "blah");
       assertEquals(bean.getPrimitiveInt(), 42);
       assertContentEquals(stringList.asUnmodifiableList(), "abc", "def", "ghi", "jkl");

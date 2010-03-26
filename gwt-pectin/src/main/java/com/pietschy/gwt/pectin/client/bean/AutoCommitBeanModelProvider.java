@@ -21,8 +21,10 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
+import com.pietschy.gwt.pectin.client.value.MutableValue;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.client.value.ValueSource;
 
 
 /**
@@ -49,7 +51,7 @@ import com.pietschy.gwt.pectin.client.value.ValueHolder;
  * <p/>
  * </pre>
  */
-public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelProvider<B>
+public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelProvider<B>  implements ValueSource<B>, MutableValue<B>
 {
 
    private MutableValueModel<B> beanSource;
@@ -174,6 +176,18 @@ public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelPr
    {
       return beanSource.getValue();
    }
+
+
+   public B getValue()
+   {
+      return getBean();
+   }
+
+   public void setValue(B value)
+   {
+      setBean(value);
+   }
+   
 
 
    /**
