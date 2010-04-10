@@ -43,7 +43,7 @@ extends AbstractBinding implements HasListDisplayFormat<T>
       this.field = field;
       this.widget = widget;
       this.format = format;
-      registerHandler(field.addListModelChangedHandler(new FieldMonitor()));
+      registerHandler(field.addListModelChangedHandler(new ListMonitor()));
    }
 
    public HasText getTarget()
@@ -69,7 +69,7 @@ extends AbstractBinding implements HasListDisplayFormat<T>
       updateTarget();
    }
 
-   private class FieldMonitor implements ListModelChangedHandler<T>
+   private class ListMonitor implements ListModelChangedHandler<T>
    {
       public void onListDataChanged(ListModelChangedEvent<T> event)
       {

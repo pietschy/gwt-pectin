@@ -44,8 +44,8 @@ public class ListBindingBuilder<T>
    
    public void to(HasValue<Collection<T>> widget)
    {
-      final ListToHasValueBinding<T> tListToHasValueBinding = new ListToHasValueBinding<T>(field, widget);
-      binder.registerBinding(tListToHasValueBinding, tListToHasValueBinding.getModel(), tListToHasValueBinding.getTarget());
+      final ListToHasValueBinding<T> binding = new ListToHasValueBinding<T>(field, widget);
+      binder.registerBinding(binding, field, binding.getTarget());
    }
 
    public ListDisplayFormatBuilder<T> toLabel(HasText label)
@@ -79,8 +79,8 @@ public class ListBindingBuilder<T>
 
       public void to(HasValue<Boolean> selectable)
       {
-         final ListContainsValueBinding<T> tListContainsValueBinding = new ListContainsValueBinding<T>(field, selectable, selectedValue);
-         binder.registerBinding(tListContainsValueBinding, tListContainsValueBinding.getModel(), tListContainsValueBinding.getTarget());
+         final ListContainsValueBinding<T> binding = new ListContainsValueBinding<T>(field, selectable, selectedValue);
+         binder.registerBinding(binding, field, binding.getTarget());
       }
       
    }

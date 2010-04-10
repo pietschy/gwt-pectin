@@ -19,7 +19,6 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.list.MutableListModel;
 
 import java.util.ArrayList;
@@ -37,13 +36,11 @@ extends AbstractListBinding<T>
 {
    private HasValue<Collection<T>> widget;
 
-   private WidgetMonitor widgetMonitor = new WidgetMonitor();
-
-   public ListToHasValueBinding(ListFieldModel<T> field, HasValue<Collection<T>> widget)
+   public ListToHasValueBinding(MutableListModel<T> field, HasValue<Collection<T>> widget)
    {
       super(field);
       this.widget = widget;
-      registerHandler(widget.addValueChangeHandler(widgetMonitor));
+      registerHandler(widget.addValueChangeHandler(new WidgetMonitor()));
    }
 
    public void updateTarget()

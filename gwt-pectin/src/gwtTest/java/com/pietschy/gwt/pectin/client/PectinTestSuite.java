@@ -20,6 +20,8 @@ import com.google.gwt.junit.tools.GWTTestSuite;
 import com.pietschy.gwt.pectin.client.bean.AbstractBeanModelProviderTest;
 import com.pietschy.gwt.pectin.client.bean.AutoCommitBeanModelProviderTest;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProviderTest;
+import com.pietschy.gwt.pectin.client.binding.WidgetBinderMetadataTest;
+import com.pietschy.gwt.pectin.client.binding.WidgetBinderUiCommandTest;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinderTest;
 import com.pietschy.gwt.pectin.client.style.StyleBinderTest;
 import junit.framework.Test;
@@ -47,7 +49,11 @@ public class PectinTestSuite extends GWTTestSuite
       gwtTestSuite.addTestSuite(AutoCommitBeanModelProviderTest.class);
       gwtTestSuite.addTestSuite(BeanModelProviderTest.class);
 
-      // metadata tests
+      // Binder tests
+      gwtTestSuite.addTestSuite(WidgetBinderUiCommandTest.class);
+      gwtTestSuite.addTestSuite(WidgetBinderMetadataTest.class);
+
+      // Metadata tests
       gwtTestSuite.addTestSuite(MetadataBinderTest.class);
 
       // style tests

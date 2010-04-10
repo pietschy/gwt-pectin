@@ -23,7 +23,7 @@ package com.pietschy.gwt.pectin.client.validation;
  * Time: 12:56:53 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface HasValidation extends HasValidationHandlers, HasValidationResult
+public interface HasValidation extends HasValidationResult
 {
    /**
     * Runs all the validators and updates the validation result.  If any widgets are bound

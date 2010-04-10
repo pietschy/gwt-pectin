@@ -54,7 +54,7 @@ public class ValidationPlugin
       return getValidationManager(field.getFormModel()).getValidator(field);
    }
 
-   public static HasIndexedValidation getFieldValidator(ListFieldModelBase<?> field)
+   public static HasIndexedValidationResult getFieldValidator(ListFieldModelBase<?> field)
    {
       return getValidationManager(field.getFormModel()).getIndexedValidator(field);
    }

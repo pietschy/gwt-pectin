@@ -23,7 +23,6 @@ package com.pietschy.gwt.pectin.client.validation;
  * Time: 1:37:18 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface HasIndexedValidation extends HasValidation, HasIndexedValidationHandlers
+public interface HasIndexedValidation extends HasIndexedValidationResult, HasValidation
 {
-   IndexedValidationResult getValidationResult();
 }

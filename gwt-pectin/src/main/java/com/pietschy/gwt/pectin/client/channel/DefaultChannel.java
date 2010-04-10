@@ -1,12 +1,11 @@
 package com.pietschy.gwt.pectin.client.channel;
 
 import com.google.gwt.user.client.ui.HasValue;
-import com.pietschy.gwt.pectin.client.activity.ParameterisedCommand;
+import com.pietschy.gwt.pectin.client.binding.Disposable;
+import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
 import com.pietschy.gwt.pectin.client.function.Function;
+import com.pietschy.gwt.pectin.client.util.SubscriptionList;
 import com.pietschy.gwt.pectin.client.value.MutableValue;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,41 +14,31 @@ import java.util.List;
  * Time: 2:32:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class DefaultChannel<T> implements Channel<T>
+public class DefaultChannel<T> extends SubscriptionList<Destination<? super T>> implements Channel<T>
 {
-   private ArrayList<Registration> registrations = new ArrayList<Registration>();
-
-   public void publish(T value)
+   public void publish(final T value)
    {
-      // make a copy so we can mutate the registration list during the iteration.  Otherwise
-      // registration.dispose() will cause a concurrent modification exception.
-      for (Registration registration : copyRegistrations())
+      visitSubscribers(new Visitor<Destination<? super T>>()
       {
-         registration.publish(value);
-//         if (registration.isOnlyOnce())
-//         {
-//            registration.dispose();
-//         }
-      }
+         public void visit(Destination<? super T> subscriber)
+         {
+            subscriber.receive(value);
+         }
+      });
    }
 
-   private List<Registration> copyRegistrations()
+   public <S> Publisher<S> getFormattedPublisher(final Function<T, S> function)
    {
-      return new ArrayList<Registration>(registrations);
+      return new Publisher<S>()
+      {
+         public void publish(S value)
+         {
+            DefaultChannel.this.publish(function.compute(value));
+         }
+      };
    }
 
-//   public <S> Publisher<S> formattedWith(final Function<T, S> function)
-//   {
-//      return new Publisher<S>()
-//      {
-//         public void publish(S value)
-//         {
-//            DefaultChannel.this.publish(function.compute(value));
-//         }
-//      };
-//   }
-
-   public <S> Destination<S> formattedWith(final Function<T,S> function)
+   public <S> Destination<S> asFormattedDestination(final Function<T,S> function)
    {
       return new Destination<S>()
       {
@@ -71,14 +60,12 @@ public class DefaultChannel<T> implements Channel<T>
       };
    }
 
-   public ChannelRegistration sendTo(Destination<? super T> destination)
+   public Disposable sendTo(Destination<? super T> destination)
    {
-      Registration registration = new Registration(destination);
-      registrations.add(registration);
-      return registration;
+      return subscribe(destination);
    }
 
-   public ChannelRegistration sendTo(final Publisher<? super T> publisher)
+   public Disposable sendTo(final Publisher<? super T> publisher)
    {
       return sendTo(new Destination<T>()
       {
@@ -89,7 +76,7 @@ public class DefaultChannel<T> implements Channel<T>
       });
    }
 
-   public ChannelRegistration sendTo(final MutableValue<? super T> destination)
+   public Disposable sendTo(final MutableValue<? super T> destination)
    {
       return sendTo(new Destination<T>()
       {
@@ -100,7 +87,7 @@ public class DefaultChannel<T> implements Channel<T>
       });
    }
 
-   public ChannelRegistration sendTo(final HasValue<? super T> destination)
+   public Disposable sendTo(final HasValue<? super T> destination)
    {
       return sendTo(new Destination<T>()
       {
@@ -111,7 +98,7 @@ public class DefaultChannel<T> implements Channel<T>
       });
    }
 
-   public ChannelRegistration sendTo(final ParameterisedCommand<? super T> destination)
+   public Disposable sendTo(final ParameterisedCommand<? super T> destination)
    {
       return sendTo(new Destination<T>()
       {
@@ -122,35 +109,4 @@ public class DefaultChannel<T> implements Channel<T>
       });
    }
 
-   private class Registration implements ChannelRegistration
-   {
-      private Destination<? super T> destination;
-      private boolean onlyOnce;
-
-      private Registration(Destination<? super T> destination)
-      {
-         this.destination = destination;
-      }
-
-      private void publish(T value)
-      {
-         destination.receive(value);
-      }
-
-      public void dispose()
-      {
-         registrations.remove(this);
-      }
-
-//      public ChannelRegistration onlyOnce()
-//      {
-//         this.onlyOnce = true;
-//         return this;
-//      }
-//
-//      public boolean isOnlyOnce()
-//      {
-//         return onlyOnce;
-//      }
-   }
 }

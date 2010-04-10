@@ -62,7 +62,7 @@ extends Composite implements ValidationDisplay, IndexedValidationDisplay
 
    public void setValidationResult(ValidationResult validationResult)
    {
-      int count = 0;
+      int added = 0;
       if (!validationResult.isEmpty())
       {
          content.clear();
@@ -70,8 +70,9 @@ extends Composite implements ValidationDisplay, IndexedValidationDisplay
          {
             for (ValidationMessage message : validationResult.getMessages(severity))
             {
-               if (count++ > displayCount)
+               if (added++ > displayCount)
                {
+                  setVisible(true);
                   return;
                }
                
@@ -79,17 +80,12 @@ extends Composite implements ValidationDisplay, IndexedValidationDisplay
                label.setStylePrimaryName("Message");
                validationStyles.applyStyle(label, message.getSeverity());
                content.add(label);
-               count++;
+               added++;
             }
          }
-
-         setVisible(true);
-      }
-      else
-      {
-         setVisible(false);
       }
 
+      setVisible(added > 0);
    }
 
    public void setValidationResult(IndexedValidationResult result)

@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
 import com.pietschy.gwt.pectin.client.list.MutableListModel;
@@ -32,18 +32,13 @@ public abstract class AbstractListBinding<T>
 extends AbstractBinding 
 implements Disposable
 {
-   private ListFieldModel<T> model;
+   private MutableListModel<T> model;
    private ListMonitor listMonitor = new ListMonitor();
 
-   public AbstractListBinding(ListFieldModel<T> field)
+   public AbstractListBinding(MutableListModel<T> field)
    {
       this.model = field;
       registerHandler(field.addListModelChangedHandler(listMonitor));
-   }
-   
-   public ListFieldModel<T> getModel()
-   {
-      return model;
    }
 
    protected void updateModel(ModelUpdater<T> runnable)
@@ -58,7 +53,12 @@ implements Disposable
          listMonitor.setIgnoreEvents(false);
       }
    }
-   
+
+   public ListModel<T> getModel()
+   {
+      return model;
+   }
+
    public interface ModelUpdater<T> {
       public void update(MutableListModel<T> model);
    }

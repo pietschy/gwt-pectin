@@ -20,9 +20,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.*;
-import com.pietschy.gwt.pectin.client.activity.Activity;
-import com.pietschy.gwt.pectin.client.activity.AsyncActivity;
 import com.pietschy.gwt.pectin.client.channel.Channel;
+import com.pietschy.gwt.pectin.client.command.AsyncUiCommand;
+import com.pietschy.gwt.pectin.client.command.UiCommand;
 import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
 import com.pietschy.gwt.pectin.client.metadata.HasVisible;
 import com.pietschy.gwt.pectin.client.metadata.binding.ConditionBinderBuilder;
@@ -46,9 +46,9 @@ public class WidgetBinder
    }
 
    // Field Bindings
-   public <T> FieldBindingBuilder<T> bind(FieldModel<T> field)
+   public <T> ValueBindingBuilder<T> bind(FieldModel<T> field)
    {
-      return new FieldBindingBuilder<T>(this, field);
+      return new ValueBindingBuilder<T>(this, field);
    }
 
    public <T> ListBindingBuilder<T> bind(ListFieldModel<T> field)
@@ -120,29 +120,37 @@ public class WidgetBinder
    }
 
 
-   // Activity Bindings
+   // UiCommand Bindings
 
-   public ActivityBindingBuilder bind(Activity activity)
+   public UiCommandBindingBuilder bind(UiCommand uiCommand)
    {
-      return new ActivityBindingBuilder(this, activity);
+      return new UiCommandBindingBuilder(this, uiCommand);
    }
 
-   public <R> ChanelBindingBuilder<R> sendResultOf(AsyncActivity<R, ?> activity)
+   public <R> UiCommandChanelBindingBuilder<R> displayResultOf(AsyncUiCommand<R, ?> command)
    {
-      return new ChanelBindingBuilder<R>(this, activity.getResults());
+      return new UiCommandChanelBindingBuilder<R>(this, command.getResults());
    }
 
-   public <E> ChanelBindingBuilder<E> sendErrorOf(AsyncActivity<?, E> activity)
+   public <E> UiCommandChanelBindingBuilder<E> displayErrorOf(AsyncUiCommand<?, E> command)
    {
-      return new ChanelBindingBuilder<E>(this, activity.getErrors());
+      return new UiCommandChanelBindingBuilder<E>(this, command.getErrors());
    }
 
-   public <T> ChanelBindingBuilder<T> send(Channel<T> channel)
+   public <T> ChanelBindingBuilder<T> bind(Channel<T> channel)
    {
       return new ChanelBindingBuilder<T>(this, channel);
    }
 
+   public UiCommandEventsBindingBuilder bindEventsOf(UiCommand command)
+   {
+      return new UiCommandEventsBindingBuilder(this, command);
+   }
 
+   public <R,E> UiCommandAsyncEventsBindingBuilder bindEventsOf(AsyncUiCommand<R, E> command)
+   {
+      return new UiCommandAsyncEventsBindingBuilder<R,E>(this, command);
+   }
 
 
    // Callback methods for notifying plugins.
@@ -186,4 +194,5 @@ public class WidgetBinder
          callback.onWidgetBinding(binding, fieldModel, target);
       }
    }
+
 }

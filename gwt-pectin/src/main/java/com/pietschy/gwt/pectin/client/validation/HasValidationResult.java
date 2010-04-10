@@ -7,7 +7,7 @@ package com.pietschy.gwt.pectin.client.validation;
  * Time: 1:59:07 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface HasValidationResult
+public interface HasValidationResult extends HasValidationHandlers
 {
    ValidationResult getValidationResult();
 }

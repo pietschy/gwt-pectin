@@ -22,8 +22,8 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
-import com.pietschy.gwt.pectin.demo.client.activity.ActivityDemo;
 import com.pietschy.gwt.pectin.demo.client.basic.BasicDemo;
+import com.pietschy.gwt.pectin.demo.client.command.CommandDemo;
 import com.pietschy.gwt.pectin.demo.client.format.FormattedFieldDemo;
 import com.pietschy.gwt.pectin.demo.client.metadata.MetadataDemo;
 import com.pietschy.gwt.pectin.demo.client.style.StyleDemo;
@@ -62,7 +62,7 @@ public class DemoEntryPoint
       tabs.add(new FormattedFieldDemo(), "Formatted fields");      
       tabs.add(new ValidationDemo(), "Validation");
       tabs.add(new StyleDemo(), "Style bindings");
-      tabs.add(new ActivityDemo(), "Activities & Buttons");
+      tabs.add(new CommandDemo(), "UiCommands & Buttons");
       tabs.selectTab(0);
       
       rootPanel.add(tabs);

@@ -1,7 +1,7 @@
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
 import com.pietschy.gwt.pectin.client.Field;
-import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractReadOnlyValueBinding;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.getMetadata;
@@ -47,7 +47,7 @@ public class ConditionBinderBuilder<T>
       binder.registerBindingAndUpdateTarget(new ConditionBinding<T>(target, condition, metadataAction));
    }
 
-   private class ConditionBinding<T> extends AbstractValueBinding<Boolean>
+   private class ConditionBinding<T> extends AbstractReadOnlyValueBinding<Boolean>
    {
       private T target;
       private ConditionBinderWidgetAction<T> action;

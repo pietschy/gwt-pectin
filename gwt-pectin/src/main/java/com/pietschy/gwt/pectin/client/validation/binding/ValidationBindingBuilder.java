@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.validation.binding;
 
 import com.google.gwt.user.client.ui.UIObject;
-import com.pietschy.gwt.pectin.client.validation.HasValidation;
+import com.pietschy.gwt.pectin.client.validation.HasValidationResult;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 
@@ -30,11 +30,11 @@ import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 */
 public class ValidationBindingBuilder
 {
-   private HasValidation validator;
+   private HasValidationResult validator;
    private ValidationBinder binder;
    private ValidationStyles validationStyles;
 
-   public ValidationBindingBuilder(ValidationBinder binder, HasValidation validator, ValidationStyles validationStyles)
+   public ValidationBindingBuilder(ValidationBinder binder, HasValidationResult validator, ValidationStyles validationStyles)
    {
       this.binder = binder;
       this.validator = validator;

@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.style;
 
 import com.google.gwt.user.client.ui.UIObject;
-import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractReadOnlyValueBinding;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
@@ -28,7 +28,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public class StyledValueBinding<T>
-   extends AbstractValueBinding<T>
+   extends AbstractReadOnlyValueBinding<T>
 {
    private UIObject widget;
    private T triggerValue;

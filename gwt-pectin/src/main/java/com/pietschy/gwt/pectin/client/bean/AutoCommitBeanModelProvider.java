@@ -21,10 +21,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
-import com.pietschy.gwt.pectin.client.value.ValueHolder;
-import com.pietschy.gwt.pectin.client.value.ValueSource;
+import com.pietschy.gwt.pectin.client.value.*;
 
 
 /**
@@ -51,10 +48,10 @@ import com.pietschy.gwt.pectin.client.value.ValueSource;
  * <p/>
  * </pre>
  */
-public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelProvider<B>  implements ValueSource<B>, MutableValue<B>
+public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelProvider<B> implements ValueSource<B>, MutableValue<B>
 {
 
-   private MutableValueModel<B> beanSource;
+   private DelegatingValueModel<B> beanSource = new DelegatingValueModel<B>(new ValueHolder<B>());
 
    private HandlerRegistration beanChangeRegistration;
 
@@ -71,7 +68,7 @@ public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelPr
 
    protected AutoCommitBeanModelProvider()
    {
-      setBeanSource(new ValueHolder<B>());
+      beanSource.addValueChangeHandler(beanChangeHandler);
    }
 
    @Override
@@ -133,7 +130,6 @@ public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelPr
       });
 
 
-
       return model;
    }
 
@@ -159,6 +155,10 @@ public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelPr
    /**
     * Sets the bean to back all the models created by this provider.  All value models will update after this
     * method has been called.
+    * <p/>
+    * <b>Please note<b/> if {@link #setBeanSource(com.pietschy.gwt.pectin.client.value.ValueModel)} has been called
+    * with a model that isn't an instance of {@link com.pietschy.gwt.pectin.client.value.MutableValueModel}
+    * then this method will fail.
     *
     * @param bean the bean
     */
@@ -178,6 +178,21 @@ public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelPr
    }
 
 
+   /**
+    * Sets the {@link ValueModel} to be used as the source of this provider.  All changes to the source
+    * model will be tracked.
+    * <p/>
+    * <b>Please note<b/> that if the source is not an instance of {@link com.pietschy.gwt.pectin.client.value.MutableValueModel}
+    * then subsequent calls to {@link #setBean(Object)} will fail.
+    *
+    * @param source the {@link com.pietschy.gwt.pectin.client.value.ValueModel} containing the source bean.
+    */
+   public void setBeanSource(ValueModel<B> source)
+   {
+      beanSource.setDelegate(source);
+   }
+
+
    public B getValue()
    {
       return getBean();
@@ -186,33 +201,6 @@ public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelPr
    public void setValue(B value)
    {
       setBean(value);
-   }
-   
-
-
-   /**
-    * Sets the {@link com.pietschy.gwt.pectin.client.value.ValueModel} to be used as the source of this provider.  All changes to the source
-    * model will be tracked.
-    *
-    * @param source the {@link com.pietschy.gwt.pectin.client.value.ValueModel} containing the source bean.
-    */
-   public void setBeanSource(MutableValueModel<B> source)
-   {
-      if (source == null)
-      {
-         throw new NullPointerException("source is null");
-      }
-
-      if (beanChangeRegistration != null)
-      {
-         beanChangeRegistration.removeHandler();
-      }
-
-      beanSource = source;
-
-      beanChangeRegistration = beanSource.addValueChangeHandler(beanChangeHandler);
-
-      readFrom(getBean());
    }
 
    @Override

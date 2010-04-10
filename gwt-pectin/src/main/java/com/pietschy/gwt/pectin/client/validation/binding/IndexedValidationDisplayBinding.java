@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.validation.binding;
 
 import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
-import com.pietschy.gwt.pectin.client.validation.HasIndexedValidation;
+import com.pietschy.gwt.pectin.client.validation.HasIndexedValidationResult;
 import com.pietschy.gwt.pectin.client.validation.IndexedValidationEvent;
 import com.pietschy.gwt.pectin.client.validation.IndexedValidationHandler;
 import com.pietschy.gwt.pectin.client.validation.IndexedValidationResult;
@@ -36,9 +36,9 @@ extends AbstractBinding
 implements IndexedValidationHandler
 {
    private IndexedValidationDisplay display;
-   private HasIndexedValidation fieldValidator;
+   private HasIndexedValidationResult fieldValidator;
 
-   public IndexedValidationDisplayBinding(HasIndexedValidation fieldValidator, IndexedValidationDisplay display)
+   public IndexedValidationDisplayBinding(HasIndexedValidationResult fieldValidator, IndexedValidationDisplay display)
    {
       this.display = display;
       this.fieldValidator = fieldValidator;

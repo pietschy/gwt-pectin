@@ -18,7 +18,6 @@ package com.pietschy.gwt.pectin.client.bean;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.value.*;
 
@@ -49,27 +48,27 @@ import com.pietschy.gwt.pectin.client.value.*;
  */
 public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B> implements ValueSource<B>, MutableValue<B>
 {
-   private MutableValueModel<B> beanSource;
-
-   private HandlerRegistration beanChangeRegistration;
-
-   private ValueChangeHandler<B> beanChangeHandler = new ValueChangeHandler<B>()
-   {
-      public void onValueChange(ValueChangeEvent<B> event)
-      {
-         readFrom(event.getValue());
-      }
-   };
+   private DelegatingValueModel<B> beanSource = new DelegatingValueModel<B>(new ValueHolder<B>());
 
 
    protected BeanModelProvider()
    {
-      setBeanSource(new ValueHolder<B>());
+      beanSource.addValueChangeHandler(new ValueChangeHandler<B>()
+      {
+         public void onValueChange(ValueChangeEvent<B> event)
+         {
+            readFrom(event.getValue());
+         }
+      });
    }
 
    /**
     * Sets the bean to back all the models created by this provider.  All value models will update after this
     * method has been called.
+    * <p/>
+    * <b>Please note<b/> if {@link #setBeanSource(com.pietschy.gwt.pectin.client.value.ValueModel)} has been called
+    * with a model that isn't an instance of {@link com.pietschy.gwt.pectin.client.value.MutableValueModel}
+    * then this method will fail.
     *
     * @param bean the bean
     */
@@ -92,26 +91,15 @@ public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B> 
    /**
     * Sets the {@link ValueModel} to be used as the source of this provider.  All changes to the source
     * model will be tracked.
+    * <p/>
+    * <b>Please note<b/> that if the source is not an instance of {@link com.pietschy.gwt.pectin.client.value.MutableValueModel}
+    * then subsequent calls to {@link #setBean(Object)} will fail.
     *
-    * @param source the {@link ValueModel} containing the source bean.
+    * @param source the {@link com.pietschy.gwt.pectin.client.value.ValueModel} containing the source bean.
     */
-   public void setBeanSource(MutableValueModel<B> source)
+   public void setBeanSource(ValueModel<B> source)
    {
-      if (source == null)
-      {
-         throw new NullPointerException("source is null");
-      }
-
-      if (beanChangeRegistration != null)
-      {
-         beanChangeRegistration.removeHandler();
-      }
-
-      beanSource = source;
-
-      beanChangeRegistration = beanSource.addValueChangeHandler(beanChangeHandler);
-
-      readFrom(getBean());
+      beanSource.setDelegate(source);
    }
 
    public B getValue()

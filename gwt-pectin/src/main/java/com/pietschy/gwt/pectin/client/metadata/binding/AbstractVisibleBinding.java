@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractReadOnlyValueBinding;
 import com.pietschy.gwt.pectin.client.util.VarArgUtil;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
@@ -30,7 +30,7 @@ import java.util.Collection;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractVisibleBinding<T> 
-extends AbstractValueBinding<Boolean>
+extends AbstractReadOnlyValueBinding<Boolean>
 {
    private Collection<T> targets;
 

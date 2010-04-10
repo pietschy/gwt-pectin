@@ -29,7 +29,7 @@ import java.util.HashMap;
  * Time: 12:27:52 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FormValidator extends AbstractHasHandlers implements HasValidation, HasValidationHandlers
+public class FormValidator extends AbstractHasHandlers implements HasValidation
 {
    private FormModel form;
 

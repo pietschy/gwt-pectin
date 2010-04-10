@@ -33,11 +33,11 @@ public class ValidationStyleBinding
 extends AbstractBinding
 implements ValidationHandler, IndexedValidationHandler
 {
-   private HasValidation validator;
+   private HasValidationResult validator;
    private UIObject widget;
    private ValidationStyles validationStyles;
 
-   public ValidationStyleBinding(HasValidation validator, UIObject widget, ValidationStyles applicator)
+   public ValidationStyleBinding(HasValidationResult validator, UIObject widget, ValidationStyles applicator)
    {
       this.validator = validator;
       this.widget = widget;
@@ -45,7 +45,7 @@ implements ValidationHandler, IndexedValidationHandler
       registerHandler(validator.addValidationHandler(this));
    }
 
-   public ValidationStyleBinding(HasIndexedValidation validator, UIObject widget, ValidationStyles applicator)
+   public ValidationStyleBinding(HasIndexedValidationResult validator, UIObject widget, ValidationStyles applicator)
    {
       this.validator = validator;
       this.widget = widget;

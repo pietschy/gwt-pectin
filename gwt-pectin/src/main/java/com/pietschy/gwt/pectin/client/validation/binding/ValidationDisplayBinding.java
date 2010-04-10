@@ -17,7 +17,10 @@
 package com.pietschy.gwt.pectin.client.validation.binding;
 
 import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
-import com.pietschy.gwt.pectin.client.validation.*;
+import com.pietschy.gwt.pectin.client.validation.HasValidationResult;
+import com.pietschy.gwt.pectin.client.validation.ValidationEvent;
+import com.pietschy.gwt.pectin.client.validation.ValidationHandler;
+import com.pietschy.gwt.pectin.client.validation.ValidationResult;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
 
 
@@ -35,7 +38,7 @@ implements ValidationHandler
    private ValidationDisplay display;
    private HasValidationResult validator;
 
-   public ValidationDisplayBinding(HasValidation validator, ValidationDisplay display)
+   public ValidationDisplayBinding(HasValidationResult validator, ValidationDisplay display)
    {
       this.display = display;
       this.validator = validator;

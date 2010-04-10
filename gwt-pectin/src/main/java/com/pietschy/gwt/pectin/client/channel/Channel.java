@@ -1,7 +1,8 @@
 package com.pietschy.gwt.pectin.client.channel;
 
 import com.google.gwt.user.client.ui.HasValue;
-import com.pietschy.gwt.pectin.client.activity.ParameterisedCommand;
+import com.pietschy.gwt.pectin.client.binding.Disposable;
+import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
 import com.pietschy.gwt.pectin.client.function.Function;
 import com.pietschy.gwt.pectin.client.value.MutableValue;
 
@@ -15,15 +16,15 @@ import com.pietschy.gwt.pectin.client.value.MutableValue;
  */
 public interface Channel<T> extends Publisher<T>
 {
-   ChannelRegistration sendTo(Destination<? super T> destination);
+   Disposable sendTo(Destination<? super T> destination);
 
-   ChannelRegistration sendTo(Publisher<? super T> destination);
+   Disposable sendTo(Publisher<? super T> destination);
 
-   ChannelRegistration sendTo(MutableValue<? super T> destination);
+   Disposable sendTo(MutableValue<? super T> destination);
 
-   ChannelRegistration sendTo(HasValue<? super T> destination);
+   Disposable sendTo(HasValue<? super T> destination);
 
-   ChannelRegistration sendTo(ParameterisedCommand<? super T> destination);
+   Disposable sendTo(ParameterisedCommand<? super T> destination);
 
    /**
     * Returns this Channel as a destination.
@@ -41,16 +42,16 @@ public interface Channel<T> extends Publisher<T>
     *
     * @return this Channel as a formatted destination.
     */
-   <S> Destination<S> formattedWith(Function<T,S> function);
+   <S> Destination<S> asFormattedDestination(Function<T,S> function);
 
-//   /**
-//    * Gets a Publisher instance that uses the specified function to convert the published
-//    * value into this channels type.
-//    * <pre>
-//    * someChannel.sendTo(thisChannel.usingFormat(myFormat));
-//    * </pre>
-//    * @param function the conversion function.
-//    * @return a Publisher instance that converts from the source type to this channels type.
-//    */
-//   <S> Publisher<S> formattedWith(Function<T, S> function);
+   /**
+    * Gets a Publisher instance that uses the specified function to convert the published
+    * value into this channels type.
+    * <pre>
+    * someChannel.sendTo(thisChannel.usingFormat(myFormat));
+    * </pre>
+    * @param function the conversion function.
+    * @return a Publisher instance that converts from the source type to this channels type.
+    */
+   <S> Publisher<S> getFormattedPublisher(Function<T, S> function);
 }
