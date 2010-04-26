@@ -18,27 +18,23 @@ package com.pietschy.gwt.pectin.client.value;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.pietschy.gwt.pectin.client.util.Utils;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 20, 2009
- * Time: 12:10:58 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
-public abstract class
-AbstractComputedValueModel<T, S>
-extends AbstractValueModel<T>
+public abstract class AbstractComputedValueModel<T, S> extends AbstractValueModel<T>
 {
    private ValueChangeHandler<S> changeMonitor = new ValueChangeHandler<S>()
    {
       public void onValueChange(ValueChangeEvent<S> event)
       {
-         fireValueChangeEvent(getValue());
+         recompute();
       }
    };
 
    private ValueModel<S> source;
+   private ValueCache valueCache;
 
    public AbstractComputedValueModel(ValueModel<S> source)
    {
@@ -50,11 +46,81 @@ extends AbstractValueModel<T>
       this.source.addValueChangeHandler(changeMonitor);
    }
 
+   /**
+    * Recomputes the value and fires a value change event as required.
+    */
+   protected void recompute()
+   {
+      // If we've never been initialised (i.e. getValue() has never been called) then
+      // we need to force the firing (since the `oldValue` will equal the `newValue`
+      // and thus no event will fire).  That way any listeners that have been added
+      // prior to initialisation won't miss out on the first event.
+
+      // must check this before we call getCache()
+      boolean firstTime = !isCacheInitialised();
+
+      // if we've never been initialised then this will be the 'newValue'
+      T oldValue = getCache().getValue();
+
+      // now recompute and get the value.
+      getCache().recompute();
+      T newValue = getCache().getValue();
+
+      // and fire the event if the values are different or if this is the first time
+      // we've been asked to recompute.
+      if (firstTime || Utils.areDifferent(oldValue, newValue))
+      {
+         fireValueChangeEvent(newValue);
+      }
+   }
+
    public T getValue()
    {
-      return computeValue(source.getValue());
+      return getCache().getValue();
+   }
+
+   private ValueCache getCache()
+   {
+      if (valueCache == null)
+      {
+         valueCache = new ValueCache();
+      }
+      return valueCache;
+   }
+
+   private boolean isCacheInitialised()
+   {
+      return valueCache != null;
    }
 
    protected abstract T computeValue(S value);
-   
+
+   /**
+    * This class allows us to lazily compute the value on the first getValue() call or
+    * source model change event.
+    *
+    * Without the lazy computation we'd need to call recompute in our constructor... which would in
+    * turn case havoc for subclasses by invoking computeValue() during super()... thus before any 
+    * fields have been initialised... at which point we'd sit back and wait for the NullPointerExceptions.
+    */
+   private class ValueCache
+   {
+      private T value;
+
+      private ValueCache()
+      {
+         recompute();
+      }
+
+      public T getValue()
+      {
+         return value;
+      }
+
+      public void recompute()
+      {
+         value = computeValue(source.getValue());
+      }
+   }
+
 }

@@ -36,6 +36,7 @@ implements Condition
 
    protected Boolean computeValue(Boolean value)
    {
+      // we're treating nulls as false.
       return value == null || !value;
    }
 }

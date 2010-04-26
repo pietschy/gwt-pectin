@@ -31,18 +31,19 @@ public abstract class AbstractTemporalUiCommand extends UiCommandSupport impleme
 
    public void execute()
    {
-      if (!enabled().getValue())
-      {
-         throw new IllegalStateException("execute called while disabled");
-      }
-
       if (active().getValue())
       {
          // the default implementation throws an {@link ReEntrantExecutionException}.
          onReEntrantExecution();
       }
-
-      startExecution(new Context());
+      else if (!enabled().getValue())
+      {
+         onDisabledExecution();
+      }
+      else
+      {
+         startExecution(new Context());
+      }
    }
 
    /**
@@ -59,16 +60,24 @@ public abstract class AbstractTemporalUiCommand extends UiCommandSupport impleme
    {
    }
 
-
    protected abstract void startExecution(Context context);
 
+
    /**
-    * Called when ever execute is invoke while active == true;  This is just an entry point for experimentation
-    * if I ever want to see if queuing events is useful or insane.
+    * Called when ever execute is invoke while active == true.  Subclasses can override as required.
     */
    protected void onReEntrantExecution()
    {
       throw new ReEntrantExecutionException();
+   }
+
+   /**
+    * Called when ever execute is invoke while enabled == false;  The default implementation throws
+    * an ExecutedWhileDisabledException.  Subclasses can override as required.
+    */
+   protected void onDisabledExecution()
+   {
+      throw new ExecutedWhileDisabledException();
    }
 
    public class Context

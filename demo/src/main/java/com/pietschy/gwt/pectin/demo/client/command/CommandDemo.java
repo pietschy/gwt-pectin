@@ -51,7 +51,7 @@ public class CommandDemo extends AbstractDemo
       addBlurbParagraph("UiCommands are a bit experimental and are only in SVN at this point in time.");
 
       addLinkToSource("Show Controller Source", EditPersonController.class);
-      addLinkToSource("Show Save Command Source", SaveUiCommand.class);
+      addLinkToSource("Show Save Command Source", SaveCommand.class);
       addLinkToModel(EditPersonModel.class);
       addLinkToView(EditPersonForm.class);
 

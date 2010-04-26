@@ -25,7 +25,7 @@ public class EditPersonController
 
       // now create our commands.  In this case I'm having them operate directly
       // on the model, but they could operate on a Display type interface was well.
-      SaveUiCommand saveCommand = new SaveUiCommand(saveService, model, notificationChannel);
+      SaveCommand saveCommand = new SaveCommand(saveService, model, notificationChannel);
       UiCommand cancelCommand = new CancelUiCommand(saveCommand);
 
       // initialise the model
@@ -52,7 +52,7 @@ public class EditPersonController
 
    private class CancelUiCommand extends AbstractUiCommand
    {
-      public CancelUiCommand(SaveUiCommand saveCommand)
+      public CancelUiCommand(SaveCommand saveCommand)
       {
          disableWhen(saveCommand.active());
       }

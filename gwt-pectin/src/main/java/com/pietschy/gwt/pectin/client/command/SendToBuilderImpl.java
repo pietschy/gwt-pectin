@@ -4,7 +4,7 @@ import com.pietschy.gwt.pectin.client.binding.Disposable;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.channel.Publisher;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
+import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 
 /**
 * Created by IntelliJ IDEA.
@@ -46,7 +46,7 @@ public class SendToBuilderImpl<T> implements SendToBuilder<T>
       });
    }
 
-   public Disposable to(final MutableValue<? super T> destination)
+   public Disposable to(final HasValueSetter<? super T> destination)
    {
       return trigger.sendTo(new Destination<Object>()
       {

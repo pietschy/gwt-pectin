@@ -13,19 +13,36 @@ import com.pietschy.gwt.pectin.demo.client.domain.Person;
  * success and error to the appropriate channels.  The active state of the command
  * is automatically updated.
  */
-public class SaveUiCommand extends AbstractAsyncUiCommand<Person, Throwable>
+public class SaveCommand extends AbstractAsyncUiCommand<Person, Throwable>
 {
    private SaveServiceAsync service;
    private EditPersonModel model;
-   private Channel<String> notificationChannel;
 
-   public SaveUiCommand(SaveServiceAsync service, EditPersonModel model, Channel<String> notificationChannel)
+   public SaveCommand(SaveServiceAsync service, EditPersonModel model, Channel<String> notificationChannel)
    {
       this.service = service;
       this.model = model;
-      this.notificationChannel = notificationChannel;
 
-      // lets disable while we're active...
+      // The following could also be done by overriding onStarting(), afterError() and afterSuccess().
+      always()
+         .onStartSend("Saving.... (we're just pretending, I'm using Random.nextBoolean() to fake errors.)")
+         .to(notificationChannel);
+
+      // our model implements Destination so we can send the
+      // results straight to it.
+      always()
+         .sendResultTo(model);
+      // and send a notification
+      always()
+         .onSuccessSend("Save worked.")
+         .to(notificationChannel);
+
+      // if we wanted to display the actual error we'd use always().sendErrorTo(...)
+      always()
+         .onErrorSend("Doh, it failed!")
+         .to(notificationChannel);
+
+      // and finally let's disable while we're active...
       disableWhen(active());
    }
 
@@ -36,12 +53,6 @@ public class SaveUiCommand extends AbstractAsyncUiCommand<Person, Throwable>
       {
          invocation.proceed();
       }
-   }
-
-   @Override
-   protected void onStarting()
-   {
-      notificationChannel.publish("Saving.... (we're just pretending, I'm using Random.nextBoolean() to fake errors.)");
    }
 
    /**
@@ -68,23 +79,5 @@ public class SaveUiCommand extends AbstractAsyncUiCommand<Person, Throwable>
             callback.publishError(caught);
          }
       });
-   }
-
-   @Override
-   protected void afterSuccess(Person result)
-   {
-      // after we've finished we'll update our model to reflect the updated bean that
-      // came back from the service.  Could also have done this via creating a binding
-      // using `always().sendResultTo(..)` style but this is easier in this case.
-      model.readFrom(result);
-      notificationChannel.publish("Saved worked.");
-   }
-
-   @Override
-   protected void afterError(Throwable error)
-   {
-      // Could also have done this via creating a binding using `always().sendResultTo(..)`
-      // but I'm keeping it consistent with the above.
-      notificationChannel.publish("Doh, it failed.");
    }
 }

@@ -21,6 +21,7 @@ import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.CopyingBeanModelProvider;
+import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.validation.validator.NoEmptyElementsValidator;
 import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
 import com.pietschy.gwt.pectin.client.validation.validator.NotNullValidator;
@@ -35,7 +36,7 @@ import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validat
 /**
  *
  */
-public class EditPersonModel extends FormModel
+public class EditPersonModel extends FormModel implements Destination<Person>
 {
    public static abstract class PersonProvider extends CopyingBeanModelProvider<Person>{}
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
@@ -72,6 +73,12 @@ public class EditPersonModel extends FormModel
       });
 
       dirty = personProvider.getDirtyModel();
+   }
+
+
+   public void receive(Person person)
+   {
+      readFrom(person);
    }
 
    public void readFrom(Person person)

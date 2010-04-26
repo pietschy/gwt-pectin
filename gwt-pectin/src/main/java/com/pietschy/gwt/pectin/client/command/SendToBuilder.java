@@ -3,7 +3,7 @@ package com.pietschy.gwt.pectin.client.command;
 import com.pietschy.gwt.pectin.client.binding.Disposable;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.channel.Publisher;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
+import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,7 +18,7 @@ public interface SendToBuilder<T>
 
    Disposable to(Publisher<? super T> destination);
 
-   Disposable to(MutableValue<? super T> destination);
+   Disposable to(HasValueSetter<? super T> destination);
 
    Disposable to(ParameterisedCommand<? super T> destination);
 }

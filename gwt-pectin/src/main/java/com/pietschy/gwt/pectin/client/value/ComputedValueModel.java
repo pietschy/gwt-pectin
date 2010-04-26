@@ -16,6 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.value;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.function.Function;
 
 /**
@@ -25,26 +27,49 @@ import com.pietschy.gwt.pectin.client.function.Function;
  * Time: 11:14:29 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ComputedValueModel<T,S> extends AbstractComputedValueModel<T,S>
+public class ComputedValueModel<T, S> extends AbstractValueModel<T>
 {
-   private Function<T,? super S> function;
-
-   public ComputedValueModel(ValueModel<S> source, Function<T,? super S> function)
+   private ValueChangeHandler<S> changeMonitor = new ValueChangeHandler<S>()
    {
-      super(source);
+      public void onValueChange(ValueChangeEvent<S> event)
+      {
+         recompute();
+      }
+   };
+
+   private ValueModel<S> source;
+   private Function<T, ? super S> function;
+   private T cachedValue;
+
+   public ComputedValueModel(ValueModel<S> source, Function<T, ? super S> function)
+   {
+      if (source == null)
+      {
+         throw new NullPointerException("source is null");
+      }
 
       if (function == null)
       {
          throw new NullPointerException("function is null");
       }
 
+      this.source = source;
       this.function = function;
+      this.source.addValueChangeHandler(changeMonitor);
 
+      recompute();
    }
 
-   protected T computeValue(S value)
+   protected void recompute()
    {
-      return function.compute(value);
+      T oldValue = cachedValue;
+      cachedValue = function.compute(source.getValue());
+      fireValueChangeEvent(oldValue, cachedValue);
+   }
+
+   public T getValue()
+   {
+      return cachedValue;
    }
 
    public Function<T, ? super S> getFunction()
@@ -54,7 +79,12 @@ public class ComputedValueModel<T,S> extends AbstractComputedValueModel<T,S>
 
    public void setFunction(Function<T, ? super S> function)
    {
+      if (function == null)
+      {
+         throw new NullPointerException("function is null");
+      }
       this.function = function;
-      fireValueChangeEvent(getValue());
+      recompute();
    }
+
 }

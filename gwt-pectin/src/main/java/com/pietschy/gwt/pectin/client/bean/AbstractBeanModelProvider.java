@@ -5,8 +5,8 @@ import com.pietschy.gwt.pectin.client.ValueModelProvider;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
- * AbstractBeanModelProvider provides common behaviour for all variants that provide value and
- * list models from bean properties.
+ * AbstractBeanModelProvider provides common behaviour for all providers that provide
+ * models from bean properties.
  */
 public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapter<B>, ValueModelProvider<String>, ListModelProvider<String>
 {
@@ -19,8 +19,7 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
    }
 
    /**
-    * Copies the current state of the provider to the specified bean.  No changes are made
-    * to the dirty state of the value models.
+    * Copies the current state of the provider to the specified bean.
     *
     * @param bean            the bean to update
     * @param clearDirtyState <code>true</code> to reset the dirty state to <code>false</code> to
@@ -75,7 +74,7 @@ public abstract class AbstractBeanModelProvider<B> implements BeanPropertyAdapte
    }
 
    /**
-    * Resets all the models back to their last checkpointed state.  If checkpoint hasn't been called then
+    * Resets all the models back to their last check pointed state.  If checkpoint hasn't been called then
     * it will revert to the last call to readFrom.
     */
    protected void revertToCheckpoint()

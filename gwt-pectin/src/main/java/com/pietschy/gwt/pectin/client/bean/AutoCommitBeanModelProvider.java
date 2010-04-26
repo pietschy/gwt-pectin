@@ -18,42 +18,19 @@ package com.pietschy.gwt.pectin.client.bean;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
 import com.pietschy.gwt.pectin.client.value.*;
 
 
 /**
- * BeanModelProvider is a factory for creating {@link com.pietschy.gwt.pectin.client.value.ValueModel}s and {@link com.pietschy.gwt.pectin.client.list.ListModel}s from
- * Java Bean properties.  This class is created using <code>GWT.create(...)</code>.
- * <p/>
- * An example:
- * <pre>
- * // create an abstract subclass with your bean type.
- * public static abstract class MyBeanModelProvider extends BeanModelProvider&lt;MyBean&gt;{}
- * <p/>
- * // and use GWT.create(..) to get a new instance.
- * MyBeanModelProvider <b>provider</b> = GWT.create(MyBeanModelProvider.class);
- * <p/>
- * // then use it in your form
- * FieldModel<String> myField = fieldOfType(String.class).boundTo(<b>provider</b>, "myProperty");
- * <p/>
- * // and load the bean you want to edit.
- * <b>provider</b>.setBean(new MyBean());
- * <p/>
- * // or you can use another value model as the bean source.
- * ValueModel<MyBean> myBeanSource = ...;
- * <b>provider</b>.setBeanSource(myBeanSource);
- * <p/>
- * </pre>
+ * AutoCommitBeanModelProvider the same as BeanModelProvider except that all changes are auto committed to the
+ * underlying bean as they happen.
  */
-public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelProvider<B> implements ValueSource<B>, MutableValue<B>
+public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelProvider<B> implements HasValueGetter<B>, HasValueSetter<B>
 {
 
    private DelegatingValueModel<B> beanSource = new DelegatingValueModel<B>(new ValueHolder<B>());
-
-   private HandlerRegistration beanChangeRegistration;
 
    private ValueChangeHandler<B> beanChangeHandler = new ValueChangeHandler<B>()
    {
@@ -206,8 +183,8 @@ public abstract class AutoCommitBeanModelProvider<B> extends AbstractBeanModelPr
    @Override
    protected void readFrom(B bean)
    {
-      // storing the old value makes us re-entrant
-      // just in case.
+      // we disable commit will our value model are reading
+      // and firing events.  Otherwise we'd do a read/write.
       boolean old = disableCommit;
       try
       {

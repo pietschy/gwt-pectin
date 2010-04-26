@@ -28,9 +28,43 @@ import com.google.gwt.event.shared.HandlerRegistration;
  */
 public class DelegatingValueModel<T> implements MutableValueModel<T>, HasValueChangeHandlers<T>
 {
+   /**
+    * Convenience method to create a new instance.
+    *
+    * @return a new instance;
+    */
+   public static <T> DelegatingValueModel<T> create()
+   {
+      return new DelegatingValueModel<T>();
+   }
+
+   /**
+    * Convenience method to create a new instance.
+    *
+    * @param defaultValue the default value for cases where the deleget is null.
+    * @return a new instance;
+    */
+   public static <T> DelegatingValueModel<T> create(T defaultValue)
+   {
+      return new DelegatingValueModel<T>(defaultValue);
+   }
+
+   /**
+    * Convenience method to create a new instance that is preconigured with
+    * the specified delegate.
+    *
+    * @param delegate the delegate.
+    * @return a new instance;
+    */
+   public static <T> DelegatingValueModel<T> create(ValueModel<T> delegate)
+   {
+      return new DelegatingValueModel<T>(delegate);
+   }
+
+
    private HandlerManager handlerManager = new HandlerManager(this);
    private DelegateMonitor delegateChangeMonitor = new DelegateMonitor();
-   
+
    private T defaultValue;
    private ValueModel<T> delegate;
    private HandlerRegistration registration;
@@ -58,7 +92,7 @@ public class DelegatingValueModel<T> implements MutableValueModel<T>, HasValueCh
          // is null, and calling removeHandler() twice will barf.
          registration = null;
       }
-      
+
       this.delegate = delegate;
 
       if (this.delegate != null)
@@ -119,7 +153,7 @@ public class DelegatingValueModel<T> implements MutableValueModel<T>, HasValueCh
    private class DelegateMonitor implements ValueChangeHandler<T>
    {
       public void onValueChange(ValueChangeEvent<T> event)
-      {                                                    
+      {
          fireValueChanged();
       }
    }

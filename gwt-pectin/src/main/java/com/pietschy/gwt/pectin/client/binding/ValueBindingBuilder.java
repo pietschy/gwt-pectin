@@ -19,9 +19,10 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.FieldModel;
+import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 import com.pietschy.gwt.pectin.client.format.ToStringFormat;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
+import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 
 /**
  * 
@@ -43,9 +44,15 @@ public class ValueBindingBuilder<T>
       binder.registerBinding(binding, field, binding.getTarget());
    }
 
-   public void to(MutableValue<T> widget)
+   public void to(HasValueSetter<T> widget)
    {
       final ValueModelToStaticValueBinding<T> binding = new ValueModelToStaticValueBinding<T>(field, widget);
+      binder.registerBinding(binding, field, binding.getTarget());
+   }
+   
+   public void to(ParameterisedCommand<T> command)
+   {
+      final ValueModelToStaticValueBinding<T> binding = new ValueModelToStaticValueBinding<T>(field, command);
       binder.registerBinding(binding, field, binding.getTarget());
    }
 

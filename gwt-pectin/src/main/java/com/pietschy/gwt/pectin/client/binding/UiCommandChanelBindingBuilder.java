@@ -5,7 +5,7 @@ import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 import com.pietschy.gwt.pectin.client.function.Function;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
+import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 
 /**
  * This class simple delegates to {@link com.pietschy.gwt.pectin.client.binding.ChannelBindingBuilder}.  It
@@ -25,7 +25,7 @@ public class UiCommandChanelBindingBuilder<T>
       delegate.to(destination);
    }
 
-   public void using(MutableValue<T> destination)
+   public void using(HasValueSetter<T> destination)
    {
       delegate.to(destination);
    }

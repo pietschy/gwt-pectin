@@ -35,6 +35,7 @@ public class AbstractFieldValidator
 
    protected boolean conditionSatisfied(ValueModel<Boolean> condition)
    {
+      // we're doing this just in case getValue() returns null.
       return Boolean.TRUE.equals(condition.getValue());
    }
 

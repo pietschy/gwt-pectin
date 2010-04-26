@@ -46,7 +46,7 @@ import com.pietschy.gwt.pectin.client.value.*;
  * <p/>
  * </pre>
  */
-public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B> implements ValueSource<B>, MutableValue<B>
+public abstract class BeanModelProvider<B> extends AbstractBeanModelProvider<B> implements HasValueGetter<B>, HasValueSetter<B>
 {
    private DelegatingValueModel<B> beanSource = new DelegatingValueModel<B>(new ValueHolder<B>());
 

@@ -17,13 +17,13 @@
 package com.pietschy.gwt.pectin.demo.client.validation;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.command.AbstractUiCommand;
+import com.pietschy.gwt.pectin.client.command.UiCommand;
 import com.pietschy.gwt.pectin.client.validation.FieldValidator;
 import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
 import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
@@ -56,9 +56,9 @@ public class ValidatedFormModel extends FormModel
    protected final ListFieldModel<Wine> favoriteWines;
 
    // click handlers for our form (since we like passive views).
-   protected final ClickHandler validateHandler = new ValidateHandler();
-   protected final ClickHandler clearHandler = new ClearValidationHandler();
-   protected final ClickHandler fakeServerErrorHandler = new FakeServerErrorHandler();
+   protected final UiCommand validateCommand = new ValidateCommand();
+   protected final UiCommand clearCommand = new ClearValidationCommand();
+   protected final UiCommand fakeServerErrorCommand = new FakeServerErrorCommand();
 
    public ValidatedFormModel()
    {
@@ -114,25 +114,28 @@ public class ValidatedFormModel extends FormModel
       personProvider.setBean(person);
    }
 
-   private class ValidateHandler implements ClickHandler
+   private class ValidateCommand extends AbstractUiCommand
    {
-      public void onClick(ClickEvent event)
+      @Override
+      protected void doExecute()
       {
          validate();
       }
    }
 
-   private class ClearValidationHandler implements ClickHandler
+   private class ClearValidationCommand extends AbstractUiCommand
    {
-      public void onClick(ClickEvent event)
+      @Override
+      protected void doExecute()
       {
          getValidationManager(ValidatedFormModel.this).clear();
       }
    }
 
-   private class FakeServerErrorHandler implements ClickHandler
+   private class FakeServerErrorCommand extends AbstractUiCommand
    {
-      public void onClick(ClickEvent event)
+      @Override
+      protected void doExecute()
       {
          FieldValidator givenNameValidator = getValidationManager(ValidatedFormModel.this).getValidator(givenName);
          // normally this would come back async from the server and get injected.

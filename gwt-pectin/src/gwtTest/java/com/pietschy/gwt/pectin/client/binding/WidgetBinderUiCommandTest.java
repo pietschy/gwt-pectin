@@ -55,6 +55,7 @@ public class WidgetBinderUiCommandTest extends GWTTestCase
       assertTrue("button is enabled after enabled state change", button.isEnabled());
    }
 
+//  the call to button.click() doesn't seem to work in the unit tests...
 //   public void testClickExecutesCommand()
 //   {
 //

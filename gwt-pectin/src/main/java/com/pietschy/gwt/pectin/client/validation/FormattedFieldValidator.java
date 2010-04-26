@@ -28,4 +28,8 @@ public interface FormattedFieldValidator<T> extends FieldValidator<T>
    void runValueValidators(ValidationResultCollector collector);
 
    void runTextValidators(ValidationResultCollector collector);
+
+   boolean isAlwaysValidateValue();
+
+   void setAlwaysValidateValue(boolean alwaysValidateValue);
 }

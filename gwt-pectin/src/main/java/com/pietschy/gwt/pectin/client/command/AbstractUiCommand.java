@@ -26,28 +26,38 @@ public abstract class AbstractUiCommand extends UiCommandSupport
    {
       if (!enabled().getValue())
       {
-         throw new IllegalStateException("execute called while disabled");
+         onDisabledExecution();
       }
-
-      // we prepare the events before the interceptors as this ensures the
-      // onNextCall event listeners are cleared.  This is part of the contract
-      // with interceptors and onNextCall() events.  i.e. an intercepted and
-      // cancelled call still constitutes a call.
-      final EventSupport.Trigger trigger = eventSupport.prepareEvents();
-
-      runWithInterceptors(new Command()
+      else
       {
-         public void execute()
+         // we prepare the events before the interceptors as this ensures the
+         // onNextCall event listeners are cleared.  This is part of the contract
+         // with interceptors and onNextCall() events.  i.e. an intercepted and
+         // cancelled call still constitutes a call.
+         final EventSupport.Trigger trigger = eventSupport.prepareEvents();
+
+         runWithInterceptors(new Command()
          {
-            trigger.fireStarted();
+            public void execute()
+            {
+               trigger.fireStarted();
 
-            doExecute();
+               doExecute();
 
-            trigger.fireFinished();
-         }
-      });
-
+               trigger.fireFinished();
+            }
+         });
+      }
    }
 
    protected abstract void doExecute();
+
+   /**
+    * Called when ever execute is invoke while enabled == false;  The default implementation throws
+    * an IllegalStateException.  Subclasses can override as required.
+    */
+   protected void onDisabledExecution()
+   {
+      throw new IllegalStateException("execute called while disabled");
+   }
 }

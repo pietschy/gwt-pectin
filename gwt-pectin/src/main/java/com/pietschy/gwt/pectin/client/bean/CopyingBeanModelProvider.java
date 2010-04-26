@@ -1,14 +1,18 @@
 package com.pietschy.gwt.pectin.client.bean;
 
 import com.google.gwt.user.client.Command;
-import com.pietschy.gwt.pectin.client.value.ValueSource;
+import com.pietschy.gwt.pectin.client.value.HasValueGetter;
 
 /**
  * CopyingBeanModelProvider is allows for the state of value models to be copied to and from
  * underlying beans.  State can be read from one bean, updated by the form and then copied to
- * another bean.  This you to apply changes to a clone of the original object.  It also allows
- * you to track dirty state, and only update it after the values have been copied to a bean and
- * successfully updated via RPC.
+ * another bean.  This you to apply changes to a clone of the original object.
+ * <p>
+ * Another important features is that this provider gives you control over when the dirty state
+ * is recomputed.  Thus you can copy the state to a bean, initiate an RPC call an only clear
+ * the dirty state once the call succeeds.
+ * @see #copyTo(Object, boolean)
+ * @see #readFrom(Object)
  */
 public abstract class CopyingBeanModelProvider<B> extends AbstractBeanModelProvider<B>
 {
@@ -25,14 +29,13 @@ public abstract class CopyingBeanModelProvider<B> extends AbstractBeanModelProvi
       super.copyTo(bean, clearDirtyState);
    }
 
-
    /**
     * This method copies all of the providers state into the value held by the specified source.  The value
     * will be updated in place and is equivalent to calling <code>copyTo(source.getValue(), boolean)</code>
     * @param source the source of the value.
     * @param clearDirtyState true to clear the dirty state of the provider, false to leave it as is.
     */
-   public void copyTo(ValueSource<B> source, boolean clearDirtyState)
+   public void copyTo(HasValueGetter<B> source, boolean clearDirtyState)
    {
       super.copyTo(source.getValue(), clearDirtyState);
    }
@@ -43,7 +46,7 @@ public abstract class CopyingBeanModelProvider<B> extends AbstractBeanModelProvi
       super.readFrom(bean);
    }
 
-   public void readFrom(ValueSource<B> source)
+   public void readFrom(HasValueGetter<B> source)
    {
       readFrom(source.getValue());
    }

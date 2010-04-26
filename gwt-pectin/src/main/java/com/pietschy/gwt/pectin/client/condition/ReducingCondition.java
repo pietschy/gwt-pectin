@@ -29,9 +29,9 @@ import java.util.Collection;
  * Time: 11:24:38 AM
  * To change this template use File | Settings | File Templates.
  */
-public class AbstractReducingCondition extends ReducingValueModel<Boolean, Boolean> implements Condition
+public class ReducingCondition extends ReducingValueModel<Boolean, Boolean> implements Condition
 {
-   public AbstractReducingCondition(Reduce<Boolean, Boolean> function, Collection<ValueModel<Boolean>> models)
+   public ReducingCondition(Reduce<Boolean, Boolean> function, Collection<ValueModel<Boolean>> models)
    {
       super(function, models);
    }

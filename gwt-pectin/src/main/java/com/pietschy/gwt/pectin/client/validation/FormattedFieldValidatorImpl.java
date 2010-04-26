@@ -111,7 +111,10 @@ public class FormattedFieldValidatorImpl<T> extends AbstractFieldValidator imple
    {
       // text validators run first so they're first in any error list.
       runTextValidators(collector);
-      // conditionaly validate the value.
+      // we only run the value validators if there were no errors with the
+      // text.  Otherwise something like a NotNullValidator would add an error
+      // in addition to a  formatting error.  But we let the user override this if
+      // the feel it's necessary.
       if (alwaysValidateValue || !collector.contains(Severity.ERROR))
       {
          runValueValidators(collector);

@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
+import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 
 /**
 * Created by IntelliJ IDEA.
@@ -39,7 +39,7 @@ public class FormattedChannelBindingBuilder<T>
       }));
    }
 
-   public void to(final MutableValue<String> destination)
+   public void to(final HasValueSetter<String> destination)
    {
       widgetBinder.registerDisposable(channel.sendTo(new Destination<T>()
       {

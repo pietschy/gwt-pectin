@@ -5,7 +5,7 @@ import com.pietschy.gwt.pectin.client.binding.Disposable;
 import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
 import com.pietschy.gwt.pectin.client.function.Function;
 import com.pietschy.gwt.pectin.client.util.SubscriptionList;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
+import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -76,7 +76,7 @@ public class DefaultChannel<T> extends SubscriptionList<Destination<? super T>> 
       });
    }
 
-   public Disposable sendTo(final MutableValue<? super T> destination)
+   public Disposable sendTo(final HasValueSetter<? super T> destination)
    {
       return sendTo(new Destination<T>()
       {

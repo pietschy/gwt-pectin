@@ -27,15 +27,14 @@ import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
 import com.pietschy.gwt.pectin.client.metadata.HasVisible;
 import com.pietschy.gwt.pectin.client.metadata.binding.ConditionBinderBuilder;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * WidgetBinder provides a builders to bind widgets to field models.  During the binding process
  * any {@link BindingCallback}s installed by plugins will be automatically invoked.
  */
-public class WidgetBinder
-   extends AbstractBinder
+public class WidgetBinder extends AbstractBinder
 {
-
    // moving metadata enable/show methods to here, will eventually move the Metadata binder
    // class from the metadata package to here..
    private MetadataBinder metadataBinder = new MetadataBinder();
@@ -68,7 +67,6 @@ public class WidgetBinder
 
 
    // Metadata style binding (visible and enabled).
-
    public ConditionBinderBuilder<?> show(HasVisible uiObject)
    {
       return metadataBinder.show(uiObject);
@@ -120,6 +118,13 @@ public class WidgetBinder
    }
 
 
+   // Transition Bindings
+   public <T> TransitionBindingBuilder<T> onTransitionOf(ValueModel<T> model)
+   {
+      return new TransitionBindingBuilder<T>(this, model);
+   }
+
+
    // UiCommand Bindings
 
    public UiCommandBindingBuilder bind(UiCommand uiCommand)
@@ -154,7 +159,6 @@ public class WidgetBinder
 
 
    // Callback methods for notifying plugins.
-
    protected <T> void registerBinding(AbstractBinding binding, FieldModel<T> fieldModel, Object target)
    {
       super.registerBindingAndUpdateTarget(binding);

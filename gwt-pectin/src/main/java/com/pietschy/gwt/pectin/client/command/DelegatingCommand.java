@@ -9,7 +9,7 @@ import com.pietschy.gwt.pectin.client.binding.Disposable;
 public class DelegatingCommand implements Command, Disposable
 {
    private Command delegate;
-
+   
    public DelegatingCommand()
    {
    }

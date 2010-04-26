@@ -17,7 +17,6 @@
 package com.pietschy.gwt.pectin.client.condition;
 
 import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.value.AbstractComputedValueModel;
 
 /**
  * Created by IntelliJ IDEA.

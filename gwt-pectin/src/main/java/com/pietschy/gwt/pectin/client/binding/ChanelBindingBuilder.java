@@ -5,7 +5,7 @@ import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 import com.pietschy.gwt.pectin.client.function.Function;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
+import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 
 /**
 * Created by IntelliJ IDEA.
@@ -30,7 +30,7 @@ public class ChanelBindingBuilder<T>
       widgetBinder.registerDisposable(channel.sendTo(destination));
    }
 
-   public void to(MutableValue<T> destination)
+   public void to(HasValueSetter<T> destination)
    {
       widgetBinder.registerDisposable(channel.sendTo(destination));
    }

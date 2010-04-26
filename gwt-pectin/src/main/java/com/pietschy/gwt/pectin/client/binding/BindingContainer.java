@@ -16,6 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
+import com.google.gwt.event.shared.HandlerRegistration;
+
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -33,4 +35,8 @@ public interface BindingContainer extends Disposable
     * @param binding the binding to register
     */
    void registerBindingAndUpdateTarget(AbstractBinding binding);
+
+   void registerHandler(HandlerRegistration handlerRegistration);
+
+   void registerDisposable(Disposable disposable);
 }

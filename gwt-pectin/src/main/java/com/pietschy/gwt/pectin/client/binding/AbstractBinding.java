@@ -18,8 +18,6 @@ package com.pietschy.gwt.pectin.client.binding;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 
-import java.util.ArrayList;
-
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -30,19 +28,22 @@ import java.util.ArrayList;
 public abstract class AbstractBinding
 implements BindingContainer
 {
-   private ArrayList<HandlerRegistration> eventRegistrations = new ArrayList<HandlerRegistration>();
-   private ArrayList<AbstractBinding> childBindings = new ArrayList<AbstractBinding>();
+   GarbageCollector gc = new GarbageCollector();
 
    public void registerHandler(HandlerRegistration registration)
    {
-      eventRegistrations.add(registration);
+      gc.add(registration);
    }
-   
    
    public void registerBindingAndUpdateTarget(AbstractBinding binding)
    {
       binding.updateTarget();
-      childBindings.add(binding);
+      gc.add(binding);
+   }
+
+   public void registerDisposable(Disposable disposable)
+   {
+      gc.add(disposable);
    }
 
    public abstract void updateTarget();
@@ -51,17 +52,6 @@ implements BindingContainer
    
    public void dispose()
    {
-      for (HandlerRegistration registration : eventRegistrations)
-      {
-         registration.removeHandler();
-      }
-      eventRegistrations.clear();
-      
-      for (AbstractBinding binding : childBindings)
-      {
-         binding.dispose();
-      }
-      
-      childBindings.clear();
+      gc.dispose();
    }
 }

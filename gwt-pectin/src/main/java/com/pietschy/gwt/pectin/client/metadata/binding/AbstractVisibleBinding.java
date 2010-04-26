@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
 import com.pietschy.gwt.pectin.client.binding.AbstractReadOnlyValueBinding;
-import com.pietschy.gwt.pectin.client.util.VarArgUtil;
+import com.pietschy.gwt.pectin.client.util.Utils;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.Collection;
@@ -36,12 +36,12 @@ extends AbstractReadOnlyValueBinding<Boolean>
 
    public AbstractVisibleBinding(ValueModel<Boolean> model, T target)
    {
-      this(model, VarArgUtil.asList(target));
+      this(model, Utils.asList(target));
    }
 
    public AbstractVisibleBinding(ValueModel<Boolean> model, T target, T... others)
    {
-      this(model, VarArgUtil.asList(target, others));
+      this(model, Utils.asList(target, others));
    }
 
    public AbstractVisibleBinding(ValueModel<Boolean> model, Collection<T> target)

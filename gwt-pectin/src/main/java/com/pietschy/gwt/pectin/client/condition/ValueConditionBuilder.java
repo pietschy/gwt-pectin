@@ -16,6 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
+import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
@@ -62,6 +63,36 @@ public class ValueConditionBuilder<T>
    public Condition isNotSameAs(ValueModel<T> model)
    {
       return isSameAs(model).not();
+   }
+
+   public Condition isIn(T first, T... others)
+   {
+      return new ValueInCondition<T>(model, first, others);
+   }
+
+   public Condition isIn(ListModel<T> list)
+   {
+      return new ValueInCondition<T>(model, list);
+   }
+
+   public Condition isIn(Iterable<T> list)
+   {
+      return new ValueInCondition<T>(model, list);
+   }
+
+   public Condition isNotIn(T first, T... others)
+   {
+      return isIn(first, others).not();
+   }
+
+   public Condition isNotIn(ListModel<T> list)
+   {
+      return isIn(list).not();
+   }
+
+   public Condition isNotIn(Iterable<T> list)
+   {
+      return isIn(list).not();
    }
 
    protected ValueModel<T> getModel()

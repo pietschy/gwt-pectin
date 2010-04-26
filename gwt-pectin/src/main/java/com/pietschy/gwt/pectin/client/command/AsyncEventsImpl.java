@@ -7,7 +7,7 @@ import com.pietschy.gwt.pectin.client.channel.DefaultChannel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.channel.Publisher;
 import com.pietschy.gwt.pectin.client.util.SubscriptionList;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
+import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 
 /**
  * AbstractAsyncEvents provides a the default implementation of {@link com.pietschy.gwt.pectin.client.command.AsyncEvents}.
@@ -71,9 +71,9 @@ public class AsyncEventsImpl<R, E> extends AbstractEvents implements AsyncEvents
       return resultChannel.sendTo(destination);
    }
 
-   public Disposable sendResultTo(MutableValue<? super R> mutableValue)
+   public Disposable sendResultTo(HasValueSetter<? super R> destination)
    {
-      return resultChannel.sendTo(mutableValue);
+      return resultChannel.sendTo(destination);
    }
 
    public Disposable sendResultTo(Publisher<? super R> publisher)
@@ -102,9 +102,9 @@ public class AsyncEventsImpl<R, E> extends AbstractEvents implements AsyncEvents
       return errorChannel.sendTo(destination);
    }
 
-   public Disposable sendErrorTo(MutableValue<? super E> mutableValue)
+   public Disposable sendErrorTo(HasValueSetter<? super E> destination)
    {
-      return errorChannel.sendTo(mutableValue);
+      return errorChannel.sendTo(destination);
    }
 
    public Disposable sendErrorTo(Publisher<? super E> publisher)

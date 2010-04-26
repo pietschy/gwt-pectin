@@ -16,10 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.value.MutableValue;
+import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
+import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,12 +30,23 @@ import com.pietschy.gwt.pectin.client.value.MutableValue;
 public class ValueModelToStaticValueBinding<T>
 extends AbstractValueBinding<T>
 {
-   private MutableValue<T> widget;
+   private HasValueSetter<T> widget;
 
-   public ValueModelToStaticValueBinding(FieldModel<T> field, MutableValue<T> widget)
+   public ValueModelToStaticValueBinding(FieldModel<T> field, HasValueSetter<T> widget)
    {
       super(field);
       this.widget = widget;
+   }
+
+   public ValueModelToStaticValueBinding(FieldModel<T> field, final ParameterisedCommand<T> command)
+   {
+      this(field, new HasValueSetter<T>()
+      {
+         public void setValue(T value)
+         {
+            command.execute(value);
+         }
+      });
    }
 
    protected void updateWidget(T value)
@@ -44,16 +54,8 @@ extends AbstractValueBinding<T>
       widget.setValue(value);
    }
 
-   public MutableValue<T> getTarget()
+   public HasValueSetter<T> getTarget()
    {
       return widget;
-   }
-
-   private class WidgetMonitor implements ValueChangeHandler<T>
-   {
-      public void onValueChange(ValueChangeEvent<T> event)
-      {
-         updateModel(event.getValue());
-      }
    }
 }

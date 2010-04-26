@@ -81,9 +81,10 @@ public class ValidatedForm extends VerySimpleForm
       binder.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
       binder.bind(model.favoriteWines).containingValue(Wine.SHIRAZ).to(shirazCheckBox);
 
-      validateButton.addClickHandler(model.validateHandler);
-      clearButton.addClickHandler(model.clearHandler);
-      fakeSererErrorButton.addClickHandler(model.fakeServerErrorHandler);
+      binder.bind(model.validateCommand).to(validateButton);
+      binder.bind(model.clearCommand).to(clearButton);
+      binder.bind(model.fakeServerErrorCommand).to(fakeSererErrorButton);
+
 
       addRow("Given name", givenName, createValidationLabel(model.givenName));
       addRow("Surname", surname, createValidationLabel(model.surname));
