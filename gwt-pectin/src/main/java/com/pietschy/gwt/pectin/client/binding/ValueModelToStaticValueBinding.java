@@ -16,9 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
-import com.pietschy.gwt.pectin.client.value.HasValueSetter;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,32 +30,32 @@ import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 public class ValueModelToStaticValueBinding<T>
 extends AbstractValueBinding<T>
 {
-   private HasValueSetter<T> widget;
+   private ValueTarget<T> target;
 
-   public ValueModelToStaticValueBinding(FieldModel<T> field, HasValueSetter<T> widget)
+   public ValueModelToStaticValueBinding(ValueModel<T> model, ValueTarget<T> target)
    {
-      super(field);
-      this.widget = widget;
+      super(model);
+      this.target = target;
    }
 
-   public ValueModelToStaticValueBinding(FieldModel<T> field, final ParameterisedCommand<T> command)
+   public ValueModelToStaticValueBinding(ValueModel<T> model, final ParameterisedCommand<T> target)
    {
-      this(field, new HasValueSetter<T>()
+      this(model, new ValueTarget<T>()
       {
          public void setValue(T value)
          {
-            command.execute(value);
+            target.execute(value);
          }
       });
    }
 
-   protected void updateWidget(T value)
+   protected void updateTarget(T value)
    {
-      widget.setValue(value);
+      target.setValue(value);
    }
 
-   public HasValueSetter<T> getTarget()
+   public ValueTarget<T> getTarget()
    {
-      return widget;
+      return target;
    }
 }

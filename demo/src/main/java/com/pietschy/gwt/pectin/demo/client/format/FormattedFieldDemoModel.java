@@ -16,12 +16,16 @@
 
 package com.pietschy.gwt.pectin.demo.client.format;
 
+import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.FormattedListFieldModel;
 import com.pietschy.gwt.pectin.client.format.IntegerFormat;
+import com.pietschy.gwt.pectin.client.function.Reduce;
 import com.pietschy.gwt.pectin.client.value.Converter;
 import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,6 +39,7 @@ public class FormattedFieldDemoModel extends FormModel
    protected final FormattedFieldModel<Integer> age;
    protected final FormattedFieldModel<Integer> ageInDogYears;
    protected final FormattedListFieldModel<Integer> luckyNumbers;
+   protected final FieldModel<Integer> sumOfLuckyNumbers;
 
    public FormattedFieldDemoModel()
    {
@@ -53,7 +58,11 @@ public class FormattedFieldDemoModel extends FormModel
       luckyNumbers = formattedListOfType(Integer.class)
          .using(new IntegerFormat())
          .create();
-      
+
+      sumOfLuckyNumbers = fieldOfType(Integer.class)
+         .computedFrom(luckyNumbers)
+         .using(new SumIntegers());
+
    }
 
    private static class DogYearsConverter implements Converter<Integer, Integer>
@@ -68,6 +77,22 @@ public class FormattedFieldDemoModel extends FormModel
       public Integer toSource(Integer value)
       {
          return value != null ? (int) ((double) value / DOG_AGE_MULTIPLE) : null;
+      }
+   }
+
+   private static class SumIntegers implements Reduce<Integer, Integer>
+   {
+      public Integer compute(List<? extends Integer> source)
+      {
+         int sum = 0;
+         for (Integer integer : source)
+         {
+            if (integer != null)
+            {
+               sum += integer;
+            }
+         }
+         return sum;
       }
    }
 }

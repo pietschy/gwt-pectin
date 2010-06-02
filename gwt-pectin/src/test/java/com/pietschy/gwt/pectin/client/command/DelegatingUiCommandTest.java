@@ -122,7 +122,7 @@ public class DelegatingUiCommandTest
          };
    }
 
-   @Test(expectedExceptions = NullPointerException.class)
+   @Test(expectedExceptions = MissingDelegateException.class)
    public void executeWithNoDelegateBarfs() throws Exception
    {
       new DelegatingUiCommand().execute();

@@ -4,7 +4,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.util.TestBean;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -25,11 +24,11 @@ import static org.testng.Assert.*;
  */
 public class PropertyModelRegistryTest
 {
-   private HashMap<BeanPropertyModelBase<TestBean>, ValueHolder<Boolean>> dirtyModels;
-   private PropertyModelRegistry<TestBean> registry;
-   private BeanPropertyValueModel<TestBean, String> stringValue;
-   private BeanPropertyValueModel<TestBean, Object> objectValue;
-   private BeanPropertyListModel<TestBean, String> stringList;
+   private HashMap<BeanPropertyModelBase, ValueHolder<Boolean>> dirtyModels;
+   private PropertyModelRegistry registry;
+   private BeanPropertyValueModel<String> stringValue;
+   private BeanPropertyValueModel<Object> objectValue;
+   private BeanPropertyListModel<String> stringList;
    private PropertyKey<String> stringValueKey;
    private PropertyKey<Object> objectValueKey;
    private PropertyKey<String> stringListKey;
@@ -37,8 +36,8 @@ public class PropertyModelRegistryTest
    @BeforeTest
    public void setUp()
    {
-      dirtyModels = new HashMap<BeanPropertyModelBase<TestBean>, ValueHolder<Boolean>>();
-      registry = new PropertyModelRegistry<TestBean>();
+      dirtyModels = new HashMap<BeanPropertyModelBase, ValueHolder<Boolean>>();
+      registry = new PropertyModelRegistry();
 
       stringValue = createValueMock(String.class);
       objectValue = createValueMock(Object.class);
@@ -51,9 +50,9 @@ public class PropertyModelRegistryTest
    }
 
    @SuppressWarnings("unchecked")
-   private <T> BeanPropertyValueModel<TestBean, T> createValueMock(Class<T> clazz)
+   private <T> BeanPropertyValueModel<T> createValueMock(Class<T> clazz)
    {
-      BeanPropertyValueModel<TestBean, T> model = (BeanPropertyValueModel<TestBean, T>) Mockito.mock(BeanPropertyValueModel.class);
+      BeanPropertyValueModel<T> model = (BeanPropertyValueModel<T>) Mockito.mock(BeanPropertyValueModel.class);
       ValueHolder<Boolean> dirty = new ValueHolder<Boolean>();
       dirtyModels.put(model, dirty);
       when(model.getDirtyModel()).thenReturn(dirty);
@@ -61,9 +60,9 @@ public class PropertyModelRegistryTest
    }
 
    @SuppressWarnings("unchecked")
-   private <T> BeanPropertyListModel<TestBean, T> createListMock(Class<T> clazz)
+   private <T> BeanPropertyListModel<T> createListMock(Class<T> clazz)
    {
-      BeanPropertyListModel<TestBean, T> model = (BeanPropertyListModel<TestBean, T>) Mockito.mock(BeanPropertyListModel.class);
+      BeanPropertyListModel<T> model = (BeanPropertyListModel<T>) Mockito.mock(BeanPropertyListModel.class);
       ValueHolder<Boolean> dirty = new ValueHolder<Boolean>();
       dirtyModels.put(model, dirty);
       when(model.getDirtyModel()).thenReturn(dirty);
@@ -77,11 +76,11 @@ public class PropertyModelRegistryTest
       registry.add(stringListKey, stringList);
       registry.add(objectValueKey, objectValue);
 
-      final ArrayList<BeanPropertyModelBase<TestBean>> collection = new ArrayList<BeanPropertyModelBase<TestBean>>();
+      final ArrayList<BeanPropertyModelBase> collection = new ArrayList<BeanPropertyModelBase>();
 
-      registry.withEachModel(new PropertyModelVisitor<TestBean>()
+      registry.withEachModel(new PropertyModelVisitor()
       {
-         public void visit(BeanPropertyModelBase<TestBean> model)
+         public void visit(BeanPropertyModelBase model)
          {
             collection.add(model);
          }
@@ -107,7 +106,7 @@ public class PropertyModelRegistryTest
    }
 
    @Test
-   public void ensureDirtyDoesntChangeTillAfterVisit()
+   public void ensureDirtyDoesNotChangeTillAfterVisit()
    {
       registry.add(stringValueKey, stringValue);
       registry.add(stringListKey, stringList);
@@ -126,9 +125,9 @@ public class PropertyModelRegistryTest
          }
       });
 
-      registry.withEachModel(new PropertyModelVisitor<TestBean>()
+      registry.withEachModel(new PropertyModelVisitor()
       {
-         public void visit(BeanPropertyModelBase<TestBean> model)
+         public void visit(BeanPropertyModelBase model)
          {
             dirtyModels.get(model).setValue(true);
 

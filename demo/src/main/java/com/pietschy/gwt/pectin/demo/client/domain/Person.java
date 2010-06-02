@@ -33,9 +33,9 @@ public class Person
    private String nickName;
    private Gender gender;
    private Integer age;
+
    private ArrayList<Wine> favoriteWines = new ArrayList<Wine>();
    private boolean wineLover = false;
-
    private ArrayList<String> favoriteCheeses= new ArrayList<String>();
    private boolean cheeseLover = false;
 

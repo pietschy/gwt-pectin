@@ -3,6 +3,7 @@ package com.pietschy.gwt.pectin.client.command;
 import com.google.gwt.user.client.Command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Collection;
  */
 public class InterceptorChain
 {
-   private ArrayList<Interceptor> interceptors = new ArrayList<Interceptor>();
+   private ArrayList<Interceptor> interceptorList = new ArrayList<Interceptor>();
 
    /**
     * This adds interceptors to run before the command gets to execute.  These
@@ -24,20 +25,28 @@ public class InterceptorChain
     */
    public void addInterceptor(Interceptor interceptor)
    {
-      interceptors.add(interceptor);
+      interceptorList.add(interceptor);
    }
 
    public void addInterceptors(Collection<Interceptor> interceptors)
    {
-      interceptors.addAll(interceptors);
+      interceptorList.addAll(interceptors);
    }
 
+   public void addInterceptors(Interceptor interceptor, Interceptor... others)
+   {
+      addInterceptor(interceptor);
+      addInterceptors(Arrays.asList(others));
+   }
 
+   /**
+    * Executes the specified command if and only if all the interceptors proceed.
+    * @param executor the command to execute if all the interceptors proceed.
+    */
    public void execute(Command executor)
    {
       buildInvocationChain(executor).proceed();
    }
-
 
    protected Invocation buildInvocationChain(final Command executor)
    {
@@ -49,7 +58,7 @@ public class InterceptorChain
          }
       });
 
-      for (Interceptor interceptor : interceptors)
+      for (Interceptor interceptor : interceptorList)
       {
          invocation = new Invocation(invocation, interceptor);
       }

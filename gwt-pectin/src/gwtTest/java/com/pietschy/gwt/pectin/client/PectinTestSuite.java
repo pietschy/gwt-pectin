@@ -17,11 +17,9 @@
 package com.pietschy.gwt.pectin.client;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
-import com.pietschy.gwt.pectin.client.bean.AbstractBeanModelProviderTest;
-import com.pietschy.gwt.pectin.client.bean.AutoCommitBeanModelProviderTest;
-import com.pietschy.gwt.pectin.client.bean.BeanModelProviderTest;
-import com.pietschy.gwt.pectin.client.binding.WidgetBinderMetadataTest;
-import com.pietschy.gwt.pectin.client.binding.WidgetBinderUiCommandTest;
+import com.pietschy.gwt.pectin.client.bean.*;
+import com.pietschy.gwt.pectin.client.binding.FormBinderMetadataTest;
+import com.pietschy.gwt.pectin.client.binding.FormBinderUiCommandTest;
 import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinderTest;
 import com.pietschy.gwt.pectin.client.style.StyleBinderTest;
 import junit.framework.Test;
@@ -45,13 +43,15 @@ public class PectinTestSuite extends GWTTestSuite
       TestSuite gwtTestSuite = new GWTTestSuite("Testing Pectin");
 
       // bean tests
-      gwtTestSuite.addTestSuite(AbstractBeanModelProviderTest.class);
-      gwtTestSuite.addTestSuite(AutoCommitBeanModelProviderTest.class);
-      gwtTestSuite.addTestSuite(BeanModelProviderTest.class);
+      gwtTestSuite.addTestSuite(BeanModelProviderGeneratedMethodsTest.class);
+      gwtTestSuite.addTestSuite(BeanModelProviderGeneratedAccessorTest.class);
+      gwtTestSuite.addTestSuite(BeanModelProviderValueModelTest.class);
+      gwtTestSuite.addTestSuite(BeanModelProviderListModelTest.class);
+      gwtTestSuite.addTestSuite(BeanModelProviderGeneralTest.class);
 
       // Binder tests
-      gwtTestSuite.addTestSuite(WidgetBinderUiCommandTest.class);
-      gwtTestSuite.addTestSuite(WidgetBinderMetadataTest.class);
+      gwtTestSuite.addTestSuite(FormBinderUiCommandTest.class);
+      gwtTestSuite.addTestSuite(FormBinderMetadataTest.class);
 
       // Metadata tests
       gwtTestSuite.addTestSuite(MetadataBinderTest.class);

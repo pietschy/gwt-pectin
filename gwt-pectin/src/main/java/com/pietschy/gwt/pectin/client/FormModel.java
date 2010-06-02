@@ -97,18 +97,39 @@ public class FormModel
     */
    public Collection<Field<?>> allFields()
    {
-      // It may be tempting to include a live colleciton of the fields so that the notion of
+      // It may be tempting to include a live collection of the fields so that the notion of
       // "all fields" is true no matter when the method was used to construct an expression
       // This however would cause problems as most bindings take some initialisation action
       // when a new field is added.
       //
       // Thus if we want this method to return a live collection then we will need to:
-      // a) make the collection observable
+      // a) make the collection observable (i.e. make it a ListModel)
       // b) ensure all bindings that take a collection of fields observe the collection and
       //    ensure new additions to it are initialised appropriately.
       //
       // but for now we return a copy.
       return new ArrayList<Field<?>>(allFields);
+   }
+
+   /**
+    * Returns all the fields in this form model at the time this method is called except those
+    * specified.  Fields added after this method is invoked will not be included in the collection.
+    * <p>
+    * Fields are in the order they are added to the form.
+    *
+    * @return a collection of the fields in this model.
+    */
+   public Collection<Field<?>> allFieldsExcept(Field<?> first, Field<?>... others)
+   {
+      // See the notes in allFields() for details on why I haven't got around to
+      // creating a live collections.
+      ArrayList<Field<?>> list = new ArrayList<Field<?>>(allFields);
+      list.remove(first);
+      for (Field<?> other : others)
+      {
+         list.remove(other);
+      }
+      return list;
    }
 
    /**

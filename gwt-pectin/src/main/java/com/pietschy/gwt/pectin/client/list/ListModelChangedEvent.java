@@ -28,10 +28,11 @@ import com.google.gwt.event.shared.GwtEvent;
 public class ListModelChangedEvent<E> extends GwtEvent<ListModelChangedHandler<E>>
 {
    private static final Type<ListModelChangedHandler<?>> TYPE = new Type<ListModelChangedHandler<?>>();
+   private ListModel<E> sourceModel;
 
-   public ListModelChangedEvent()
+   public ListModelChangedEvent(ListModel<E> sourceModel)
    {
-      
+      this.sourceModel = sourceModel;
    }
 
    public static Type<ListModelChangedHandler<?>> getType()
@@ -39,9 +40,9 @@ public class ListModelChangedEvent<E> extends GwtEvent<ListModelChangedHandler<E
       return TYPE;
    }
 
-   public static <E> void fire(HasListModelChangedHandler<E> source)
+   public static <E> void fire(ListModel<E> source)
    {
-      source.fireEvent(new ListModelChangedEvent<E>());
+      source.fireEvent(new ListModelChangedEvent<E>(source));
    }
 
    @SuppressWarnings("unchecked")
@@ -55,4 +56,8 @@ public class ListModelChangedEvent<E> extends GwtEvent<ListModelChangedHandler<E
       handler.onListDataChanged(this);
    }
 
+   public ListModel<E> getSourceModel()
+   {
+      return sourceModel;
+   }
 }

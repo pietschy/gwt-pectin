@@ -19,6 +19,7 @@ package com.pietschy.gwt.pectin.demo.client.format;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
+import com.pietschy.gwt.pectin.client.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
@@ -51,8 +52,10 @@ extends VerySimpleForm
          return new EnhancedTextBox();
       }
    };
+   private Label luckNumberTotal = new Label();
 
-   private WidgetBinder binder = new WidgetBinder();
+   private FormBinder binder = new WidgetBinder();
+
 
    public FormattedFieldDemoForm(final FormattedFieldDemoModel model)
    {
@@ -61,15 +64,17 @@ extends VerySimpleForm
       binder.bind(model.ageInDogYears).to(ageInDogYears);
 
       // bind formattedListField to a text box (wrapped by out ListTextBox to
-      // make it impement HasValue<Collection<String>>)
+      // make it implement HasValue<Collection<String>>)
       binder.bind(model.luckyNumbers).to(luckyNumbers);
 
       // Now bind the list to a Label for simple display.  This format only
       // has to deal with integer values.
-      binder.bind(model.luckyNumbers).toLabel(luckyNumberLabel, new LuckyNumberLabelFormat());
+      binder.bind(model.luckyNumbers).toLabel(luckyNumberLabel).withFormat(new LuckyNumberLabelFormat());
 
       // we'll show a second binding for our lucky numbers.
       binder.bind(model.luckyNumbers).to(luckyNumbersAgain);
+
+      binder.bind(model.sumOfLuckyNumbers).toLabel(luckNumberTotal);
 
       age.setVisibleLength(5);
       ageInDogYears.setVisibleLength(5);
@@ -87,6 +92,8 @@ extends VerySimpleForm
       addNote("And here are your lucky numbers bound to a HasValue<Collection<String>>");
       addTallRow("Lucky Numbers", luckyNumbersAgain);
 
+      addNote("This is the sum of your lucky numbers computed by a Reduce style function.");
+      addRow("Total", luckNumberTotal);
 
 
 

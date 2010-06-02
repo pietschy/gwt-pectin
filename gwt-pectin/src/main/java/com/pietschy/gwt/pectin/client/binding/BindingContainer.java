@@ -34,9 +34,9 @@ public interface BindingContainer extends Disposable
     *  
     * @param binding the binding to register
     */
-   void registerBindingAndUpdateTarget(AbstractBinding binding);
+   void registerDisposableAndUpdateTarget(AbstractBinding binding);
 
-   void registerHandler(HandlerRegistration handlerRegistration);
+   void registerDisposable(HandlerRegistration handlerRegistration);
 
    void registerDisposable(Disposable disposable);
 }

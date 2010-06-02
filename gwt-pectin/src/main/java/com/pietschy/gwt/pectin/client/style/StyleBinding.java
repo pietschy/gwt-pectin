@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client.style;
 
 import com.google.gwt.user.client.ui.UIObject;
-import com.pietschy.gwt.pectin.client.binding.AbstractReadOnlyValueBinding;
+import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class StyleBinding
-   extends AbstractReadOnlyValueBinding<Boolean>
+   extends AbstractValueBinding<Boolean>
 {
    private List<UIObject> widgets;
    private String styleName;

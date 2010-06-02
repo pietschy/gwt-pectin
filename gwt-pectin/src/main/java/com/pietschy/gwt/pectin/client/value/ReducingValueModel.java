@@ -30,9 +30,8 @@ import java.util.List;
  * {@link ValueModel}s and a {@link Reduce}.  Changes in any of the source models result in
  * the function being re-evaluated and the value updating.
  */
-public class ReducingValueModel<T, S> extends AbstractValueModel<T>
+public class ReducingValueModel<T, S> extends AbstractReducingValueModel<T,S>
 {
-   private Reduce<T, ? super S> function;
    private ArrayList<ValueModel<S>> sourceModels = new ArrayList<ValueModel<S>>();
    private ValueChangeHandler<S> changeMonitor = new ValueChangeHandler<S>()
    {
@@ -42,17 +41,9 @@ public class ReducingValueModel<T, S> extends AbstractValueModel<T>
       }
    };
 
-   private T computedValue = null;
-   private boolean ignoreChanges = false;
-
    private ReducingValueModel(Reduce<T, ? super S> function, boolean compute)
    {
-      if (function == null)
-      {
-         throw new NullPointerException("function is null");
-      }
-
-      this.function = function;
+      super(function);
 
       if (compute)
       {
@@ -118,87 +109,15 @@ public class ReducingValueModel<T, S> extends AbstractValueModel<T>
       }
    }
 
-   public Reduce<T, ? super S> getFunction()
-   {
-      return function;
-   }
-
-   public void setFunction(Reduce<T, ? super S> function)
-   {
-      if (function == null)
-      {
-         throw new NullPointerException("function is null");
-      }
-
-      this.function = function;
-
-      // we use tryRecompute so we only recompute if we're not ignoring
-      // changes for now.
-      tryRecompute();
-   }
-
-   protected void tryRecompute()
-   {
-      if (!ignoreChanges)
-      {
-         recompute();
-      }
-   }
-
-   protected void recompute()
-   {
-      T old = computedValue;
-      computedValue = computeValue();
-      fireValueChangeEvent(old, computedValue);
-   }
-
-   T computeValue()
+   @Override
+   protected List<S> prepareValues()
    {
       ArrayList<S> values = new ArrayList<S>();
       for (ValueModel<S> model : sourceModels)
       {
          values.add(model.getValue());
       }
-
-      return function.compute(values);
+      return values;
    }
 
-   public T getValue()
-   {
-      return computedValue;
-   }
-
-   protected boolean isIgnoreChanges()
-   {
-      return ignoreChanges;
-   }
-
-   protected void setIgnoreChanges(boolean ignoreChanges)
-   {
-      this.ignoreChanges = ignoreChanges;
-   }
-
-   /**
-    * Delays re-computation of the result until after the specified runnable
-    * has been completed.  This method is re-entrant.
-    *
-    * @param r the runnable to run.
-    */
-   public void recomputeAfterRunning(Runnable r)
-   {
-      boolean oldValue = isIgnoreChanges();
-      try
-      {
-         setIgnoreChanges(true);
-         r.run();
-      }
-      finally
-      {
-         setIgnoreChanges(oldValue);
-         // we could have been called in a re-entrant mode so we only
-         // try and recompute.
-         tryRecompute();
-      }
-
-   }
 }

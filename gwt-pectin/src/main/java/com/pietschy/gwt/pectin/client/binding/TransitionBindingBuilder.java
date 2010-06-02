@@ -43,7 +43,7 @@ public class TransitionBindingBuilder<T>
       public void invoke(Command command)
       {
          binding.setCommand(command);
-         bindingContainer.registerHandler(
+         bindingContainer.registerDisposable(
             model.addValueChangeHandler(binding)
          );
       }

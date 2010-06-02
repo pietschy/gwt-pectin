@@ -4,7 +4,7 @@ import com.pietschy.gwt.pectin.client.binding.Disposable;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.channel.Publisher;
-import com.pietschy.gwt.pectin.client.value.HasValueSetter;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
 /**
 * Created by IntelliJ IDEA.
@@ -26,6 +26,10 @@ public class SendToBuilderImpl<T> implements SendToBuilder<T>
 
    public Disposable to(final Destination<? super T> destination)
    {
+      if (destination == null)
+      {
+         throw new NullPointerException("destination is null");
+      }
       return trigger.sendTo(new Destination<Object>()
       {
          public void receive(Object ignore)
@@ -37,6 +41,11 @@ public class SendToBuilderImpl<T> implements SendToBuilder<T>
 
    public Disposable to(final Publisher<? super T> destination)
    {
+      if (destination == null)
+      {
+         throw new NullPointerException("destination is null");
+      }
+
       return trigger.sendTo(new Destination<Object>()
       {
          public void receive(Object ignore)
@@ -46,8 +55,13 @@ public class SendToBuilderImpl<T> implements SendToBuilder<T>
       });
    }
 
-   public Disposable to(final HasValueSetter<? super T> destination)
+   public Disposable to(final ValueTarget<? super T> destination)
    {
+      if (destination == null)
+      {
+         throw new NullPointerException("destination is null");
+      }
+
       return trigger.sendTo(new Destination<Object>()
       {
          public void receive(Object ignore)
@@ -59,6 +73,11 @@ public class SendToBuilderImpl<T> implements SendToBuilder<T>
 
    public Disposable to(final ParameterisedCommand<? super T> destination)
    {
+      if (destination == null)
+      {
+         throw new NullPointerException("destination is null");
+      }
+
       return trigger.sendTo(new Destination<Object>()
       {
          public void receive(Object ignore)

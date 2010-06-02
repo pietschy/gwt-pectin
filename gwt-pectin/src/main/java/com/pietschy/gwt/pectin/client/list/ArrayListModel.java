@@ -73,6 +73,12 @@ implements MutableListModel<T>
       setElements(Arrays.asList(elements));
    }
 
+   public void clear()
+   {
+      internalList.clear();;
+      fireListChanged();
+   }
+   
    /**
     * Returns a {@link Destination} allowing the contents of a {@link Channel} to be
     * injected directly into the list.

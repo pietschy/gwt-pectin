@@ -20,12 +20,12 @@ import com.google.gwt.core.client.GWT;
 import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
-import com.pietschy.gwt.pectin.client.bean.CopyingBeanModelProvider;
-import com.pietschy.gwt.pectin.client.channel.Destination;
+import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import com.pietschy.gwt.pectin.client.validation.validator.NoEmptyElementsValidator;
 import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
 import com.pietschy.gwt.pectin.client.validation.validator.NotNullValidator;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
@@ -36,9 +36,9 @@ import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validat
 /**
  *
  */
-public class EditPersonModel extends FormModel implements Destination<Person>
+public class EditPersonModel extends FormModel implements ValueTarget<Person>
 {
-   public static abstract class PersonProvider extends CopyingBeanModelProvider<Person>{}
+   public static abstract class PersonProvider extends BeanModelProvider<Person>{}
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
 
    protected final FieldModel<String> givenName;
@@ -76,19 +76,19 @@ public class EditPersonModel extends FormModel implements Destination<Person>
    }
 
 
-   public void receive(Person person)
+   public Person getValue()
    {
-      readFrom(person);
+      return personProvider.getValue();
    }
 
-   public void readFrom(Person person)
+   public void setValue(Person person)
    {
-      personProvider.readFrom(person);
+      personProvider.setValue(person);
    }
 
-   public void copyTo(Person person)
+   public void commit()
    {
-      personProvider.copyTo(person, false);
+      personProvider.commit();
    }
 
    public void revert()

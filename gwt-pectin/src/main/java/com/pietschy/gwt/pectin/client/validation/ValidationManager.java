@@ -86,7 +86,7 @@ implements BindingCallback
             ValidationDisplayBinding validationBinding = new ValidationDisplayBinding(fieldValidator, (ValidationDisplay) target);
             validationBinding.updateTarget();
 
-            binding.registerBindingAndUpdateTarget(validationBinding);
+            binding.registerDisposableAndUpdateTarget(validationBinding);
          }
       }
    }
@@ -101,7 +101,7 @@ implements BindingCallback
          {
             IndexedValidationDisplayBinding validationBinding = new IndexedValidationDisplayBinding(fieldValidator, (IndexedValidationDisplay) target);
             validationBinding.updateTarget();
-            binding.registerBindingAndUpdateTarget(validationBinding);
+            binding.registerDisposableAndUpdateTarget(validationBinding);
          }
       }
    }
@@ -116,7 +116,7 @@ implements BindingCallback
          {
             IndexedValidationDisplayBinding validationBinding = new IndexedValidationDisplayBinding(fieldValidator, (IndexedValidationDisplay) target);
             validationBinding.updateTarget();
-            binding.registerBindingAndUpdateTarget(validationBinding);
+            binding.registerDisposableAndUpdateTarget(validationBinding);
          }
       }
    }

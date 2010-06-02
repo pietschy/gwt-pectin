@@ -5,7 +5,7 @@ import com.pietschy.gwt.pectin.client.binding.Disposable;
 import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
 import com.pietschy.gwt.pectin.client.function.Function;
 import com.pietschy.gwt.pectin.client.util.SubscriptionList;
-import com.pietschy.gwt.pectin.client.value.HasValueSetter;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +29,10 @@ public class DefaultChannel<T> extends SubscriptionList<Destination<? super T>> 
 
    public <S> Publisher<S> getFormattedPublisher(final Function<T, S> function)
    {
+      if (function == null)
+      {
+         throw new NullPointerException("function is null");
+      }
       return new Publisher<S>()
       {
          public void publish(S value)
@@ -40,6 +44,10 @@ public class DefaultChannel<T> extends SubscriptionList<Destination<? super T>> 
 
    public <S> Destination<S> asFormattedDestination(final Function<T,S> function)
    {
+      if (function == null)
+      {
+         throw new NullPointerException("function is null");
+      }
       return new Destination<S>()
       {
          public void receive(S value)
@@ -62,6 +70,10 @@ public class DefaultChannel<T> extends SubscriptionList<Destination<? super T>> 
 
    public Disposable sendTo(Destination<? super T> destination)
    {
+      if (destination == null)
+      {
+         throw new NullPointerException("destination is null");
+      }
       return subscribe(destination);
    }
 
@@ -76,7 +88,7 @@ public class DefaultChannel<T> extends SubscriptionList<Destination<? super T>> 
       });
    }
 
-   public Disposable sendTo(final HasValueSetter<? super T> destination)
+   public Disposable sendTo(final ValueTarget<? super T> destination)
    {
       return sendTo(new Destination<T>()
       {

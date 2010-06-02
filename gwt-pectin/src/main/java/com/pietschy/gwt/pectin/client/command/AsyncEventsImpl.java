@@ -7,7 +7,7 @@ import com.pietschy.gwt.pectin.client.channel.DefaultChannel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.channel.Publisher;
 import com.pietschy.gwt.pectin.client.util.SubscriptionList;
-import com.pietschy.gwt.pectin.client.value.HasValueSetter;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
 /**
  * AbstractAsyncEvents provides a the default implementation of {@link com.pietschy.gwt.pectin.client.command.AsyncEvents}.
@@ -71,7 +71,7 @@ public class AsyncEventsImpl<R, E> extends AbstractEvents implements AsyncEvents
       return resultChannel.sendTo(destination);
    }
 
-   public Disposable sendResultTo(HasValueSetter<? super R> destination)
+   public Disposable sendResultTo(ValueTarget<? super R> destination)
    {
       return resultChannel.sendTo(destination);
    }
@@ -83,6 +83,10 @@ public class AsyncEventsImpl<R, E> extends AbstractEvents implements AsyncEvents
 
    public Disposable onSuccessInvoke(final Command command)
    {
+      if (command == null)
+      {
+         throw new NullPointerException("command is null");
+      }
       return resultChannel.sendTo(new Destination<R>()
       {
          public void receive(R value)
@@ -102,7 +106,7 @@ public class AsyncEventsImpl<R, E> extends AbstractEvents implements AsyncEvents
       return errorChannel.sendTo(destination);
    }
 
-   public Disposable sendErrorTo(HasValueSetter<? super E> destination)
+   public Disposable sendErrorTo(ValueTarget<? super E> destination)
    {
       return errorChannel.sendTo(destination);
    }
@@ -119,6 +123,10 @@ public class AsyncEventsImpl<R, E> extends AbstractEvents implements AsyncEvents
 
    public Disposable onErrorInvoke(final Command command)
    {
+      if (command == null)
+      {
+         throw new NullPointerException("command is null");
+      }
       return errorChannel.sendTo(new Destination<E>()
       {
          public void receive(E value)

@@ -21,6 +21,8 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.format.Format;
 import com.pietschy.gwt.pectin.client.format.FormatException;
 import com.pietschy.gwt.pectin.client.list.*;
+import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,7 @@ public class FormattedListFieldModelImpl<T>
    extends AbstractListFieldModelBase<T>
    implements FormattedListFieldModel<T>
 {
-   private Format<T> format;
+   private ValueHolder<Format<T>> formatModel = new ValueHolder<Format<T>>();
    private ArrayListModel<String> textModel = new ArrayListModel<String>();
    private ListFormatExceptionPolicy<T> formatExceptionPolicy = new ListFormatExceptionPolicy<T>()
    {
@@ -74,9 +76,9 @@ public class FormattedListFieldModelImpl<T>
    {
       super(formModel, source, valueType);
       setFormat(format);
-
       addListModelChangedHandler(valueMonitor);
       textModel.addListModelChangedHandler(textMonitor);
+      formatModel.addValueChangeHandler(formatMonitor);
    }
 
    public MutableListModel<String> getTextModel()
@@ -91,16 +93,17 @@ public class FormattedListFieldModelImpl<T>
          throw new NullPointerException("format is null");
       }
 
-      this.format = format;
-
-      // this will trigger the text model to update using
-      // the new format.
-      writeSourceToText();
+      this.formatModel.setValue(format);
    }
 
    public Format<T> getFormat()
    {
-      return format;
+      return formatModel.getValue();
+   }
+
+   public ValueModel<Format<T>> getFormatModel()
+   {
+      return formatModel;
    }
 
    public void setFormatExceptionPolicy(ListFormatExceptionPolicy<T> formatExceptionPolicy)

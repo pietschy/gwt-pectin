@@ -7,15 +7,64 @@ package com.pietschy.gwt.pectin.client.bean;
 * Time: 11:32:38 AM
 * To change this template use File | Settings | File Templates.
 */
-class PropertyKey<T>
+public class PropertyKey<T>
 {
    private Class<T> type;
+   private String fullPath;
    private String propertyName;
+   private String parentPath;
 
-   PropertyKey(Class<T> type, String propertyName)
+
+   public PropertyKey(Class<T> type, String propertyPath)
    {
       this.type = type;
-      this.propertyName = propertyName;
+      this.fullPath = propertyPath;
+      parsePath(propertyPath);
+   }
+
+   public String getPropertyName()
+   {
+      return propertyName;
+   }
+
+   public String getFullPath()
+   {
+      return fullPath;
+   }
+
+   public boolean isRootProperty()
+   {
+      return parentPath == null;
+   }
+
+   public String getParentPath()
+   {
+      return parentPath;
+   }
+
+   void parsePath(String propertyPath)
+   {
+      if (propertyPath.startsWith("."))
+      {
+         throw new IllegalArgumentException("Property path can't start with a '.': " + propertyPath);
+      }
+      if (propertyPath.endsWith("."))
+      {
+         throw new IllegalArgumentException("Property path can't end with a '.': " + propertyPath);
+      }
+
+      int lastDotIndex = propertyPath.lastIndexOf('.');
+
+      if (lastDotIndex > 0)
+      {
+         parentPath = propertyPath.substring(0, lastDotIndex);
+         propertyName = propertyPath.substring(lastDotIndex + 1);
+      }
+      else
+      {
+         parentPath = null;
+         propertyName = propertyPath;
+      }
    }
 
    @SuppressWarnings("unchecked")
@@ -32,7 +81,7 @@ class PropertyKey<T>
 
       PropertyKey<T> key = (PropertyKey<T>) o;
 
-      if (propertyName != null ? !propertyName.equals(key.propertyName) : key.propertyName != null)
+      if (fullPath != null ? !fullPath.equals(key.fullPath) : key.fullPath != null)
       {
          return false;
       }
@@ -49,7 +98,7 @@ class PropertyKey<T>
    {
       int result;
       result = (type != null ? type.hashCode() : 0);
-      result = 31 * result + (propertyName != null ? propertyName.hashCode() : 0);
+      result = 31 * result + (fullPath != null ? fullPath.hashCode() : 0);
       return result;
    }
 }

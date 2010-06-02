@@ -42,7 +42,7 @@ implements ValidationHandler, IndexedValidationHandler
       this.validator = validator;
       this.widget = widget;
       validationStyles = applicator;
-      registerHandler(validator.addValidationHandler(this));
+      registerDisposable(validator.addValidationHandler(this));
    }
 
    public ValidationStyleBinding(HasIndexedValidationResult validator, UIObject widget, ValidationStyles applicator)
@@ -50,7 +50,7 @@ implements ValidationHandler, IndexedValidationHandler
       this.validator = validator;
       this.widget = widget;
       validationStyles = applicator;
-      registerHandler(validator.addValidationHandler((IndexedValidationHandler) this));
+      registerDisposable(validator.addValidationHandler((IndexedValidationHandler) this));
    }
 
    public void updateTarget()

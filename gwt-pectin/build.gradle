@@ -9,7 +9,7 @@ dependencies {
 
    testCompile("org.testng:testng:5.8:jdk15",
                "junit:junit:4.7",
-               "org.mockito:mockito-all:1.7")
+               "org.mockito:mockito-all:1.8.4")
 }
 
 gradle.taskGraph.whenReady {taskGraph ->
@@ -30,7 +30,8 @@ check.dependsOn('testGwt')
 task release << {
    incrementBuildNumber(project)
 }
-release.dependsOn 'build', 'install'
+release.dependsOn 'build', 'install', 'uploadArchives'
+
 
 // task for creating the gradle scripts.
 task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {

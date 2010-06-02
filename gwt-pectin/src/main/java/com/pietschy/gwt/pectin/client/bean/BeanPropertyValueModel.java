@@ -16,6 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.bean;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.value.AbstractMutableValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
@@ -23,45 +25,100 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 /**
  *
  */
-public class BeanPropertyValueModel<B, T>
-   extends AbstractMutableValueModel<T> implements BeanPropertyModelBase<B>
+public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> implements BeanPropertyModelBase
 {
-   private BeanPropertyAdapter<B> provider;
-   private String propertyName;
+   private BeanPropertyAccessor accessor;
+   private PropertyKey<T> propertyKey;
    private T checkpointValue;
    private T bufferedValue;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
    private ValueHolder<Boolean> mutableModel = new ValueHolder<Boolean>(false);
+   private ValueModel<?> source;
+   private ValueModel<Boolean> autoCommit;
 
-   public BeanPropertyValueModel(BeanPropertyAdapter<B> provider, String propertyName)
+   public BeanPropertyValueModel(ValueModel<?> source, PropertyKey<T> key, BeanPropertyAccessor accessor, ValueModel<Boolean> autoCommit)
    {
-      this.provider = provider;
-      this.propertyName = propertyName;
+      this.source = source;
+      this.propertyKey = key;
+      this.accessor = accessor;
+      this.autoCommit = autoCommit;
       dirtyModel.setFireEventsEvenWhenValuesEqual(false);
-      updateMutableState();
+      
+      installValueChangeHandler(source);
+      handleSourceModelChange();
    }
 
+   @SuppressWarnings("unchecked")
+   private void installValueChangeHandler(ValueModel<?> source)
+   {
+      // yep I know, no generics... I don't know or care what the type is since the generated accessor handles
+      // all that.  We could get around this if ValueChangeHandler allowed for ValueChangeHandler<? super T>.
+      source.addValueChangeHandler(new ValueChangeHandler()
+      {
+         public void onValueChange(ValueChangeEvent event)
+         {
+            handleSourceModelChange();
+         }
+      });
+   }
+
+   private void handleSourceModelChange()
+   {
+      readFromSource();
+      onSourceModelChanged(source.getValue());
+   }
+
+   /**
+    * This is an empty method that subclasses can override to perform
+    * actions when the source bean changes.
+    * @param sourceBean the new value of the source bean.
+    */
+   protected void onSourceModelChanged(Object sourceBean)
+   {
+   }
 
    public String getPropertyName()
    {
-      return propertyName;
+      return propertyKey.getPropertyName();
    }
 
    public void setValue(T value)
    {
-      if (!isMutable())
-      {
-         throw new IllegalStateException("Underlying bean property is read only: " + getPropertyName());
-      }
-
+      ensureMutable();
       setValueInternal(value);
+   }
+
+   private void ensureMutable()
+   {
+      if (!isMutableProperty())
+      {
+         throw new ReadOnlyPropertyException(propertyKey);
+      }
+      else if (!isNonNullSource())
+      {
+         throw new SourceBeanIsNullException(propertyKey);
+      }
    }
 
    private void setValueInternal(T value)
    {
+      T oldValue = bufferedValue;
       bufferedValue = value;
-      updateDirtyState();
-      fireValueChangeEvent(value);
+      if (isAutoCommit())
+      {
+         writeToSource(true);
+      }
+      else
+      {
+         updateDirtyState();
+      }
+      fireValueChangeEvent(oldValue, value);
+   }
+
+   protected boolean isAutoCommit()
+   {
+      // only true if not null and true.
+      return Boolean.TRUE.equals(autoCommit.getValue());
    }
 
    @SuppressWarnings("unchecked")
@@ -70,20 +127,21 @@ public class BeanPropertyValueModel<B, T>
       return bufferedValue;
    }
 
-   public void copyTo(B bean, boolean clearDirtyState)
+   public void writeToSource(boolean checkpoint)
    {
+      ensureMutable();
       T value = getValue();
-      provider.writeProperty(bean, getPropertyName(), value);
-      if (clearDirtyState)
+      accessor.writeProperty(source.getValue(), getPropertyName(), value);
+      if (checkpoint)
       {
          checkpoint();
       }
    }
 
    @SuppressWarnings("unchecked")
-   public void readFrom(B bean)
+   public void readFromSource()
    {
-      checkpointValue = (T) provider.readProperty(bean, getPropertyName());
+      checkpointValue = (T) accessor.readProperty(source.getValue(), getPropertyName());
       updateMutableState();
       setValueInternal(checkpointValue);
    }
@@ -121,9 +179,18 @@ public class BeanPropertyValueModel<B, T>
 
    private void updateMutableState()
    {
-      mutableModel.setValue(provider.isMutable(propertyName));
+      mutableModel.setValue(isMutableProperty() && isNonNullSource());
    }
 
+   private boolean isNonNullSource()
+   {
+      return source.getValue() != null;
+   }
+
+   public boolean isMutableProperty()
+   {
+      return accessor.isMutable(getPropertyName());
+   }
 
    public ValueModel<Boolean> getDirtyModel()
    {

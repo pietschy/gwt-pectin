@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasText;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
+import com.pietschy.gwt.pectin.client.format.Format;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,18 +31,16 @@ import com.pietschy.gwt.pectin.client.format.DisplayFormat;
  * To change this template use File | Settings | File Templates.
  */
 public class FormattedFieldToHasTextBinding<T>
-extends AbstractBinding implements HasDisplayFormat<T>
+extends AbstractValueBinding<T> implements HasDisplayFormat<T>
 {
    private HasText widget;
-   private FormattedFieldModel<T> field;
-   private DisplayFormat<? super T> format;
+   private DisplayFormat<? super T> userFormat;
 
-   public FormattedFieldToHasTextBinding(FormattedFieldModel<T> field, HasText widget, DisplayFormat<? super T> format)
+   public FormattedFieldToHasTextBinding(FormattedFieldModel<T> field, HasText widget)
    {
-      this.field = field;
+      super(field);
+      registerDisposable(field.getFormatModel().addValueChangeHandler(new FormatChangeHandler<T>()));
       this.widget = widget;
-      this.format = format;
-      registerHandler(field.addValueChangeHandler(new FieldMonitor()));
    }
 
    public HasText getTarget()
@@ -49,34 +48,35 @@ extends AbstractBinding implements HasDisplayFormat<T>
       return widget;
    }
 
-
-   public void updateTarget()
-   {
-      T value = field.getValue();
-      updateTarget(value);
-   }
-
    protected void updateTarget(T value)
    {
-      getTarget().setText(format.format(value));
+      getTarget().setText(format(value));
    }
 
-   private void onModelChanged(T value)
+   protected String format(T value)
    {
-      updateTarget(value);
+      return userFormat != null ?
+             userFormat.format(value) :
+             getModel().getFormat().format(value);
    }
 
-   private class FieldMonitor implements ValueChangeHandler<T>
+   @Override
+   protected FormattedFieldModel<T> getModel()
    {
-      public void onValueChange(ValueChangeEvent<T> event)
-      {
-         onModelChanged(event.getValue());
-      }
+      return (FormattedFieldModel<T>) super.getModel();
    }
 
    public void setFormat(DisplayFormat<? super T> format)
    {
-      this.format = format;
+      this.userFormat = format;
       updateTarget();
+   }
+
+   private class FormatChangeHandler<T> implements ValueChangeHandler<Format<T>>
+   {
+      public void onValueChange(ValueChangeEvent<Format<T>> event)
+      {
+         updateTarget();
+      }
    }
 }

@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.demo.client.basic;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.*;
+import com.pietschy.gwt.pectin.client.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
@@ -58,7 +59,7 @@ public class BasicForm extends VerySimpleForm
    private Button saveButton = new Button("Save");
    private Button revertButton = new Button("Revert");
 
-   private WidgetBinder binder = new WidgetBinder();
+   private FormBinder binder = new WidgetBinder();
 
 
 

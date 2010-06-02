@@ -31,19 +31,19 @@ import java.util.List;
  */
 public class WidgetStyleBindingBuilder
 {
-   private BindingContainer builder;
+   private BindingContainer bindingContainer;
    private String styleName;
    private List<UIObject> widgets;
 
-   public WidgetStyleBindingBuilder(BindingContainer builder, List<UIObject> widgets, String styleName)
+   public WidgetStyleBindingBuilder(BindingContainer bindingContainer, List<UIObject> widgets, String styleName)
    {
-      this.builder = builder;
+      this.bindingContainer = bindingContainer;
       this.styleName = styleName;
       this.widgets = widgets;
    }
 
    public void when(ValueModel<Boolean> condition)
    {
-      builder.registerBindingAndUpdateTarget(new StyleBinding(condition, widgets, styleName));
+      bindingContainer.registerDisposableAndUpdateTarget(new StyleBinding(condition, widgets, styleName));
    }
 }

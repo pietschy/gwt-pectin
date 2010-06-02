@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.binding.Disposable;
 import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
 import com.pietschy.gwt.pectin.client.function.Function;
-import com.pietschy.gwt.pectin.client.value.HasValueSetter;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
 /**
  * Channels allow objects to be passed between interested parties.  It's a similar concept to an event bus
@@ -20,7 +20,7 @@ public interface Channel<T> extends Publisher<T>
 
    Disposable sendTo(Publisher<? super T> destination);
 
-   Disposable sendTo(HasValueSetter<? super T> destination);
+   Disposable sendTo(ValueTarget<? super T> destination);
 
    Disposable sendTo(HasValue<? super T> destination);
 

@@ -16,8 +16,6 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
@@ -27,35 +25,10 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * Time: 4:53:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractReadOnlyValueBinding<T> extends AbstractBinding
+public abstract class AbstractReadOnlyValueBinding<T> extends AbstractValueBinding<T>
 {
-   private ValueModel<T> model;
-   private ValueMonitor valueMonitor = new ValueMonitor();
-
    public AbstractReadOnlyValueBinding(ValueModel<T> valueModel)
    {
-      this.model = valueModel;
-      registerHandler(valueModel.addValueChangeHandler(valueMonitor));
-   }
-
-   public void updateTarget()
-   {
-      updateTarget(model.getValue());
-   }
-
-   protected abstract void updateTarget(T value);
-
-   protected Boolean areEqual(T one, T two)
-   {
-      return one != null ? one.equals(two) : two == null;
-   }
-
-   private class ValueMonitor implements ValueChangeHandler<T>
-   {
-      public void onValueChange(ValueChangeEvent<T> event)
-      {
-         T value = event.getValue();
-         updateTarget(value);
-      }
+      super(valueModel);
    }
 }

@@ -36,7 +36,7 @@ public class FormattedFieldModelImpl<T>
 extends AbstractFieldModelBase<T>
 implements FormattedFieldModel<T>
 {
-   private Format<T> format;
+   private ValueHolder<Format<T>> formatModel = new ValueHolder<Format<T>>();
    private MutableValueModel<String> textModel = new ValueHolder<String>();
    private FormatExceptionPolicy<T> formatExceptionPolicy = new FormatExceptionPolicy<T>()
    {
@@ -78,6 +78,7 @@ implements FormattedFieldModel<T>
 
       addValueChangeHandler(valueMonitor);
       textModel.addValueChangeHandler(textMonitor);
+      formatModel.addValueChangeHandler(formatMonitor);
    }
 
    public MutableValueModel<String> getTextModel()
@@ -91,17 +92,20 @@ implements FormattedFieldModel<T>
       {
          throw new NullPointerException("format is null");
       }
-      
-      this.format = format;
-      
-      // this will trigger the text model to update using
-      // the new format.
-      writeValueToText(getValue());
+
+      // this will trigger a writeToText causing the text model to update
+      // using the new format.
+      this.formatModel.setValue(format);
    }
 
    public Format<T> getFormat()
    {
-      return format;
+      return formatModel.getValue();
+   }
+
+   public ValueModel<Format<T>> getFormatModel()
+   {
+      return formatModel;
    }
 
    public void setFormatExceptionPolicy(FormatExceptionPolicy<T> formatExceptionPolicy)

@@ -30,12 +30,12 @@ implements BindingContainer
 {
    GarbageCollector gc = new GarbageCollector();
 
-   public void registerHandler(HandlerRegistration registration)
+   public void registerDisposable(HandlerRegistration registration)
    {
       gc.add(registration);
    }
    
-   public void registerBindingAndUpdateTarget(AbstractBinding binding)
+   public void registerDisposableAndUpdateTarget(AbstractBinding binding)
    {
       binding.updateTarget();
       gc.add(binding);

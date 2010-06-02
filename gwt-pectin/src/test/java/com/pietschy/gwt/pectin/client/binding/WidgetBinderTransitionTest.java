@@ -17,13 +17,13 @@ import static org.mockito.Mockito.*;
 public class WidgetBinderTransitionTest
 {
    private ValueHolder<String> value;
-   private WidgetBinder binder;
+   private FormBinder binder;
 
    @BeforeTest
    public void setUp()
    {
       value = new ValueHolder<String>();
-      binder = new WidgetBinder();
+      binder = new FormBinder();
    }
 
    @Test
@@ -42,6 +42,7 @@ public class WidgetBinderTransitionTest
    }
 
    @Test
+   @SuppressWarnings("unchecked")
    public void transitionToOnlyFiresOnceIfValuesChangesMultipleTimes()
    {
       value.setValue("a");

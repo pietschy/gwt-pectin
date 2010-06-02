@@ -42,7 +42,7 @@ implements ValidationHandler
    {
       this.display = display;
       this.validator = validator;
-      registerHandler(validator.addValidationHandler(this));
+      registerDisposable(validator.addValidationHandler(this));
    }
 
    public void updateTarget()

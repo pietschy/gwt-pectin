@@ -9,18 +9,19 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * Time: 11:17:24 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface BeanPropertyModelBase<B>
+public interface BeanPropertyModelBase
 {
-   void copyTo(B bean, boolean clearDirtyState);
+   void writeToSource(boolean clearDirtyState);
 
-   @SuppressWarnings("unchecked")
-   void readFrom(B bean);
+   void readFromSource();
 
    void checkpoint();
 
    void revertToCheckpoint();
 
    boolean isMutable();
+
+   boolean isMutableProperty();
 
    ValueModel<Boolean> getDirtyModel();
 }

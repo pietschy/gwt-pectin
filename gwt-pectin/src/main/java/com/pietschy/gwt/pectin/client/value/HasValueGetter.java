@@ -1,10 +1,9 @@
 package com.pietschy.gwt.pectin.client.value;
 
 /**
- * This interface is used as a basis for all objects that can vend a value of particular type.
- * @see ValueModel
+ * @deprecated use {@link com.pietschy.gwt.pectin.client.value.ValueSource} instead.
  */
-public interface HasValueGetter<T>
+public interface HasValueGetter<T> extends ValueSource<T>
 {
    /**
     * Gets the value held by this provider.

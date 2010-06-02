@@ -21,13 +21,32 @@ public class BeanInfo implements Iterable<PropertyInfo>
    private JClassType beanType;
    private Map<String,PropertyInfo> properties;
    private TypeOracle typeOracle;
+   private String parentPath;
 
-
+   /**
+    * Creates a top level BeanInfo instance.
+    * @param typeOracle the type oracle.
+    * @param beanType the beans type.
+    */
    public BeanInfo(TypeOracle typeOracle, JClassType beanType)
+   {
+      this(typeOracle, beanType, "");
+   }
+
+   /**
+    * Creates a nested BeanInfo instance.
+    * @param typeOracle the type oracle.
+    * @param beanType the beans type.
+    * @param parentPath the path of this bean from the root bean.
+    */
+   public BeanInfo(TypeOracle typeOracle, JClassType beanType, String parentPath)
    {
       this.typeOracle = typeOracle;
       this.beanType = beanType;
+      this.parentPath = parentPath;
       properties = scanProperties();
+      // verify any nested bean properties are ..
+      buildNestedBeanInfos(properties.values());
    }
 
 
@@ -51,9 +70,13 @@ public class BeanInfo implements Iterable<PropertyInfo>
       {
          if (method.isGetter())
          {
-            PropertyInfo info = new PropertyInfo(typeOracle, method.getPropertyName(),
+            PropertyInfo info = new PropertyInfo(typeOracle,
+                                                 this,
+                                                 parentPath,
+                                                 method.getPropertyName(),
                                                  method.getReturnType(),
-                                                 method.getName());
+                                                 method.getName(),
+                                                 method.isAnnotatedAsNestedBean());
             map.put(info.getName(), info);
          }
       }
@@ -62,7 +85,8 @@ public class BeanInfo implements Iterable<PropertyInfo>
          if (method.isSetter())
          {
             PropertyInfo info = map.get(method.getPropertyName());
-            // a setter without a getter with the same type isn't a property
+            // a setter without a getter with the same type isn't a property so we ignore
+            // setters that haven't had the info created from an existing getter.
             if (info != null && method.hasSingleParameterOfType(info.getType()))
             {
                info.setSetterMethodName(method.getName());
@@ -73,6 +97,32 @@ public class BeanInfo implements Iterable<PropertyInfo>
       return map;
    }
 
+   private void buildNestedBeanInfos(Iterable<PropertyInfo> properties)
+   {
+      for (PropertyInfo info : properties)
+      {
+         if (info.isNestedBean())
+         {
+            // this will generate the nested bean info and barf if there are
+            // any issues.
+            BeanInfo nestedBean = info.getNestedBeanInfo();
+            // now scan the the nested bean for more nesting.
+            buildNestedBeanInfos(nestedBean);
+         }
+      }
+   }
+
+   public void visitAllProperties(Visitor<PropertyInfo> visitor)
+   {
+      for (PropertyInfo info : properties.values())
+      {
+         visitor.visit(info);
+         if (info.isNestedBean())
+         {
+            info.getNestedBeanInfo().visitAllProperties(visitor);
+         }
+      }
+   }
 
    ArrayList<MethodInfo> getMethods(JClassType beanType)
    {

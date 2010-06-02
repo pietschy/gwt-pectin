@@ -1,6 +1,7 @@
 package com.pietschy.gwt.pectin.client;
 
 import com.pietschy.gwt.pectin.client.format.Format;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,4 +15,6 @@ public interface HasFormat<T>
    Format<T> getFormat();
 
    void setFormat(Format<T> format);
+
+   ValueModel<Format<T>> getFormatModel();
 }

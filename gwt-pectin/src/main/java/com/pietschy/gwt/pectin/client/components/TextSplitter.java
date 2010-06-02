@@ -33,11 +33,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Nov 21, 2009
- * Time: 9:06:59 AM
- * To change this template use File | Settings | File Templates.
+ * This class can be used to turn a regular TextBox or TextArea into a HasValue&lt;Collection&lt;String&gt;&gt; based on a
+ * regular expression.
  */
 public class TextSplitter extends Composite implements HasValue<Collection<String>>, Focusable, HasAllFocusHandlers
 {

@@ -20,7 +20,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.Field;
-import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
+import com.pietschy.gwt.pectin.client.binding.AbstractBindingContainer;
 import com.pietschy.gwt.pectin.client.condition.Conditions;
 import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
 import com.pietschy.gwt.pectin.client.metadata.HasVisible;
@@ -35,8 +35,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * Time: 12:44:37 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MetadataBinder
-   extends AbstractBinder
+public class MetadataBinder extends AbstractBindingContainer
 {
    private static final MetadataEnabledAction enableUsingMetadataAction = new MetadataEnabledAction();
    private static final MetadataVisibleAction showUsingMetadataAction = new MetadataVisibleAction();

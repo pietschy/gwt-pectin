@@ -4,6 +4,7 @@ import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JParameter;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
+import com.pietschy.gwt.pectin.client.bean.NestedBean;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,37 +16,37 @@ import com.google.gwt.core.ext.typeinfo.JType;
 class MethodInfo
 {
    private JMethod method;
+   private boolean getter;
+   private boolean setter;
+   private String propertyName;
 
    MethodInfo(JMethod method)
    {
       this.method = method;
+
+      getter = computeGetter(method);
+      setter = computeSetter(method);
+      propertyName = computePropertyName(method);
    }
 
-   public boolean isPropertyAccessor()
-   {
-      return isGetter() || isSetter();
-   }
-
-   public boolean isGetter()
-   {
-      String name = method.getName();
-      return method.isPublic() && !method.isStatic()
-             && (name.startsWith("is") || name.startsWith("get"))
-             && method.getParameters().length == 0
-             && method.getReturnType() != JPrimitiveType.VOID;
-
-   }
-
-   public boolean isSetter()
+   private boolean computeSetter(JMethod method)
    {
       return method.isPublic() && !method.isStatic()
              && method.getName().startsWith("set")
              && method.getParameters().length == 1
              && method.getReturnType() == JPrimitiveType.VOID;
-
    }
 
-   public String getPropertyName()
+   private boolean computeGetter(JMethod method)
+   {
+      String name = method.getName();
+      return method.isPublic() && !method.isStatic()
+          && (name.startsWith("is") || name.startsWith("get"))
+          && method.getParameters().length == 0
+          && method.getReturnType() != JPrimitiveType.VOID;
+   }
+
+   private String computePropertyName(JMethod method)
    {
       String name = method.getName();
 
@@ -77,6 +78,27 @@ class MethodInfo
       }
 
       return name.substring(0, 1).toLowerCase() + name.substring(1);
+   }
+
+   public boolean isGetter()
+   {
+      return getter;
+   }
+
+   public boolean isSetter()
+   {
+      return setter;
+
+   }
+
+   public boolean isAnnotatedAsNestedBean()
+   {
+      return isGetter() && method.getAnnotation(NestedBean.class) != null;
+   }
+
+   public String getPropertyName()
+   {
+      return propertyName;
    }
 
    public JType getReturnType()

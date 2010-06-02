@@ -17,10 +17,8 @@
 package com.pietschy.gwt.pectin.client.value;
 
 /**
- * MutableValue identifies any object that can receive a value of a particular type.
- * @see com.pietschy.gwt.pectin.client.value.MutableValueModel
+ * @deprecated use {@link ValueTarget} instead.
  */
-public interface HasValueSetter<T>
+public interface HasValueSetter<T> extends ValueTarget<T>
 {
-   void setValue(T value);
 }

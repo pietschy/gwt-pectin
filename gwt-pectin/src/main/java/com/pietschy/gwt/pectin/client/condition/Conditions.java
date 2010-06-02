@@ -16,6 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.condition;
 
+import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.util.Utils;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
@@ -37,6 +38,11 @@ public class Conditions
    public static TextConditionBuilder textOf(ValueModel<String> model)
    {
       return new TextConditionBuilder(model);
+   }
+
+   public static <T> ListConditionBuilder listOf(ListModel<T> source)
+   {
+      return new ListConditionBuilder<T>(source);
    }
    
    public static Condition and(ValueModel<Boolean> a, ValueModel<Boolean> b, ValueModel<Boolean>... others)

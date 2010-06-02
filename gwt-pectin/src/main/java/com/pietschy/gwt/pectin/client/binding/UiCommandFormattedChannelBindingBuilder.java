@@ -4,7 +4,7 @@ import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.channel.Destination;
-import com.pietschy.gwt.pectin.client.value.HasValueSetter;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
 /**
  * This class simple delegates to {@link com.pietschy.gwt.pectin.client.binding.FormattedChannelBindingBuilder}.  It
@@ -24,7 +24,7 @@ public class UiCommandFormattedChannelBindingBuilder
       delegate.to(destination);
    }
 
-   public void using(HasValueSetter<String> destination)
+   public void using(ValueTarget<String> destination)
    {
       delegate.to(destination);
    }

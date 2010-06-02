@@ -18,12 +18,13 @@ package com.pietschy.gwt.pectin.client;
 
 
 import com.pietschy.gwt.pectin.client.format.Format;
-import static org.mockito.Mockito.mock;
-import static org.testng.Assert.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
+
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.*;
 
 /**
  * FormModel Tester.
@@ -56,6 +57,25 @@ public class FormModelTest
       assertTrue(fields.contains(fa));
       assertTrue(fields.contains(fb));
       assertTrue(fields.contains(fc));
+
+      // the collection isn't live so a field added after the call to allFields shouldn't
+      // contain this one.
+      FieldModel<Integer> fd = fm.fieldOfType(Integer.class).create();
+      assertFalse(fields.contains(fd));
+   }
+
+   @Test
+   public void allFieldsExcept()
+   {
+      FormModel fm = new FormModel();
+      FieldModel<String> fa = fm.fieldOfType(String.class).create();
+      FormattedFieldModel<String> fb = fm.formattedFieldOfType(String.class).using((Format<String>) mock(Format.class)).create();
+      ListFieldModel<String> fc = fm.listOfType(String.class).create();
+
+      Collection<Field<?>> fields = fm.allFieldsExcept(fa, fc);
+
+      assertEquals(fields.size(), 1);
+      assertTrue(fields.contains(fb));
 
       // the collection isn't live so a field added after the call to allFields shouldn't
       // contain this one.

@@ -19,6 +19,7 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
+import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.list.MutableListModel;
 
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ import java.util.Collection;
  * To change this template use File | Settings | File Templates.
  */
 public class ListToHasValueBinding<T> 
-extends AbstractListBinding<T>
+extends AbstractMutableListBinding<T>
 {
    private HasValue<Collection<T>> widget;
 
@@ -40,12 +41,16 @@ extends AbstractListBinding<T>
    {
       super(field);
       this.widget = widget;
-      registerHandler(widget.addValueChangeHandler(new WidgetMonitor()));
+      registerDisposable(widget.addValueChangeHandler(new WidgetMonitor()));
    }
 
-   public void updateTarget()
+   @Override
+   protected void updateTarget(ListModel<T> model)
    {
-      widget.setValue(new ArrayList<T>(getModel().asUnmodifiableList()));
+      // todo: we're copying in case the widget tries to modify in place... this will likely
+      // lead to multiple copies being so it may be worth passing the unmodifiable list
+      // and letting the widget developer decide what to do.
+      widget.setValue(new ArrayList<T>(model.asUnmodifiableList()));
    }
 
    public HasValue<Collection<T>> getTarget()
@@ -57,9 +62,9 @@ extends AbstractListBinding<T>
    {
       public void onValueChange(ValueChangeEvent<Collection<T>> event)
       {
-         updateModel(new ModelUpdater<T>()
+         updateModel(new MutateOperation<T>()
          {
-            public void update(MutableListModel<T> model)
+            public void execute(MutableListModel<T> model)
             {
                model.setElements(widget.getValue());
             }

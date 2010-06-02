@@ -30,5 +30,6 @@ extends ListModel<E>
 {
    void add(E element);
    void remove(E element);
+   void clear();
    void setElements(Collection<? extends E> elements);
 }

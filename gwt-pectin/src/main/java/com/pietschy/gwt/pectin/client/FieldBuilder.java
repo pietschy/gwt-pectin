@@ -16,6 +16,7 @@
 
 package com.pietschy.gwt.pectin.client;
 
+import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
@@ -80,5 +81,8 @@ public class FieldBuilder<T>
       return new ReducingFieldBuilder<T, S>(formModel, valueType, source);
    }
 
-
+   public <S> ReducingListFieldBuilder<T, S> computedFrom(ListModel<S> source)
+   {
+      return new ReducingListFieldBuilder<T, S>(formModel, valueType, source);
+   }
 }

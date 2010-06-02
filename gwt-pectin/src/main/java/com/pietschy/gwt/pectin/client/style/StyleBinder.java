@@ -17,9 +17,9 @@
 package com.pietschy.gwt.pectin.client.style;
 
 import com.google.gwt.user.client.ui.UIObject;
-import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
+import com.pietschy.gwt.pectin.client.binding.AbstractBindingContainer;
+import com.pietschy.gwt.pectin.client.util.Utils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -29,8 +29,7 @@ import java.util.Arrays;
  * Time: 12:14:53 PM
  * To change this template use File | Settings | File Templates.
  */
-public class StyleBinder 
-   extends AbstractBinder
+public class StyleBinder extends AbstractBindingContainer
 {
    public StyleBindingBuilder style(UIObject widget)
    {
@@ -39,9 +38,6 @@ public class StyleBinder
 
    public StyleBindingBuilder style(UIObject widget, UIObject... others)
    {
-      ArrayList<UIObject> widgets = new ArrayList<UIObject>();
-      widgets.add(widget);
-      widgets.addAll(Arrays.asList(others));
-      return new StyleBindingBuilder(this, widgets);
+      return new StyleBindingBuilder(this, Utils.asList(widget, others));
    }
 }

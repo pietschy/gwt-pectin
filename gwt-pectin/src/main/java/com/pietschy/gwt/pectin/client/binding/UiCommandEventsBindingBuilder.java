@@ -12,12 +12,12 @@ import com.pietschy.gwt.pectin.client.command.UiCommand;
 */
 public class UiCommandEventsBindingBuilder
 {
-   private WidgetBinder widgetBinder;
+   private AbstractBindingContainer binder;
    private UiCommand command;
 
-   public UiCommandEventsBindingBuilder(WidgetBinder widgetBinder, UiCommand command)
+   public UiCommandEventsBindingBuilder(AbstractBindingContainer binder, UiCommand command)
    {
-      this.widgetBinder = widgetBinder;
+      this.binder = binder;
       this.command = command;
    }
 
@@ -30,7 +30,7 @@ public class UiCommandEventsBindingBuilder
 
    void registerDisposable(Disposable disposable)
    {
-      widgetBinder.registerDisposable(disposable);
+      binder.registerDisposable(disposable);
    }
 
    UiCommand getCommand()

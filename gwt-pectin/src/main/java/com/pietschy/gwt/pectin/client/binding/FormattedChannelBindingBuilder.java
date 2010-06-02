@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
-import com.pietschy.gwt.pectin.client.value.HasValueSetter;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
 /**
 * Created by IntelliJ IDEA.
@@ -19,18 +19,18 @@ public class FormattedChannelBindingBuilder<T>
 {
    private Channel<T> channel;
    private DisplayFormat<? super T> format;
-   private WidgetBinder widgetBinder;
+   private AbstractBindingContainer binder;
 
-   public FormattedChannelBindingBuilder(WidgetBinder widgetBinder, Channel<T> channel, DisplayFormat<? super T> format)
+   public FormattedChannelBindingBuilder(AbstractBindingContainer binder, Channel<T> channel, DisplayFormat<? super T> format)
    {
-      this.widgetBinder = widgetBinder;
+      this.binder = binder;
       this.channel = channel;
       this.format = format;
    }
 
    public void to(final Destination<String> destination)
    {
-      widgetBinder.registerDisposable(channel.sendTo(new Destination<T>()
+      binder.registerDisposable(channel.sendTo(new Destination<T>()
       {
          public void receive(T value)
          {
@@ -39,9 +39,9 @@ public class FormattedChannelBindingBuilder<T>
       }));
    }
 
-   public void to(final HasValueSetter<String> destination)
+   public void to(final ValueTarget<String> destination)
    {
-      widgetBinder.registerDisposable(channel.sendTo(new Destination<T>()
+      binder.registerDisposable(channel.sendTo(new Destination<T>()
       {
          public void receive(T value)
          {
@@ -52,7 +52,7 @@ public class FormattedChannelBindingBuilder<T>
 
    public void to(final HasText destination)
    {
-      widgetBinder.registerDisposable(channel.sendTo(new Destination<T>()
+      binder.registerDisposable(channel.sendTo(new Destination<T>()
       {
          public void receive(T value)
          {
@@ -63,7 +63,7 @@ public class FormattedChannelBindingBuilder<T>
 
    public void toHtml(final HasHTML destination)
    {
-      widgetBinder.registerDisposable(channel.sendTo(new Destination<T>()
+      binder.registerDisposable(channel.sendTo(new Destination<T>()
       {
          public void receive(T value)
          {
@@ -74,7 +74,7 @@ public class FormattedChannelBindingBuilder<T>
 
    public void to(final HasValue<String> destination)
    {
-      widgetBinder.registerDisposable(channel.sendTo(new Destination<T>()
+      binder.registerDisposable(channel.sendTo(new Destination<T>()
       {
          public void receive(T value)
          {

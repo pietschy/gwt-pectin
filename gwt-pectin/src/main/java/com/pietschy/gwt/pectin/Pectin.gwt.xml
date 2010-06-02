@@ -17,9 +17,9 @@
 <module>
 
    <generate-with class="com.pietschy.gwt.pectin.rebind.BeanModelProviderGenerator">
-      <when-type-assignable class="com.pietschy.gwt.pectin.client.bean.BeanPropertyAdapter"/>
+      <when-type-assignable class="com.pietschy.gwt.pectin.client.bean.BeanIntrospector"/>
    </generate-with>
-   
+
    <stylesheet src="pectin/Validation.css"/>
    <stylesheet src="pectin/Metadata.css"/>
 

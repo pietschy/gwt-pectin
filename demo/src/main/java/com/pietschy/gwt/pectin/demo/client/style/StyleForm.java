@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.demo.client.style;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
+import com.pietschy.gwt.pectin.client.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.style.StyleBinder;
@@ -49,7 +50,7 @@ extends VerySimpleForm
    private HTML nickNameLabel = new HTML("Nick Name");
    private NickNameEditor nickName = new NickNameEditor();
 
-   private WidgetBinder binder = new WidgetBinder();
+   private FormBinder binder = new WidgetBinder();
    private StyleBinder style = new StyleBinder();
    private ValidationBinder validation = new ValidationBinder();
 

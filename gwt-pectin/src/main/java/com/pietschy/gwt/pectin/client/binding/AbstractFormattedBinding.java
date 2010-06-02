@@ -34,32 +34,30 @@ public abstract class AbstractFormattedBinding<T> extends AbstractBinding
    {
       public void onGuardedValueChanged(ValueChangeEvent<String> event)
       {
-         setWidgetText(event.getValue());
+         updateTarget(event.getValue());
       }
    };
 
-   private FormattedFieldModel<T> field;
+   private FormattedFieldModel<T> model;
    private MutableValueModel<String> textModel;
 
-   public AbstractFormattedBinding(FormattedFieldModel<T> field)
+   public AbstractFormattedBinding(FormattedFieldModel<T> model)
    {
-      this.field = field;
-      textModel = field.getTextModel();
-      registerHandler(textModel.addValueChangeHandler(fieldMonitor));
+      this.model = model;
+      textModel = model.getTextModel();
+      registerDisposable(textModel.addValueChangeHandler(fieldMonitor));
    }
 
-   public FormattedFieldModel<T> getFieldModel()
+   public FormattedFieldModel<T> getModel()
    {
-      return field;
+      return model;
    }
 
-   public abstract String getWidgetText();
-
-   protected abstract void setWidgetText(String value);
+   protected abstract void updateTarget(String value);
 
    public void updateTarget()
    {
-      setWidgetText(textModel.getValue());
+      updateTarget(textModel.getValue());
    }
 
    protected void onWidgetChanged(String text)
@@ -67,7 +65,7 @@ public abstract class AbstractFormattedBinding<T> extends AbstractBinding
       fieldMonitor.setIgnoreEvents(true);
       try
       {
-         field.getTextModel().setValue(text);
+         model.getTextModel().setValue(text);
       }
       finally
       {

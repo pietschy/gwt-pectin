@@ -19,7 +19,7 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
-import com.pietschy.gwt.pectin.client.FieldModel;
+import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,7 +29,7 @@ import com.pietschy.gwt.pectin.client.FieldModel;
  * To change this template use File | Settings | File Templates.
  */
 public class ValueModelWithValueBinding<T>
-extends AbstractValueBinding<T>
+extends AbstractMutableValueBinding<T>
 {
    private HasValue<Boolean> widget;
 
@@ -42,12 +42,12 @@ extends AbstractValueBinding<T>
       }
    };
 
-   public ValueModelWithValueBinding(FieldModel<T> field, HasValue<Boolean> widget, T value)
+   public ValueModelWithValueBinding(MutableValueModel<T> field, HasValue<Boolean> widget, T value)
    {
       super(field);
       this.widget = widget;
       this.value = value;
-      registerHandler(widget.addValueChangeHandler(widgetChangeMonitor));
+      registerDisposable(widget.addValueChangeHandler(widgetChangeMonitor));
    }
 
    private void onWidgetValueChange(ValueChangeEvent<Boolean> event)
@@ -59,15 +59,9 @@ extends AbstractValueBinding<T>
       }
    }
 
-   protected void updateWidget(T value)
+   protected void updateTarget(T value)
    {
       widget.setValue(areEqual(this.value, value), false);
-   }
-
-
-   private Boolean areEqual(T one, T two)
-   {
-      return one != null ? one.equals(two) : two == null;
    }
 
    public HasValue<Boolean> getTarget()

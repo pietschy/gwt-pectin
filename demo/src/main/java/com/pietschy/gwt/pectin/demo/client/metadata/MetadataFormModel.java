@@ -118,7 +118,7 @@ public class MetadataFormModel extends FormModel
    
    public void setPerson(Person person)
    {
-      personProvider.setBean(person);
+      personProvider.setValue(person);
    }
 
    private static class ProtocolToPortFunction implements Function<Integer, Protocol>

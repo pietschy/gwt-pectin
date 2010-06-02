@@ -5,7 +5,7 @@ import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 import com.pietschy.gwt.pectin.client.function.Function;
-import com.pietschy.gwt.pectin.client.value.HasValueSetter;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
 /**
 * Created by IntelliJ IDEA.
@@ -17,37 +17,37 @@ import com.pietschy.gwt.pectin.client.value.HasValueSetter;
 public class ChanelBindingBuilder<T>
 {
    private Channel<T> channel;
-   private WidgetBinder widgetBinder;
+   private AbstractBindingContainer binder;
 
-   public ChanelBindingBuilder(WidgetBinder widgetBinder, Channel<T> channel)
+   public ChanelBindingBuilder(AbstractBindingContainer binder, Channel<T> channel)
    {
-      this.widgetBinder = widgetBinder;
+      this.binder = binder;
       this.channel = channel;
    }
 
    public void to(Destination<T> destination)
    {
-      widgetBinder.registerDisposable(channel.sendTo(destination));
+      binder.registerDisposable(channel.sendTo(destination));
    }
 
-   public void to(HasValueSetter<T> destination)
+   public void to(ValueTarget<T> destination)
    {
-      widgetBinder.registerDisposable(channel.sendTo(destination));
+      binder.registerDisposable(channel.sendTo(destination));
    }
 
    public void to(HasValue<T> destination)
    {
-      widgetBinder.registerDisposable(channel.sendTo(destination));
+      binder.registerDisposable(channel.sendTo(destination));
    }
 
    public FormattedChannelBindingBuilder formattedWith(DisplayFormat<? super T> format)
    {
-      return new FormattedChannelBindingBuilder<T>(widgetBinder, channel, format);
+      return new FormattedChannelBindingBuilder<T>(binder, channel, format);
    }
 
    public FormattedChannelBindingBuilder formattedWith(final Function<String, ? super T> format)
    {
-      return new FormattedChannelBindingBuilder<T>(widgetBinder, channel, new DisplayFormat<T>()
+      return new FormattedChannelBindingBuilder<T>(binder, channel, new DisplayFormat<T>()
       {
          public String format(T value)
          {

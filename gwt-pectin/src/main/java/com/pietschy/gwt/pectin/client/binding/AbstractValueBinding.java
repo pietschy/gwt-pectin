@@ -1,82 +1,57 @@
-/*
- * Copyright 2009 Andrew Pietsch 
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- *      
- *      http://www.apache.org/licenses/LICENSE-2.0 
- *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
- * implied. See the License for the specific language governing permissions 
- * and limitations under the License. 
- */
-
 package com.pietschy.gwt.pectin.client.binding;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
+import com.pietschy.gwt.pectin.client.value.GuardedValueChangeHandler;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 1, 2009
- * Time: 4:53:36 PM
+ * Date: May 22, 2010
+ * Time: 9:20:15 AM
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractValueBinding<T> extends AbstractBinding
 {
-   private MutableValueModel<T> model;
-   private FieldMonitor fieldMonitor = new FieldMonitor();
+   private ValueModel<T> model;
+   private ModelChangeHandler valueMonitor = new ModelChangeHandler();
 
-   public AbstractValueBinding(MutableValueModel<T> model)
+   public AbstractValueBinding(ValueModel<T> model)
    {
       this.model = model;
-      registerHandler(model.addValueChangeHandler(fieldMonitor));
+      registerDisposable(model.addValueChangeHandler(valueMonitor));
+   }
+
+   protected ValueModel<T> getModel()
+   {
+      return model;
    }
 
    public void updateTarget()
    {
-      updateWidget(model.getValue());
+      updateTarget(model.getValue());
    }
 
-   protected abstract void updateWidget(T value);
+   protected abstract void updateTarget(T value);
 
-   protected void updateModel(T value)
+
+   protected void whileIgnoringModelChanges(Runnable r)
    {
-      fieldMonitor.setIgnoreEvents(true);
-      try
-      {
-         model.setValue(value);
-      }
-      finally
-      {
-         fieldMonitor.setIgnoreEvents(false);
-      }
+      valueMonitor.whileIgnoringEvents(r);
    }
 
-   private class FieldMonitor implements ValueChangeHandler<T>
+   protected Boolean areEqual(T one, T two)
    {
-      private boolean ignoreEvents = false;
-      
-      public void onValueChange(ValueChangeEvent<T> event)
+      return one != null ? one.equals(two) : two == null;
+   }
+
+   private class ModelChangeHandler extends GuardedValueChangeHandler<T>
+   {
+      @Override
+      public void onGuardedValueChanged(ValueChangeEvent<T> event)
       {
-         if (!ignoreEvents)
-         {
             T value = event.getValue();
-            updateWidget(value);
-         }
-      }
-
-      public void setIgnoreEvents(boolean ignoreEvents)
-      {
-         this.ignoreEvents = ignoreEvents;
+            updateTarget(value);
       }
    }
-
-
-   
 }

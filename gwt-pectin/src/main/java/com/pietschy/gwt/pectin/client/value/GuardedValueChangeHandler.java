@@ -16,8 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.value;
 
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,6 +35,11 @@ public abstract class GuardedValueChangeHandler<T> implements ValueChangeHandler
       this.ignoreEvents = ignoreEvents;
    }
 
+   public boolean isIgnoreEvents()
+   {
+      return ignoreEvents;
+   }
+
    public void onValueChange(ValueChangeEvent<T> event)
    {
       if (!ignoreEvents)
@@ -44,4 +49,20 @@ public abstract class GuardedValueChangeHandler<T> implements ValueChangeHandler
    }
    
    public abstract void onGuardedValueChanged(ValueChangeEvent<T> event);
+
+   public void whileIgnoringEvents(Runnable r)
+   {
+      boolean oldIgnore = isIgnoreEvents();
+      setIgnoreEvents(true);
+      try
+      {
+         r.run();
+      }
+      finally
+      {
+         setIgnoreEvents(oldIgnore);
+      }
+   }
+
+
 }

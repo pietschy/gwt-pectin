@@ -16,6 +16,8 @@
 
 package com.pietschy.gwt.pectin.client.bean;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.list.ArrayListModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
@@ -28,64 +30,123 @@ import java.util.List;
 /**
  *
  */
-public class BeanPropertyListModel<B, T> extends ArrayListModel<T> implements BeanPropertyModelBase<B>
+public class BeanPropertyListModel<T> extends ArrayListModel<T> implements BeanPropertyModelBase
 {
    private List<T> EMPTY_LIST = Collections.emptyList();
 
-   private String propertyName;
+   private PropertyKey<T> propertyKey;
    private List<T> checkpointValue = null;
    private CollectionConverter listConverter;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
-   private BeanPropertyAdapter<B> provider;
+   private BeanPropertyAccessor accessor;
    private ValueHolder<Boolean> mutableModel = new ValueHolder<Boolean>(false);
+   private ValueModel<?> source;
+   private ValueModel<Boolean> autoCommit;
 
 
-   public BeanPropertyListModel(BeanPropertyAdapter<B> provider, String propertyName, CollectionConverter listConverter)
+   public BeanPropertyListModel(ValueModel<?> source, PropertyKey<T> propertyKey, BeanPropertyAccessor accessor, CollectionConverter listConverter, ValueModel<Boolean> autoCommit)
    {
-      this.provider = provider;
-      this.propertyName = propertyName;
+      this.source = source;
+      this.accessor = accessor;
+      this.propertyKey = propertyKey;
       this.listConverter = listConverter;
+      this.autoCommit = autoCommit;
       dirtyModel.setFireEventsEvenWhenValuesEqual(false);
-      updateMutableState();
+      
+      installValueChangeHandler();
+      handleSourceModelChange();
    }
 
+   @SuppressWarnings("unchecked")
+   private void installValueChangeHandler()
+   {
+      // yep I know, no generics... I don't know or care what the type is since the accessor handles
+      // all that.  And since ValueChangeHandler doesn't allow for ValueChangeHander<? super T> I can't
+      // add a ValueChangeHandler<Object> to a ValueModel<?>
+      this.source.addValueChangeHandler(new ValueChangeHandler()
+      {
+         public void onValueChange(ValueChangeEvent bValueChangeEvent)
+         {
+            handleSourceModelChange();
+         }
+      });
+   }
+
+   private void handleSourceModelChange()
+   {
+      readFromSource();
+      onSourceModelChanged(source.getValue());
+   }
+
+   /**
+    * This is an empty method that subclasses can override to perform
+    * actions when the source bean changes.
+    * @param sourceBean the new value of the source bean.
+    */
+   protected void onSourceModelChanged(Object sourceBean)
+   {
+   }
+   
    public String getPropertyName()
    {
-      return propertyName;
+      return propertyKey.getPropertyName();
    }
+
+   protected boolean isAutoCommit()
+   {
+      // only true if not null and true.
+      return Boolean.TRUE.equals(autoCommit.getValue());
+   }
+
 
    private void ensureMutable()
    {
-      if (!isMutable())
+      if (!isMutableProperty())
       {
-         throw new IllegalStateException("Underlying bean list property is read only: " + getPropertyName());
+         throw new ReadOnlyPropertyException(propertyKey);
       }
+      else if (!isNonNullSource())
+      {
+         throw new SourceBeanIsNullException(propertyKey);
+      }
+   }
+
+   private void setElementsInternal(Collection<? extends T> elements)
+   {
+      super.setElements(elements);
    }
 
    public void setElements(Collection<? extends T> elements)
    {
       ensureMutable();
       setElementsInternal(elements);
+      afterMutate();
    }
 
-   private void setElementsInternal(Collection<? extends T> elements)
+   private void afterMutate()
    {
-      super.setElements(elements);
-      updateDirtyState();
+      if (isAutoCommit())
+      {
+         writeToSource(true);
+      }
+      else
+      {
+         updateDirtyState();
+      }
    }
 
    public void add(T element)
    {
       ensureMutable();
       super.add(element);
-      updateDirtyState();
+      afterMutate();
    }
 
    public void remove(T element)
    {
       ensureMutable();
       super.remove(element);
-      updateDirtyState();
+      afterMutate();
    }
 
    public ValueModel<Boolean> getDirtyModel()
@@ -94,9 +155,10 @@ public class BeanPropertyListModel<B, T> extends ArrayListModel<T> implements Be
    }
 
    @SuppressWarnings("unchecked")
-   public void readFrom(B bean)
+   public void readFromSource()
    {
-      safelySetCheckpoint(listConverter.fromBean(provider.readProperty(bean, getPropertyName())));
+      Object propertyValue = accessor.readProperty(source.getValue(), getPropertyName());
+      safelySetCheckpoint(listConverter.fromBean(propertyValue));
       updateMutableState();
       revertToCheckpoint();
    }
@@ -107,6 +169,7 @@ public class BeanPropertyListModel<B, T> extends ArrayListModel<T> implements Be
     */
    private void safelySetCheckpoint(Collection<T> source)
    {
+      // we copy so mutations don't affect us.
       checkpointValue = source != null ? new ArrayList<T>(source) : EMPTY_LIST;
       updateDirtyState();
    }
@@ -120,9 +183,10 @@ public class BeanPropertyListModel<B, T> extends ArrayListModel<T> implements Be
       return checkpointValue != null ? checkpointValue : EMPTY_LIST;
    }
 
-   public void copyTo(B bean, boolean clearDirtyState)
+   public void writeToSource(boolean clearDirtyState)
    {
-      provider.writeProperty(bean, getPropertyName(), listConverter.toBean(asUnmodifiableList()));
+      ensureMutable();
+      accessor.writeProperty(source.getValue(), getPropertyName(), listConverter.toBean(asUnmodifiableList()));
       if (clearDirtyState)
       {
          checkpoint();
@@ -137,7 +201,6 @@ public class BeanPropertyListModel<B, T> extends ArrayListModel<T> implements Be
     */
    public void checkpoint()
    {
-      // we copy so mutations don't affect us.
       safelySetCheckpoint(asUnmodifiableList());
    }
 
@@ -147,9 +210,10 @@ public class BeanPropertyListModel<B, T> extends ArrayListModel<T> implements Be
     */
    public void revertToCheckpoint()
    {
-      // set elements makes a copy of the data (i.e it doesn't maintain a reference
+      // setElements makes a copy of the data (i.e it doesn't maintain a reference
       // to the list so we don't need copy it passing in.
       setElementsInternal(safelyGetCheckpoint());
+      dirtyModel.setValue(false);
    }
 
    @SuppressWarnings("unchecked")
@@ -170,9 +234,18 @@ public class BeanPropertyListModel<B, T> extends ArrayListModel<T> implements Be
 
    private void updateMutableState()
    {
-      mutableModel.setValue(provider.isMutable(propertyName));
+      mutableModel.setValue(isMutableProperty() && isNonNullSource());
    }
 
+   private boolean isNonNullSource()
+   {
+      return source.getValue() != null;
+   }
+
+   public boolean isMutableProperty()
+   {
+      return accessor.isMutable(getPropertyName());
+   }
 
    protected boolean computeDirty()
    {

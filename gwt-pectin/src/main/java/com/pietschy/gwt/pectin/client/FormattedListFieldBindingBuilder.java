@@ -70,8 +70,4 @@ public class FormattedListFieldBindingBuilder<T>
       return boundTo(provider.getListModel(key, valueType));
    }
 
-//   public <S> ConvertedFormattedFieldBuilder<T,S> convertedFrom(ValueModel<S> source)
-//   {
-//      return new ConvertedFormattedFieldBuilder<T,S>(formModel, source, formatter, valueType);
-//   }
 }

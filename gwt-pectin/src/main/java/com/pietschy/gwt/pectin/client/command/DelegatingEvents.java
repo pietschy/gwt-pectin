@@ -28,6 +28,8 @@ public class DelegatingEvents extends EventsImpl implements Disposable
       if (disposable != null)
       {
          disposable.dispose();
+         // we null it or we'll dispose it twice if the
+         // new delegate is null.
          disposable = null;
       }
 

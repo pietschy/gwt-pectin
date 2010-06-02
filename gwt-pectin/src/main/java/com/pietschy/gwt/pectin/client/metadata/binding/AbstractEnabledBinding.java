@@ -16,10 +16,10 @@
 
 package com.pietschy.gwt.pectin.client.metadata.binding;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,7 +39,7 @@ implements ValueChangeHandler<Boolean>
    {
       this.model = model;
       this.widget = widget;
-      registerHandler(model.addValueChangeHandler(this));
+      registerDisposable(model.addValueChangeHandler(this));
    }
 
    public void updateTarget()

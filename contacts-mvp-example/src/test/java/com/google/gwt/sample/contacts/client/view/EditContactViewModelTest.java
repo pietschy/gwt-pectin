@@ -6,11 +6,12 @@ import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import com.pietschy.gwt.pectin.client.metadata.Metadata;
 import com.pietschy.gwt.pectin.client.metadata.MetadataPlugin;
 import com.pietschy.gwt.pectin.client.validation.HasValidation;
-import com.pietschy.gwt.pectin.util.TestUtil;
-import static org.testng.Assert.assertEquals;
+import com.pietschy.gwt.pectin.reflect.ReflectionProviders;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
 
 /**
  * EditContactViewModel Tester.
@@ -22,15 +23,15 @@ import org.testng.annotations.Test;
  */
 public class EditContactViewModelTest
 {
-   private EditContactViewModel model;
+   private EditContactModel model;
 
    @BeforeMethod
    public void setUp()
    {
       // we'll use our jvm provider for the tests.
-      BeanModelProvider<Contact> contactProvider = TestUtil.reflectionBeanModelProvider(Contact.class);
+      BeanModelProvider<Contact> contactProvider = ReflectionProviders.providerFor(Contact.class);
 
-      model = new EditContactViewModel(contactProvider);
+      model = new EditContactModel(contactProvider);
    }
 
    @Test

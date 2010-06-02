@@ -17,14 +17,20 @@
 package com.pietschy.gwt.pectin.client.bean;
 
 
-import com.pietschy.gwt.pectin.util.TestBean;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.reflect.test.TestBean;
 import org.mockito.ArgumentMatcher;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import static com.pietschy.gwt.pectin.util.AssertUtil.assertContentEquals;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -38,231 +44,357 @@ import static org.testng.Assert.*;
  */
 public class BeanPropertyListModelTest
 {
+   private static final String PROPERTY_PATH = "stringList";
 
-   private BeanPropertyAdapter<TestBean> propertyAdapter;
-   private TestBean bean;
+   private ValueHolder<TestBean> source;
+   private BeanPropertyAccessor accessor;
+   private BeanPropertyListModel<String> model;
+   private TestBean sourceBean;
+   private PropertyKey<String> propertyKey;
+   private List<String> listOne;
+   private List<String> listTwo;
+   private List<String> listThree;
+   private ValueHolder<Boolean> autoCommit;
 
    @BeforeMethod
    protected void setUp() throws Exception
    {
-      bean = mock(TestBean.class);
-      propertyAdapter = (BeanPropertyAdapter<TestBean>) mock(BeanPropertyAdapter.class);
+      source = new ValueHolder<TestBean>();
+      accessor = mock(BeanPropertyAccessor.class);
+      propertyKey = new PropertyKey<String>(String.class, PROPERTY_PATH);
+      autoCommit = new ValueHolder<Boolean>(false);
+      model = new BeanPropertyListModel<String>(source,
+                                                propertyKey,
+                                                accessor,
+                                                CollectionConverters.LIST_CONVERTER,
+                                                autoCommit);
+      sourceBean = new TestBean();
+      source.setValue(sourceBean);
+      listOne = Arrays.asList("abc", "def");
+      listTwo = Arrays.asList("ghi", "jkl", "mno");
+      listThree = Arrays.asList("pqr", "stu", "vwx", "yz");
    }
 
 
    @Test
-   public void readFrom()
+   public void immutableWhenSourceIsNull()
    {
-      BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               "set",
-                                                                                               CollectionConverters.SET_CONVERTER);
-
-
-      when(propertyAdapter.readProperty(bean, "set"))
-         .thenReturn(new HashSet<String>(Arrays.asList("abc", "def", "ghi")));
-      lm.readFrom(bean);
-
-      assertContentEquals(lm.asUnmodifiableList(), "abc", "def", "ghi");
-      assertFalse(lm.getDirtyModel().getValue());
+      // the property is mutable
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      // but the source is null
+      source.setValue(null);
+      assertFalse(model.isMutable());
+      // once the source is non-null we should be mutable again.
+      source.setValue(new TestBean());
+      assertTrue(model.isMutable());
    }
 
    @Test
-   public void copyToButWithoutResettingDirty()
+   public void immutableWhenPropertyIsReadOnly()
    {
-      String propertyName = "set";
-      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+      // the property is mutable
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(false);
+      // but the source is null
+      source.setValue(null);
+      assertFalse(model.isMutable());
+      // always immutable, even when source isn't null
+      source.setValue(new TestBean());
+      assertFalse(model.isMutable());
+   }
 
-      BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               propertyName,
-                                                                                               CollectionConverters.SET_CONVERTER);
-      assertEquals(lm.size(), 0);
-
-      final List<String> values = Arrays.asList("abc", "def");
-      lm.setElements(values);
-
-      lm.copyTo(bean, false);
-
-      assertTrue(lm.getDirtyModel().getValue());
-
-      verify(propertyAdapter, times(1)).writeProperty(eq(bean), eq("set"), argThat(new ArgumentMatcher<Set>()
+   @Test
+   public void mutatingWithImmutablePropertyBarfs()
+   {
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(false);
+      try
       {
-         @Override
-         public boolean matches(Object o)
-         {
-            return o instanceof Set &&
-                   ((Set) o).size() == values.size() &&
-                   ((Set) o).containsAll(values);
-
-         }
-      }));
-
-   }
-
-   @Test
-   public void copyToAndResetDirty()
-   {
-      String propertyName = "set";
-      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
-
-      BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               propertyName,
-                                                                                               CollectionConverters.SET_CONVERTER);
-      assertEquals(lm.size(), 0);
-
-      final List<String> values = Arrays.asList("abc", "def");
-      lm.setElements(values);
-
-      TestBean bean = new TestBean();
-
-      lm.copyTo(bean, true);
-
-      assertFalse(lm.getDirtyModel().getValue());
-
-      verify(propertyAdapter, times(1)).writeProperty(eq(bean), eq(propertyName), argThat(new ArgumentMatcher<Set>()
+         model.setElements(new ArrayList<String>());
+         fail("Expected ReadOnlyPropertyException");
+      }
+      catch (ReadOnlyPropertyException e)
       {
-         @Override
-         public boolean matches(Object o)
-         {
-            return o instanceof Set &&
-                   ((Set) o).size() == values.size() &&
-                   ((Set) o).containsAll(values);
+      }
 
-         }
-      }));
+      try
+      {
+         model.add("blah");
+         fail("Expected ReadOnlyPropertyException");
+      }
+      catch (ReadOnlyPropertyException e)
+      {
+      }
 
+      try
+      {
+         model.remove("blah");
+         fail("Expected IllegalStateException");
+      }
+      catch (ReadOnlyPropertyException e)
+      {
+      }
    }
 
    @Test
-   public void resetDirty()
+   public void mutateWithNullSourceBarfs()
    {
-      String propertyName = "set";
-      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
-      BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               propertyName,
-                                                                                               CollectionConverters.SET_CONVERTER);
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      source.setValue(null);
 
+      try
+      {
+         model.setElements(new ArrayList<String>());
+         fail("Expected NullSourceException");
+      }
+      catch (SourceBeanIsNullException e)
+      {
+      }
 
-      when(propertyAdapter.readProperty(bean, propertyName))
-         .thenReturn(new HashSet<String>(Arrays.asList("abc", "def", "ghi")));
-      lm.readFrom(bean);
+      try
+      {
+         model.add("blah");
+         fail("Expected NullSourceException");
+      }
+      catch (SourceBeanIsNullException e)
+      {
+      }
 
-      assertContentEquals(lm.asUnmodifiableList(), "abc", "def", "ghi");
-      assertFalse(lm.getDirtyModel().getValue());
+      try
+      {
+         model.remove("blah");
+         fail("Expected ReadOnlyPropertyException");
+      }
+      catch (SourceBeanIsNullException e)
+      {
+      }
+   }
 
-      lm.add("blah");
-      assertTrue(lm.getDirtyModel().getValue());
+   @Test(expectedExceptions = ReadOnlyPropertyException.class)
+   public void writeToSourceWithImmutablePropertyBarfs()
+   {
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(false);
+      model.writeToSource(true);
+   }
 
-      lm.checkpoint();
-      assertFalse(lm.getDirtyModel().getValue());
-      assertContentEquals(lm.asUnmodifiableList(), "abc", "def", "ghi", "blah");
+   @Test(expectedExceptions = SourceBeanIsNullException.class)
+   public void writeToSourceWithNullSourceBarfs()
+   {
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      source.setValue(null);
+      model.writeToSource(true);
+   }
+   
+
+   @Test
+   public void valueChangesAreReflectedByDirtyModel()
+   {
+      List<String> listOne = Arrays.asList("abc", "def");
+
+      assertEquals(model.size(), 0);
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      model.readFromSource();
+
+      assertFalse(model.getDirtyModel().getValue());
+
+      model.setElements(Arrays.asList("ghi"));
+      assertTrue(model.getDirtyModel().getValue());
+
+      // dirty should recover
+      model.setElements(listOne);
+      assertFalse(model.getDirtyModel().getValue());
    }
 
    @Test
-   public void getWithNullCollection()
+   public void readFromSource()
    {
-      BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                "set",
-                                                                                CollectionConverters.SET_CONVERTER);
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne, listTwo);
+      model.readFromSource();
 
-      when(propertyAdapter.readProperty(bean, "set")).thenReturn(null);
-      lm.readFrom(bean);
+      assertEquals(model.asUnmodifiableList(), listOne);
+      assertFalse(model.getDirtyModel().getValue());
 
-      assertEquals(lm.size(), 0);
-      assertFalse(lm.getDirtyModel().getValue());
+      model.setElements(listTwo);
+      assertEquals(model.asUnmodifiableList(), listTwo);
+      assertTrue(model.getDirtyModel().getValue());
+
+      // we should get the second mock value (listTwo) and dirty should return to false
+      model.readFromSource();
+      assertEquals(model.asUnmodifiableList(), listTwo);
+      assertFalse(model.getDirtyModel().getValue());
    }
 
+
+   @Test
+   public void readFromSourceWithNullProperty()
+   {
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(null);
+      model.readFromSource();
+
+      assertEquals(model.size(), 0);
+      assertFalse(model.getDirtyModel().getValue());
+   }
+
+
+   @Test
+   public void checkpoint()
+   {
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      model.readFromSource();
+
+      assertEquals(model.asUnmodifiableList(), listOne);
+      assertFalse(model.getDirtyModel().getValue());
+
+      model.setElements(listTwo);
+      assertEquals(model.asUnmodifiableList(), listTwo);
+      assertTrue(model.getDirtyModel().getValue());
+
+      // dirty should recover
+      model.checkpoint();
+      assertEquals(model.asUnmodifiableList(), listTwo);
+      assertFalse(model.getDirtyModel().getValue());
+   }
+
+   @Test
+   public void revert()
+   {
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      model.readFromSource();
+
+
+      assertEquals(model.asUnmodifiableList(), listOne);
+      assertFalse(model.getDirtyModel().getValue());
+
+      model.setElements(listTwo);
+      assertEquals(model.asUnmodifiableList(), listTwo);
+      assertTrue(model.getDirtyModel().getValue());
+
+      // dirty should recover
+      model.revertToCheckpoint();
+      assertEquals(model.asUnmodifiableList(), listOne);
+      assertFalse(model.getDirtyModel().getValue());
+   }
+
+   @Test
+   public void writeValueWithCheckpoint()
+   {
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      model.readFromSource();
+
+
+      model.setElements(listTwo);
+      assertTrue(model.getDirtyModel().getValue());
+
+      model.writeToSource(true);
+      // not dirty anymore
+      assertFalse(model.getDirtyModel().getValue());
+      // and value was written out to the bean...
+      verify(accessor).writeProperty(isA(TestBean.class),
+                                     eq(propertyKey.getPropertyName()),
+                                     argThat(new ThatMatchesList(listTwo)));
+   }
+
+   @Test
+   public void writeValueWithoutCheckpoint()
+   {
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      model.readFromSource();
+
+
+      model.setElements(listTwo);
+      assertTrue(model.getDirtyModel().getValue());
+
+
+      model.writeToSource(false);
+      // still dirty
+      assertTrue(model.getDirtyModel().getValue());
+      // and value was written out to the bean...
+      verify(accessor).writeProperty(isA(TestBean.class),
+                                     eq(propertyKey.getPropertyName()),
+                                     argThat(new ThatMatchesList(listTwo)));
+   }
 
    @Test
    public void dirtyChecksCollectionOrder()
    {
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
 
-      String propertyName = "list";
-      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
-
-      BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                propertyName,
-                                                                                CollectionConverters.LIST_CONVERTER);
-
-      lm.setElements(Arrays.asList("def", "abc", "qbt"));
+      model.setElements(Arrays.asList("def", "abc", "qbt"));
       // make sure our dirty state is based on the above values
-      lm.checkpoint();
-      lm.setElements(Arrays.asList("qbt", "def", "abc"));
+      model.checkpoint();
+      model.setElements(Arrays.asList("qbt", "def", "abc"));
 
-      assertTrue(lm.getDirtyModel().getValue());
+      assertTrue(model.getDirtyModel().getValue());
    }
 
    @Test
    public void dirtyIsNotFooledByDuplicateEntries()
    {
-      String propertyName = "list";
-      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
 
-      BeanPropertyListModel<TestBean, String> lm = new BeanPropertyListModel<TestBean, String>(propertyAdapter,
-                                                                                               propertyName,
-                                                                                               CollectionConverters.LIST_CONVERTER);
-
-      lm.setElements(Arrays.asList("abc", "abc", "def"));
+      model.setElements(Arrays.asList("abc", "abc", "def"));
       // make sure our dirty state is based on the above values
-      lm.checkpoint();
-      lm.setElements(Arrays.asList("abc", "def", "abc"));
+      model.checkpoint();
+      model.setElements(Arrays.asList("abc", "def", "abc"));
 
-      assertTrue(lm.getDirtyModel().getValue());
+      assertTrue(model.getDirtyModel().getValue());
    }
 
 
    @Test
-   public void copyImmutableObjectBarfs()
+   public void autoCommit()
    {
-      when(propertyAdapter.isMutable("readOnlyCollection")).thenReturn(false);
+      autoCommit.setValue(true);
 
-      BeanPropertyListModel<TestBean, Object> vm = new BeanPropertyListModel<TestBean, Object>(propertyAdapter,
-                                                                                               "readOnlyCollection",
-                                                                                               CollectionConverters.COLLECTION_CONVERTER);
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      model.readFromSource();
 
-      try
-      {
-         vm.setElements(new ArrayList<Object>());
-         fail("Expected IllegalStateException");
-      }
-      catch (IllegalStateException e)
-      {
-      }
+      ValueChangeHandler<Boolean> dirtyHandler = mock(ValueChangeHandler.class);
 
-      try
-      {
-         vm.add(new Object());
-         fail("Expected IllegalStateException");
-      }
-      catch (IllegalStateException e)
-      {
-      }
+      model.getDirtyModel().addValueChangeHandler(dirtyHandler);
 
-      try
-      {
-         vm.remove(new Object());
-         fail("Expected IllegalStateException");
-      }
-      catch (IllegalStateException e)
-      {
-      }
+      assertEquals(model.asUnmodifiableList(), listOne);
+
+      model.setElements(listTwo);
+
+      verify(dirtyHandler, never()).onValueChange(isA(ValueChangeEvent.class));
+      verify(accessor).writeProperty(isA(TestBean.class),
+                                     eq(propertyKey.getPropertyName()),
+                                     argThat(new ThatMatchesList(listTwo)));
    }
 
-   @Test
-   public void normalPropertyIsMutable()
+   private static class ThatMatchesList extends ArgumentMatcher<Object>
    {
-      when(propertyAdapter.isMutable("collection")).thenReturn(true);
-      assertTrue(new BeanPropertyListModel<TestBean, Integer>(propertyAdapter,
-                                                              "collection",
-                                                              CollectionConverters.COLLECTION_CONVERTER).isMutable());
-   }
+      private List<String> listToMatch;
 
-   @Test
-   public void readOnlyPropertyIsNotMutable()
-   {
-      when(propertyAdapter.isMutable("readOnlyCollection")).thenReturn(false);
-      assertFalse(new BeanPropertyListModel<TestBean, Integer>(propertyAdapter,
-                                                               "readOnlyCollection",
-                                                               CollectionConverters.COLLECTION_CONVERTER).isMutable());
-   }
+      public ThatMatchesList(List<String> listToMatch)
+      {
+         this.listToMatch = listToMatch;
+      }
 
+      @Override
+      public boolean matches(Object o)
+      {
+         List<String> list = (List<String>) o;
+
+         if (list.size() != listToMatch.size())
+         {
+            return false;
+         }
+
+         for (int i = 0; i < list.size(); i++)
+         {
+            if (!listToMatch.get(i).equals(list.get(i)))
+            {
+               return false;
+            }
+         }
+         return true;
+      }
+   }
 }

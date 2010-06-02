@@ -17,8 +17,9 @@
 package com.pietschy.gwt.pectin.client.binding;
 
 import com.google.gwt.user.client.ui.HasText;
-import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
+import com.pietschy.gwt.pectin.client.format.ToStringFormat;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,24 +31,29 @@ import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 public class ValueModelToHasTextBinding<T>
 extends AbstractValueBinding<T> implements HasDisplayFormat<T>
 {
-   private HasText widget;
+   private HasText target;
    private DisplayFormat<? super T> format;
 
-   public ValueModelToHasTextBinding(FieldModel<T> field, HasText widget, DisplayFormat<? super T> format)
+   public ValueModelToHasTextBinding(ValueModel<T> model, HasText target)
    {
-      super(field);
-      this.widget = widget;
+      this(model, target, ToStringFormat.defaultInstance());
+   }
+
+   public ValueModelToHasTextBinding(ValueModel<T> model, HasText target, DisplayFormat<? super T> format)
+   {
+      super(model);
+      this.target = target;
       this.format = format;
    }
 
-   protected void updateWidget(T value)
+   protected void updateTarget(T value)
    {
-      widget.setText(format.format(value));
+      target.setText(format.format(value));
    }
 
    public HasText getTarget()
    {
-      return widget;
+      return target;
    }
 
    public void setFormat(DisplayFormat<? super T> format)

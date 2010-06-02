@@ -4,13 +4,14 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.sample.contacts.client.presenter.EditContactPresenter;
 import com.google.gwt.sample.contacts.shared.Contact;
 import com.google.gwt.user.client.ui.*;
+import com.pietschy.gwt.pectin.client.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplayPanel;
 
 public class EditContactView extends Composite implements EditContactPresenter.Display
 {
-   private EditContactViewModel model;
+   private EditContactModel model;
 
    private final TextBox firstName;
    private final TextBox lastName;
@@ -19,16 +20,16 @@ public class EditContactView extends Composite implements EditContactPresenter.D
    private final Button saveButton;
    private final Button cancelButton;
 
-   private WidgetBinder binder = new WidgetBinder();
+   private FormBinder binder = new WidgetBinder();
    private ValidationBinder validation = new ValidationBinder();
 
 
    public EditContactView()
    {
-      this(new EditContactViewModel());
+      this(new EditContactModel());
    }
 
-   public EditContactView(EditContactViewModel model)
+   public EditContactView(EditContactModel model)
    {
       this.model = model;
       DecoratorPanel contentDetailsDecorator = new DecoratorPanel();

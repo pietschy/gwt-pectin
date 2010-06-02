@@ -1,7 +1,6 @@
 package com.pietschy.gwt.pectin.demo.client.command;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.command.AbstractAsyncUiCommand;
 import com.pietschy.gwt.pectin.client.command.AsyncCommandCallback;
 import com.pietschy.gwt.pectin.client.command.Invocation;
@@ -18,29 +17,14 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, Throwable>
    private SaveServiceAsync service;
    private EditPersonModel model;
 
-   public SaveCommand(SaveServiceAsync service, EditPersonModel model, Channel<String> notificationChannel)
+   public SaveCommand(SaveServiceAsync service, EditPersonModel model)
    {
       this.service = service;
       this.model = model;
 
-      // The following could also be done by overriding onStarting(), afterError() and afterSuccess().
-      always()
-         .onStartSend("Saving.... (we're just pretending, I'm using Random.nextBoolean() to fake errors.)")
-         .to(notificationChannel);
-
-      // our model implements Destination so we can send the
+      // our model implements ValueTarget so we can send the
       // results straight to it.
-      always()
-         .sendResultTo(model);
-      // and send a notification
-      always()
-         .onSuccessSend("Save worked.")
-         .to(notificationChannel);
-
-      // if we wanted to display the actual error we'd use always().sendErrorTo(...)
-      always()
-         .onErrorSend("Doh, it failed!")
-         .to(notificationChannel);
+      always().sendResultTo(model);
 
       // and finally let's disable while we're active...
       disableWhen(active());
@@ -51,6 +35,7 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, Throwable>
    {
       if (model.validate())
       {
+         model.commit();
          invocation.proceed();
       }
    }
@@ -62,12 +47,7 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, Throwable>
     */
    protected void performAsyncOperation(final AsyncCommandCallback<Person, Throwable> callback)
    {
-      // copy the model changes into a new instance.. normally I'd have a person.copy() method to ensure
-      // any non exposed attributes are also copied but this is just a demo.
-      Person p = new Person();
-      model.copyTo(p);
-
-      service.save(p, new AsyncCallback<Person>()
+      service.save(model.getValue(), new AsyncCallback<Person>()
       {
          public void onSuccess(Person result)
          {

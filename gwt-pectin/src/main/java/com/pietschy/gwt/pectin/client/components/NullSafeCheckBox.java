@@ -23,6 +23,10 @@ import com.google.gwt.user.client.ui.CheckBox;
  */
 public class NullSafeCheckBox extends CheckBox
 {
+   public NullSafeCheckBox()
+   {
+   }
+
    public NullSafeCheckBox(String text)
    {
       super(text);

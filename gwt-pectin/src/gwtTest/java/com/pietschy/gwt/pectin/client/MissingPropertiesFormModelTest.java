@@ -3,7 +3,7 @@ package com.pietschy.gwt.pectin.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.pietschy.gwt.pectin.client.bean.test.TestBeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.test.TestProvider;
 
 
 /**
@@ -12,7 +12,7 @@ import com.pietschy.gwt.pectin.client.bean.test.TestBeanModelProvider;
  */
 public class MissingPropertiesFormModelTest extends GWTTestCase
 {
-   private TestBeanModelProvider provider;
+   private TestProvider provider;
 
 
    public String getModuleName()
@@ -23,7 +23,7 @@ public class MissingPropertiesFormModelTest extends GWTTestCase
    @Override
    protected void gwtSetUp() throws Exception
    {
-      provider = GWT.create(TestBeanModelProvider.class);
+      provider = GWT.create(TestProvider.class);
    }
 
    public void testMissingPropertyBarfs()
@@ -92,7 +92,7 @@ public class MissingPropertiesFormModelTest extends GWTTestCase
          {
             {
                // Integer is wrong property type, should be a string.
-               listOfType(Integer.class).boundTo(provider, "set");
+               listOfType(Integer.class).boundTo(provider, "collections.stringCollection");
             }
          };
 
@@ -112,7 +112,7 @@ public class MissingPropertiesFormModelTest extends GWTTestCase
          {
             {
                // Integer is wrong property type, should be a string.
-               listOfType(Integer.class).boundTo(provider, "untypedCollection");
+               listOfType(Integer.class).boundTo(provider, "collections.untypedCollection");
             }
          };
 

@@ -40,17 +40,12 @@ extends AbstractFormattedListBinding<T>
    {
       super(field);
       this.widget = widget;
-      registerHandler(widget.addValueChangeHandler(widgetMonitor));
+      registerDisposable(widget.addValueChangeHandler(widgetMonitor));
    }
 
    public HasValue<Collection<String>> getTarget()
    {
       return widget;
-   }
-
-   public Collection<String> getWidgetValues()
-   {
-      return widget.getValue();
    }
 
    protected void setWidgetValues(Collection<String> value)

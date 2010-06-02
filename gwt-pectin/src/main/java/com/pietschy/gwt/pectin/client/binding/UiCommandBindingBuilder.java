@@ -18,11 +18,11 @@ import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
 public class UiCommandBindingBuilder
 {
    private UiCommand uiCommand;
-   private WidgetBinder widgetBinder;
+   private Binder container;
 
-   public UiCommandBindingBuilder(WidgetBinder widgetBinder, UiCommand uiCommand)
+   public UiCommandBindingBuilder(Binder container, UiCommand uiCommand)
    {
-      this.widgetBinder = widgetBinder;
+      this.container = container;
       this.uiCommand = uiCommand;
    }
 
@@ -36,7 +36,7 @@ public class UiCommandBindingBuilder
          }
       });
 
-      widgetBinder.registerHandler(registration);
+      container.registerDisposable(registration);
 
       bindEnabled(uiCommand, button);
    }
@@ -45,11 +45,11 @@ public class UiCommandBindingBuilder
    {
       if (button instanceof FocusWidget)
       {
-         widgetBinder.enable((FocusWidget) button).when(uiCommand.enabled());
+         container.enable((FocusWidget) button).when(uiCommand.enabled());
       }
       else if (button instanceof HasEnabled)
       {
-         widgetBinder.enable((HasEnabled) button).when(uiCommand.enabled());
+         container.enable((HasEnabled) button).when(uiCommand.enabled());
       }
       else
       {

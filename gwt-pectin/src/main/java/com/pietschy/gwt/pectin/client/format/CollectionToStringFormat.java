@@ -62,4 +62,9 @@ public class CollectionToStringFormat<T> implements ListDisplayFormat<T>
 
       return buf != null ? buf.toString() : "";
    }
+
+   public void setJoinString(String joinString)
+   {
+      this.joinString = joinString;
+   }
 }

@@ -20,6 +20,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.FieldModelBase;
 import com.pietschy.gwt.pectin.client.ListFieldModelBase;
+import com.pietschy.gwt.pectin.client.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
@@ -67,7 +68,7 @@ public class EditPersonForm extends VerySimpleForm
 
    private NotificationDisplay notificationDisplay = new NotificationDisplay();
 
-   private WidgetBinder binder = new WidgetBinder();
+   private FormBinder binder = new WidgetBinder();
    private ValidationBinder validation = new ValidationBinder();
 
 

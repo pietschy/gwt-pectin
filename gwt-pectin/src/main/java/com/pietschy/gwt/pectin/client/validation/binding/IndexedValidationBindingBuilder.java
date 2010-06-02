@@ -43,12 +43,12 @@ public class IndexedValidationBindingBuilder
    
    public void to(final IndexedValidationDisplay validationDisplay)
    {
-      binder.registerBindingAndUpdateTarget(new IndexedValidationDisplayBinding(validator, validationDisplay));
+      binder.registerDisposableAndUpdateTarget(new IndexedValidationDisplayBinding(validator, validationDisplay));
    }
    
    public void toStyle(UIObject widget)
    {
-      binder.registerBindingAndUpdateTarget(new ValidationStyleBinding(validator, widget, validationStyles));
+      binder.registerDisposableAndUpdateTarget(new ValidationStyleBinding(validator, widget, validationStyles));
    }
    
    

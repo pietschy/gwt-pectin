@@ -3,11 +3,7 @@ package com.pietschy.gwt.pectin.client.command;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Apr 1, 2010
- * Time: 4:11:04 PM
- * To change this template use File | Settings | File Templates.
+ * 
  */
 public class AsyncEventSupport<R,E>
 {

@@ -42,7 +42,7 @@ implements IndexedValidationHandler
    {
       this.display = display;
       this.fieldValidator = fieldValidator;
-      registerHandler(this.fieldValidator.addValidationHandler(this));
+      registerDisposable(this.fieldValidator.addValidationHandler(this));
    }
 
    public void updateTarget()

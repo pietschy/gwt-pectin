@@ -40,22 +40,20 @@ public abstract class AbstractFormattedListBinding<T> extends AbstractBinding
       }
    };
 
-   private FormattedListFieldModel<T> list;
+   private FormattedListFieldModel<T> model;
    private MutableListModel<String> textList;
 
    public AbstractFormattedListBinding(FormattedListFieldModel<T> field)
    {
-      this.list = field;
+      this.model = field;
       textList = field.getTextModel();
-      registerHandler(textList.addListModelChangedHandler(textListMonitor));
+      registerDisposable(textList.addListModelChangedHandler(textListMonitor));
    }
 
-   public FormattedListFieldModel<T> getFieldModel()
+   public FormattedListFieldModel<T> getModel()
    {
-      return list;
+      return model;
    }
-
-   public abstract Collection<String> getWidgetValues();
 
    protected abstract void setWidgetValues(Collection<String> values);
 
@@ -69,7 +67,7 @@ public abstract class AbstractFormattedListBinding<T> extends AbstractBinding
       textListMonitor.setIgnoreEvents(true);
       try
       {
-         list.getTextModel().setElements(values);
+         model.getTextModel().setElements(values);
       }
       finally
       {

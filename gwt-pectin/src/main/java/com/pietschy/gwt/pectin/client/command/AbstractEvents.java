@@ -49,11 +49,20 @@ public abstract class AbstractEvents implements Events
 
    protected void visitSubscribers(SubscriptionList.Visitor<LifeCycleCallback> visitor)
    {
+      if (visitor == null)
+      {
+         throw new NullPointerException("visitor is null");
+      }
       callbacks.visitSubscribers(visitor);
    }
 
    public Disposable onStartInvoke(final Command command)
    {
+      if (command == null)
+      {
+         throw new NullPointerException("command is null");
+      }
+
       return startChannel.sendTo(new Destination<Void>()
       {
          public void receive(Void value)
@@ -70,6 +79,11 @@ public abstract class AbstractEvents implements Events
 
    public Disposable onFinishInvoke(final Command command)
    {
+      if (command == null)
+      {
+         throw new NullPointerException("command is null");
+      }
+
       return finishedChannel.sendTo(new Destination<Void>()
       {
          public void receive(Void value)
@@ -81,6 +95,11 @@ public abstract class AbstractEvents implements Events
 
    public Disposable sendAllEventsTo(LifeCycleCallback callback)
    {
+      if (callback == null)
+      {
+         throw new NullPointerException("callback is null");
+      }
+
       return callbacks.subscribe(callback);
    }
 

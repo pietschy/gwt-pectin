@@ -11,4 +11,5 @@ public interface AsyncCommandCallback<R,E>
 {
    void publishSuccess(R result);
    void publishError(E error);
+   void abort();
 }

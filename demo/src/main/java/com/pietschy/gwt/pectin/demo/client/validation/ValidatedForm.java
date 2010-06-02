@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.pietschy.gwt.pectin.client.FieldModelBase;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.ListFieldModelBase;
+import com.pietschy.gwt.pectin.client.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
@@ -62,7 +63,7 @@ public class ValidatedForm extends VerySimpleForm
    private Button clearButton = new Button("Clear");
    private Button fakeSererErrorButton = new Button("Fake a Server Validation Error");
 
-   WidgetBinder binder = new WidgetBinder();
+   FormBinder binder = new WidgetBinder();
    ValidationBinder validation = new ValidationBinder();
    MetadataBinder metadata = new MetadataBinder();
 

@@ -62,6 +62,11 @@ implements ListFieldModelBase<T>
       getMutableSource().setElements(elements);
    }
 
+   public void clear()
+   {
+      getMutableSource().clear();
+   }
+
    public int size()
    {
       return getSource().size();

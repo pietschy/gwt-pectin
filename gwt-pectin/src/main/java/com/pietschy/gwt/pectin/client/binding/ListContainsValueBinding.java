@@ -19,7 +19,7 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasValue;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
+import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.list.MutableListModel;
 
 /**
@@ -30,23 +30,23 @@ import com.pietschy.gwt.pectin.client.list.MutableListModel;
  * To change this template use File | Settings | File Templates.
  */
 public class ListContainsValueBinding<T> 
-extends AbstractListBinding<T>
+extends AbstractMutableListBinding<T>
 {
    private HasValue<Boolean> widget;
 
    private T value;
 
-   public ListContainsValueBinding(ListFieldModel<T> field, HasValue<Boolean> widget, T value)
+   public ListContainsValueBinding(MutableListModel<T> model, HasValue<Boolean> widget, T value)
    {
-      super(field);
+      super(model);
       this.widget = widget;
       this.value = value;
-      registerHandler(widget.addValueChangeHandler(new WidgetMonitor()));
+      registerDisposable(widget.addValueChangeHandler(new WidgetMonitor()));
    }
 
-   public void updateTarget()
+   protected void updateTarget(ListModel<T> model)
    {
-      widget.setValue(getModel().contains(value), false);
+      widget.setValue(model.contains(value), false);
    }
 
    public HasValue<Boolean> getTarget()
@@ -58,9 +58,9 @@ extends AbstractListBinding<T>
    {
       public void onValueChange(final ValueChangeEvent<Boolean> event)
       {
-         updateModel(new ModelUpdater<T>()
+         updateModel(new MutateOperation<T>()
          {
-            public void update(MutableListModel<T> model)
+            public void execute(MutableListModel<T> model)
             {
                if (event.getValue())
                {

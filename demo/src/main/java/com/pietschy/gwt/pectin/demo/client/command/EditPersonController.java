@@ -23,20 +23,42 @@ public class EditPersonController
       // create our editor model
       model = new EditPersonModel();
 
-      // now create our commands.  In this case I'm having them operate directly
-      // on the model, but they could operate on a Display type interface was well.
-      SaveCommand saveCommand = new SaveCommand(saveService, model, notificationChannel);
+      // now create our commands.  In this case I'm having them operate directly on the model.
+      SaveCommand saveCommand = createSaveCommand(model, saveService, notificationChannel);
       UiCommand cancelCommand = new CancelUiCommand(saveCommand);
 
       // initialise the model
-      model.readFrom(person);
+      model.setValue(person);
 
-      // and finally create the form passing in the model and activities.
+      // and finally create the view passing in the model and activities.
       editPersonForm = new EditPersonForm(model, notificationChannel, saveCommand, cancelCommand);
 
       // if our controller needed to hook into the activities (such as to fire an
       // and editFinished event) then we could do something like..
       //    saveCommand.onSuccessExecute(...);
+   }
+
+   private SaveCommand createSaveCommand(EditPersonModel model, SaveServiceAsync saveService, DefaultChannel<String> notificationChannel)
+   {
+      // if I were using GIN I'd inject the save command into the controller and have
+      // a saveCommand.configure(EditPersonModel) style method.
+      SaveCommand saveCommand = new SaveCommand(saveService, model);
+
+      // Configure our events...
+      saveCommand.always()
+         .onStartSend("Saving.... (we're just pretending, I'm using Random.nextBoolean() to fake errors.)")
+         .to(notificationChannel);
+
+      saveCommand.always()
+         .onSuccessSend("Save worked.")
+         .to(notificationChannel);
+
+      // if we wanted to display the actual error we'd use always().sendErrorTo(...)
+      saveCommand.always()
+         .onErrorSend("Doh, it failed!")
+         .to(notificationChannel);
+
+      return saveCommand;
    }
 
    public void go(HasWidgets container)

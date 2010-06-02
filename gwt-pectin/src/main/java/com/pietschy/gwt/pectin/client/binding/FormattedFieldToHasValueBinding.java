@@ -16,9 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.HasValue;
 import com.pietschy.gwt.pectin.client.FormattedFieldModel;
 
 /**
@@ -32,13 +32,12 @@ public class FormattedFieldToHasValueBinding<T>
 extends AbstractFormattedBinding<T>
 {
    private HasValue<String> widget;
-   private WidgetMonitor widgetMonitor = new WidgetMonitor();
 
    public FormattedFieldToHasValueBinding(FormattedFieldModel<T> field, HasValue<String> widget)
    {
       super(field);
       this.widget = widget;
-      registerHandler(widget.addValueChangeHandler(widgetMonitor));
+      registerDisposable(widget.addValueChangeHandler(new WidgetMonitor()));
    }
 
    public HasValue<String> getTarget()
@@ -46,12 +45,7 @@ extends AbstractFormattedBinding<T>
       return widget;
    }
 
-   public String getWidgetText()
-   {
-      return widget.getValue();
-   }
-
-   protected void setWidgetText(String value)
+   protected void updateTarget(String value)
    {
       widget.setValue(value);
    }
@@ -63,6 +57,4 @@ extends AbstractFormattedBinding<T>
          onWidgetChanged(event.getValue());
       }
    }
-
-
 }

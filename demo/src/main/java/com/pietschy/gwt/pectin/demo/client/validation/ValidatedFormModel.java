@@ -111,7 +111,7 @@ public class ValidatedFormModel extends FormModel
 
    public void setPerson(Person person)
    {
-      personProvider.setBean(person);
+      personProvider.setValue(person);
    }
 
    private class ValidateCommand extends AbstractUiCommand

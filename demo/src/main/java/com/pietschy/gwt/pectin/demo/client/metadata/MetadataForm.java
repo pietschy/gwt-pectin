@@ -17,6 +17,7 @@
 package com.pietschy.gwt.pectin.demo.client.metadata;
 
 import com.google.gwt.user.client.ui.*;
+import com.pietschy.gwt.pectin.client.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.ComboBox;
@@ -69,7 +70,7 @@ public class MetadataForm extends VerySimpleForm
    };
 
 
-   private WidgetBinder binder = new WidgetBinder();
+   private FormBinder binder = new WidgetBinder();
 
    public MetadataForm(MetadataFormModel model)
    {

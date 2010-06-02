@@ -85,7 +85,7 @@ public class BasicFormModel extends FormModel
 
    public void setPerson(Person person)
    {
-      personProvider.setBean(person);
+      personProvider.setValue(person);
    }
 
    // I'd prefer to use a proper gui-action here, but for now we'll
@@ -102,7 +102,7 @@ public class BasicFormModel extends FormModel
    {
       public void onClick(ClickEvent event)
       {
-         personProvider.revert();
+         personProvider.revertToCheckpoint();
       }
    }
 

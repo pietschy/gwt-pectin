@@ -65,6 +65,13 @@ public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCom
    {
    }
 
+   /**
+    * Method for subclasses to perform work after an execution has been aborted..
+    */
+   protected void afterAbort()
+   {
+   }
+
    @Override
    protected void startExecution(Context context)
    {
@@ -113,6 +120,21 @@ public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCom
          {
             afterError(error);
             events.fireError(error);
+            events.fireFinished();
+         }
+         finally
+         {
+            // just so our button always gets enabled even if a listener
+            // throws an exception.  This is just for debugging ease.
+            context.notifyFinished();
+         }
+      }
+
+      public void abort()
+      {
+         try
+         {
+            afterAbort();
             events.fireFinished();
          }
          finally

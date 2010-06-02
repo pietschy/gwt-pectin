@@ -17,11 +17,14 @@
 package com.pietschy.gwt.pectin.client.bean;
 
 
-
-import com.pietschy.gwt.pectin.util.TestBean;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.reflect.test.TestBean;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
@@ -36,202 +39,209 @@ import static org.testng.Assert.*;
  */
 public class BeanPropertyValueModelTest
 {
-   private BeanPropertyAdapter<TestBean> propertyAdapter;
-   private TestBean bean;
+   private ValueHolder<TestBean> source;
+   private BeanPropertyAccessor accessor;
+   private BeanPropertyValueModel<String> model;
+   private TestBean sourceBean;
+   private static final String PROPERTY_NAME = "string";
+   private ValueHolder<Boolean> autoCommit;
 
    @BeforeMethod
    protected void setUp() throws Exception
    {
-      bean = mock(TestBean.class);
-      propertyAdapter = (BeanPropertyAdapter<TestBean>) mock(BeanPropertyAdapter.class);
+      source = new ValueHolder<TestBean>();
+      accessor = mock(BeanPropertyAccessor.class);
+      autoCommit = new ValueHolder<Boolean>(false);
+      model = new BeanPropertyValueModel<String>(source,
+                                                 new PropertyKey<String>(String.class, PROPERTY_NAME),
+                                                 accessor,
+                                                 autoCommit);
+      sourceBean = new TestBean();
+      source.setValue(sourceBean);
    }
 
 
    @Test
-   public void readAPrimitiveInt()
+   public void immutableWhenSourceIsNull()
    {
-      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, "primitiveInt");
-      assertNull(vm.getValue());
-      when(propertyAdapter.readProperty(bean, "primitiveInt")).thenReturn(5);
-      vm.readFrom(bean);
-      verify(propertyAdapter, times(1)).readProperty(isA(TestBean.class), eq("primitiveInt"));
-      assertEquals(vm.getValue(), new Integer(5));
-      assertFalse(vm.getDirtyModel().getValue());
+      // the property is mutable
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      // but the source is null
+      source.setValue(null);
+      assertFalse(model.isMutable());
+      // once the source is non-null we should be mutable again.
+      source.setValue(new TestBean());
+      assertTrue(model.isMutable());
+   }
+
+   @Test
+   public void immutableWhenPropertyIsReadOnly()
+   {
+      // the property is mutable
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(false);
+      // but the source is null
+      source.setValue(null);
+      assertFalse(model.isMutable());
+      // always immutable, even when source isn't null
+      source.setValue(new TestBean());
+      assertFalse(model.isMutable());
+   }
+
+   @Test(expectedExceptions = ReadOnlyPropertyException.class)
+   public void writeToSourceWithImmutablePropertyBarfs()
+   {
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(false);
+      model.writeToSource(true);
+   }
+
+   @Test(expectedExceptions = SourceBeanIsNullException.class)
+   public void writeToSourceWithNullSourceBarfs()
+   {
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      source.setValue(null);
+      model.writeToSource(true);
+   }
+
+
+   @Test(expectedExceptions = ReadOnlyPropertyException.class)
+   public void setValueWithImmutablePropertySourceBarfs()
+   {
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(false);
+
+      model.setValue("thisShouldBarf");
+   }
+
+   @Test(expectedExceptions = SourceBeanIsNullException.class)
+   public void setValueWithNullSourceBarfs()
+   {
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      source.setValue(null);
+      model.setValue("thisShouldBarf");
    }
 
    @Test
    public void valueChangesAreReflectedByDirtyModel()
    {
+      assertNull(model.getValue());
+      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      model.readFromSource();
 
-      String propertyName = "primitiveInt";
-      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
+      assertFalse(model.getDirtyModel().getValue());
 
-      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, propertyName);
-      assertNull(vm.getValue());
-      when(propertyAdapter.readProperty(bean, propertyName)).thenReturn(5);
-      vm.readFrom(bean);
-      verify(propertyAdapter, times(1)).readProperty(isA(TestBean.class), eq(propertyName));
-      assertEquals(vm.getValue(), new Integer(5));
-      assertFalse(vm.getDirtyModel().getValue());
-
-      vm.setValue(6);
-      assertEquals(vm.getValue(), new Integer(6));
-      assertTrue(vm.getDirtyModel().getValue());
+      model.setValue("def");
+      assertTrue(model.getDirtyModel().getValue());
 
       // dirty should recover
-      vm.setValue(5);
-      assertEquals(vm.getValue(), new Integer(5));
-      assertFalse(vm.getDirtyModel().getValue());
+      model.setValue("abc");
+      assertFalse(model.getDirtyModel().getValue());
    }
 
+   @Test
+   public void readFromSource()
+   {
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc", "xyz");
+      model.readFromSource();
 
+      assertEquals(model.getValue(), "abc");
+      assertFalse(model.getDirtyModel().getValue());
+
+      model.setValue("def");
+      assertEquals(model.getValue(), "def");
+      assertTrue(model.getDirtyModel().getValue());
+
+      // we should get the second mock value and dirty should recover
+      model.readFromSource();
+      assertEquals(model.getValue(), "xyz");
+      assertFalse(model.getDirtyModel().getValue());
+   }
 
    @Test
-   public void resetDirtyModel()
+   public void checkpoint()
    {
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      model.readFromSource();
 
-      String propertyName = "primitiveInt";
-      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
-      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, propertyName);
-      when(propertyAdapter.readProperty(bean, propertyName)).thenReturn(5);
-      vm.readFrom(bean);
+      assertEquals(model.getValue(), "abc");
+      assertFalse(model.getDirtyModel().getValue());
 
-      vm.setValue(6);
-      assertEquals(vm.getValue(), new Integer(6));
-      assertTrue(vm.getDirtyModel().getValue());
+      model.setValue("def");
+      assertEquals(model.getValue(), "def");
+      assertTrue(model.getDirtyModel().getValue());
 
       // dirty should recover
-      vm.checkpoint();
-      assertEquals(vm.getValue(), new Integer(6));
-      assertFalse(vm.getDirtyModel().getValue());
+      model.checkpoint();
+      assertEquals(model.getValue(), "def");
+      assertFalse(model.getDirtyModel().getValue());
    }
 
    @Test
-   public void computeDirty()
+   public void revert()
    {
-      BeanPropertyValueModel<TestBean, Object> vm = new BeanPropertyValueModel<TestBean, Object>(propertyAdapter, "primitiveInt");
-      when(propertyAdapter.readProperty(bean, "primitiveInt")).thenReturn(5);
-      vm.readFrom(bean);
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      model.readFromSource();
 
-      assertFalse(vm.computeDirty());
+      assertEquals(model.getValue(), "abc");
+      assertFalse(model.getDirtyModel().getValue());
+
+      model.setValue("def");
+      assertEquals(model.getValue(), "def");
+      assertTrue(model.getDirtyModel().getValue());
+
+      // dirty should recover
+      model.revertToCheckpoint();
+      assertEquals(model.getValue(), "abc");
+      assertFalse(model.getDirtyModel().getValue());
    }
 
    @Test
-   public void copyPrimitiveInt()
+   public void writeValueWithAndWithoutOutCheckpoint()
    {
-      String propertyName = "primitiveInt";
-      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
-      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, propertyName);
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      model.readFromSource();
 
-      when(propertyAdapter.readProperty(bean, propertyName)).thenReturn(5);
-      vm.readFrom(bean);
-      assertEquals(vm.getValue(), new Integer(5));
-      assertFalse(vm.getDirtyModel().getValue());
+      model.setValue("def");
+      assertTrue(model.getDirtyModel().getValue());
 
-      vm.setValue(8);
-      assertEquals(vm.getValue(), new Integer(8));
-      assertTrue(vm.getDirtyModel().getValue());
 
-      vm.copyTo(bean, false);
-      verify(propertyAdapter, times(1)).writeProperty(isA(TestBean.class), eq(propertyName), eq(8));
-      assertTrue(vm.getDirtyModel().getValue());
+      model.writeToSource(false);
+      // still dirty
+      assertTrue(model.getDirtyModel().getValue());
+      // and value was written out to the bean...
+      verify(accessor).writeProperty(isA(TestBean.class), eq(PROPERTY_NAME), eq("def"));
+
+      model.setValue("hij");
+      model.writeToSource(true);
+      // still dirty
+      assertFalse(model.getDirtyModel().getValue());
+      // and value was written out to the bean...
+      verify(accessor).writeProperty(isA(TestBean.class), eq(PROPERTY_NAME), eq("hij"));
    }
+
 
    @Test
-   public void copyPrimitiveIntAndResetDirty()
+   public void autoCommit()
    {
-      String propertyName = "primitiveInt";
-      when(propertyAdapter.isMutable(propertyName)).thenReturn(true);
-      BeanPropertyValueModel<TestBean, Integer> vm = new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, propertyName);
-      assertNull(vm.getValue());
+      autoCommit.setValue(true);
 
-      when(propertyAdapter.readProperty(bean, propertyName)).thenReturn(5);
-      vm.readFrom(bean);
-      assertEquals(vm.getValue(), new Integer(5));
-      assertFalse(vm.getDirtyModel().getValue());
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      model.readFromSource();
 
-      vm.setValue(8);
-      assertEquals(vm.getValue(), new Integer(8));
-      assertTrue(vm.getDirtyModel().getValue());
+      ValueChangeHandler<Boolean> dirtyHandler = mock(ValueChangeHandler.class);
 
-      vm.copyTo(bean, true);
-      verify(propertyAdapter, times(1)).writeProperty(isA(TestBean.class), eq(propertyName), eq(8));
-      assertFalse(vm.getDirtyModel().getValue());
+      model.getDirtyModel().addValueChangeHandler(dirtyHandler);
+
+      assertEquals(model.getValue(), "abc");
+
+      model.setValue("def");
+
+      verify(dirtyHandler, never()).onValueChange(isA(ValueChangeEvent.class));
+      verify(accessor).writeProperty(isA(TestBean.class), eq(PROPERTY_NAME), eq("def"));
    }
 
-
-   @Test(expectedExceptions = IllegalStateException.class)
-   public void copyImmutableObjectBarfs()
-   {
-      when(propertyAdapter.isMutable("readOnlyObject")).thenReturn(false);
-
-      BeanPropertyValueModel<TestBean, Object> vm = new BeanPropertyValueModel<TestBean, Object>(propertyAdapter, "readOnlyObject");
-
-      vm.setValue(new Object());
-   }
-
-   @Test
-   public void normalPropertyIsMutable()
-   {
-      when(propertyAdapter.isMutable("primitiveInt")).thenReturn(true);
-      assertTrue(new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, "primitiveInt").isMutable());
-   }
-
-   @Test
-   public void readOnlyPropertyIsNotMutable()
-   {
-      when(propertyAdapter.isMutable("readOnlyObject")).thenReturn(false);
-      assertFalse(new BeanPropertyValueModel<TestBean, Integer>(propertyAdapter, "primitiveInt").isMutable());
-   }
-
-//   public void testSetValue()
-//   {
-//      BeanPropertyValueModel<TestBean, String> vm = propertyAdapter.getValueModel("string", String.class);
-//
-//      propertyAdapter.setBean(bean);
-//
-//      String value = "abc";
-//      assertNull(bean.getString());
-//      assertFalse(vm.getDirtyModel().getValue());
-//
-//      vm.setValue(value);
-//      assertTrue(vm.getDirtyModel().getValue());
-//      assertNull(bean.getString());
-//      propertyAdapter.commit();
-//      assertEquals(bean.getString(), value);
-//      assertFalse(vm.getDirtyModel().getValue());
-//
-//   }
-//
-//   public void testPrimitiveIntGetValue()
-//   {
-//      BeanPropertyValueModel<TestBean, Integer> vm = propertyAdapter.getValueModel("primitiveInt", Integer.class);
-//      assertNull(vm.getValue());
-//
-//      bean.setPrimitiveInt(5);
-//      propertyAdapter.setBean(bean);
-//      assertFalse(vm.getDirtyModel().getValue());
-//      assertEquals(vm.getValue(), new Integer(5));
-//   }
-//
-//   public void testPrimitiveInSetValue()
-//   {
-//      BeanPropertyValueModel<TestBean, Integer> vm = propertyAdapter.getValueModel("primitiveInt", Integer.class);
-//
-//      bean.setPrimitiveInt(5);
-//      propertyAdapter.setBean(bean);
-//
-//
-//      assertEquals(vm.getValue(), new Integer(5));
-//      assertFalse(vm.getDirtyModel().getValue());
-//
-//      vm.setValue(6);
-//      assertTrue(vm.getDirtyModel().getValue());
-//      propertyAdapter.commit();
-//      assertEquals(bean.getPrimitiveInt(), 6);
-//      assertFalse(vm.getDirtyModel().getValue());
-//
-//   }
-
-   
 }

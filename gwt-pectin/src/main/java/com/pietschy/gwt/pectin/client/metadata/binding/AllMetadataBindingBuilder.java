@@ -53,23 +53,23 @@ public class AllMetadataBindingBuilder
       if (target instanceof UIObject)
       {
          VisibleBinding binding = new VisibleBinding(metadata.getVisibleModel(), (UIObject) target);
-         container.registerBindingAndUpdateTarget(binding);
+         container.registerDisposableAndUpdateTarget(binding);
       }
       else if (target instanceof HasVisible)
       {
          HasVisibleBinding binding = new HasVisibleBinding(metadata.getVisibleModel(), (HasVisible) target);
-         container.registerBindingAndUpdateTarget(binding);
+         container.registerDisposableAndUpdateTarget(binding);
       }
       
       if (target instanceof FocusWidget)
       {
          FocusWidgetEnabledBinding binding = new FocusWidgetEnabledBinding(metadata.getEnabledModel(), (FocusWidget) target);
-         container.registerBindingAndUpdateTarget(binding);
+         container.registerDisposableAndUpdateTarget(binding);
       }
       else if (target instanceof HasEnabled)
       {
          HasEnabledBinding binding = new HasEnabledBinding(metadata.getEnabledModel(), (HasEnabled) target);
-         container.registerBindingAndUpdateTarget(binding);
+         container.registerDisposableAndUpdateTarget(binding);
       }
    }
 }

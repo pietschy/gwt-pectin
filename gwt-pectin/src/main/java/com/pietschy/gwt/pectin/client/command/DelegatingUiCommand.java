@@ -15,6 +15,8 @@ import static com.pietschy.gwt.pectin.client.condition.Conditions.is;
  */
 public class DelegatingUiCommand extends UiCommandSupport implements TemporalUiCommand, Disposable
 {
+   private Object debugInfo;
+
    // create our delegating models all with default values of false.
    private DelegatingValueModel<Boolean> delegateActive = new DelegatingValueModel<Boolean>(false);
    private DelegatingValueModel<Boolean> delegateEnabled = new DelegatingValueModel<Boolean>(false);
@@ -26,6 +28,7 @@ public class DelegatingUiCommand extends UiCommandSupport implements TemporalUiC
 
    private UiCommand delegate;
 
+
    public DelegatingUiCommand()
    {
    }
@@ -34,6 +37,13 @@ public class DelegatingUiCommand extends UiCommandSupport implements TemporalUiC
    {
       setDelegate(delegate);
    }
+
+   public DelegatingUiCommand withDebugContext(Object debugInfo)
+   {
+      this.debugInfo = debugInfo;
+      return this;
+   }
+
 
    public Events onNextCall()
    {
@@ -49,7 +59,7 @@ public class DelegatingUiCommand extends UiCommandSupport implements TemporalUiC
    {
       if (delegate == null)
       {
-         throw new NullPointerException("delegate is null");
+         throw new MissingDelegateException(debugInfo);
       }
 
       runWithInterceptors(new Command()

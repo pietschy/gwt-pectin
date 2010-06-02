@@ -29,11 +29,11 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 /**
  *
  */
-public class WatermarkBinding
-   extends AbstractBinding
+public class WatermarkBinding extends AbstractBinding
    implements BlurHandler, FocusHandler, ValueChangeHandler<String>
 {
    private static final String WATERMARK_STYLE = "pectin-Watermark";
+
    private ValueModel<String> valueModel;
    private ValueModel<String> watermarkModel;
    private TextBox textBox;
@@ -45,10 +45,10 @@ public class WatermarkBinding
       this.valueModel = value;
       this.watermarkModel = watermark;
       this.textBox = widget;
-      registerHandler(valueModel.addValueChangeHandler(this));
-      registerHandler(watermarkModel.addValueChangeHandler(this));
-      registerHandler(textBox.addBlurHandler(this));
-      registerHandler(textBox.addFocusHandler(this));
+      registerDisposable(valueModel.addValueChangeHandler(this));
+      registerDisposable(watermarkModel.addValueChangeHandler(this));
+      registerDisposable(textBox.addBlurHandler(this));
+      registerDisposable(textBox.addFocusHandler(this));
    }
 
    /**

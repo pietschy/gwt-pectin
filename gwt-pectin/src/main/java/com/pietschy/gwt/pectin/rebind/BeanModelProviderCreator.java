@@ -1,17 +1,17 @@
 /*
- * Copyright 2009 Andrew Pietsch 
+ * Copyright 2009 Andrew Pietsch
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- *      
- *      http://www.apache.org/licenses/LICENSE-2.0 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
- * implied. See the License for the specific language governing permissions 
- * and limitations under the License. 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package com.pietschy.gwt.pectin.rebind;
@@ -23,11 +23,13 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+import com.pietschy.gwt.pectin.client.bean.BeanPropertyAccessor;
 
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 /**
- *
+ * TODO: Improve error messages when a property is referenced that hasn't been annotated with @NestedBean.
  */
 public class BeanModelProviderCreator
 {
@@ -72,16 +74,6 @@ public class BeanModelProviderCreator
             BeanInfo beanInfo = new BeanInfo(typeOracle, beanType);
 
             writer.indent();
-            
-            writer.println();
-
-            generateReadValueMethod(beanInfo, writer);
-
-            writer.println();
-
-            generateWriteValueMethod(beanInfo, writer);
-
-            writer.println();
 
             generateGetPropertyTypeMethod(writer, beanInfo);
 
@@ -91,7 +83,11 @@ public class BeanModelProviderCreator
 
             writer.println();
 
-            generateIsMutableMethod(writer, beanInfo);
+            generateGetBeanPropertyAccessorMethod(writer, beanInfo);
+
+            writer.println();
+
+            generateGetBeanPropertyAccessorByTypeMethod(writer, beanInfo);
 
             writer.println();
 
@@ -107,64 +103,142 @@ public class BeanModelProviderCreator
       }
    }
 
-   private void generateReadValueMethod(BeanInfo bean, SourceWriter source)
+   private void generateGetPropertyTypeMethod(final SourceWriter source, BeanInfo beanInfo)
    {
-      // create the getAttribute method
-      source.println("public Object readProperty(" + bean.getTypeName() + " bean, String property) {");
+      // create the getPropertyType method
+      source.println("public Class getPropertyType(String propertyPath) {");
       source.indent();
 
-      for (PropertyInfo propertyInfo : bean)
+      beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
       {
-         source.println("if (property.equals(\"" + propertyInfo.getName() + "\")) {");
-         source.indent();
-         source.println("return bean == null ? null : bean." + propertyInfo.getGetterMethodName() + "();");
-         source.outdent();
-         source.print("} else ");
-      }
+         public void visit(PropertyInfo propertyInfo)
+         {
+            source.println("if (propertyPath.equals(\"" + propertyInfo.getFullPropertyPath() + "\")) { ");
+            source.indent();
+            source.println("return " + propertyInfo.getTypeName() + ".class;");
 
+            source.outdent();
+            source.print("} else ");
+         }
+      });
       source.println("{");
       source.indent();
-      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
+      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(propertyPath);");
       source.outdent();
       source.println("}");
       source.outdent();
       source.println("}");
    }
 
-   private void generateWriteValueMethod(BeanInfo beanInfo, SourceWriter source)
+   private void generateGetElementTypeMethod(final SourceWriter source, BeanInfo beanInfo)
    {
-      // create the set attribute method
-      source.println("public void writeProperty(" + beanInfo.getTypeName() + " bean, String property, Object value) {");
+      // create the getPropertyType method
+      source.println("public Class getElementType(String propertyPath) {");
       source.indent();
-      source.println("if (bean == null) {");
-      source.println("   throw new com.pietschy.gwt.pectin.client.bean.TargetBeanIsNullException(" + beanInfo.getTypeName() + ".class);");
-      source.println("}");
-      source.println("");
-      for (PropertyInfo property : beanInfo)
+
+      beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
       {
-         source.println("if (property.equals(\"" + property.getName() + "\")) { ");
-         source.indent();
-         if (property.isMutable())
+         public void visit(PropertyInfo property)
          {
-            source.println("bean." + property.getSetterMethodName() + "((" + property.getTypeName() + ") value);");
+            source.println("if (propertyPath.equals(\"" + property.getFullPropertyPath() + "\")) { ");
+            source.indent();
+            if (property.isCollectionProperty())
+            {
+               source.println("return " + property.getCollectionElementType() + ".class;");
+            }
+            else
+            {
+               source.println("throw new com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException(propertyPath, " + property.getTypeName() + ".class);");
+            }
+            source.outdent();
+            source.print("} else ");
          }
-         else
-         {
-            source.println("throw new com.pietschy.gwt.pectin.client.bean.ImmutablePropertyException(property);");
-         }
-         source.outdent();
-         source.print("} else ");
-      }
+      });
       source.println("{");
       source.indent();
-      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
+      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(propertyPath);");
       source.outdent();
       source.println("}");
       source.outdent();
       source.println("}");
    }
 
-   private void generateIsMutableMethod(SourceWriter source, BeanInfo beanInfo)
+
+   private void generateGetBeanPropertyAccessorMethod(final SourceWriter source, BeanInfo beanInfo)
+   {
+      // create the getPropertyType method
+      source.println("public " + BeanPropertyAccessor.class.getName() + " getBeanAccessorForPropertyPath(String propertyPath) {");
+      source.indent();
+
+      beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
+      {
+         public void visit(PropertyInfo property)
+         {
+            source.println("if (propertyPath.equals(\"" + property.getFullPropertyPath() + "\")) { ");
+            source.indent();
+            source.println("return getAccessorByType(\"" + property.getFullPropertyPath() + "\"," + property.getParentType().getTypeName() + ".class);");
+            source.outdent();
+            source.print("} else ");
+         }
+      });
+      source.println("{");
+      source.indent();
+      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(propertyPath);");
+      source.outdent();
+      source.println("}");
+      source.outdent();
+      source.println("}");
+   }
+
+   private void generateGetBeanPropertyAccessorByTypeMethod(final SourceWriter source, final BeanInfo beanInfo)
+   {
+      // create the getPropertyType method
+      source.println("public " + BeanPropertyAccessor.class.getName() + " getAccessorByType(String path, Class type) {");
+      source.indent();
+      // we track the types we've already scanned so we don't do duplicates if the
+      // same type is referenced more than once.
+      final HashSet<String> typeNames = new HashSet<String>();
+
+      // write our root level accessor
+      typeNames.add(beanInfo.getTypeName());
+      writeAccessorFor(beanInfo, source);
+
+      // and now generate types for every nested bean we find along the way.
+      beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
+      {
+         public void visit(PropertyInfo property)
+         {
+            if (property.isNestedBean() && typeNames.add(property.getNestedBeanInfo().getTypeName()))
+            {
+               writeAccessorFor(property.getNestedBeanInfo(), source);
+            }
+         }
+      });
+      source.println("{");
+      source.indent();
+      source.println("throw new IllegalStateException(\"You've found a Pectin bug.  The rebind generator failed to create an appropriate BeanPropertyAccessor for \" + path + \".\");");
+      source.outdent();
+      source.println("}");
+      source.outdent();
+      source.println("}");
+   }
+
+   private void writeAccessorFor(BeanInfo beanInfo, SourceWriter source)
+   {
+      source.println("if (type.equals(" + beanInfo.getTypeName() + ".class)) { ");
+      source.indent();
+      source.println("return new " + BeanPropertyAccessor.class.getName() + "() {");
+      source.indent();
+      generateIsMutableMethod(beanInfo, source);
+      generateReadValueMethod(beanInfo, source);
+      generateWriteValueMethod(beanInfo, source);
+      source.outdent();
+      source.println("};");
+      source.outdent();
+      source.print("} else ");
+   }
+
+   private void generateIsMutableMethod(BeanInfo beanInfo, final SourceWriter source)
    {
       // create the set attribute method
       source.println("public boolean isMutable(String property) {");
@@ -194,18 +268,17 @@ public class BeanModelProviderCreator
    }
 
 
-   private void generateGetPropertyTypeMethod(SourceWriter source, BeanInfo beanInfo)
+   private void generateReadValueMethod(BeanInfo bean, SourceWriter source)
    {
-      // create the getPropertyType method
-      source.println("public Class getPropertyType(String property) {");
+      // create the getAttribute method
+      source.println("public Object readProperty(Object bean, String property) {");
       source.indent();
 
-      for (PropertyInfo propertyInfo : beanInfo)
+      for (PropertyInfo property : bean)
       {
-         source.println("if (property.equals(\"" + propertyInfo.getName() + "\")) { ");
+         source.println("if (property.equals(\"" + property.getName() + "\")) {");
          source.indent();
-         source.println("return " + propertyInfo.getTypeName() + ".class;");
-
+         source.println("return bean == null ? null : ((" + bean.getTypeName() + ")bean)." + property.getGetterMethodName() + "();");
          source.outdent();
          source.print("} else ");
       }
@@ -219,23 +292,26 @@ public class BeanModelProviderCreator
       source.println("}");
    }
 
-   private void generateGetElementTypeMethod(SourceWriter source, BeanInfo beanInfo)
+   private void generateWriteValueMethod(BeanInfo beanInfo, SourceWriter source)
    {
-      // create the getPropertyType method
-      source.println("public Class getElementType(String property) {");
+      // create the set attribute method
+      source.println("public void writeProperty(Object bean, String property, Object value) {");
       source.indent();
-
+      source.println("if (bean == null) {");
+      source.println("   throw new com.pietschy.gwt.pectin.client.bean.TargetBeanIsNullException(" + beanInfo.getTypeName() + ".class);");
+      source.println("}");
+      source.println("");
       for (PropertyInfo property : beanInfo)
       {
          source.println("if (property.equals(\"" + property.getName() + "\")) { ");
          source.indent();
-         if (property.isCollectionProperty())
+         if (property.isMutable())
          {
-            source.println("return " + property.getCollectionElementType() + ".class;");
+            source.println("((" + beanInfo.getTypeName() + ")bean)." + property.getSetterMethodName() + "((" + property.getTypeName() + ") value);");
          }
          else
          {
-            source.println("throw new com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException(property, " + property.getTypeName() + ".class);");
+            source.println("throw new com.pietschy.gwt.pectin.client.bean.ImmutablePropertyException(property);");
          }
          source.outdent();
          source.print("} else ");

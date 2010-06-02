@@ -12,9 +12,9 @@ import com.pietschy.gwt.pectin.client.command.AsyncUiCommand;
 */
 public class UiCommandAsyncEventsBindingBuilder<R,E> extends UiCommandEventsBindingBuilder
 {
-   UiCommandAsyncEventsBindingBuilder(WidgetBinder widgetBinder, AsyncUiCommand<R,E> command)
+   UiCommandAsyncEventsBindingBuilder(AbstractBindingContainer binder, AsyncUiCommand<R,E> command)
    {
-      super(widgetBinder, command);
+      super(binder, command);
 
    }
 

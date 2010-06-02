@@ -19,7 +19,7 @@ package com.pietschy.gwt.pectin.client.validation.binding;
 import com.pietschy.gwt.pectin.client.FieldModelBase;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.ListFieldModelBase;
-import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
+import com.pietschy.gwt.pectin.client.binding.AbstractBindingContainer;
 import com.pietschy.gwt.pectin.client.validation.HasIndexedValidationResult;
 import com.pietschy.gwt.pectin.client.validation.HasValidationResult;
 import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
@@ -30,8 +30,7 @@ import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
  *
  * @see com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay
  */
-public class ValidationBinder
-   extends AbstractBinder
+public class ValidationBinder extends AbstractBindingContainer
 {
    private ValidationStyles validationStyles;
 
