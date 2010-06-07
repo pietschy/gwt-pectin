@@ -37,7 +37,7 @@ public class EditContactViewModelTest
    @Test
    public void setContact()
    {
-      Contact contact = new Contact("0", "Joe", "Blogs", "joe@bloggy.com");
+      Contact contact = createContact();
 
       model.setContact(contact);
 
@@ -49,7 +49,7 @@ public class EditContactViewModelTest
    @Test
    public void commit()
    {
-      Contact contact = new Contact("0", "Joe", "Blogs", "joe@bloggy.com");
+      Contact contact = createContact();
       model.setContact(contact);
 
       model.firstName.setValue("Joseph");
@@ -69,9 +69,11 @@ public class EditContactViewModelTest
    }
 
    // An example of testing the validation of a specific field.
+
    @Test(dataProvider = "firstNameValidationData")
    public void validateFirstName(String value, boolean valid)
    {
+      model.setContact(createContact());
       model.firstName.setValue(value);
       HasValidation validator = model.getValidationManager().getValidator(model.firstName);
       assertEquals(validator.validate(), valid);
@@ -89,15 +91,20 @@ public class EditContactViewModelTest
          };
    }
 
-
    @Test
    public void waterMarkMetadataIsConfigured()
    {
-      // and example of using the plugin to fetch the metadata for testing. 
+      // and example of using the plugin to fetch the metadata for testing.
       Metadata metadata = MetadataPlugin.getMetadata(model.firstName);
 
       assertEquals(metadata.getWatermark(), "Required");
 
+   }
+
+
+   private Contact createContact()
+   {
+      return new Contact("0", "Joe", "Blogs", "joe@bloggy.com");
    }
 
 }

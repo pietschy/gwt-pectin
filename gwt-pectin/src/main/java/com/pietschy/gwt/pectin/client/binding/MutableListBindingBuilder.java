@@ -22,11 +22,7 @@ import com.pietschy.gwt.pectin.client.list.MutableListModel;
 import java.util.Collection;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 1, 2009
- * Time: 4:48:23 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
 public class MutableListBindingBuilder<T> extends ListBindingBuilder<T>
 {
@@ -37,8 +33,14 @@ public class MutableListBindingBuilder<T> extends ListBindingBuilder<T>
    
    public void to(HasValue<Collection<T>> widget)
    {
-      final ListToHasValueBinding<T> binding = new ListToHasValueBinding<T>(getModel(), widget);
-      getCallback().onBindingCreated(binding, widget);
+      getCallback().onBindingCreated(new MutableListModelToHasValueBinding<T>(getModel(), widget),
+                                     widget);
+   }
+
+   public void to(MutableListModel<T> target)
+   {
+      getCallback().onBindingCreated(new MutableListModelToMutableListModelBinding<T>(getModel(), target),
+                                     target);
    }
 
    public ContainingValueBuilder containingValue(T value)

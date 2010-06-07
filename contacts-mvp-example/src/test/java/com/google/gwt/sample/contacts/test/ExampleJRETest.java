@@ -9,7 +9,7 @@ import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 
-import static org.easymock.EasyMock.createStrictMock;
+import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertTrue;
 
 public class ExampleJRETest
@@ -22,9 +22,9 @@ public class ExampleJRETest
    @BeforeMethod
    protected void setUp()
    {
-      mockRpcService = createStrictMock(ContactsServiceAsync.class);
+      mockRpcService = mock(ContactsServiceAsync.class);
       eventBus = new HandlerManager(null);
-      mockDisplay = createStrictMock(ContactsPresenter.Display.class);
+      mockDisplay = mock(ContactsPresenter.Display.class);
       contactsPresenter = new ContactsPresenter(mockRpcService, eventBus, mockDisplay);
    }
 

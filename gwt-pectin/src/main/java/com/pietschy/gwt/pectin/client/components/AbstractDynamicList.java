@@ -82,10 +82,10 @@ extends Composite implements HasValue<Collection<T>>
 
 
    private Row
-   addNewRow()
+   addNewRow(boolean fireEvents)
    {
       Row row = createRemovableRow();
-      addRows(Arrays.asList(row));
+      addRows(Arrays.asList(row), fireEvents);
       return row;
    }
 
@@ -96,13 +96,13 @@ extends Composite implements HasValue<Collection<T>>
    }
 
    private Row
-   createPermenantRow()
+   createPermanentRow()
    {
       return new Row(createWidget(), false);
    }
 
    private void
-   addRows(List<Row> rows)
+   addRows(List<Row> rows, boolean fireEvents)
    {
       for (Row row : rows)
       {
@@ -110,11 +110,14 @@ extends Composite implements HasValue<Collection<T>>
       }
 
       updateUI();
-      fireValueChange();
+      if (fireEvents)
+      {
+         fireValueChange();
+      }
    }
 
    private void
-   removeRows(List<Row> rows)
+   removeRows(List<Row> rows, boolean fireEvents)
    {
       for (Row row : rows)
       {
@@ -123,7 +126,10 @@ extends Composite implements HasValue<Collection<T>>
       }
 
       updateUI();
-      fireValueChange();
+      if (fireEvents)
+      {
+         fireValueChange();
+      }
    }
 
    private void
@@ -196,7 +202,7 @@ extends Composite implements HasValue<Collection<T>>
       int i = 0;
       for (T value : values)
       {
-         Row row = (!allowEmpty && i == 0) ? createPermenantRow() : createRemovableRow();
+         Row row = (!allowEmpty && i == 0) ? createPermanentRow() : createRemovableRow();
          row.getComponent().setValue(value, false);
          rows.add(row);
          i++;
@@ -204,10 +210,10 @@ extends Composite implements HasValue<Collection<T>>
 
       if (rows.size() < 1 && !allowEmpty)
       {
-         rows.add(createPermenantRow());
+         rows.add(createPermanentRow());
       }
 
-      addRows(rows);   
+      addRows(rows, false);
       
       if (fireEvents)
       {
@@ -264,7 +270,7 @@ extends Composite implements HasValue<Collection<T>>
 
       public void onClick(ClickEvent event)
       {
-         removeRows(Arrays.asList(this));
+         removeRows(Arrays.asList(this), true);
       }
 
       public HasValue<T>
@@ -303,7 +309,7 @@ extends Composite implements HasValue<Collection<T>>
    {
       public void onClick(ClickEvent event)
       {
-         Row row = addNewRow();
+         Row row = addNewRow(true);
          row.tryAndFocus();
       }
    }

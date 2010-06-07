@@ -23,6 +23,10 @@ compileGwt {
    modules('com.google.gwt.sample.contacts.Contacts')
 }
 
+test {
+   useTestNG()
+}
+
 task shell(type: com.pietschy.gradle.plugin.gwt.task.GwtDevelopmentShell) {
    modules('com.google.gwt.sample.contacts.Contacts')
    startupUrl = 'Contacts.html'

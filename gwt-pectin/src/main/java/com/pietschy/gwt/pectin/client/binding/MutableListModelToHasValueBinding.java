@@ -32,12 +32,12 @@ import java.util.Collection;
  * Time: 4:35:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ListToHasValueBinding<T> 
+public class MutableListModelToHasValueBinding<T>
 extends AbstractMutableListBinding<T>
 {
    private HasValue<Collection<T>> widget;
 
-   public ListToHasValueBinding(MutableListModel<T> field, HasValue<Collection<T>> widget)
+   public MutableListModelToHasValueBinding(MutableListModel<T> field, HasValue<Collection<T>> widget)
    {
       super(field);
       this.widget = widget;
@@ -49,7 +49,7 @@ extends AbstractMutableListBinding<T>
    {
       // todo: we're copying in case the widget tries to modify in place... this will likely
       // lead to multiple copies being so it may be worth passing the unmodifiable list
-      // and letting the widget developer decide what to do.
+      // and letting the widget developer do what's right in their case.
       widget.setValue(new ArrayList<T>(model.asUnmodifiableList()));
    }
 

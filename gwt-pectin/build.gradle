@@ -20,6 +20,7 @@ gradle.taskGraph.whenReady {taskGraph ->
    println "Version: ${version}"
 }
 
+
 test {
    useTestNG()
 }

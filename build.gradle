@@ -1,37 +1,33 @@
 import org.gradle.api.Project
 
 buildscript {
-   repositories {
-      mavenRepo urls: 'http://maven.pietschy.com'
-   }
-   dependencies {
-      // this provides the plugins used to build pectin, most notably
-      // the GwtLibPlugin and GwtAppPlugin and associated tasks
-      classpath "com.pietschy.gradle:plugins:0.8-3-SNAPSHOT"
-   }
+  repositories {
+    mavenRepo urls: 'http://maven.pietschy.com'
+  }
+  dependencies {
+    // this provides the plugins used to build pectin, most notably
+    // the GwtLibPlugin and GwtAppPlugin and associated tasks
+    classpath "com.pietschy.gradle:plugins:0.8-3-SNAPSHOT"
+  }
 }
 
 allprojects {
 
-   group = 'com.pietschy.gwt'
+  group = 'com.pietschy.gwt'
 
-   usePlugin('java')
-   usePlugin('maven')
-   usePlugin(com.pietschy.gradle.plugin.IdePlugin)
+  usePlugin('java')
+  usePlugin('maven')
+  usePlugin(com.pietschy.gradle.plugin.IdePlugin)
 
-   sourceCompatibility = 1.5
-   targetCompatibility = 1.5
+  sourceCompatibility = 1.5
+  targetCompatibility = 1.5
 
-   def localMavenRepo = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
-   
-   repositories {
-      // todo: remove the local repo     
-      mavenRepo urls: localMavenRepo
-      mavenRepo urls: 'http://maven.pietschy.com'
-      mavenCentral()
-   }
+  repositories {
+    mavenRepo urls: 'http://maven.pietschy.com'
+    mavenCentral()
+  }
 
-/* offline support */
+  /* offline support - hopefully native in gradle 0.9*/
 //   repositories {
 //      if (rootProject.hasProperty('offline')) {
 //          add(new FileSystemResolver()) {
@@ -44,25 +40,49 @@ allprojects {
 //          repositories { mavenCentral() }
 //      }
 //  }
+
+  configurations {
+    // configuration with libraries to
+    // support maven uploads
+    deployerJars
+  }
+
+  dependencies {
+    // upload to maven repo using ftp.
+    deployerJars('org.apache.maven.wagon:wagon-ftp:1.0-beta-2')
+  }
+
+  uploadArchives {
+    repositories.mavenDeployer {
+      name = 'ftpDeployer'
+      configuration = configurations.deployerJars
+      repository(url: MAVEN_REPOSITORY_URL) {
+        authentication(userName: MAVEN_USERNAME, password: MAVEN_PASSWORD)
+      }
+    }
+  }
+
+
 }
 
 // define some generic functions for use by other project builds
+
 void incrementBuildNumber(Project project)
 {
-   project.ant.buildnumber();
+  project.ant.buildnumber();
 }
 
 String readBuildNumber(Project project)
 {
-   File buildNumberFile = project.file('build.number')
-   return buildNumberFile.exists() ? loadProperties(buildNumberFile).getProperty('build.number') : '0'
+  File buildNumberFile = project.file('build.number')
+  return buildNumberFile.exists() ? loadProperties(buildNumberFile).getProperty('build.number') : '0'
 }
 
 Properties loadProperties(File file)
 {
-   Properties map = new Properties()
-   map.load(new FileInputStream(file))
-   return map
+  Properties map = new Properties()
+  map.load(new FileInputStream(file))
+  return map
 }
 
 

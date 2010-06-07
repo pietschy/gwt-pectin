@@ -19,24 +19,34 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.event.shared.HandlerRegistration;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 17, 2009
- * Time: 1:43:55 PM
- * To change this template use File | Settings | File Templates.
+ * BindingContainer defines the common methods for all classes that generate bindings.  The methods
+ * are primarily related to registering handlers and disposables.
  */
 public interface BindingContainer extends Disposable
 {
-
    /**
     * Registers the binding with the container and ensures {@link com.pietschy.gwt.pectin.client.binding.AbstractBinding#updateTarget()}
-    * is invoked.
+    * is invoked to synchronise the model with the target.
+    * <p>
+    * The container will ensure {@link AbstractBinding#dispose()} wil be called when the container is disposed.
     *  
     * @param binding the binding to register
     */
    void registerDisposableAndUpdateTarget(AbstractBinding binding);
 
+   /**
+    * Registers a {@link com.google.gwt.event.shared.HandlerRegistration} with this container.  The container will ensure
+    * that {@link com.google.gwt.event.shared.HandlerRegistration#removeHandler()} will be invoked when the container
+    * is disposed.
+    * @param handlerRegistration the registration to register.
+    */
    void registerDisposable(HandlerRegistration handlerRegistration);
 
+   /**
+    * Registers a {@link Disposable} with this container.  The container will ensure
+    * that {@link Disposable#dispose()} will be invoked when the container
+    * is disposed.
+    * @param disposable the disposable to register.
+    */
    void registerDisposable(Disposable disposable);
 }

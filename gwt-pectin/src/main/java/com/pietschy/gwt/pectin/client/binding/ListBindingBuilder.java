@@ -3,6 +3,9 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.user.client.ui.HasText;
 import com.pietschy.gwt.pectin.client.format.CollectionToStringFormat;
 import com.pietschy.gwt.pectin.client.list.ListModel;
+import com.pietschy.gwt.pectin.client.value.ValueTarget;
+
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,6 +30,12 @@ public class ListBindingBuilder<T>
       ListModelToHasTextBinding<T> binding = new ListModelToHasTextBinding<T>(getModel(), label, CollectionToStringFormat.DEFAULT_INSTANCE);
       getCallback().onBindingCreated(binding, label);
       return new ListDisplayFormatBuilder<T>(binding);
+   }
+
+   public void to(ValueTarget<Collection<T>> target)
+   {
+      getCallback().onBindingCreated(new ListModelToValueTargetBinding<T>(model, target),
+                                     target);
    }
 
    protected BindingBuilderCallback getCallback()
