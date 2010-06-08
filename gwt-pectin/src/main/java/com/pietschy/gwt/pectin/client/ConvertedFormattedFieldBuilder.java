@@ -31,19 +31,21 @@ public class ConvertedFormattedFieldBuilder<T, S>
    private FormModel formModel;
    private ValueModel<S> from;
    private Format<T> format;
+   private FormatExceptionPolicy<T> exceptionPolicy;
    private Class<T> valueType;
 
-   protected ConvertedFormattedFieldBuilder(FormModel formModel, ValueModel<S> from, Format<T> format, Class<T> valueType)
+   protected ConvertedFormattedFieldBuilder(FormModel formModel, ValueModel<S> from, Format<T> format, FormatExceptionPolicy<T> exceptionPolicy, Class<T> valueType)
    {
       this.formModel = formModel;
       this.from = from;
       this.format = format;
+      this.exceptionPolicy = exceptionPolicy;
       this.valueType = valueType;
    }
 
    public FormattedFieldModel<T> using(Converter<T, S> converter)
    {
-      return formModel.createFormattedFieldModel(createConvertingModel(converter), format, valueType);
+      return formModel.createFormattedFieldModel(createConvertingModel(converter), format, exceptionPolicy, valueType);
    }
 
    protected ConvertingValueModel<T, S> createConvertingModel(Converter<T, S> converter)

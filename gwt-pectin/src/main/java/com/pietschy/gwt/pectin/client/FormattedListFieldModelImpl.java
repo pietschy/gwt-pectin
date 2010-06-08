@@ -72,10 +72,11 @@ public class FormattedListFieldModelImpl<T>
    };
 
 
-   public FormattedListFieldModelImpl(FormModel formModel, ListModel<T> source, Format<T> format, Class<T> valueType)
+   public FormattedListFieldModelImpl(FormModel formModel, ListModel<T> source, Format<T> format, ListFormatExceptionPolicy<T> exceptionPolicy, Class<T> valueType)
    {
       super(formModel, source, valueType);
       setFormat(format);
+      setFormatExceptionPolicy(exceptionPolicy);
       addListModelChangedHandler(valueMonitor);
       textModel.addListModelChangedHandler(textMonitor);
       formatModel.addValueChangeHandler(formatMonitor);
@@ -108,6 +109,11 @@ public class FormattedListFieldModelImpl<T>
 
    public void setFormatExceptionPolicy(ListFormatExceptionPolicy<T> formatExceptionPolicy)
    {
+      if (formatExceptionPolicy == null)
+      {
+         throw new NullPointerException("formatExceptionPolicy is null");
+      }
+
       this.formatExceptionPolicy = formatExceptionPolicy;
    }
 

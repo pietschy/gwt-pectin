@@ -47,11 +47,6 @@ implements FieldModelBase<T>
       onSourceModelChange(source.getValue());
    }
 
-   protected T readFromSource()
-   {
-      return getSource().getValue();
-   }
-
    protected void writeToSource(T value)
    {
       try

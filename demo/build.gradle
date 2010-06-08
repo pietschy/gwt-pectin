@@ -1,15 +1,12 @@
 usePlugin(com.pietschy.gradle.plugin.gwt.GwtAppPlugin)
 
-version = "0.1.${buildNumber}"
-
-gwtVersion = '2.0.3'
+version = "0.${buildNumber}"
 
 defaultTasks "demo"
 
 dependencies {
    compile project(':gwt-pectin')
 }
-
 
 // ensure our parent project get's cleaned.
 clean.dependsOn(':gwt-pectin:clean')

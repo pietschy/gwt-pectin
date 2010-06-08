@@ -16,7 +16,6 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
@@ -27,26 +26,15 @@ import com.pietschy.gwt.pectin.client.value.ValueTarget;
  * Time: 4:35:13 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ValueModelToStaticValueBinding<T>
+public class ValueModelToValueTargetBinding<T>
 extends AbstractValueBinding<T>
 {
    private ValueTarget<T> target;
 
-   public ValueModelToStaticValueBinding(ValueModel<T> model, ValueTarget<T> target)
+   public ValueModelToValueTargetBinding(ValueModel<T> model, ValueTarget<T> target)
    {
       super(model);
       this.target = target;
-   }
-
-   public ValueModelToStaticValueBinding(ValueModel<T> model, final ParameterisedCommand<T> target)
-   {
-      this(model, new ValueTarget<T>()
-      {
-         public void setValue(T value)
-         {
-            target.execute(value);
-         }
-      });
    }
 
    protected void updateTarget(T value)

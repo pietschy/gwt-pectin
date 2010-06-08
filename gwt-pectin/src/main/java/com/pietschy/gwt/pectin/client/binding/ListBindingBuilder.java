@@ -1,6 +1,8 @@
 package com.pietschy.gwt.pectin.client.binding;
 
 import com.google.gwt.user.client.ui.HasText;
+import com.pietschy.gwt.pectin.client.channel.Destination;
+import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
 import com.pietschy.gwt.pectin.client.format.CollectionToStringFormat;
 import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.value.ValueTarget;
@@ -36,6 +38,30 @@ public class ListBindingBuilder<T>
    {
       getCallback().onBindingCreated(new ListModelToValueTargetBinding<T>(model, target),
                                      target);
+   }
+
+   public void to(final ParameterisedCommand<Collection<T>> target)
+   {
+      AbstractBinding binding = new ListModelToValueTargetBinding<T>(model, new ValueTarget<Collection<T>>()
+      {
+         public void setValue(Collection<T> value)
+         {
+            target.execute(value);
+         }
+      });
+      getCallback().onBindingCreated(binding, target);
+   }
+
+   public void to(final Destination<Collection<T>> target)
+   {
+      AbstractBinding binding = new ListModelToValueTargetBinding<T>(model, new ValueTarget<Collection<T>>()
+      {
+         public void setValue(Collection<T> value)
+         {
+            target.receive(value);
+         }
+      });
+      getCallback().onBindingCreated(binding, target);
    }
 
    protected BindingBuilderCallback getCallback()

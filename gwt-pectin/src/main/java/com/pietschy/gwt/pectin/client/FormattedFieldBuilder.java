@@ -38,7 +38,12 @@ public class FormattedFieldBuilder<T>
 
    public FormattedFieldBindingBuilder<T> using(Format<T> formatter)
    {
-      return new FormattedFieldBindingBuilder<T>(formModel, valueType, formatter);
+      return new FormattedFieldBindingBuilder<T>(formModel, valueType, formatter, new DefaultFormatExceptionPolicy<T>());
+   }
+
+   public FormattedFieldBindingBuilder<T> using(Format<T> formatter, FormatExceptionPolicy exceptionPolicy)
+   {
+      return new FormattedFieldBindingBuilder<T>(formModel, valueType, formatter, exceptionPolicy);
    }
 
 }

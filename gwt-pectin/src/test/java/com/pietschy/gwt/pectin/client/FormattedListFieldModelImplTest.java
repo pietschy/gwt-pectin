@@ -47,6 +47,7 @@ public class FormattedListFieldModelImplTest
       field = new FormattedListFieldModelImpl<Integer>(form,
                                                        source,
                                                        mockFormat,
+                                                       new DefaultListFormatExceptionPolicy<Integer>(),
                                                        Integer.class);
    }
 

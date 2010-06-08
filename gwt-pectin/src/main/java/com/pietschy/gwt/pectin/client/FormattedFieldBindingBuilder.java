@@ -32,27 +32,29 @@ public class FormattedFieldBindingBuilder<T>
    private Format<T> formatter;
    private FormModel formModel;
    private Class<T> valueType;
+   private FormatExceptionPolicy<T> exceptionPolicy;
 
-   protected FormattedFieldBindingBuilder(FormModel formModel, Class<T> type, Format<T> formatter)
+   protected FormattedFieldBindingBuilder(FormModel formModel, Class<T> type, Format<T> formatter, FormatExceptionPolicy<T> exceptionPolicy)
    {
       this.formModel = formModel;
       valueType = type;
       this.formatter = formatter;
+      this.exceptionPolicy = exceptionPolicy;
    }
 
    public FormattedFieldModel<T> create()
    {
-      return formModel.createFormattedFieldModel(new ValueHolder<T>(), formatter, valueType);
+      return formModel.createFormattedFieldModel(new ValueHolder<T>(), formatter, exceptionPolicy, valueType);
    }
 
    public FormattedFieldModel<T> createWithValue(T initialValue)
    {
-      return formModel.createFormattedFieldModel(new ValueHolder<T>(initialValue), formatter, valueType);
+      return formModel.createFormattedFieldModel(new ValueHolder<T>(initialValue), formatter, exceptionPolicy, valueType);
    }
 
    public FormattedFieldModel<T> boundTo(ValueModel<T> source)
    {
-      return formModel.createFormattedFieldModel(source, formatter, valueType);
+      return formModel.createFormattedFieldModel(source, formatter, exceptionPolicy, valueType);
    }
 
    /**
@@ -70,6 +72,6 @@ public class FormattedFieldBindingBuilder<T>
    
    public <S> ConvertedFormattedFieldBuilder<T,S> convertedFrom(ValueModel<S> source)
    {
-      return new ConvertedFormattedFieldBuilder<T,S>(formModel, source, formatter, valueType);
+      return new ConvertedFormattedFieldBuilder<T,S>(formModel, source, formatter, exceptionPolicy, valueType);
    }
 }

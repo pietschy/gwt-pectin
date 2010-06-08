@@ -34,27 +34,29 @@ public class FormattedListFieldBindingBuilder<T>
    private Format<T> formatter;
    private FormModel formModel;
    private Class<T> valueType;
+   private ListFormatExceptionPolicy<T> exceptionPolicy;
 
-   protected FormattedListFieldBindingBuilder(FormModel formModel, Class<T> type, Format<T> formatter)
+   protected FormattedListFieldBindingBuilder(FormModel formModel, Class<T> type, Format<T> formatter, ListFormatExceptionPolicy<T> exceptionPolicy)
    {
       this.formModel = formModel;
       valueType = type;
       this.formatter = formatter;
+      this.exceptionPolicy = exceptionPolicy;
    }
 
    public FormattedListFieldModel<T> create()
    {
-      return formModel.createFormattedListFieldModel(new ArrayListModel<T>(), formatter, valueType);
+      return formModel.createFormattedListFieldModel(new ArrayListModel<T>(), formatter, exceptionPolicy, valueType);
    }
 
    public FormattedListFieldModel<T> createWithValue(Collection<T> initialValue)
    {
-      return formModel.createFormattedListFieldModel(new ArrayListModel<T>(initialValue), formatter, valueType);
+      return formModel.createFormattedListFieldModel(new ArrayListModel<T>(initialValue), formatter, exceptionPolicy, valueType);
    }
 
    public FormattedListFieldModel<T> boundTo(ListModel<T> source)
    {
-      return formModel.createFormattedListFieldModel(source, formatter, valueType);
+      return formModel.createFormattedListFieldModel(source, formatter, exceptionPolicy, valueType);
    }
 
    /**

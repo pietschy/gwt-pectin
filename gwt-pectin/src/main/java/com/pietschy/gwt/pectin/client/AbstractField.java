@@ -24,23 +24,24 @@ package com.pietschy.gwt.pectin.client;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class AbstractField<T>
-extends AbstractHasHandlers
-implements Field<T>
+   extends AbstractHasHandlers
+   implements Field<T>
 {
    private FormModel formModel;
    private Class<T> valueClass;
 
    public AbstractField(FormModel formModel, Class<T> valueClass)
    {
-      if (formModel == null) {
-          throw new NullPointerException("formModel is null");
+      if (formModel == null)
+      {
+         throw new NullPointerException("formModel is null");
       }
 
       if (valueClass == null)
       {
          throw new NullPointerException("valueClass is null");
       }
-      
+
       this.formModel = formModel;
       this.valueClass = valueClass;
    }

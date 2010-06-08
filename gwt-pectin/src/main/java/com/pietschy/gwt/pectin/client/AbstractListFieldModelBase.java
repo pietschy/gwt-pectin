@@ -43,6 +43,10 @@ implements ListFieldModelBase<T>
    public AbstractListFieldModelBase(FormModel formModel, ListModel<T> source, Class<T> valueType)
    {
       super(formModel, valueType);
+      if (source == null)
+      {
+         throw new NullPointerException("source is null");
+      }
       this.source = source;
       source.addListModelChangedHandler(sourceListener);
    }

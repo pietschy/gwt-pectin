@@ -27,27 +27,33 @@ public class CollectionToStringFormat<T> implements ListDisplayFormat<T>
 
    public static final CollectionToStringFormat<Object> DEFAULT_INSTANCE = new CollectionToStringFormat<Object>();
 
+   private DisplayFormat<? super T> valueFormat;
    private String joinString;
 
    public CollectionToStringFormat()
    {
-      this(DEFAULT_JOIN_STRING);
+      this(ToStringFormat.defaultInstance(), DEFAULT_JOIN_STRING);
    }
 
-   public CollectionToStringFormat(String joinString)
+   public CollectionToStringFormat(DisplayFormat<? super T> valueFormat, String joinString)
    {
+      if (valueFormat == null)
+      {
+         throw new NullPointerException("format is null");
+      }
+
       if (joinString == null)
       {
          throw new NullPointerException("joinString is null");
       }
-
+      this.setValueFormat(valueFormat);
       this.joinString = joinString;
    }
 
    public String format(List<? extends T> values)
    {
       StringBuilder buf = null;
-      for (Object value : values)
+      for (T value : values)
       {
          if (buf == null)
          {
@@ -57,7 +63,7 @@ public class CollectionToStringFormat<T> implements ListDisplayFormat<T>
          {
             buf.append(joinString);
          }
-         buf.append(value != null ? value.toString() : "");
+         buf.append(getValueFormat().format(value));
       }
 
       return buf != null ? buf.toString() : "";
@@ -65,6 +71,20 @@ public class CollectionToStringFormat<T> implements ListDisplayFormat<T>
 
    public void setJoinString(String joinString)
    {
+      if (joinString == null)
+      {
+         throw new NullPointerException("joinString is null");
+      }
       this.joinString = joinString;
+   }
+
+   public DisplayFormat<? super T> getValueFormat()
+   {
+      return valueFormat;
+   }
+
+   public void setValueFormat(DisplayFormat<? super T> valueFormat)
+   {
+      this.valueFormat = valueFormat;
    }
 }

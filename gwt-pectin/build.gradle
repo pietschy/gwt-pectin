@@ -3,8 +3,6 @@ usePlugin('maven')
 
 version = "0.${buildNumber}"
 
-gwtVersion = '2.0.3'
-
 dependencies {
 
    testCompile("org.testng:testng:5.8:jdk15",
@@ -12,6 +10,7 @@ dependencies {
                "org.mockito:mockito-all:1.8.4")
 }
 
+// we hook into the build and
 gradle.taskGraph.whenReady {taskGraph ->
    if (!taskGraph.hasTask(':gwt-pectin:release'))
    {
@@ -20,19 +19,20 @@ gradle.taskGraph.whenReady {taskGraph ->
    println "Version: ${version}"
 }
 
-
+// configure out testing
 test {
    useTestNG()
 }
-
+// testGwt is provided by GwtLibPlugin
 check.dependsOn('testGwt')
 
-// Creates the release and increments the build number when finished.
-task release << {
-   incrementBuildNumber(project)
-}
-release.dependsOn 'build', 'install', 'uploadArchives'
+task snapshot(dependsOn: ['build', 'uploadArchives'])
 
+// Creates the release and increments the build number when finished.
+task release(dependsOn: ['build', 'uploadArchives']) << {
+  // do last..
+  incrementBuildNumber(project)
+}
 
 // task for creating the gradle scripts.
 task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {

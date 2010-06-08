@@ -38,13 +38,7 @@ implements FormattedFieldModel<T>
 {
    private ValueHolder<Format<T>> formatModel = new ValueHolder<Format<T>>();
    private MutableValueModel<String> textModel = new ValueHolder<String>();
-   private FormatExceptionPolicy<T> formatExceptionPolicy = new FormatExceptionPolicy<T>()
-   {
-      public void onFormatException(FormattedFieldModel<T> model, FormatException e)
-      {
-         // do nothing.
-      }
-   };
+   private FormatExceptionPolicy<T> formatExceptionPolicy;
 
    private GuardedValueChangeHandler<T> valueMonitor = new GuardedValueChangeHandler<T>()
    {
@@ -71,11 +65,11 @@ implements FormattedFieldModel<T>
    };
 
 
-   public FormattedFieldModelImpl(FormModel formModel, ValueModel<T> source, Format<T> format, Class valueType)
+   public FormattedFieldModelImpl(FormModel formModel, ValueModel<T> source, Format<T> format, FormatExceptionPolicy<T> exceptionPolicy, Class valueType)
    {
       super(formModel, source, valueType);
       setFormat(format);
-
+      setFormatExceptionPolicy(exceptionPolicy);
       addValueChangeHandler(valueMonitor);
       textModel.addValueChangeHandler(textMonitor);
       formatModel.addValueChangeHandler(formatMonitor);
@@ -110,6 +104,11 @@ implements FormattedFieldModel<T>
 
    public void setFormatExceptionPolicy(FormatExceptionPolicy<T> formatExceptionPolicy)
    {
+      if (formatExceptionPolicy == null)
+      {
+         throw new NullPointerException("formatExceptionPolicy is null");
+      }
+      
       this.formatExceptionPolicy = formatExceptionPolicy;
    }
 

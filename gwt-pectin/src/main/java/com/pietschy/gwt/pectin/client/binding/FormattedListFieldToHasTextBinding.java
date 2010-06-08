@@ -16,8 +16,13 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.HasText;
 import com.pietschy.gwt.pectin.client.FormattedListFieldModel;
+import com.pietschy.gwt.pectin.client.format.CollectionToStringFormat;
+import com.pietschy.gwt.pectin.client.format.DisplayFormat;
+import com.pietschy.gwt.pectin.client.format.Format;
 import com.pietschy.gwt.pectin.client.format.ListDisplayFormat;
 import com.pietschy.gwt.pectin.client.list.ListModel;
 
@@ -28,13 +33,22 @@ public class FormattedListFieldToHasTextBinding<T>
 extends AbstractListBinding<T> implements HasListDisplayFormat<T>
 {
    private HasText widget;
-   private ListDisplayFormat<? super T> format;
+   private ListDisplayFormat<? super T> userFormat;
+   private CollectionToStringFormat<T> defaultFormat = new CollectionToStringFormat<T>()
+   {
+      @Override
+      public DisplayFormat<? super T> getValueFormat()
+      {
+         return getModel().getFormat();
+      }
+   };
 
-   public FormattedListFieldToHasTextBinding(FormattedListFieldModel<T> field, HasText widget, ListDisplayFormat<? super T> format)
+   public FormattedListFieldToHasTextBinding(FormattedListFieldModel<T> field, HasText widget, ListDisplayFormat<? super T> userFormat)
    {
       super(field);
       this.widget = widget;
-      this.format = format;
+      this.userFormat = userFormat;
+      registerDisposable(field.getFormatModel().addValueChangeHandler(new FormatChangeHandler<T>()));
    }
 
    public HasText getTarget()
@@ -45,7 +59,14 @@ extends AbstractListBinding<T> implements HasListDisplayFormat<T>
    @Override
    protected void updateTarget(ListModel<T> model)
    {
-      getTarget().setText(format.format(model.asUnmodifiableList()));
+      getTarget().setText(format(model));
+   }
+
+   String format(ListModel<T> model)
+   {
+      return userFormat != null ?
+             userFormat.format(model.asUnmodifiableList()) :
+             defaultFormat.format(model.asUnmodifiableList());
    }
 
    @Override
@@ -60,7 +81,16 @@ extends AbstractListBinding<T> implements HasListDisplayFormat<T>
       {
          throw new NullPointerException("format is null");
       }
-      this.format = format;
+      this.userFormat = format;
       updateTarget();
    }
+
+   private class FormatChangeHandler<T> implements ValueChangeHandler<Format<T>>
+   {
+      public void onValueChange(ValueChangeEvent<Format<T>> event)
+      {
+         updateTarget();
+      }
+   }
+
 }

@@ -1,6 +1,7 @@
 package com.pietschy.gwt.pectin.client.binding;
 
 import com.google.gwt.user.client.ui.HasText;
+import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueTarget;
@@ -30,14 +31,32 @@ public class ValueBindingBuilder<T>
 
    public void to(ValueTarget<T> widget)
    {
-      final ValueModelToStaticValueBinding<T> binding = new ValueModelToStaticValueBinding<T>(model, widget);
-      getCallback().onBindingCreated(binding, widget);
+      getCallback().onBindingCreated(new ValueModelToValueTargetBinding<T>(model, widget),
+                                     widget);
    }
 
-   public void to(ParameterisedCommand<T> command)
+   public void to(final ParameterisedCommand<T> command)
    {
-      final ValueModelToStaticValueBinding<T> binding = new ValueModelToStaticValueBinding<T>(model, command);
+      AbstractBinding binding = new ValueModelToValueTargetBinding<T>(model, new ValueTarget<T>()
+      {
+         public void setValue(T value)
+         {
+            command.execute(value);
+         }
+      });
       getCallback().onBindingCreated(binding, command);
+   }
+
+   public void to(final Destination<T> destination)
+   {
+      AbstractBinding binding = new ValueModelToValueTargetBinding<T>(model, new ValueTarget<T>()
+      {
+         public void setValue(T value)
+         {
+            destination.receive(value);
+         }
+      });
+      getCallback().onBindingCreated(binding, destination);
    }
 
    public DisplayFormatBuilder<T> toLabel(HasText label)

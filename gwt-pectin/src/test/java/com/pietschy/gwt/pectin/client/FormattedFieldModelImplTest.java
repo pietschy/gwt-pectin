@@ -35,6 +35,7 @@ public class FormattedFieldModelImplTest
       field = new FormattedFieldModelImpl<Integer>(form,
                                                    source,
                                                    mockFormat,
+                                                   new DefaultFormatExceptionPolicy<Integer>(), 
                                                    Integer.class);
    }
 
