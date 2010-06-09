@@ -102,7 +102,7 @@ public class BasicFormModel extends FormModel
    {
       public void onClick(ClickEvent event)
       {
-         personProvider.revertToCheckpoint();
+         personProvider.revert();
       }
    }
 

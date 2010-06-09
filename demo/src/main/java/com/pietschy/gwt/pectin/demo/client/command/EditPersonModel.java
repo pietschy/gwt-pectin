@@ -93,7 +93,7 @@ public class EditPersonModel extends FormModel implements ValueTarget<Person>
 
    public void revert()
    {
-      personProvider.revertToCheckpoint();
+      personProvider.revert();
    }
 
 

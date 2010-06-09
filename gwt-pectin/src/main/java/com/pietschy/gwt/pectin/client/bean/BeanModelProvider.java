@@ -55,6 +55,24 @@ public abstract class BeanModelProvider<B> extends AbstractMutableValueModel<B> 
    }
 
    /**
+    * @deprecated use {@link #setValue(B)} instead.
+    */
+   @Deprecated
+   public void setBean(B bean)
+   {
+      setValue(bean);
+   }
+
+   /**
+    * @deprecated use {@link #getValue()} instead.
+    */
+   @Deprecated
+   public B getBean()
+   {
+      return getValue();
+   }
+
+   /**
     * Sets the {@link ValueModel} to be used as the source of this provider.  All changes to the source
     * model will be tracked.
     * <p/>
@@ -97,7 +115,7 @@ public abstract class BeanModelProvider<B> extends AbstractMutableValueModel<B> 
     * Resets all the models back to their last check pointed state.  If checkpoint hasn't been called then
     * it will revert to the state when the source bean was last configured.
     */
-   public void revertToCheckpoint()
+   public void revert()
    {
       registry.withEachModel(new PropertyModelVisitor()
       {
@@ -119,7 +137,7 @@ public abstract class BeanModelProvider<B> extends AbstractMutableValueModel<B> 
    /**
     * Writes all outstanding changes to the underlying bean graph.  If <code>checkpoint</code>
     * is <code>true</code> then the provider will be check pointed and the dirty state cleared.
-    * If <code>false</code> then only the changes are written to the bean graph and the dirty state
+    * If <code>false</code> then the changes are still written to the bean graph but the dirty state
     * remains as is.
     * <p/>
     * This method is useful if you don't want to clear the dirty state until some time later, e.g. after
