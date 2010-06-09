@@ -10,10 +10,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static com.pietschy.gwt.pectin.reflect.AssertUtil.assertContentEquals;
 import static com.pietschy.gwt.pectin.reflect.AssertUtil.isListChangeEventWithValues;
@@ -90,6 +92,30 @@ public class FormattedListFieldModelImplTest
       field.setFormat(new DummyFormat("blah"));
       verify(textHandler).onListDataChanged(isListChangeEventWithValues("blah", "blah"));
    }
+
+
+   @Test
+   public void builderConfiguresFormatExceptionPolicy()
+   {
+      FormModel form = new FormModel();
+      // not specifying the policy should use the default.
+      FormattedListFieldModel<Integer> field = form.formattedListOfType(Integer.class).using(new IntegerFormat()).create();
+      Assert.assertNotNull(field.getFormatExceptionPolicy());
+      Assert.assertEquals(field.getFormatExceptionPolicy().getClass(), DefaultListFormatExceptionPolicy.class);
+
+      // specifying the policy should work.
+      ListFormatExceptionPolicy<Integer> customPolicy = new ListFormatExceptionPolicy<Integer>()
+      {
+         public void onFormatException(List<Integer> valueList, FormatException e)
+         {
+         }
+      };
+      field = form.formattedListOfType(Integer.class).using(new IntegerFormat(), customPolicy).create();
+      Assert.assertNotNull(field.getFormatExceptionPolicy());
+      Assert.assertEquals(field.getFormatExceptionPolicy(), customPolicy);
+   }
+
+
 
    private static class DummyFormat implements Format<Integer>
    {

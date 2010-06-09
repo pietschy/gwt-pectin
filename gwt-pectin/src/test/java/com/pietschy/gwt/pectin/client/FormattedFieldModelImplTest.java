@@ -5,6 +5,7 @@ import com.pietschy.gwt.pectin.client.format.Format;
 import com.pietschy.gwt.pectin.client.format.FormatException;
 import com.pietschy.gwt.pectin.client.format.IntegerFormat;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -83,6 +84,29 @@ public class FormattedFieldModelImplTest
 
       verify(textHandler).onValueChange(isValueChangeEventWithValue("42"));
       verify(textHandler).onValueChange(isValueChangeEventWithValue(result));
+   }
+
+
+   @Test
+   public void builderConfiguresFormatExceptionPolicy()
+   {
+      FormModel form = new FormModel();
+      // not specifying the policy should use the default.
+      FormattedFieldModel<Integer> field = form.formattedFieldOfType(Integer.class).using(new IntegerFormat()).create();
+      Assert.assertNotNull(field.getFormatExceptionPolicy());
+      Assert.assertEquals(field.getFormatExceptionPolicy().getClass(), DefaultFormatExceptionPolicy.class);
+
+      // specifying the policy should work.
+      FormatExceptionPolicy<Integer> customPolicy = new FormatExceptionPolicy<Integer>()
+      {
+         public void onFormatException(FormattedFieldModel<Integer> formattedFieldModel, FormatException e)
+         {
+
+         }
+      };
+      field = form.formattedFieldOfType(Integer.class).using(new IntegerFormat(), customPolicy).create();
+      Assert.assertNotNull(field.getFormatExceptionPolicy());
+      Assert.assertEquals(field.getFormatExceptionPolicy(), customPolicy);
    }
 
    private static class DummyFormat implements Format<Integer>

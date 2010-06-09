@@ -5,4 +5,11 @@
     <inherits name="com.google.gwt.junit.JUnit"/>
     <inherits name='com.pietschy.gwt.pectin.Pectin'/>
 
+    <!--
+    This stops the compiler trying to compile the GWTTestSuite and complaining about not
+    finding any source.
+    See: http://groups.google.com/group/Google-Web-Toolkit/msg/e76707d1c50fad76
+    -->
+    <source path="client" excludes="**/*TestSuite.java" />
+
 </module>

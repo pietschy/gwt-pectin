@@ -6,8 +6,8 @@ version = "0.${buildNumber}"
 dependencies {
 
    testCompile("org.testng:testng:5.8:jdk15",
-               "junit:junit:4.7",
-               "org.mockito:mockito-all:1.8.4")
+               "org.mockito:mockito-all:1.8.4",
+               "junit:junit:4.7")  // for GWT tests
 }
 
 // we hook into the build and

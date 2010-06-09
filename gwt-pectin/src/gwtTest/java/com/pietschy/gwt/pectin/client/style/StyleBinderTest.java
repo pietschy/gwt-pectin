@@ -25,8 +25,8 @@ public class StyleBinderTest extends GWTTestCase
    public void testStyle()
    {
       Button b1 = new Button("b1");
-      Button b2 = new Button("b1");
-      Button b3 = new Button("b1");
+      Button b2 = new Button("b2");
+      Button b3 = new Button("b3");
 
       ValueHolder<Boolean> trigger = new ValueHolder<Boolean>(true);
       StyleBinder style = new StyleBinder();
@@ -49,6 +49,36 @@ public class StyleBinderTest extends GWTTestCase
       assertFalse(b1.getStyleName().contains(styleName));
       assertFalse(b2.getStyleName().contains(styleName));
       assertFalse(b3.getStyleName().contains(styleName));
+   }
+
+   public void testDependentStyle()
+   {
+      Button b1 = new Button("b1");
+      Button b2 = new Button("b2");
+      Button b3 = new Button("b3");
+
+      ValueHolder<Boolean> trigger = new ValueHolder<Boolean>(true);
+      StyleBinder style = new StyleBinder();
+
+      String styleName = "blah";
+
+      // start of with no style
+      assertFalse(b1.getStyleName().contains(styleName));
+      assertFalse(b2.getStyleName().contains(styleName));
+      assertFalse(b3.getStyleName().contains(styleName));
+
+      // after binding style should reflect trigger
+      style.style(b1, b2, b3).withDependent(styleName).when(trigger);
+
+      assertTrue(b1.getStyleName().contains(b1.getStylePrimaryName() + "-" + styleName));
+      assertTrue(b2.getStyleName().contains(b2.getStylePrimaryName() + "-" + styleName));
+      assertTrue(b3.getStyleName().contains(b3.getStylePrimaryName() + "-" + styleName));
+
+      // changing the trigger should update the style.
+      trigger.setValue(false);
+      assertFalse(b1.getStyleName().contains(b1.getStylePrimaryName() + "-" + styleName));
+      assertFalse(b2.getStyleName().contains(b2.getStylePrimaryName() + "-" + styleName));
+      assertFalse(b3.getStyleName().contains(b3.getStylePrimaryName() + "-" + styleName));
    }
    
 }

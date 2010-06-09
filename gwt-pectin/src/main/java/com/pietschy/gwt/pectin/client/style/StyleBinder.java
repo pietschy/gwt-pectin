@@ -31,13 +31,13 @@ import java.util.Arrays;
  */
 public class StyleBinder extends AbstractBindingContainer
 {
-   public StyleBindingBuilder style(UIObject widget)
+   public StyleBuilder style(UIObject widget)
    {
-      return new StyleBindingBuilder(this, Arrays.asList(widget));
+      return new StyleBuilder(this, Arrays.asList(widget));
    }
 
-   public StyleBindingBuilder style(UIObject widget, UIObject... others)
+   public StyleBuilder style(UIObject widget, UIObject... others)
    {
-      return new StyleBindingBuilder(this, Utils.asList(widget, others));
+      return new StyleBuilder(this, Utils.asList(widget, others));
    }
 }

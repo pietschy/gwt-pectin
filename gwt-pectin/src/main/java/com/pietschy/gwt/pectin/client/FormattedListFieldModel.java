@@ -29,4 +29,7 @@ public interface FormattedListFieldModel<T>
 extends ListFieldModelBase<T>, HasFormat<T>
 {
    MutableListModel<String> getTextModel();
+   void setFormatExceptionPolicy(ListFormatExceptionPolicy<T> formatExceptionPolicy);
+   ListFormatExceptionPolicy<T> getFormatExceptionPolicy();
+
 }

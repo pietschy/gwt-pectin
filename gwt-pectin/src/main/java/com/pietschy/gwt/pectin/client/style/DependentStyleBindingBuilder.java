@@ -29,13 +29,13 @@ import java.util.List;
  * Time: 10:37:05 AM
  * To change this template use File | Settings | File Templates.
  */
-public class WidgetStyleBindingBuilder
+public class DependentStyleBindingBuilder
 {
    private BindingContainer bindingContainer;
    private String styleName;
    private List<UIObject> widgets;
 
-   public WidgetStyleBindingBuilder(BindingContainer bindingContainer, List<UIObject> widgets, String styleName)
+   public DependentStyleBindingBuilder(BindingContainer bindingContainer, List<UIObject> widgets, String styleName)
    {
       this.bindingContainer = bindingContainer;
       this.styleName = styleName;
@@ -44,6 +44,6 @@ public class WidgetStyleBindingBuilder
 
    public void when(ValueModel<Boolean> condition)
    {
-      bindingContainer.registerDisposableAndUpdateTarget(new StyleBinding(condition, widgets, styleName));
+      bindingContainer.registerDisposableAndUpdateTarget(new DependentStyleBinding(condition, widgets, styleName));
    }
 }

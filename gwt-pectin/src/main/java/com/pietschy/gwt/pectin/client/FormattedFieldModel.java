@@ -29,4 +29,6 @@ public interface FormattedFieldModel<T>
 extends FieldModelBase<T>, HasFormat<T>
 {
    MutableValueModel<String> getTextModel();
+   void setFormatExceptionPolicy(FormatExceptionPolicy<T> formatExceptionPolicy);
+   FormatExceptionPolicy<T> getFormatExceptionPolicy();
 }

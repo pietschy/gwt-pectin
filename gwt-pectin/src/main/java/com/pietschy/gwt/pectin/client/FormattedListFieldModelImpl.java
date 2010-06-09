@@ -107,6 +107,11 @@ public class FormattedListFieldModelImpl<T>
       return formatModel;
    }
 
+   public ListFormatExceptionPolicy<T> getFormatExceptionPolicy()
+   {
+      return formatExceptionPolicy;
+   }
+
    public void setFormatExceptionPolicy(ListFormatExceptionPolicy<T> formatExceptionPolicy)
    {
       if (formatExceptionPolicy == null)

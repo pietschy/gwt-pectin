@@ -108,8 +108,13 @@ implements FormattedFieldModel<T>
       {
          throw new NullPointerException("formatExceptionPolicy is null");
       }
-      
+
       this.formatExceptionPolicy = formatExceptionPolicy;
+   }
+
+   public FormatExceptionPolicy<T> getFormatExceptionPolicy()
+   {
+      return formatExceptionPolicy;
    }
 
    protected void writeValueToText(T value)

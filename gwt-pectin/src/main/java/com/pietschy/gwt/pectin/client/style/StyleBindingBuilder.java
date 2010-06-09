@@ -1,46 +1,49 @@
 /*
- * Copyright 2009 Andrew Pietsch 
+ * Copyright 2009 Andrew Pietsch
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- *      
- *      http://www.apache.org/licenses/LICENSE-2.0 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
  *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
- * implied. See the License for the specific language governing permissions 
- * and limitations under the License. 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing permissions
+ * and limitations under the License.
  */
 
 package com.pietschy.gwt.pectin.client.style;
 
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.BindingContainer;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
-* User: andrew
-* Date: Aug 14, 2009
-* Time: 2:09:27 PM
-* To change this template use File | Settings | File Templates.
-*/
+ * User: andrew
+ * Date: Oct 27, 2009
+ * Time: 10:37:05 AM
+ * To change this template use File | Settings | File Templates.
+ */
 public class StyleBindingBuilder
 {
-   private BindingContainer builder;
+   private BindingContainer bindingContainer;
+   private String styleName;
    private List<UIObject> widgets;
 
-   public StyleBindingBuilder(BindingContainer builder, List<UIObject> widgets)
+   public StyleBindingBuilder(BindingContainer bindingContainer, List<UIObject> widgets, String styleName)
    {
-      this.builder = builder;
+      this.bindingContainer = bindingContainer;
+      this.styleName = styleName;
       this.widgets = widgets;
    }
 
-   public WidgetStyleBindingBuilder with(String style)
+   public void when(ValueModel<Boolean> condition)
    {
-      return new WidgetStyleBindingBuilder(builder, widgets, style);
+      bindingContainer.registerDisposableAndUpdateTarget(new StyleBinding(condition, widgets, styleName));
    }
 }
