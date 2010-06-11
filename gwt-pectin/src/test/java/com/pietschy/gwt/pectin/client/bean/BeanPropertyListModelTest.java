@@ -409,7 +409,7 @@ public class BeanPropertyListModelTest
       //  should write the original value back to the bean.
       model.revert();
 
-      // setElements to listTwo x 2 plus revert
+      // setElements(...) twice plus one revert()
       verify(accessor, times(3)).writeProperty(isA(TestBean.class),
                                                eq(propertyKey.getPropertyName()),
                                                argThat(new ThatMatchesList(listTwo)));
