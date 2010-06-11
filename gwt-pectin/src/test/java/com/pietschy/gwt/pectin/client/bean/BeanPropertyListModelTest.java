@@ -22,6 +22,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.reflect.test.TestBean;
 import org.mockito.ArgumentMatcher;
+import org.mockito.Matchers;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -272,7 +273,7 @@ public class BeanPropertyListModelTest
       assertTrue(model.getDirtyModel().getValue());
 
       // dirty should recover
-      model.revertToCheckpoint();
+      model.revert();
       assertEquals(model.asUnmodifiableList(), listOne);
       assertFalse(model.getDirtyModel().getValue());
    }
@@ -323,7 +324,7 @@ public class BeanPropertyListModelTest
    {
       when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
 
-      model.setElements(Arrays.asList("def", "abc", "qbt"));
+      model.setElements(Arrays.asList("abc", "def", "qbt"));
       // make sure our dirty state is based on the above values
       model.checkpoint();
       model.setElements(Arrays.asList("qbt", "def", "abc"));
@@ -368,6 +369,72 @@ public class BeanPropertyListModelTest
                                      argThat(new ThatMatchesList(listTwo)));
    }
 
+
+   @Test
+   public void readFromSourceDoesNotWriteToBeanWithAutoCommit()
+   {
+      autoCommit.setValue(true);
+
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+
+      model.readFromSource();
+      verify(accessor, never()).writeProperty(Matchers.<Object>any(),
+                                              Matchers.<String>any(),
+                                              Matchers.<Object>any());
+   }
+
+   @Test
+   public void checkpointAndRevertWriteToSourceCorrectlyWithAutoCommit()
+   {
+      autoCommit.setValue(true);
+
+      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      model.readFromSource();
+
+      // this should write the new value to the accessor
+      model.setElements(listTwo);
+
+      // should revert to list one
+      model.revert();
+
+      model.setElements(listTwo);
+
+      model.checkpoint();
+
+      // this should write the new value to the accessor
+      model.setElements(listThree);
+
+      //  should write the original value back to the bean.
+      model.revert();
+
+      // setElements to listTwo
+      verify(accessor, times(1)).writeProperty(isA(TestBean.class),
+                                               eq(propertyKey.getPropertyName()),
+                                               argThat(new ThatMatchesList(listTwo)));
+
+      // revert to listOne
+      verify(accessor, times(1)).writeProperty(isA(TestBean.class),
+                                               eq(propertyKey.getPropertyName()),
+                                               argThat(new ThatMatchesList(listOne)));
+
+      // setElements to listTwo
+      verify(accessor, times(1)).writeProperty(isA(TestBean.class),
+                                               eq(propertyKey.getPropertyName()),
+                                               argThat(new ThatMatchesList(listTwo)));
+      // setElements to listThree
+      verify(accessor, times(1)).writeProperty(isA(TestBean.class),
+                                               eq(propertyKey.getPropertyName()),
+                                               argThat(new ThatMatchesList(listThree)));
+
+      // revert to listTwo
+      verify(accessor, times(1)).writeProperty(isA(TestBean.class),
+                                               eq(propertyKey.getPropertyName()),
+                                               argThat(new ThatMatchesList(listTwo)));
+   }
+
+
    private static class ThatMatchesList extends ArgumentMatcher<Object>
    {
       private List<String> listToMatch;
@@ -380,16 +447,16 @@ public class BeanPropertyListModelTest
       @Override
       public boolean matches(Object o)
       {
-         List<String> list = (List<String>) o;
+         List<String> testList = (List<String>) o;
 
-         if (list.size() != listToMatch.size())
+         if (testList.size() != listToMatch.size())
          {
             return false;
          }
 
-         for (int i = 0; i < list.size(); i++)
+         for (int i = 0; i < testList.size(); i++)
          {
-            if (!listToMatch.get(i).equals(list.get(i)))
+            if (!listToMatch.get(i).equals(testList.get(i)))
             {
                return false;
             }

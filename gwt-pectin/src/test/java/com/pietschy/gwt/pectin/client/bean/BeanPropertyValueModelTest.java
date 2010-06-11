@@ -21,6 +21,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.reflect.test.TestBean;
+import org.mockito.Matchers;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -155,6 +156,8 @@ public class BeanPropertyValueModelTest
       model.readFromSource();
       assertEquals(model.getValue(), "xyz");
       assertFalse(model.getDirtyModel().getValue());
+
+      verify(accessor, never()).writeProperty(any(), any(String.class), any());
    }
 
    @Test
@@ -192,7 +195,7 @@ public class BeanPropertyValueModelTest
       assertTrue(model.getDirtyModel().getValue());
 
       // dirty should recover
-      model.revertToCheckpoint();
+      model.revert();
       assertEquals(model.getValue(), "abc");
       assertFalse(model.getDirtyModel().getValue());
    }
@@ -244,4 +247,37 @@ public class BeanPropertyValueModelTest
       verify(accessor).writeProperty(isA(TestBean.class), eq(PROPERTY_NAME), eq("def"));
    }
 
+   @Test
+   public void readFromSourceWithAutoCommit()
+   {
+      autoCommit.setValue(true);
+
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+
+      model.readFromSource();
+      verify(accessor, never()).writeProperty(isA(TestBean.class), isA(String.class), Matchers.<Object>any());
+   }
+
+   @Test
+   public void checkpointWithAutoCommit()
+   {
+      autoCommit.setValue(true);
+
+      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      model.readFromSource();
+      verify(accessor, never()).writeProperty(isA(TestBean.class), isA(String.class), Matchers.<Object>any());
+
+      // the checkpoint should remember this value.
+      model.checkpoint();
+
+      // this should write the new value to the accessor
+      model.setValue("def");
+      verify(accessor, times(1)).writeProperty(isA(TestBean.class), isA(String.class), eq("def"));
+
+      //  should write the original value back to the bean.
+      model.revert();
+      verify(accessor, times(1)).writeProperty(isA(TestBean.class), isA(String.class), eq("abc"));
+   }
 }

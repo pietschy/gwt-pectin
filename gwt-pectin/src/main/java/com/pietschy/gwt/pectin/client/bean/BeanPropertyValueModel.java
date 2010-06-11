@@ -30,11 +30,14 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
    private BeanPropertyAccessor accessor;
    private PropertyKey<T> propertyKey;
    private T checkpointValue;
-   private T bufferedValue;
+   private T currentValue;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
    private ValueHolder<Boolean> mutableModel = new ValueHolder<Boolean>(false);
    private ValueModel<?> source;
    private ValueModel<Boolean> autoCommit;
+   private UpdateStrategy<T> defaultUpdateStrategy = new DefaultUpdateStrategy();
+   private UpdateStrategy<T> autoCommitUpdateStrategy = new AutoCommitUpdateStrategy();
+
 
    public BeanPropertyValueModel(ValueModel<?> source, PropertyKey<T> key, BeanPropertyAccessor accessor, ValueModel<Boolean> autoCommit)
    {
@@ -43,7 +46,7 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
       this.accessor = accessor;
       this.autoCommit = autoCommit;
       dirtyModel.setFireEventsEvenWhenValuesEqual(false);
-      
+
       installValueChangeHandler(source);
       handleSourceModelChange();
    }
@@ -71,6 +74,7 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
    /**
     * This is an empty method that subclasses can override to perform
     * actions when the source bean changes.
+    *
     * @param sourceBean the new value of the source bean.
     */
    protected void onSourceModelChanged(Object sourceBean)
@@ -82,10 +86,10 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
       return propertyKey.getPropertyName();
    }
 
-   public void setValue(T value)
+   protected boolean isAutoCommit()
    {
-      ensureMutable();
-      setValueInternal(value);
+      // only true if not null and true.
+      return Boolean.TRUE.equals(autoCommit.getValue());
    }
 
    private void ensureMutable()
@@ -100,50 +104,24 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
       }
    }
 
-   private void setValueInternal(T value)
+   public void setValue(T value)
    {
-      T oldValue = bufferedValue;
-      bufferedValue = value;
-      if (isAutoCommit())
-      {
-         writeToSource(true);
-      }
-      else
-      {
-         updateDirtyState();
-      }
-      fireValueChangeEvent(oldValue, value);
+      getUpdateStrategy().setValue(value);
    }
 
-   protected boolean isAutoCommit()
-   {
-      // only true if not null and true.
-      return Boolean.TRUE.equals(autoCommit.getValue());
-   }
-
-   @SuppressWarnings("unchecked")
    public T getValue()
    {
-      return bufferedValue;
+      return getUpdateStrategy().getValue();
    }
 
    public void writeToSource(boolean checkpoint)
    {
-      ensureMutable();
-      T value = getValue();
-      accessor.writeProperty(source.getValue(), getPropertyName(), value);
-      if (checkpoint)
-      {
-         checkpoint();
-      }
+      getUpdateStrategy().writeToSource(checkpoint);
    }
 
-   @SuppressWarnings("unchecked")
    public void readFromSource()
    {
-      checkpointValue = (T) accessor.readProperty(source.getValue(), getPropertyName());
-      updateMutableState();
-      setValueInternal(checkpointValue);
+      getUpdateStrategy().readFromSource();
    }
 
    /**
@@ -154,17 +132,16 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
     */
    public void checkpoint()
    {
-      checkpointValue = getValue();
-      dirtyModel.setValue(false);
+      getUpdateStrategy().checkpoint();
    }
 
    /**
     * Reverts the value of this model to the previous checkpoint.  If checkpoint hasn't been called
     * then it will revert to the last call to readFrom.
     */
-   public void revertToCheckpoint()
+   public void revert()
    {
-      setValueInternal(checkpointValue);
+      getUpdateStrategy().revertToCheckpoint();
    }
 
    public ValueModel<Boolean> getMutableModel()
@@ -197,13 +174,134 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
       return dirtyModel;
    }
 
-   void updateDirtyState()
+   protected UpdateStrategy<T> getUpdateStrategy()
    {
-      dirtyModel.setValue(computeDirty());
+      return isAutoCommit() ? autoCommitUpdateStrategy : defaultUpdateStrategy;
    }
 
-   boolean computeDirty()
+
+   private interface UpdateStrategy<T>
    {
-      return bufferedValue == null ? checkpointValue != null : !bufferedValue.equals(checkpointValue);
+      void readFromSource();
+
+      void writeToSource(boolean checkpoint);
+
+      void setValue(T value);
+
+      void checkpoint();
+
+      void revertToCheckpoint();
+
+      T getValue();
+   }
+
+   private class DefaultUpdateStrategy implements UpdateStrategy<T>
+   {
+      @SuppressWarnings("unchecked")
+      public void readFromSource()
+      {
+         checkpointValue = (T) accessor.readProperty(source.getValue(), getPropertyName());
+         updateMutableState();
+         setValueInternal(checkpointValue);
+      }
+
+      public void writeToSource(boolean checkpoint)
+      {
+         ensureMutable();
+         T value = getValue();
+         accessor.writeProperty(source.getValue(), getPropertyName(), value);
+         if (checkpoint)
+         {
+            checkpoint();
+         }
+      }
+
+      public void setValue(T value)
+      {
+         ensureMutable();
+         setValueInternal(value);
+      }
+
+      public T getValue()
+      {
+         return currentValue;
+      }
+
+      public void checkpoint()
+      {
+         checkpointValue = getValue();
+         dirtyModel.setValue(false);
+      }
+
+      public void revertToCheckpoint()
+      {
+         setValueInternal(checkpointValue);
+      }
+
+      protected void setValueInternal(T value)
+      {
+         T oldValue = currentValue;
+         currentValue = value;
+         fireValueChangeEvent(oldValue, value);
+         afterMutate();
+      }
+
+      protected void afterMutate()
+      {
+         updateDirtyState();
+      }
+
+      void updateDirtyState()
+      {
+         dirtyModel.setValue(computeDirty());
+      }
+
+      boolean computeDirty()
+      {
+         return currentValue == null ? checkpointValue != null : !currentValue.equals(checkpointValue);
+      }
+
+   }
+
+   private class AutoCommitUpdateStrategy extends DefaultUpdateStrategy
+   {
+      boolean inReadFromSource = false;
+
+      @Override
+      public void readFromSource()
+      {
+         // this is a bit of a hack, but we flag that we're inside a
+         // readFromSource call so that we can re-use setValueInternal without
+         // causing a write back to the source.
+         boolean oldInReadFromSource = inReadFromSource;
+         inReadFromSource = true;
+         try
+         {
+            super.readFromSource();
+         }
+         finally
+         {
+            inReadFromSource = oldInReadFromSource;
+         }
+      }
+
+      @Override
+      protected void afterMutate()
+      {
+         // We don't write if we're currently reading from the source;
+         if (!inReadFromSource)
+         {
+            // we don't checkpoint so the user can still checkpoint and revert
+            // even though were writing through to the bean.
+            writeToSource(false);
+         }
+      }
+
+      @Override
+      boolean computeDirty()
+      {
+         // we're never dirty...
+         return false;
+      }
    }
 }

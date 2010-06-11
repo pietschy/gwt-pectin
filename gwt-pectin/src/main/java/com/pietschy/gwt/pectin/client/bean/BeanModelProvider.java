@@ -23,7 +23,12 @@ public abstract class BeanModelProvider<B> extends AbstractMutableValueModel<B> 
 
    protected BeanModelProvider()
    {
-      // our actual value is held in our delegating model so we can swap it out.
+      // Our actual value is held in our delegating model so we always
+      // fire a value change when it changes.
+      //
+      // Each BeanPropertyValue/ListModel monitors their source model and will automatically
+      // readFromSource() when on value changes, so there's not explicit read from source to
+      // call here.
       source.addValueChangeHandler(new ValueChangeHandler<B>()
       {
          public void onValueChange(ValueChangeEvent<B> event)
@@ -121,7 +126,7 @@ public abstract class BeanModelProvider<B> extends AbstractMutableValueModel<B> 
       {
          public void visit(BeanPropertyModelBase model)
          {
-            model.revertToCheckpoint();
+            model.revert();
          }
       });
    }

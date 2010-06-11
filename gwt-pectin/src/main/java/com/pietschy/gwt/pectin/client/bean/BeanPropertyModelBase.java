@@ -17,7 +17,7 @@ public interface BeanPropertyModelBase
 
    void checkpoint();
 
-   void revertToCheckpoint();
+   void revert();
 
    boolean isMutable();
 
