@@ -45,7 +45,7 @@ public abstract class ValidationStyles
       }
    };
 
-   private static final ValidationStyles DEFAULT_DEPANDENT_STYLE_INSTANCE = new ValidationStyles()
+   private static final ValidationStyles DEFAULT_DEPENDENT_STYLE_INSTANCE = new ValidationStyles()
    {
       protected void removeStyle(UIObject widget, String styleName)
       {
@@ -87,7 +87,7 @@ public abstract class ValidationStyles
 
       if (!result.isEmpty())
       {
-         applyStyle(widget, getHigestSeverity(result));
+         applyStyle(widget, getHighestSeverity(result));
       }
    }
 
@@ -98,7 +98,7 @@ public abstract class ValidationStyles
       addStyle(widget, styleNames.get(severity));
    }
 
-   private Severity getHigestSeverity(ValidationResult result)
+   private Severity getHighestSeverity(ValidationResult result)
    {
       for (Map.Entry<Severity, String> entry : styleNames.entrySet())
       {
@@ -140,6 +140,6 @@ public abstract class ValidationStyles
     */
    public static ValidationStyles defaultDependentStyleNameInstance()
    {
-      return DEFAULT_DEPANDENT_STYLE_INSTANCE;
+      return DEFAULT_DEPENDENT_STYLE_INSTANCE;
    }
 }
