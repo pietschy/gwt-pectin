@@ -10,7 +10,8 @@ dependencies {
                "junit:junit:4.7")  // for GWT tests
 }
 
-// we hook into the build and
+// we hook into the build and add SNAPSHOT to non
+// release version numbers.
 gradle.taskGraph.whenReady {taskGraph ->
    if (!taskGraph.hasTask(':gwt-pectin:release'))
    {
