@@ -21,40 +21,20 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 1, 2009
- * Time: 8:03:21 PM
+ * Date: Jul 20, 2009
+ * Time: 12:09:09 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TextConditionBuilder extends ValueConditionBuilder<String>
+public class TextIsEmptyCondition
+extends AbstractComputedCondition<String>
 {
-   public TextConditionBuilder(ValueModel<String> model)
+   public TextIsEmptyCondition(ValueModel<String> source)
    {
-      super(model);
+      super(source);
    }
 
-   public Condition matches(String regex)
+   protected Boolean computeValue(String sourceValue)
    {
-      return new TextMatchesCondition(getModel(), regex);
+      return sourceValue == null || sourceValue.length() < 1;
    }
-
-   public Condition isEmpty()
-   {
-      return new TextIsEmptyCondition(getModel());
-   }
-
-   public Condition isNotEmpty()
-   {
-      return isEmpty().not();
-   }
-
-   public Condition isBlank()
-   {
-      return new TextIsBlankCondition(getModel());
-   }
-
-   public Condition isNotBlank()
-   {
-      return isBlank().not();
-   }
-
 }
