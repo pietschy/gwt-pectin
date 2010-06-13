@@ -1,11 +1,12 @@
 package com.pietschy.gwt.pectin.client.interceptor;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Feb 21, 2010
- * Time: 3:13:50 PM
- * To change this template use File | Settings | File Templates.
+ * Interceptors can be added to an {@link com.pietschy.gwt.pectin.client.interceptor.InterceptorChain}
+ * to conditionally execute a command.
+ * <p>
+ * The interceptor must either explicitly invoke {@link Invocation#proceed()} or invoke the command
+ * returned by {@link Invocation#getProceedCommand()}.  Not invoking one of the above will abort the
+ * interceptor chain.
  */
 public interface Interceptor
 {

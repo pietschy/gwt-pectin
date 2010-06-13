@@ -7,32 +7,37 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Mar 18, 2010
- * Time: 5:11:40 PM
- * To change this template use File | Settings | File Templates.
+ * InterceptorChain allows the creation of interceptor chains that can be used to
+ * conditionally execute commands in an asynchronous manner.
  */
 public class InterceptorChain
 {
    private ArrayList<Interceptor> interceptorList = new ArrayList<Interceptor>();
 
    /**
-    * This adds interceptors to run before the command gets to execute.  These
+    * This adds interceptors to the start of the chain.
     *
-    * @param interceptor
-    * @param others
+    * @param interceptor the interceptor to add.
     */
    public void addInterceptor(Interceptor interceptor)
    {
       interceptorList.add(interceptor);
    }
 
+   /**
+    * Adds interceptors to the start of the chain.
+    * @param interceptors the interceptors to add.
+    */
    public void addInterceptors(Collection<Interceptor> interceptors)
    {
       interceptorList.addAll(interceptors);
    }
 
+   /**
+    * Adds interceptors to the start of the chain.
+    * @param interceptor the first interceptor to add.
+    * @param others any additional interceptors.
+    */
    public void addInterceptors(Interceptor interceptor, Interceptor... others)
    {
       addInterceptor(interceptor);
