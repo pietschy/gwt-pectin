@@ -1,9 +1,9 @@
-package com.pietschy.gwt.pectin.client.command;
+package com.pietschy.gwt.pectin.client.interceptor;
 
 import com.google.gwt.user.client.Command;
 
 /**
- * This class represents one link in an interceptor chain.  Invocations allow {@link com.pietschy.gwt.pectin.client.command.Interceptor}
+ * This class represents one link in an interceptor chain.  Invocations allow {@link Interceptor}
  * instances to stop the execution of a command.  In order to continue the execution of a command the interceptor
  * must either call {@link #proceed()} or invoke execute on the command returned by {@link #getProceedCommand()}.
  */

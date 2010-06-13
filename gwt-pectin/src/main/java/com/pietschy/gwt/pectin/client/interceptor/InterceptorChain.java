@@ -1,4 +1,4 @@
-package com.pietschy.gwt.pectin.client.command;
+package com.pietschy.gwt.pectin.client.interceptor;
 
 import com.google.gwt.user.client.Command;
 
@@ -48,7 +48,14 @@ public class InterceptorChain
       buildInvocationChain(executor).proceed();
    }
 
-   protected Invocation buildInvocationChain(final Command executor)
+   /**
+    * Builds the invocation chain.  This is useful if you need access to the
+    * Invocation although typically you'd call {@link #execute(com.google.gwt.user.client.Command)}
+    * instead.
+    * @param executor the command to run if all interceptors proceed.
+    * @return the invocation chain.
+    */
+   public Invocation buildInvocationChain(final Command executor)
    {
       Invocation invocation = new Invocation(new Command()
       {

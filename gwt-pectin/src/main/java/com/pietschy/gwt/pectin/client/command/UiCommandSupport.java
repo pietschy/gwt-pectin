@@ -1,6 +1,9 @@
 package com.pietschy.gwt.pectin.client.command;
 
 import com.google.gwt.user.client.Command;
+import com.pietschy.gwt.pectin.client.interceptor.Interceptor;
+import com.pietschy.gwt.pectin.client.interceptor.InterceptorChain;
+import com.pietschy.gwt.pectin.client.interceptor.Invocation;
 import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
@@ -80,7 +83,7 @@ public abstract class UiCommandSupport implements UiCommand
     * </pre>
     *
     * @param invocation the invocation chain.
-    * @see #interceptUsing(Interceptor)
+    * @see #interceptUsing(com.pietschy.gwt.pectin.client.interceptor.Interceptor)
     */
    protected void intercept(Invocation invocation)
    {

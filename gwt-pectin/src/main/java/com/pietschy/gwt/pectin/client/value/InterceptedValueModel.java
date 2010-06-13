@@ -1,14 +1,14 @@
 package com.pietschy.gwt.pectin.client.value;
 
 import com.google.gwt.user.client.Command;
-import com.pietschy.gwt.pectin.client.command.Interceptor;
-import com.pietschy.gwt.pectin.client.command.InterceptorChain;
+import com.pietschy.gwt.pectin.client.interceptor.Interceptor;
+import com.pietschy.gwt.pectin.client.interceptor.InterceptorChain;
 
 /**
  * A ValueModel that can allows value changes to be intercepted by interested third parties.  The
  * interceptors can abort the value change if required.
  * 
- * @see #interceptUsing(com.pietschy.gwt.pectin.client.command.Interceptor)
+ * @see #interceptUsing(com.pietschy.gwt.pectin.client.interceptor.Interceptor)
  */
 public class InterceptedValueModel<T> extends ValueHolder<T>
 {

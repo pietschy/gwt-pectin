@@ -1,6 +1,8 @@
 package com.pietschy.gwt.pectin.client.command;
 
 import com.google.gwt.user.client.Command;
+import com.pietschy.gwt.pectin.client.interceptor.Interceptor;
+import com.pietschy.gwt.pectin.client.interceptor.Invocation;
 import org.junit.Before;
 import org.junit.Test;
 

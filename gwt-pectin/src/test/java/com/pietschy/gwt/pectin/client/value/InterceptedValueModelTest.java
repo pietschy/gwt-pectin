@@ -1,7 +1,7 @@
 package com.pietschy.gwt.pectin.client.value;
 
-import com.pietschy.gwt.pectin.client.command.Interceptor;
-import com.pietschy.gwt.pectin.client.command.Invocation;
+import com.pietschy.gwt.pectin.client.interceptor.Interceptor;
+import com.pietschy.gwt.pectin.client.interceptor.Invocation;
 import junit.framework.TestCase;
 import org.testng.Assert;
 import org.testng.annotations.Test;

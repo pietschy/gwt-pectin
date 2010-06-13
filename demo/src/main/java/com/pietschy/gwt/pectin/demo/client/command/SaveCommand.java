@@ -3,7 +3,7 @@ package com.pietschy.gwt.pectin.demo.client.command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.pietschy.gwt.pectin.client.command.AbstractAsyncUiCommand;
 import com.pietschy.gwt.pectin.client.command.AsyncCommandCallback;
-import com.pietschy.gwt.pectin.client.command.Invocation;
+import com.pietschy.gwt.pectin.client.interceptor.Invocation;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 
 /**

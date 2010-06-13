@@ -1,6 +1,7 @@
 package com.pietschy.gwt.pectin.client.command;
 
 import com.google.gwt.user.client.Command;
+import com.pietschy.gwt.pectin.client.interceptor.Interceptor;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
@@ -22,7 +23,7 @@ public interface UiCommand extends Command
 
    /**
     * Adds an interceptor to run before the command executes.  The interceptor <b>must</b> invoke
-    * {@link com.pietschy.gwt.pectin.client.command.Invocation#proceed()} or execute {@link Invocation#getProceedCommand()}
+    * {@link com.pietschy.gwt.pectin.client.interceptor.Invocation#proceed()} or execute {@link com.pietschy.gwt.pectin.client.interceptor.Invocation#getProceedCommand()}
     * for the execution to proceed.  Failure to do so will effectively abort the execution.  In reality
     * it's a case of a silent abort since the command is not notified of the interception.
     * <p>

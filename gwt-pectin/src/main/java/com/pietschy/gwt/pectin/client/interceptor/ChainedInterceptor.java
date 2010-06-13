@@ -1,4 +1,4 @@
-package com.pietschy.gwt.pectin.client.command;
+package com.pietschy.gwt.pectin.client.interceptor;
 
 import java.util.Collection;
 
