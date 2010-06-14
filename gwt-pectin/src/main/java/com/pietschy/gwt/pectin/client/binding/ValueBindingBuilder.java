@@ -1,5 +1,6 @@
 package com.pietschy.gwt.pectin.client.binding;
 
+import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
@@ -59,10 +60,38 @@ public class ValueBindingBuilder<T>
       getCallback().onBindingCreated(binding, destination);
    }
 
-   public DisplayFormatBuilder<T> toLabel(HasText label)
+   /**
+    * @deprecated User {@link #toText(com.google.gwt.user.client.ui.HasText)} instead.
+    * @param target the binding target.
+    * @return a builder to optionally configure the format.
+    */
+   @Deprecated
+   public DisplayFormatBuilder<T> toLabel(HasText target)
    {
-      ValueModelToHasTextBinding<T> binding = new ValueModelToHasTextBinding<T>(model, label);
-      getCallback().onBindingCreated(binding, label);
+      return toText(target);
+   }
+
+   /**
+    * Binds the value model to the specified {@link HasText} target.
+    * @param target the binding target.
+    * @return a builder to optionally configure the format.
+    */
+   public DisplayFormatBuilder<T> toText(HasText target)
+   {
+      ValueModelToHasTextBinding<T> binding = new ValueModelToHasTextBinding<T>(model, target);
+      getCallback().onBindingCreated(binding, target);
+      return new DisplayFormatBuilder<T>(binding);
+   }
+
+   /**
+    * Binds the value model to the specified {@link HasHTML} target.
+    * @param target the binding target.
+    * @return a builder to optionally configure the format.
+    */
+   public DisplayFormatBuilder<T> toHtml(HasHTML target)
+   {
+      ValueModelToHasHtmlBinding<T> binding = new ValueModelToHasHtmlBinding<T>(model, target);
+      getCallback().onBindingCreated(binding, target);
       return new DisplayFormatBuilder<T>(binding);
    }
 

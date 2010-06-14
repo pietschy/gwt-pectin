@@ -1,5 +1,6 @@
 package com.pietschy.gwt.pectin.client.binding;
 
+import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.pietschy.gwt.pectin.client.channel.Destination;
 import com.pietschy.gwt.pectin.client.command.ParameterisedCommand;
@@ -27,10 +28,41 @@ public class ListBindingBuilder<T>
       this.model = model;
    }
 
+   /**
+    * Binds the list to the specified {@link HasText} target.
+    * @param target the target to bind too.
+    * @return a builder to optionally configure the format.
+    * @deprecated use {@link #toText(HasText)} instead.
+    */
+   @Deprecated
    public ListDisplayFormatBuilder<T> toLabel(HasText label)
    {
-      ListModelToHasTextBinding<T> binding = new ListModelToHasTextBinding<T>(getModel(), label, CollectionToStringFormat.DEFAULT_INSTANCE);
-      getCallback().onBindingCreated(binding, label);
+      return toText(label);
+   }
+
+   /**
+    * Binds the list to the specified {@link HasText} target.
+    *
+    * @param target the target to bind too.
+    * @return a builder to optionally configure the format.
+    */
+   public ListDisplayFormatBuilder<T> toText(HasText target)
+   {
+      ListModelToHasTextBinding<T> binding = new ListModelToHasTextBinding<T>(getModel(), target, CollectionToStringFormat.DEFAULT_INSTANCE);
+      getCallback().onBindingCreated(binding, target);
+      return new ListDisplayFormatBuilder<T>(binding);
+   }
+
+   /**
+    * Binds the list to the specified {@link HasHTML} target.
+    *
+    * @param target the target to bind too.
+    * @return a builder to optionally configure the format.
+    */
+   public ListDisplayFormatBuilder<T> toHtml(HasHTML target)
+   {
+      ListModelToHasHTMLBinding<T> binding = new ListModelToHasHTMLBinding<T>(getModel(), target, CollectionToStringFormat.DEFAULT_INSTANCE);
+      getCallback().onBindingCreated(binding, target);
       return new ListDisplayFormatBuilder<T>(binding);
    }
 
