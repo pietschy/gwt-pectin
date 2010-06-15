@@ -61,14 +61,14 @@ public class ValueBindingBuilder<T>
    }
 
    /**
-    * @deprecated User {@link #toText(com.google.gwt.user.client.ui.HasText)} instead.
+    * @deprecated User {@link #toTextOf(com.google.gwt.user.client.ui.HasText)} instead.
     * @param target the binding target.
     * @return a builder to optionally configure the format.
     */
    @Deprecated
    public DisplayFormatBuilder<T> toLabel(HasText target)
    {
-      return toText(target);
+      return toTextOf(target);
    }
 
    /**
@@ -76,7 +76,7 @@ public class ValueBindingBuilder<T>
     * @param target the binding target.
     * @return a builder to optionally configure the format.
     */
-   public DisplayFormatBuilder<T> toText(HasText target)
+   public DisplayFormatBuilder<T> toTextOf(HasText target)
    {
       ValueModelToHasTextBinding<T> binding = new ValueModelToHasTextBinding<T>(model, target);
       getCallback().onBindingCreated(binding, target);
@@ -88,7 +88,7 @@ public class ValueBindingBuilder<T>
     * @param target the binding target.
     * @return a builder to optionally configure the format.
     */
-   public DisplayFormatBuilder<T> toHtml(HasHTML target)
+   public DisplayFormatBuilder<T> toHtmlOf(HasHTML target)
    {
       ValueModelToHasHtmlBinding<T> binding = new ValueModelToHasHtmlBinding<T>(model, target);
       getCallback().onBindingCreated(binding, target);

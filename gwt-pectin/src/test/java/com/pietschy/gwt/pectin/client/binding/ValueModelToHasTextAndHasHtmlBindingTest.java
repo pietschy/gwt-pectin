@@ -26,7 +26,7 @@ public class ValueModelToHasTextAndHasHtmlBindingTest
       ValueHolder<String> model = new ValueHolder<String>("a");
       HasText hasText = mock(HasText.class);
 
-      binder.bind(model).toText(hasText);
+      binder.bind(model).toTextOf(hasText);
       model.setValue("b");
       verify(hasText, times(1)).setText(eq("a"));
       verify(hasText, times(1)).setText(eq("b"));
@@ -40,7 +40,7 @@ public class ValueModelToHasTextAndHasHtmlBindingTest
       ValueHolder<String> model = new ValueHolder<String>("a");
       HasText hasText = mock(HasText.class);
 
-      binder.bind(model).toText(hasText).withFormat(new DisplayFormat<String>()
+      binder.bind(model).toTextOf(hasText).withFormat(new DisplayFormat<String>()
       {
          public String format(String value)
          {
@@ -61,7 +61,7 @@ public class ValueModelToHasTextAndHasHtmlBindingTest
       ValueHolder<String> model = new ValueHolder<String>("a");
       HasHTML hasText = mock(HasHTML.class);
 
-      binder.bind(model).toHtml(hasText);
+      binder.bind(model).toHtmlOf(hasText);
       model.setValue("b");
       verify(hasText, times(1)).setHTML(eq("a"));
       verify(hasText, times(1)).setHTML(eq("b"));
@@ -75,7 +75,7 @@ public class ValueModelToHasTextAndHasHtmlBindingTest
       ValueHolder<String> model = new ValueHolder<String>("a");
       HasHTML hasText = mock(HasHTML.class);
 
-      binder.bind(model).toHtml(hasText).withFormat(new DisplayFormat<String>()
+      binder.bind(model).toHtmlOf(hasText).withFormat(new DisplayFormat<String>()
       {
          public String format(String value)
          {

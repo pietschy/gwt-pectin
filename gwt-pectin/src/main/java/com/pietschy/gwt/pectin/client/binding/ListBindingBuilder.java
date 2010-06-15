@@ -32,12 +32,12 @@ public class ListBindingBuilder<T>
     * Binds the list to the specified {@link HasText} target.
     * @param target the target to bind too.
     * @return a builder to optionally configure the format.
-    * @deprecated use {@link #toText(HasText)} instead.
+    * @deprecated use {@link #toTextOf(HasText)} instead.
     */
    @Deprecated
    public ListDisplayFormatBuilder<T> toLabel(HasText label)
    {
-      return toText(label);
+      return toTextOf(label);
    }
 
    /**
@@ -46,7 +46,7 @@ public class ListBindingBuilder<T>
     * @param target the target to bind too.
     * @return a builder to optionally configure the format.
     */
-   public ListDisplayFormatBuilder<T> toText(HasText target)
+   public ListDisplayFormatBuilder<T> toTextOf(HasText target)
    {
       ListModelToHasTextBinding<T> binding = new ListModelToHasTextBinding<T>(getModel(), target, CollectionToStringFormat.DEFAULT_INSTANCE);
       getCallback().onBindingCreated(binding, target);
@@ -59,7 +59,7 @@ public class ListBindingBuilder<T>
     * @param target the target to bind too.
     * @return a builder to optionally configure the format.
     */
-   public ListDisplayFormatBuilder<T> toHtml(HasHTML target)
+   public ListDisplayFormatBuilder<T> toHtmlOf(HasHTML target)
    {
       ListModelToHasHTMLBinding<T> binding = new ListModelToHasHTMLBinding<T>(getModel(), target, CollectionToStringFormat.DEFAULT_INSTANCE);
       getCallback().onBindingCreated(binding, target);

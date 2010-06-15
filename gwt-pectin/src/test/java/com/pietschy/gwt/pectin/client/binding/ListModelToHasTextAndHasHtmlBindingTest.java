@@ -28,7 +28,7 @@ public class ListModelToHasTextAndHasHtmlBindingTest
       ArrayListModel<String> model = new ArrayListModel<String>("a", "b");
       HasText hasText = mock(HasText.class);
 
-      binder.bind(model).toText(hasText);
+      binder.bind(model).toTextOf(hasText);
       model.setElements(Arrays.asList("c", "d"));
 
       verify(hasText, times(1)).setText(eq("a, b"));
@@ -43,7 +43,7 @@ public class ListModelToHasTextAndHasHtmlBindingTest
       ArrayListModel<String> model = new ArrayListModel<String>("a", "b");
       HasText hasText = mock(HasText.class);
 
-      binder.bind(model).toText(hasText).withFormat(new Join(":"));
+      binder.bind(model).toTextOf(hasText).withFormat(new Join(":"));
 
       model.setElements(Arrays.asList("c", "d"));
 
@@ -60,7 +60,7 @@ public class ListModelToHasTextAndHasHtmlBindingTest
       ArrayListModel<String> model = new ArrayListModel<String>("a", "b");
       HasHTML hasHTML = mock(HasHTML.class);
 
-      binder.bind(model).toHtml(hasHTML);
+      binder.bind(model).toHtmlOf(hasHTML);
       model.setElements(Arrays.asList("c", "d"));
 
       verify(hasHTML, times(1)).setHTML(eq("a, b"));
@@ -75,7 +75,7 @@ public class ListModelToHasTextAndHasHtmlBindingTest
       ArrayListModel<String> model = new ArrayListModel<String>("a", "b");
       HasHTML hasHTML = mock(HasHTML.class);
 
-      binder.bind(model).toHtml(hasHTML).withFormat(new Join(":"));
+      binder.bind(model).toHtmlOf(hasHTML).withFormat(new Join(":"));
       model.setElements(Arrays.asList("c", "d"));
 
       verify(hasHTML, times(1)).setHTML(eq("a:b"));
