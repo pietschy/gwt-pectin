@@ -17,10 +17,12 @@
 package com.pietschy.gwt.pectin.reflect.test;
 
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.NestedTypes;
 
 /**
  * this would normally be a static inner class but we need to be in a different
  * package to our created instance doesn't have any 'accidentally working' imports.
 */
+@NestedTypes({AnotherBean.class})
 public abstract class TestProvider extends BeanModelProvider<TestBean>
 {}

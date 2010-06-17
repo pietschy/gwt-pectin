@@ -86,7 +86,8 @@ public class TestBean
       this.objectBoolean = objectBoolean;
    }
 
-   @NestedBean
+   // we're not marking this one as nested, but relying on the
+   // @NestedTypes annotation on the provider.
    public AnotherBean getNestedBean()
    {
       return nestedBean;

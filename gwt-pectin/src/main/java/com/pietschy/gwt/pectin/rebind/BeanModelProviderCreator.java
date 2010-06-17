@@ -24,9 +24,13 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.pietschy.gwt.pectin.client.bean.BeanPropertyAccessor;
+import com.pietschy.gwt.pectin.client.bean.NestedTypes;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * TODO: Improve error messages when a property is referenced that hasn't been annotated with @NestedBean.
@@ -67,11 +71,13 @@ public class BeanModelProviderCreator
          else
          {
 
+            Set<Class> nestedBeanTypes = getNestedTypeClasses(classType);
+
             // bean type is in our declaration e.g.
             // class MyProvider extends AbstractBeanModelProvider<BeanType>
             JClassType beanType = classType.getSuperclass().isParameterized().getTypeArgs()[0];
 
-            BeanInfo beanInfo = new BeanInfo(typeOracle, beanType);
+            BeanInfo beanInfo = new BeanInfo(typeOracle, beanType, nestedBeanTypes);
 
             writer.indent();
 
@@ -101,6 +107,15 @@ public class BeanModelProviderCreator
          e.printStackTrace();
          return null;
       }
+   }
+
+   private Set<Class> getNestedTypeClasses(JClassType classType)
+   {
+      NestedTypes nestedTypeAnnotation = classType.findAnnotationInTypeHierarchy(NestedTypes.class);
+
+      return nestedTypeAnnotation == null
+             ? Collections.<Class>emptySet()
+             : new HashSet<Class>(Arrays.asList(nestedTypeAnnotation.value()));
    }
 
    private void generateGetPropertyTypeMethod(final SourceWriter source, BeanInfo beanInfo)
@@ -144,7 +159,7 @@ public class BeanModelProviderCreator
             source.indent();
             if (property.isCollectionProperty())
             {
-               source.println("return " + property.getCollectionElementType() + ".class;");
+               source.println("return " + property.getCollectionElementTypeName() + ".class;");
             }
             else
             {
@@ -208,6 +223,7 @@ public class BeanModelProviderCreator
       {
          public void visit(PropertyInfo property)
          {
+            // we only generate one accessor per type so we only proceed if typeNames.add returns true.
             if (property.isNestedBean() && typeNames.add(property.getNestedBeanInfo().getTypeName()))
             {
                writeAccessorFor(property.getNestedBeanInfo(), source);

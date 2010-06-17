@@ -6,11 +6,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: May 9, 2010
- * Time: 5:21:22 PM
- * To change this template use File | Settings | File Templates.
+ * This annotation can be used to mark a bean property as being a nested bean.  The annotation must
+ * be placed on the getter of the parent bean.
+ * <p>
+ * The following will expose the address property as a nested bean.
+ * <pre>
+ * public class Person {
+ *   &#064;NestedBean
+ *   public Address getAddress() {return address;}
+ * }
+ * </pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

@@ -3,6 +3,8 @@ package com.pietschy.gwt.pectin.rebind;
 import com.google.gwt.core.ext.typeinfo.*;
 import com.pietschy.gwt.pectin.client.bean.NestedBean;
 
+import java.util.Set;
+
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -19,7 +21,7 @@ class PropertyInfo
    private JType type;
    private String getterMethodName;
    private String setterMethodName = null;
-   private boolean annotatedWithNested;
+   private boolean nestedBean;
 
 
    PropertyInfo(TypeOracle typeOracle, BeanInfo parentType, String parentPath, String name, JType type, String getterMethodName, boolean hasNestedAnnotation)
@@ -30,7 +32,26 @@ class PropertyInfo
       this.name = name;
       this.type = type;
       this.getterMethodName = getterMethodName;
-      this.annotatedWithNested = hasNestedAnnotation;
+      this.nestedBean = computeNestedBean(hasNestedAnnotation, parentType.getNestedBeanTypes());
+   }
+
+   private boolean computeNestedBean(boolean hasNestedAnnotation, Set<Class> nestedBeanTypes)
+   {
+      if (hasNestedAnnotation)
+      {
+         return true;
+      }
+      else
+      {
+         for (Class nestedBeanType : nestedBeanTypes)
+         {
+            if (getTypeName().equals(nestedBeanType.getName()))
+            {
+               return true;
+            }
+         }
+         return false;
+      }
    }
 
    public String getName()
@@ -65,7 +86,7 @@ class PropertyInfo
 
    public boolean isNestedBean()
    {
-      return annotatedWithNested;
+      return nestedBean;
    }
 
    public BeanInfo getNestedBeanInfo()
@@ -88,7 +109,7 @@ class PropertyInfo
                                          " but returns an instanceOf Collection");
       }
 
-      return new BeanInfo(typeOracle, beanType, getFullPropertyPath());
+      return new BeanInfo(typeOracle, beanType, parentType.getNestedBeanTypes(), getFullPropertyPath());
    }
 
    public boolean isCollectionProperty()
@@ -98,7 +119,13 @@ class PropertyInfo
       return classType != null && classType.isAssignableTo(typeOracle.findType("java.util.Collection"));
    }
 
-   public String getCollectionElementType()
+   public String getCollectionElementTypeName()
+   {
+      JClassType type = getCollectionElementType();
+      return type != null ? type.getQualifiedSourceName() : "java.lang.Object";
+   }
+
+   public JClassType getCollectionElementType()
    {
       if (!isCollectionProperty())
       {
@@ -106,7 +133,7 @@ class PropertyInfo
       }
 
       JParameterizedType parameterisedType = getAsParameterisedType();
-      return parameterisedType != null ? parameterisedType.getTypeArgs()[0].getQualifiedSourceName() : "java.lang.Object";
+      return parameterisedType != null ? parameterisedType.getTypeArgs()[0] : null;
    }
 
    private JClassType getAsClassType()
