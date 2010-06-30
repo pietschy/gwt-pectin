@@ -9,8 +9,8 @@ package com.pietschy.gwt.pectin.client.bean;
  */
 public class ReadOnlyPropertyException extends RuntimeException
 {
-   public ReadOnlyPropertyException(PropertyKey key)
+   public ReadOnlyPropertyException(Path path)
    {
-      super("Property is read only: " + key.getFullPath());
+      super("Property is read only: " + path.getFullPath());
    }
 }

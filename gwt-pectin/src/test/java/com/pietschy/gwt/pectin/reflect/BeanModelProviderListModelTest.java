@@ -27,7 +27,7 @@ import static org.testng.AssertJUnit.assertFalse;
  */
 public class BeanModelProviderListModelTest
 {
-   private BeanModelProvider<TestBean> provider;
+   private AbstractBeanModelProvider<TestBean> provider;
    private TestBean bean;
 
    @BeforeMethod

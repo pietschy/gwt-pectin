@@ -5,20 +5,21 @@ version = "0.${buildNumber}"
 defaultTasks "demo"
 
 dependencies {
-   compile project(':gwt-pectin')
+  compile project(':gwt-pectin')
 }
 
 // ensure our parent project get's cleaned.
 clean.dependsOn(':gwt-pectin:clean')
 
 compileGwt {
-   compileReport = true
-   modules('com.pietschy.gwt.pectin.demo.PectinDemo')
+  compileReport = true
+//  style = com.pietschy.gradle.plugin.gwt.task.Style.PRETTY
+  modules('com.pietschy.gwt.pectin.demo.PectinDemo')
 }
- 
+
 task shell(type: com.pietschy.gradle.plugin.gwt.task.GwtDevelopmentShell) {
-   modules('com.pietschy.gwt.pectin.demo.PectinDemo')
-   startupUrl = 'PectinDemo.html'
+  modules('com.pietschy.gwt.pectin.demo.PectinDemo')
+  startupUrl = 'PectinDemo.html'
 }
 
 task demo(dependsOn: ['classes', 'shell'])
@@ -27,22 +28,22 @@ task demo(dependsOn: ['classes', 'shell'])
 task dist(overwrite: true, dependsOn: ['classes', 'compileGwt'])
 dist << {
 
-   File compileOutput = compileGwt.destinationDir;
-   File webAppDir = project.webAppDir;
+  File compileOutput = compileGwt.destinationDir;
+  File webAppDir = project.webAppDir;
 
-   File dest = new File((File)project.buildDir, 'web')
-   ant.copy(toDir: dest) {
-      fileset(dir: compileOutput)
-      fileset(dir: webAppDir, excludes: 'WEB-INF/**')
-   }
+  File dest = new File((File) project.buildDir, 'web')
+  ant.copy(toDir: dest) {
+    fileset(dir: compileOutput)
+    fileset(dir: webAppDir, excludes: 'WEB-INF/**')
+  }
 }
 
 // Task for creating the gradle wrapper for this project.
 task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {
-   gradleVersion = '0.8'
+  gradleVersion = '0.8'
 }
 
 String getBuildNumber()
 {
-   return readBuildNumber(project)
+  return readBuildNumber(project)
 }

@@ -33,6 +33,7 @@ public class Person
    private String nickName;
    private Gender gender;
    private Integer age;
+   private Address address = new Address();
 
    private ArrayList<Wine> favoriteWines = new ArrayList<Wine>();
    private boolean wineLover = false;
@@ -131,5 +132,10 @@ public class Person
    public void setCheeseLover(boolean cheeseLover)
    {
       this.cheeseLover = cheeseLover;
+   }
+
+   public Address getAddress()
+   {
+      return address;
    }
 }

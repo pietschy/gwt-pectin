@@ -16,9 +16,6 @@
 
 package com.pietschy.gwt.pectin.reflect;
 
-import com.pietschy.gwt.pectin.client.bean.AutoCommitBeanModelProvider;
-import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-
 /**
  * Utilities for testing.
  */
@@ -33,7 +30,7 @@ public class ReflectionProviders
     * @param clazz the class wrapped by the provider.
     * @return a reflection based provider for JVM tests.
     */
-   public static <T> BeanModelProvider<T> providerFor(Class<T> clazz)
+   public static <T> ReflectionBeanModelProvider<T> providerFor(Class<T> clazz)
    {
       return new ReflectionBeanModelProvider<T>(clazz);
    }
@@ -47,7 +44,7 @@ public class ReflectionProviders
     * @param clazz the class wrapped by the provider.
     * @return a reflection based provider for JVM tests.
     */
-   public static <T> AutoCommitBeanModelProvider<T> autoCommitProviderFor(Class<T> clazz)
+   public static <T> ReflectionAutoCommitBeanModelProvider<T> autoCommitProviderFor(Class<T> clazz)
    {
       return new ReflectionAutoCommitBeanModelProvider<T>(clazz);
    }

@@ -16,36 +16,15 @@
 
 package com.pietschy.gwt.pectin.reflect;
 
-import com.pietschy.gwt.pectin.client.bean.AutoCommitBeanModelProvider;
-import com.pietschy.gwt.pectin.client.bean.BeanPropertyAccessor;
-import com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException;
-import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
-
 /**
  * This class provides an implementation of {@link com.pietschy.gwt.pectin.client.bean.BeanModelProvider}
  * that can be used in JVM based tests.  This class <b>can not</b> be used withing client code as it uses reflection.
  */
-public class ReflectionAutoCommitBeanModelProvider<B> extends AutoCommitBeanModelProvider<B>
+public class ReflectionAutoCommitBeanModelProvider<B> extends ReflectionBeanModelProvider<B>
 {
-   private ProviderSupport<B> support;
-
    public ReflectionAutoCommitBeanModelProvider(Class<B> clazz)
    {
-      support = new ProviderSupport<B>(clazz);
-   }
-
-   public Class getPropertyType(String property) throws UnknownPropertyException
-   {
-      return support.getPropertyType(property);
-   }
-
-   public Class getElementType(String property) throws UnknownPropertyException, NotCollectionPropertyException
-   {
-      return support.getElementType(property);
-   }
-
-   public BeanPropertyAccessor getBeanAccessorForPropertyPath(String propertyPath) throws UnknownPropertyException
-   {
-      return support.getBeanAccessorForPropertyPath(propertyPath);
+      super(clazz);
+      setAutoCommit(true);
    }
 }

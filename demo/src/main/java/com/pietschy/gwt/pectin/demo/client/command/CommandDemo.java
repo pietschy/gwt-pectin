@@ -46,9 +46,8 @@ public class CommandDemo extends AbstractDemo
 
       addBlurbParagraph("UiCommands are a command pattern that can be bound to buttons.  The come in async versions " +
                         "(AsyncUiCommand and IncrementalUiCommand) and a regular non-async version (UiCommand).");
-      addBlurbParagraph("This example combines two commands (Save & Cancel) with a validated FormModel and " +
+      addBlurbParagraph("This example includes a UiCommand (Save) with a validated FormModel and " +
                         "and backed by an async service.");
-      addBlurbParagraph("UiCommands are a bit experimental and are only in SVN at this point in time.");
 
       addLinkToSource("Show Controller Source", EditPersonController.class);
       addLinkToSource("Show Save Command Source", SaveCommand.class);

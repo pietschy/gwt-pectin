@@ -27,8 +27,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  */
 public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> implements BeanPropertyModelBase
 {
-   private BeanPropertyAccessor accessor;
-   private PropertyKey<T> propertyKey;
+   private PropertyDescriptor propertyDescriptor;
    private T checkpointValue;
    private T currentValue;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
@@ -39,11 +38,10 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
    private UpdateStrategy<T> autoCommitUpdateStrategy = new AutoCommitUpdateStrategy();
 
 
-   public BeanPropertyValueModel(ValueModel<?> source, PropertyKey<T> key, BeanPropertyAccessor accessor, ValueModel<Boolean> autoCommit)
+   public BeanPropertyValueModel(ValueModel<?> sourceModel, PropertyDescriptor descriptor, ValueModel<Boolean> autoCommit)
    {
-      this.source = source;
-      this.propertyKey = key;
-      this.accessor = accessor;
+      this.source = sourceModel;
+      this.propertyDescriptor = descriptor;
       this.autoCommit = autoCommit;
       dirtyModel.setFireEventsEvenWhenValuesEqual(false);
 
@@ -83,7 +81,12 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
 
    public String getPropertyName()
    {
-      return propertyKey.getPropertyName();
+      return propertyDescriptor.getPropertyName();
+   }
+
+   public Class getValueType()
+   {
+      return propertyDescriptor.getValueType();
    }
 
    protected boolean isAutoCommit()
@@ -96,11 +99,11 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
    {
       if (!isMutableProperty())
       {
-         throw new ReadOnlyPropertyException(propertyKey);
+         throw new ReadOnlyPropertyException(propertyDescriptor);
       }
       else if (!isNonNullSource())
       {
-         throw new SourceBeanIsNullException(propertyKey);
+         throw new SourceBeanIsNullException(propertyDescriptor);
       }
    }
 
@@ -166,7 +169,7 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
 
    public boolean isMutableProperty()
    {
-      return accessor.isMutable(getPropertyName());
+      return propertyDescriptor.isMutable();
    }
 
    public ValueModel<Boolean> getDirtyModel()
@@ -178,6 +181,8 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
    {
       return isAutoCommit() ? autoCommitUpdateStrategy : defaultUpdateStrategy;
    }
+
+
 
 
    private interface UpdateStrategy<T>
@@ -200,7 +205,7 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
       @SuppressWarnings("unchecked")
       public void readFromSource()
       {
-         checkpointValue = (T) accessor.readProperty(source.getValue(), getPropertyName());
+         checkpointValue = (T) propertyDescriptor.readProperty(source.getValue());
          updateMutableState();
          setValueInternal(checkpointValue);
       }
@@ -209,7 +214,7 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
       {
          ensureMutable();
          T value = getValue();
-         accessor.writeProperty(source.getValue(), getPropertyName(), value);
+         propertyDescriptor.writeProperty(source.getValue(), value);
          if (checkpoint)
          {
             checkpoint();

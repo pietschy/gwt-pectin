@@ -34,30 +34,29 @@ public class BeanPropertyListModel<T> extends ArrayListModel<T> implements BeanP
 {
    private List<T> EMPTY_LIST = Collections.emptyList();
 
-   private PropertyKey<T> propertyKey;
    private List<T> checkpointValue = null;
    private CollectionConverter listConverter;
    private ValueHolder<Boolean> dirtyModel = new ValueHolder<Boolean>(false);
-   private BeanPropertyAccessor accessor;
    private ValueHolder<Boolean> mutableModel = new ValueHolder<Boolean>(false);
    private ValueModel<?> source;
    private ValueModel<Boolean> autoCommit;
    private UpdateStrategy<T> defaultUpdateStrategy = new DefaultUpdateStrategy();
    private UpdateStrategy<T> autoCommitUpdateStrategy = new AutoCommitUpdateStrategy();
+   private PropertyDescriptor propertyDescriptor;
 
 
-   public BeanPropertyListModel(ValueModel<?> source, PropertyKey<T> propertyKey, BeanPropertyAccessor accessor, CollectionConverter listConverter, ValueModel<Boolean> autoCommit)
+   public BeanPropertyListModel(ValueModel<?> sourceModel, PropertyDescriptor descriptor, CollectionConverter converter, ValueModel<Boolean> autoCommit)
    {
-      this.source = source;
-      this.accessor = accessor;
-      this.propertyKey = propertyKey;
-      this.listConverter = listConverter;
+      this.source = sourceModel;
+      this.propertyDescriptor = descriptor;
+      this.listConverter = converter;
       this.autoCommit = autoCommit;
       dirtyModel.setFireEventsEvenWhenValuesEqual(false);
 
       installValueChangeHandler();
       handleSourceModelChange();
    }
+
 
    @SuppressWarnings("unchecked")
    private void installValueChangeHandler()
@@ -92,7 +91,12 @@ public class BeanPropertyListModel<T> extends ArrayListModel<T> implements BeanP
 
    public String getPropertyName()
    {
-      return propertyKey.getPropertyName();
+      return propertyDescriptor.getPropertyName();
+   }
+
+   public Class getValueType()
+   {
+      return propertyDescriptor.getElementType();
    }
 
    protected boolean isAutoCommit()
@@ -106,11 +110,11 @@ public class BeanPropertyListModel<T> extends ArrayListModel<T> implements BeanP
    {
       if (!isMutableProperty())
       {
-         throw new ReadOnlyPropertyException(propertyKey);
+         throw new ReadOnlyPropertyException(propertyDescriptor);
       }
       else if (!isNonNullSource())
       {
-         throw new SourceBeanIsNullException(propertyKey);
+         throw new SourceBeanIsNullException(propertyDescriptor);
       }
    }
 
@@ -196,7 +200,7 @@ public class BeanPropertyListModel<T> extends ArrayListModel<T> implements BeanP
 
    public boolean isMutableProperty()
    {
-      return accessor.isMutable(getPropertyName());
+      return propertyDescriptor.isMutable();
    }
 
    private UpdateStrategy<T> getUpdateStrategy()
@@ -229,7 +233,7 @@ public class BeanPropertyListModel<T> extends ArrayListModel<T> implements BeanP
       @SuppressWarnings("unchecked")
       public void readFromSource()
       {
-         Object propertyValue = accessor.readProperty(source.getValue(), getPropertyName());
+         Object propertyValue = propertyDescriptor.readProperty(source.getValue());
          updateElements(toList(listConverter.fromBean(propertyValue)));
          checkpoint();
          updateMutableState();
@@ -239,7 +243,7 @@ public class BeanPropertyListModel<T> extends ArrayListModel<T> implements BeanP
       public void writeToSource(boolean checkpoint)
       {
          ensureMutable();
-         accessor.writeProperty(source.getValue(), getPropertyName(), listConverter.toBean(asUnmodifiableList()));
+         propertyDescriptor.writeProperty(source.getValue(), listConverter.toBean(asUnmodifiableList()));
          if (checkpoint)
          {
             checkpoint();
@@ -300,6 +304,7 @@ public class BeanPropertyListModel<T> extends ArrayListModel<T> implements BeanP
 
       /**
        * Returns the last checkpoint value.
+       *
        * @return the checkpoint value.
        */
       private List<T> getCheckpoint()

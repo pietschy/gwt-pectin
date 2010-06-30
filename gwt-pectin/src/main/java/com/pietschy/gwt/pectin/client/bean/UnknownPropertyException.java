@@ -25,8 +25,13 @@ package com.pietschy.gwt.pectin.client.bean;
  */
 public class UnknownPropertyException extends RuntimeException
 {
-   public UnknownPropertyException(String propertyName)
+   public UnknownPropertyException(Path path)
    {
-      super("Unknown property: " + propertyName);
+      this(path.getFullPath());
+   }
+
+   public UnknownPropertyException(String fullPath)
+   {
+      super("Unknown property: " + fullPath);
    }
 }

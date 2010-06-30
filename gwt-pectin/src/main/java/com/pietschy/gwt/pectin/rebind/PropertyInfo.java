@@ -23,7 +23,6 @@ class PropertyInfo
    private String setterMethodName = null;
    private boolean nestedBean;
 
-
    PropertyInfo(TypeOracle typeOracle, BeanInfo parentType, String parentPath, String name, JType type, String getterMethodName, boolean hasNestedAnnotation)
    {
       this.typeOracle = typeOracle;
@@ -71,10 +70,10 @@ class PropertyInfo
 
    public boolean isTopLevel()
    {
-      return getParentPath().isEmpty();
+      return getParentPath() == null;
    }
 
-   public BeanInfo getParentType()
+   public BeanInfo getParentBeanInfo()
    {
       return parentType;
    }

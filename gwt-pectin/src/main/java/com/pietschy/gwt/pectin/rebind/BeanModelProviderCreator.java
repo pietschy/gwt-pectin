@@ -23,8 +23,7 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.pietschy.gwt.pectin.client.bean.BeanPropertyAccessor;
-import com.pietschy.gwt.pectin.client.bean.NestedTypes;
+import com.pietschy.gwt.pectin.client.bean.*;
 
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -59,7 +58,13 @@ public class BeanModelProviderCreator
 
          String fullClassName = createClassNameWithPackage(classType);
 
-         SourceWriter writer = getSourceWriter(classType);
+         Writer writer = getSourceWriterWithImports(classType,
+                                                    PropertyDescriptor.class,
+                                                    DefaultPropertyDescriptor.class,
+                                                    CollectionPropertyDescriptor.class,
+                                                    UnknownPropertyException.class,
+                                                    TargetBeanIsNullException.class,
+                                                    ReadOnlyPropertyException.class);
 
 
          // The source writer is null if the class already exists, so we don't need
@@ -81,21 +86,15 @@ public class BeanModelProviderCreator
 
             writer.indent();
 
-            generateGetPropertyTypeMethod(writer, beanInfo);
+            writer.println();
+
+            // e.g. private PropertyKey key_firstName = new DefaultPropertyKey(...);
+            generateDescriptorVars(writer, beanInfo);
 
             writer.println();
 
-            generateGetElementTypeMethod(writer, beanInfo);
-
-            writer.println();
-
-            generateGetBeanPropertyAccessorMethod(writer, beanInfo);
-
-            writer.println();
-
-            generateGetBeanPropertyAccessorByTypeMethod(writer, beanInfo);
-
-            writer.println();
+            // e.g. private BeanPropertyAccessor accessor_a_package_Class = new BeanPropertyAccessor(){...};
+            generateGetPropertyDescriptorMethod(writer, beanInfo);
 
             writer.commit(logger);
 
@@ -118,165 +117,99 @@ public class BeanModelProviderCreator
              : new HashSet<Class>(Arrays.asList(nestedTypeAnnotation.value()));
    }
 
-   private void generateGetPropertyTypeMethod(final SourceWriter source, BeanInfo beanInfo)
+   private String toDescriptorVarName(PropertyInfo property)
    {
-      // create the getPropertyType method
-      source.println("public Class getPropertyType(String propertyPath) {");
-      source.indent();
-
-      beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
-      {
-         public void visit(PropertyInfo propertyInfo)
-         {
-            source.println("if (propertyPath.equals(\"" + propertyInfo.getFullPropertyPath() + "\")) { ");
-            source.indent();
-            source.println("return " + propertyInfo.getTypeName() + ".class;");
-
-            source.outdent();
-            source.print("} else ");
-         }
-      });
-      source.println("{");
-      source.indent();
-      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(propertyPath);");
-      source.outdent();
-      source.println("}");
-      source.outdent();
-      source.println("}");
+      return "descriptor_" + property.getFullPropertyPath().replace('.', '_');
    }
 
-   private void generateGetElementTypeMethod(final SourceWriter source, BeanInfo beanInfo)
+   private String quote(String string)
    {
-      // create the getPropertyType method
-      source.println("public Class getElementType(String propertyPath) {");
-      source.indent();
+      return string != null ? "\"" + string + "\"" : null;
+   }
 
+   private void generateDescriptorVars(final Writer source, BeanInfo beanInfo)
+   {
       beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
       {
          public void visit(PropertyInfo property)
          {
-            source.println("if (propertyPath.equals(\"" + property.getFullPropertyPath() + "\")) { ");
-            source.indent();
+            // generate an appropriate constructor call...
+            BeanInfo parentBean = property.getParentBeanInfo();
             if (property.isCollectionProperty())
             {
-               source.println("return " + property.getCollectionElementTypeName() + ".class;");
+               // CollectionPropertyDescriptor(String fullPath, String parentPath, String propertyName,
+               //                              Class beanType, Class collectionType, Class elementType, boolean mutable)
+
+               source.println("private final PropertyDescriptor %s = new CollectionPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s.class, %s) {",
+                              toDescriptorVarName(property),
+                              quote(property.getFullPropertyPath()),
+                              quote(property.getParentPath()),
+                              quote(property.getName()),
+                              parentBean.getTypeName(),
+                              property.getTypeName(),
+                              property.getCollectionElementTypeName(),
+                              property.isMutable());
             }
             else
             {
-               source.println("throw new com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException(propertyPath, " + property.getTypeName() + ".class);");
+               // DefaultPropertyKey(Class type, String fullPath, String parentPath, String propertyName)
+               source.println("private final PropertyDescriptor %s = new DefaultPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s) {",
+                              toDescriptorVarName(property),
+                              quote(property.getFullPropertyPath()),
+                              quote(property.getParentPath()),
+                              quote(property.getName()),
+                              parentBean.getTypeName(),
+                              property.getTypeName(),
+                              property.isMutable());
             }
-            source.outdent();
-            source.print("} else ");
-         }
-      });
-      source.println("{");
-      source.indent();
-      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(propertyPath);");
-      source.outdent();
-      source.println("}");
-      source.outdent();
-      source.println("}");
-   }
 
-
-   private void generateGetBeanPropertyAccessorMethod(final SourceWriter source, BeanInfo beanInfo)
-   {
-      // create the getPropertyType method
-      source.println("public " + BeanPropertyAccessor.class.getName() + " getBeanAccessorForPropertyPath(String propertyPath) {");
-      source.indent();
-
-      beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
-      {
-         public void visit(PropertyInfo property)
-         {
-            source.println("if (propertyPath.equals(\"" + property.getFullPropertyPath() + "\")) { ");
+            // now implement the methods....
             source.indent();
-            source.println("return getAccessorByType(\"" + property.getFullPropertyPath() + "\"," + property.getParentType().getTypeName() + ".class);");
+            source.println("public Object readProperty(Object bean) {");
+            source.indent();
+            source.println("return bean == null ? null : ((" + parentBean.getTypeName() + ")bean)." + property.getGetterMethodName() + "();");
+            source.outdent();
+            source.println("}");
+
+            source.println("public void writeProperty(Object bean, Object value) {");
+            source.indent();
+            source.println("if (bean == null) {");
+            source.println("   throw new TargetBeanIsNullException(this, " + parentBean.getTypeName() + ".class);");
+            source.println("}");
+            if (property.isMutable())
+            {
+               source.println("((" + parentBean.getTypeName() + ")bean)." + property.getSetterMethodName() + "((" + property.getTypeName() + ") value);");
+            }
+            else
+            {
+               source.println("throw new ReadOnlyPropertyException(this);");
+            }
+            source.outdent();
+            source.println("}");
+            source.outdent();
+            source.println("};");
+         }
+      });
+   }
+
+   private void generateGetPropertyDescriptorMethod(final Writer source, final BeanInfo beanInfo)
+   {
+      source.println("public PropertyDescriptor getPropertyDescriptor(String path) {");
+      source.indent();
+      beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
+      {
+         public void visit(PropertyInfo property)
+         {
+            source.println("if (\"%s\".equals(path)) {", property.getFullPropertyPath());
+            source.indent();
+            source.println("return %s;", toDescriptorVarName(property));
             source.outdent();
             source.print("} else ");
          }
       });
       source.println("{");
       source.indent();
-      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(propertyPath);");
-      source.outdent();
-      source.println("}");
-      source.outdent();
-      source.println("}");
-   }
-
-   private void generateGetBeanPropertyAccessorByTypeMethod(final SourceWriter source, final BeanInfo beanInfo)
-   {
-      // create the getPropertyType method
-      source.println("public " + BeanPropertyAccessor.class.getName() + " getAccessorByType(String path, Class type) {");
-      source.indent();
-      // we track the types we've already scanned so we don't do duplicates if the
-      // same type is referenced more than once.
-      final HashSet<String> typeNames = new HashSet<String>();
-
-      // write our root level accessor
-      typeNames.add(beanInfo.getTypeName());
-      writeAccessorFor(beanInfo, source);
-
-      // and now generate types for every nested bean we find along the way.
-      beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
-      {
-         public void visit(PropertyInfo property)
-         {
-            // we only generate one accessor per type so we only proceed if typeNames.add returns true.
-            if (property.isNestedBean() && typeNames.add(property.getNestedBeanInfo().getTypeName()))
-            {
-               writeAccessorFor(property.getNestedBeanInfo(), source);
-            }
-         }
-      });
-      source.println("{");
-      source.indent();
-      source.println("throw new IllegalStateException(\"You've found a Pectin bug.  The rebind generator failed to create an appropriate BeanPropertyAccessor for \" + path + \".\");");
-      source.outdent();
-      source.println("}");
-      source.outdent();
-      source.println("}");
-   }
-
-   private void writeAccessorFor(BeanInfo beanInfo, SourceWriter source)
-   {
-      source.println("if (type.equals(" + beanInfo.getTypeName() + ".class)) { ");
-      source.indent();
-      source.println("return new " + BeanPropertyAccessor.class.getName() + "() {");
-      source.indent();
-      generateIsMutableMethod(beanInfo, source);
-      generateReadValueMethod(beanInfo, source);
-      generateWriteValueMethod(beanInfo, source);
-      source.outdent();
-      source.println("};");
-      source.outdent();
-      source.print("} else ");
-   }
-
-   private void generateIsMutableMethod(BeanInfo beanInfo, final SourceWriter source)
-   {
-      // create the set attribute method
-      source.println("public boolean isMutable(String property) {");
-      source.indent();
-      for (PropertyInfo property : beanInfo)
-      {
-         source.println("if (property.equals(\"" + property.getName() + "\")) { ");
-         source.indent();
-         if (property.isMutable())
-         {
-            source.println("return true;");
-         }
-         else
-         {
-            source.println("return false;");
-         }
-         source.outdent();
-         source.print("} else ");
-      }
-      source.println("{");
-      source.indent();
-      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
+      source.println("throw new UnknownPropertyException(path);");
       source.outdent();
       source.println("}");
       source.outdent();
@@ -284,66 +217,9 @@ public class BeanModelProviderCreator
    }
 
 
-   private void generateReadValueMethod(BeanInfo bean, SourceWriter source)
-   {
-      // create the getAttribute method
-      source.println("public Object readProperty(Object bean, String property) {");
-      source.indent();
 
-      for (PropertyInfo property : bean)
-      {
-         source.println("if (property.equals(\"" + property.getName() + "\")) {");
-         source.indent();
-         source.println("return bean == null ? null : ((" + bean.getTypeName() + ")bean)." + property.getGetterMethodName() + "();");
-         source.outdent();
-         source.print("} else ");
-      }
-
-      source.println("{");
-      source.indent();
-      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
-      source.outdent();
-      source.println("}");
-      source.outdent();
-      source.println("}");
-   }
-
-   private void generateWriteValueMethod(BeanInfo beanInfo, SourceWriter source)
-   {
-      // create the set attribute method
-      source.println("public void writeProperty(Object bean, String property, Object value) {");
-      source.indent();
-      source.println("if (bean == null) {");
-      source.println("   throw new com.pietschy.gwt.pectin.client.bean.TargetBeanIsNullException(" + beanInfo.getTypeName() + ".class);");
-      source.println("}");
-      source.println("");
-      for (PropertyInfo property : beanInfo)
-      {
-         source.println("if (property.equals(\"" + property.getName() + "\")) { ");
-         source.indent();
-         if (property.isMutable())
-         {
-            source.println("((" + beanInfo.getTypeName() + ")bean)." + property.getSetterMethodName() + "((" + property.getTypeName() + ") value);");
-         }
-         else
-         {
-            source.println("throw new com.pietschy.gwt.pectin.client.bean.ImmutablePropertyException(property);");
-         }
-         source.outdent();
-         source.print("} else ");
-      }
-      source.println("{");
-      source.indent();
-      source.println("throw new com.pietschy.gwt.pectin.client.bean.UnknownPropertyException(property);");
-      source.outdent();
-      source.println("}");
-      source.outdent();
-      source.println("}");
-   }
-
-
-   public SourceWriter
-   getSourceWriter(JClassType classType)
+   public Writer
+   getSourceWriterWithImports(JClassType classType, Class... imports)
    {
       String packageName = createPackageName(classType);
       String simpleName = createClassName(classType);
@@ -360,7 +236,11 @@ public class BeanModelProviderCreator
       }
       else
       {
-         return composer.createSourceWriter(context, printWriter);
+         for (Class type : imports)
+         {
+            composer.addImport(type.getName());
+         }
+         return new Writer(composer.createSourceWriter(context, printWriter));
       }
    }
 
@@ -401,6 +281,61 @@ public class BeanModelProviderCreator
    createClassNameWithPackage(JClassType classType)
    {
       return createPackageName(classType) + "." + createClassName(classType);
+   }
+
+   public static class Writer
+   {
+      private SourceWriter writer;
+
+      public Writer(SourceWriter writer)
+      {
+         this.writer = writer;
+      }
+
+      public void print(String string)
+      {
+         writer.print(string);
+      }
+
+      public void println(String string)
+      {
+         writer.println(string);
+      }
+
+      public void println(String format, Object... args)
+      {
+         writer.println(String.format(format, args));
+      }
+
+      public void indent()
+      {
+         writer.indent();
+      }
+
+      public void outdent()
+      {
+         writer.outdent();
+      }
+
+      public void endJavaDocComment()
+      {
+         writer.endJavaDocComment();
+      }
+
+      public void beginJavaDocComment()
+      {
+         writer.beginJavaDocComment();
+      }
+
+      public void commit(TreeLogger logger)
+      {
+         writer.commit(logger);
+      }
+
+      public void println()
+      {
+         writer.println();
+      }
    }
 
 

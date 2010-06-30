@@ -16,10 +16,10 @@ import java.util.LinkedHashMap;
  */
 public class PropertyModelRegistry
 {
-   private LinkedHashMap<PropertyKey<?>, BeanPropertyModelBase> allModels = new LinkedHashMap<PropertyKey<?>, BeanPropertyModelBase>();
+   private LinkedHashMap<String, BeanPropertyModelBase> allModels = new LinkedHashMap<String, BeanPropertyModelBase>();
 
-   private HashMap<PropertyKey<?>, BeanPropertyValueModel<?>> valueModels = new HashMap<PropertyKey<?>, BeanPropertyValueModel<?>>();
-   private HashMap<PropertyKey<?>, BeanPropertyListModel<?>> listModels = new HashMap<PropertyKey<?>, BeanPropertyListModel<?>>();
+   private HashMap<String, BeanPropertyValueModel<?>> valueModels = new HashMap<String, BeanPropertyValueModel<?>>();
+   private HashMap<String, BeanPropertyListModel<?>> listModels = new HashMap<String, BeanPropertyListModel<?>>();
 
    private ReducingValueModel<Boolean, Boolean> dirtyModel = new ReducingValueModel<Boolean, Boolean>(new OrFunction());
 
@@ -54,31 +54,29 @@ public class PropertyModelRegistry
       });
    }
 
-   @SuppressWarnings("unchecked")
-   public <T> BeanPropertyValueModel<T> getValueModel(PropertyKey<T> key)
+   public BeanPropertyValueModel<?> getValueModel(String fullPath)
    {
-      return (BeanPropertyValueModel<T>) valueModels.get(key);
+      return valueModels.get(fullPath);
    }
 
-   @SuppressWarnings("unchecked")
-   public <T> BeanPropertyListModel<T> getListModel(PropertyKey<T> key)
+   public BeanPropertyListModel<?> getListModel(String fullPath)
    {
-      return (BeanPropertyListModel<T>) listModels.get(key);
+      return listModels.get(fullPath);
    }
 
-   public <T> void add(PropertyKey<T> key, BeanPropertyListModel<T> listModel)
+   public <T> void add(String fullPath, BeanPropertyListModel<T> listModel)
    {
-      doAddCommonBits(key, listModel);
-      listModels.put(key, listModel);
+      doAddCommonBits(fullPath, listModel);
+      listModels.put(fullPath, listModel);
    }
 
-   public <T> void add(PropertyKey<T> key, BeanPropertyValueModel<T> valueModel)
+   public <T> void add(String fullPath, BeanPropertyValueModel<T> valueModel)
    {
-      doAddCommonBits(key, valueModel);
-      valueModels.put(key, valueModel);
+      doAddCommonBits(fullPath, valueModel);
+      valueModels.put(fullPath, valueModel);
    }
 
-   private <T> void doAddCommonBits(PropertyKey<T> key, BeanPropertyModelBase valueModel)
+   private void doAddCommonBits(String key, BeanPropertyModelBase valueModel)
    {
       allModels.put(key, valueModel);
       dirtyModel.addSourceModel(valueModel.getDirtyModel());

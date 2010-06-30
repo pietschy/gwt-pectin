@@ -56,6 +56,11 @@ public class BasicForm extends VerySimpleForm
       }
    };
 
+   private TextBox addressOne = new EnhancedTextBox();
+   private TextBox addressTwo = new EnhancedTextBox();
+   private TextBox suburb = new EnhancedTextBox();
+   private TextBox postCode = new EnhancedTextBox();
+
    private Button saveButton = new Button("Save");
    private Button revertButton = new Button("Revert");
 
@@ -75,8 +80,8 @@ public class BasicForm extends VerySimpleForm
       // here we're binding field to a static display (HasText).  We can also use
       // a DisplayFormat here if we need to.  In this case the default ToStringFormat
       // will be used.
-      binder.bind(model.fullName).toLabel(fullName);
-      binder.bind(model.lettersInName).toLabel(lettersInName);
+      binder.bind(model.fullName).toTextOf(fullName);
+      binder.bind(model.lettersInName).toTextOf(lettersInName);
 
       // now lets bind a value using radio buttons
       binder.bind(model.gender).withValue(Gender.MALE).to(maleRadio);
@@ -89,6 +94,11 @@ public class BasicForm extends VerySimpleForm
 
       // and a list model to a HasValue<Collection<T>>
       binder.bind(model.favoriteCheeses).to(favoriteCheeses);
+      
+      binder.bind(model.addressOne).to(addressOne);
+      binder.bind(model.addressTwo).to(addressTwo);
+      binder.bind(model.suburb).to(suburb);
+      binder.bind(model.postCode).to(postCode);
 
       // checkout the activities demo for a command style pattern for buttons.
       saveButton.addClickHandler(model.saveHandler);
@@ -101,9 +111,19 @@ public class BasicForm extends VerySimpleForm
       // now layout the form
       addRow("Given Name", givenName);
       addRow("Surname", surname);
-      addNote("The following two fields are computed from the above.");
+
+      addGap();
+      addNote("The following two fields are computed from the name.");
       addRow("Full name", fullName);
       addRow("Letters in name", lettersInName);
+
+      addGap();
+      addNote("The following properties are bound to nested bean.");
+      addRow("Address One", addressOne, "address.addressOne");
+      addRow("Address Two", addressTwo, "address.addressTwo");
+      addRow("Suburb", suburb, "address.suburb");
+      addRow("Post code", postCode, "address.postCode");
+
       addGap();
       addNote("This binds a FieldModel<T> to a collection of HasValue<Boolean>");
       addRow("Gender", maleRadio, femaleRadio);

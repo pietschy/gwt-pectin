@@ -25,8 +25,9 @@ package com.pietschy.gwt.pectin.client.bean;
  */
 public class IncorrectPropertyTypeException extends RuntimeException
 {
-   public IncorrectPropertyTypeException(Class expected, Class found)
+   public IncorrectPropertyTypeException(Class expected, PropertyDescriptor descriptor)
    {
-      super("Incorrect bean property type, expected: " + expected + " but found: " + found);
+      super("Incorrect bean property type for `" + descriptor.getFullPath() + "`.  " +
+            "Expected: " + expected + " but found: " + descriptor.getValueType());
    }
 }

@@ -23,9 +23,11 @@ import com.pietschy.gwt.pectin.client.FieldModel;
 import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.NestedTypes;
 import com.pietschy.gwt.pectin.client.function.Join;
 import com.pietschy.gwt.pectin.client.function.Reduce;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
+import com.pietschy.gwt.pectin.demo.client.domain.Address;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
@@ -37,8 +39,7 @@ import java.util.List;
  */
 public class BasicFormModel extends FormModel
 {
-
-
+   @NestedTypes(Address.class)
    public static abstract class PersonProvider extends BeanModelProvider<Person> {}
 
    private PersonProvider personProvider = GWT.create(PersonProvider.class);
@@ -50,6 +51,10 @@ public class BasicFormModel extends FormModel
    protected final FieldModel<Gender> gender;
    protected final ListFieldModel<Wine> favoriteWines;
    protected final ListFieldModel<String> favoriteCheeses;
+   protected final FieldModel<String> addressOne;
+   protected final FieldModel<String> addressTwo;
+   protected final FieldModel<String> suburb;
+   protected final FieldModel<String> postCode;
 
    protected final ValueModel<Boolean> dirty;
 
@@ -78,6 +83,12 @@ public class BasicFormModel extends FormModel
       lettersInName = fieldOfType(Integer.class)
          .computedFrom(givenName, surname)
          .using(new CharacterCounter());
+
+      // nested properties...
+      addressOne= fieldOfType(String.class).boundTo(personProvider, "address.addressOne");
+      addressTwo= fieldOfType(String.class).boundTo(personProvider, "address.addressTwo");
+      suburb = fieldOfType(String.class).boundTo(personProvider, "address.suburb");
+      postCode = fieldOfType(String.class).boundTo(personProvider, "address.postCode");
 
       dirty = personProvider.getDirtyModel();
 

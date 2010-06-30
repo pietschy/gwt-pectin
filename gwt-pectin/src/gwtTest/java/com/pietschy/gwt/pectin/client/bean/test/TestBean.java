@@ -22,7 +22,8 @@ public class TestBean
 
    private Object readOnlyObject = "read only object";
    private int readOnlyPrimitiveInt = 42;
-   
+
+//   private PublicFieldsDTO dto = new PublicFieldsDTO("abc");
    private AnotherBean nestedBean;
    private BeanWithCollections collections;
 
@@ -108,6 +109,11 @@ public class TestBean
    {
       this.collections = collections;
    }
+
+//   public PublicFieldsDTO getDto()
+//   {
+//      return dto;
+//   }
 
    public Object getReadOnlyObject()
    {

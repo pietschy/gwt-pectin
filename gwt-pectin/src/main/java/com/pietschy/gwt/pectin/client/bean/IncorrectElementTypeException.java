@@ -25,8 +25,9 @@ package com.pietschy.gwt.pectin.client.bean;
  */
 public class IncorrectElementTypeException extends RuntimeException
 {
-   public IncorrectElementTypeException(Class expected, Class found)
+   public IncorrectElementTypeException(PropertyDescriptor expected, Class found)
    {
-      super("Incorrect collection element type, expected: " + expected + " but found: " + found);
+      super("Incorrect collection element type at " + expected.getFullPath() + ".  " +
+            "Expected: " + expected.getElementType() + " but found: " + found);
    }
 }

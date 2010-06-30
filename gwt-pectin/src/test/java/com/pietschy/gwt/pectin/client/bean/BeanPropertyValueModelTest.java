@@ -41,24 +41,29 @@ import static org.testng.Assert.*;
 public class BeanPropertyValueModelTest
 {
    private ValueHolder<TestBean> source;
-   private BeanPropertyAccessor accessor;
    private BeanPropertyValueModel<String> model;
+   private PropertyDescriptor propertyDescriptor;
    private TestBean sourceBean;
-   private static final String PROPERTY_NAME = "string";
    private ValueHolder<Boolean> autoCommit;
 
    @BeforeMethod
    protected void setUp() throws Exception
    {
       source = new ValueHolder<TestBean>();
-      accessor = mock(BeanPropertyAccessor.class);
+      propertyDescriptor = mock(PropertyDescriptor.class);
       autoCommit = new ValueHolder<Boolean>(false);
       model = new BeanPropertyValueModel<String>(source,
-                                                 new PropertyKey<String>(String.class, PROPERTY_NAME),
-                                                 accessor,
+                                                 propertyDescriptor,
                                                  autoCommit);
       sourceBean = new TestBean();
       source.setValue(sourceBean);
+
+      // set up default for the property key.
+      when(propertyDescriptor.getFullPath()).thenReturn("stringList");
+      when(propertyDescriptor.getParentPath()).thenReturn(null);
+      when(propertyDescriptor.getPropertyName()).thenReturn("stringList");
+      when(propertyDescriptor.isTopLevel()).thenReturn(true);
+
    }
 
 
@@ -66,7 +71,7 @@ public class BeanPropertyValueModelTest
    public void immutableWhenSourceIsNull()
    {
       // the property is mutable
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
       // but the source is null
       source.setValue(null);
       assertFalse(model.isMutable());
@@ -79,7 +84,7 @@ public class BeanPropertyValueModelTest
    public void immutableWhenPropertyIsReadOnly()
    {
       // the property is mutable
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(false);
+      when(propertyDescriptor.isMutable()).thenReturn(false);
       // but the source is null
       source.setValue(null);
       assertFalse(model.isMutable());
@@ -91,14 +96,14 @@ public class BeanPropertyValueModelTest
    @Test(expectedExceptions = ReadOnlyPropertyException.class)
    public void writeToSourceWithImmutablePropertyBarfs()
    {
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(false);
+      when(propertyDescriptor.isMutable()).thenReturn(false);
       model.writeToSource(true);
    }
 
    @Test(expectedExceptions = SourceBeanIsNullException.class)
    public void writeToSourceWithNullSourceBarfs()
    {
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
       source.setValue(null);
       model.writeToSource(true);
    }
@@ -107,7 +112,7 @@ public class BeanPropertyValueModelTest
    @Test(expectedExceptions = ReadOnlyPropertyException.class)
    public void setValueWithImmutablePropertySourceBarfs()
    {
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(false);
+      when(propertyDescriptor.isMutable()).thenReturn(false);
 
       model.setValue("thisShouldBarf");
    }
@@ -115,7 +120,7 @@ public class BeanPropertyValueModelTest
    @Test(expectedExceptions = SourceBeanIsNullException.class)
    public void setValueWithNullSourceBarfs()
    {
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
       source.setValue(null);
       model.setValue("thisShouldBarf");
    }
@@ -124,8 +129,8 @@ public class BeanPropertyValueModelTest
    public void valueChangesAreReflectedByDirtyModel()
    {
       assertNull(model.getValue());
-      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn("abc");
+      when(propertyDescriptor.isMutable()).thenReturn(true);
       model.readFromSource();
 
       assertFalse(model.getDirtyModel().getValue());
@@ -141,8 +146,8 @@ public class BeanPropertyValueModelTest
    @Test
    public void readFromSource()
    {
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
-      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc", "xyz");
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn("abc", "xyz");
       model.readFromSource();
 
       assertEquals(model.getValue(), "abc");
@@ -157,14 +162,14 @@ public class BeanPropertyValueModelTest
       assertEquals(model.getValue(), "xyz");
       assertFalse(model.getDirtyModel().getValue());
 
-      verify(accessor, never()).writeProperty(any(), any(String.class), any());
+      verify(propertyDescriptor, never()).writeProperty(any(), any());
    }
 
    @Test
    public void checkpoint()
    {
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
-      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn("abc");
       model.readFromSource();
 
       assertEquals(model.getValue(), "abc");
@@ -183,8 +188,8 @@ public class BeanPropertyValueModelTest
    @Test
    public void revert()
    {
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
-      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn("abc");
       model.readFromSource();
 
       assertEquals(model.getValue(), "abc");
@@ -203,8 +208,8 @@ public class BeanPropertyValueModelTest
    @Test
    public void writeValueWithAndWithoutOutCheckpoint()
    {
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
-      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn("abc");
       model.readFromSource();
 
       model.setValue("def");
@@ -215,14 +220,14 @@ public class BeanPropertyValueModelTest
       // still dirty
       assertTrue(model.getDirtyModel().getValue());
       // and value was written out to the bean...
-      verify(accessor).writeProperty(isA(TestBean.class), eq(PROPERTY_NAME), eq("def"));
+      verify(propertyDescriptor).writeProperty(isA(TestBean.class), eq("def"));
 
       model.setValue("hij");
       model.writeToSource(true);
       // still dirty
       assertFalse(model.getDirtyModel().getValue());
       // and value was written out to the bean...
-      verify(accessor).writeProperty(isA(TestBean.class), eq(PROPERTY_NAME), eq("hij"));
+      verify(propertyDescriptor).writeProperty(isA(TestBean.class), eq("hij"));
    }
 
 
@@ -231,8 +236,8 @@ public class BeanPropertyValueModelTest
    {
       autoCommit.setValue(true);
 
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
-      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn("abc");
       model.readFromSource();
 
       ValueChangeHandler<Boolean> dirtyHandler = mock(ValueChangeHandler.class);
@@ -244,7 +249,7 @@ public class BeanPropertyValueModelTest
       model.setValue("def");
 
       verify(dirtyHandler, never()).onValueChange(isA(ValueChangeEvent.class));
-      verify(accessor).writeProperty(isA(TestBean.class), eq(PROPERTY_NAME), eq("def"));
+      verify(propertyDescriptor).writeProperty(isA(TestBean.class), eq("def"));
    }
 
    @Test
@@ -252,11 +257,11 @@ public class BeanPropertyValueModelTest
    {
       autoCommit.setValue(true);
 
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
-      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn("abc");
 
       model.readFromSource();
-      verify(accessor, never()).writeProperty(isA(TestBean.class), isA(String.class), Matchers.<Object>any());
+      verify(propertyDescriptor, never()).writeProperty(isA(TestBean.class), Matchers.<Object>any());
    }
 
    @Test
@@ -264,20 +269,20 @@ public class BeanPropertyValueModelTest
    {
       autoCommit.setValue(true);
 
-      when(accessor.isMutable(PROPERTY_NAME)).thenReturn(true);
-      when(accessor.readProperty(sourceBean, PROPERTY_NAME)).thenReturn("abc");
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn("abc");
       model.readFromSource();
-      verify(accessor, never()).writeProperty(isA(TestBean.class), isA(String.class), Matchers.<Object>any());
+      verify(propertyDescriptor, never()).writeProperty(isA(TestBean.class), Matchers.<Object>any());
 
       // the checkpoint should remember this value.
       model.checkpoint();
 
       // this should write the new value to the accessor
       model.setValue("def");
-      verify(accessor, times(1)).writeProperty(isA(TestBean.class), isA(String.class), eq("def"));
+      verify(propertyDescriptor, times(1)).writeProperty(isA(TestBean.class), eq("def"));
 
       //  should write the original value back to the bean.
       model.revert();
-      verify(accessor, times(1)).writeProperty(isA(TestBean.class), isA(String.class), eq("abc"));
+      verify(propertyDescriptor, times(1)).writeProperty(isA(TestBean.class), eq("abc"));
    }
 }

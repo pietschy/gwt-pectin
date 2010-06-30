@@ -20,6 +20,7 @@ package com.pietschy.gwt.pectin.client.bean;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.reflect.ComputedPath;
 import com.pietschy.gwt.pectin.reflect.test.TestBean;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
@@ -31,7 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -45,13 +45,12 @@ import static org.testng.Assert.*;
  */
 public class BeanPropertyListModelTest
 {
-   private static final String PROPERTY_PATH = "stringList";
+   private static final Path PROPERTY_PATH = new ComputedPath("stringList");
 
    private ValueHolder<TestBean> source;
-   private BeanPropertyAccessor accessor;
    private BeanPropertyListModel<String> model;
    private TestBean sourceBean;
-   private PropertyKey<String> propertyKey;
+   private PropertyDescriptor propertyDescriptor;
    private List<String> listOne;
    private List<String> listTwo;
    private List<String> listThree;
@@ -61,12 +60,10 @@ public class BeanPropertyListModelTest
    protected void setUp() throws Exception
    {
       source = new ValueHolder<TestBean>();
-      accessor = mock(BeanPropertyAccessor.class);
-      propertyKey = new PropertyKey<String>(String.class, PROPERTY_PATH);
+      propertyDescriptor = mock(PropertyDescriptor.class);
       autoCommit = new ValueHolder<Boolean>(false);
       model = new BeanPropertyListModel<String>(source,
-                                                propertyKey,
-                                                accessor,
+                                                propertyDescriptor,
                                                 CollectionConverters.LIST_CONVERTER,
                                                 autoCommit);
       sourceBean = new TestBean();
@@ -74,6 +71,11 @@ public class BeanPropertyListModelTest
       listOne = Arrays.asList("abc", "def");
       listTwo = Arrays.asList("ghi", "jkl", "mno");
       listThree = Arrays.asList("pqr", "stu", "vwx", "yz");
+
+      // set up default for the property key.
+      when(propertyDescriptor.getPropertyName()).thenReturn("stringList");
+      when(propertyDescriptor.isTopLevel()).thenReturn(true);
+      when(propertyDescriptor.getParentPath()).thenReturn(null);
    }
 
 
@@ -81,7 +83,7 @@ public class BeanPropertyListModelTest
    public void immutableWhenSourceIsNull()
    {
       // the property is mutable
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
       // but the source is null
       source.setValue(null);
       assertFalse(model.isMutable());
@@ -94,7 +96,7 @@ public class BeanPropertyListModelTest
    public void immutableWhenPropertyIsReadOnly()
    {
       // the property is mutable
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(false);
+      when(propertyDescriptor.isMutable()).thenReturn(false);
       // but the source is null
       source.setValue(null);
       assertFalse(model.isMutable());
@@ -106,7 +108,7 @@ public class BeanPropertyListModelTest
    @Test
    public void mutatingWithImmutablePropertyBarfs()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(false);
+      when(propertyDescriptor.isMutable()).thenReturn(false);
       try
       {
          model.setElements(new ArrayList<String>());
@@ -138,7 +140,7 @@ public class BeanPropertyListModelTest
    @Test
    public void mutateWithNullSourceBarfs()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
       source.setValue(null);
 
       try
@@ -172,18 +174,18 @@ public class BeanPropertyListModelTest
    @Test(expectedExceptions = ReadOnlyPropertyException.class)
    public void writeToSourceWithImmutablePropertyBarfs()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(false);
+      when(propertyDescriptor.isMutable()).thenReturn(false);
       model.writeToSource(true);
    }
 
    @Test(expectedExceptions = SourceBeanIsNullException.class)
    public void writeToSourceWithNullSourceBarfs()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
       source.setValue(null);
       model.writeToSource(true);
    }
-   
+
 
    @Test
    public void valueChangesAreReflectedByDirtyModel()
@@ -191,8 +193,8 @@ public class BeanPropertyListModelTest
       List<String> listOne = Arrays.asList("abc", "def");
 
       assertEquals(model.size(), 0);
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(listOne);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
       model.readFromSource();
 
       assertFalse(model.getDirtyModel().getValue());
@@ -208,8 +210,8 @@ public class BeanPropertyListModelTest
    @Test
    public void readFromSource()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne, listTwo);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(listOne, listTwo);
       model.readFromSource();
 
       assertEquals(model.asUnmodifiableList(), listOne);
@@ -229,7 +231,7 @@ public class BeanPropertyListModelTest
    @Test
    public void readFromSourceWithNullProperty()
    {
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(null);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(null);
       model.readFromSource();
 
       assertEquals(model.size(), 0);
@@ -240,8 +242,8 @@ public class BeanPropertyListModelTest
    @Test
    public void checkpoint()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(listOne);
       model.readFromSource();
 
       assertEquals(model.asUnmodifiableList(), listOne);
@@ -260,8 +262,8 @@ public class BeanPropertyListModelTest
    @Test
    public void revert()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(listOne);
       model.readFromSource();
 
 
@@ -281,8 +283,8 @@ public class BeanPropertyListModelTest
    @Test
    public void writeValueWithCheckpoint()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(listOne);
       model.readFromSource();
 
 
@@ -293,16 +295,15 @@ public class BeanPropertyListModelTest
       // not dirty anymore
       assertFalse(model.getDirtyModel().getValue());
       // and value was written out to the bean...
-      verify(accessor).writeProperty(isA(TestBean.class),
-                                     eq(propertyKey.getPropertyName()),
-                                     argThat(new ThatMatchesList(listTwo)));
+      verify(propertyDescriptor).writeProperty(isA(TestBean.class),
+                                               argThat(new ThatMatchesList(listTwo)));
    }
 
    @Test
    public void writeValueWithoutCheckpoint()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(listOne);
       model.readFromSource();
 
 
@@ -314,15 +315,14 @@ public class BeanPropertyListModelTest
       // still dirty
       assertTrue(model.getDirtyModel().getValue());
       // and value was written out to the bean...
-      verify(accessor).writeProperty(isA(TestBean.class),
-                                     eq(propertyKey.getPropertyName()),
-                                     argThat(new ThatMatchesList(listTwo)));
+      verify(propertyDescriptor).writeProperty(isA(TestBean.class),
+                                               argThat(new ThatMatchesList(listTwo)));
    }
 
    @Test
    public void dirtyChecksCollectionOrder()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
 
       model.setElements(Arrays.asList("abc", "def", "qbt"));
       // make sure our dirty state is based on the above values
@@ -335,7 +335,7 @@ public class BeanPropertyListModelTest
    @Test
    public void dirtyIsNotFooledByDuplicateEntries()
    {
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
 
       model.setElements(Arrays.asList("abc", "abc", "def"));
       // make sure our dirty state is based on the above values
@@ -351,8 +351,8 @@ public class BeanPropertyListModelTest
    {
       autoCommit.setValue(true);
 
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(listOne);
       model.readFromSource();
 
       ValueChangeHandler<Boolean> dirtyHandler = mock(ValueChangeHandler.class);
@@ -364,9 +364,8 @@ public class BeanPropertyListModelTest
       model.setElements(listTwo);
 
       verify(dirtyHandler, never()).onValueChange(isA(ValueChangeEvent.class));
-      verify(accessor).writeProperty(isA(TestBean.class),
-                                     eq(propertyKey.getPropertyName()),
-                                     argThat(new ThatMatchesList(listTwo)));
+      verify(propertyDescriptor).writeProperty(isA(TestBean.class),
+                                               argThat(new ThatMatchesList(listTwo)));
    }
 
 
@@ -375,13 +374,12 @@ public class BeanPropertyListModelTest
    {
       autoCommit.setValue(true);
 
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(listOne);
 
       model.readFromSource();
-      verify(accessor, never()).writeProperty(Matchers.<Object>any(),
-                                              Matchers.<String>any(),
-                                              Matchers.<Object>any());
+      verify(propertyDescriptor, never()).writeProperty(Matchers.<Object>any(),
+                                                        Matchers.<Object>any());
    }
 
    @Test
@@ -389,8 +387,8 @@ public class BeanPropertyListModelTest
    {
       autoCommit.setValue(true);
 
-      when(accessor.isMutable(propertyKey.getPropertyName())).thenReturn(true);
-      when(accessor.readProperty(sourceBean, propertyKey.getPropertyName())).thenReturn(listOne);
+      when(propertyDescriptor.isMutable()).thenReturn(true);
+      when(propertyDescriptor.readProperty(sourceBean)).thenReturn(listOne);
       model.readFromSource();
 
       // this should write the new value to the accessor
@@ -410,18 +408,15 @@ public class BeanPropertyListModelTest
       model.revert();
 
       // setElements(...) twice plus one revert()
-      verify(accessor, times(3)).writeProperty(isA(TestBean.class),
-                                               eq(propertyKey.getPropertyName()),
-                                               argThat(new ThatMatchesList(listTwo)));
+      verify(propertyDescriptor, times(3)).writeProperty(isA(TestBean.class),
+                                                         argThat(new ThatMatchesList(listTwo)));
 
       // revert to listOne
-      verify(accessor, times(1)).writeProperty(isA(TestBean.class),
-                                               eq(propertyKey.getPropertyName()),
-                                               argThat(new ThatMatchesList(listOne)));
+      verify(propertyDescriptor, times(1)).writeProperty(isA(TestBean.class),
+                                                         argThat(new ThatMatchesList(listOne)));
       // setElements to listThree
-      verify(accessor, times(1)).writeProperty(isA(TestBean.class),
-                                               eq(propertyKey.getPropertyName()),
-                                               argThat(new ThatMatchesList(listThree)));
+      verify(propertyDescriptor, times(1)).writeProperty(isA(TestBean.class),
+                                                         argThat(new ThatMatchesList(listThree)));
    }
 
 

@@ -29,9 +29,9 @@ public class PropertyModelRegistryTest
    private BeanPropertyValueModel<String> stringValue;
    private BeanPropertyValueModel<Object> objectValue;
    private BeanPropertyListModel<String> stringList;
-   private PropertyKey<String> stringValueKey;
-   private PropertyKey<Object> objectValueKey;
-   private PropertyKey<String> stringListKey;
+   private String stringValueKey;
+   private String objectValueKey;
+   private String stringListKey;
 
    @BeforeTest
    public void setUp()
@@ -43,9 +43,9 @@ public class PropertyModelRegistryTest
       objectValue = createValueMock(Object.class);
       stringList = createListMock(String.class);
 
-      stringValueKey = new PropertyKey<String>(String.class, "string");
-      objectValueKey = new PropertyKey<Object>(Object.class, "object");
-      stringListKey = new PropertyKey<String>(String.class, "set");
+      stringValueKey = "string";
+      objectValueKey = "object";
+      stringListKey = "set";
 
    }
 

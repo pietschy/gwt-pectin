@@ -25,8 +25,13 @@ package com.pietschy.gwt.pectin.client.bean;
  */
 public class NotCollectionPropertyException extends RuntimeException
 {
-   public NotCollectionPropertyException(String property, Class propertyType)
+   public NotCollectionPropertyException(PropertyDescriptor descriptor)
    {
-      super("Expected " + property + " property to be a collection type, but found: " + propertyType);
+      this(descriptor, descriptor.getValueType());
+   }
+
+   public NotCollectionPropertyException(Path path, Class<?> actualType)
+   {
+      super("Expected " + path + " property to be a collection type, but found: " + actualType);
    }
 }

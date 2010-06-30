@@ -1,7 +1,7 @@
 package com.pietschy.gwt.pectin.reflect;
 
 
-import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.AbstractBeanModelProvider;
 import com.pietschy.gwt.pectin.client.bean.BeanPropertyListModel;
 import com.pietschy.gwt.pectin.client.bean.BeanPropertyValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
@@ -28,7 +28,7 @@ import static org.testng.Assert.assertNull;
  */
 public class BeanModelProviderGeneralTest
 {
-   private BeanModelProvider<TestBean> provider;
+   private AbstractBeanModelProvider<TestBean> provider;
    private TestBean bean;
 
 

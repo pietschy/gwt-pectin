@@ -3,9 +3,15 @@ package com.pietschy.gwt.pectin.reflect;
 
 import com.pietschy.gwt.pectin.client.bean.*;
 import com.pietschy.gwt.pectin.reflect.test.AnotherBean;
+import com.pietschy.gwt.pectin.reflect.test.BeanWithCollections;
 import com.pietschy.gwt.pectin.reflect.test.TestBean;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.SortedSet;
 
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.fail;
@@ -20,7 +26,7 @@ import static org.testng.AssertJUnit.fail;
  */
 public class BeanModelProviderGeneratedAccessorTest
 {
-   private BeanModelProvider<TestBean> provider;
+   private AbstractBeanModelProvider<TestBean> provider;
    private TestBean bean;
 
    @BeforeMethod
@@ -35,7 +41,7 @@ public class BeanModelProviderGeneratedAccessorTest
    {
       try
       {
-         provider.getBeanAccessorForPropertyPath("blah");
+         provider.getPropertyDescriptor("blah");
          fail("expected to throw UnknownPropertyException");
       }
       catch (UnknownPropertyException e)
@@ -47,10 +53,10 @@ public class BeanModelProviderGeneratedAccessorTest
    public void testGetBeanAccessorForPropertyPathUnknownNestedProperty()
    {
       // this should work so we guarantee our nestedBeanProperty exists
-      provider.getBeanAccessorForPropertyPath("nestedBean");
+      provider.getPropertyDescriptor("nestedBean");
       try
       {
-         provider.getBeanAccessorForPropertyPath("nestedBean.blah");
+         provider.getPropertyDescriptor("nestedBean.blah");
          fail("expected to throw UnknownPropertyException");
       }
       catch (UnknownPropertyException e)
@@ -85,16 +91,8 @@ public class BeanModelProviderGeneratedAccessorTest
 
    private void doMutableTest(String propertyPath, boolean mutable)
    {
-      BeanPropertyAccessor accessor = provider.getBeanAccessorForPropertyPath(propertyPath);
-      String propertyName = getPropertyAtPathEnd(propertyPath);
-      assertEquals(accessor.isMutable(propertyName), mutable);
-   }
-
-
-   private String getPropertyAtPathEnd(String propertyPath)
-   {
-      int index = propertyPath.lastIndexOf('.');
-      return index < 0 ? propertyPath : propertyPath.substring(index + 1);
+      PropertyDescriptor descriptor = provider.getPropertyDescriptor(propertyPath);
+      assertEquals(descriptor.isMutable(), mutable);
    }
 
 
@@ -103,8 +101,8 @@ public class BeanModelProviderGeneratedAccessorTest
    {
       String name = "abc";
       bean.setString(name);
-      BeanPropertyAccessor accessor = provider.getBeanAccessorForPropertyPath("string");
-      assertEquals(accessor.readProperty(bean, "string"), name);
+      PropertyDescriptor propertyDescriptor = provider.getPropertyDescriptor("string");
+      assertEquals(propertyDescriptor.readProperty(bean), name);
    }
 
    @Test
@@ -114,8 +112,8 @@ public class BeanModelProviderGeneratedAccessorTest
       bean.setNestedBean(new AnotherBean());
       bean.getNestedBean().setString(name);
 
-      BeanPropertyAccessor accessor = provider.getBeanAccessorForPropertyPath("nestedBean.string");
-      assertEquals(accessor.readProperty(bean.getNestedBean(), "string"), name);
+      PropertyDescriptor descriptor = provider.getPropertyDescriptor("nestedBean.string");
+      assertEquals(descriptor.readProperty(bean.getNestedBean()), name);
    }
 
 
@@ -123,7 +121,7 @@ public class BeanModelProviderGeneratedAccessorTest
    public void testWriteValue()
    {
       String name = "abc";
-      provider.getBeanAccessorForPropertyPath("string").writeProperty(bean, "string", name);
+      provider.getPropertyDescriptor("string").writeProperty(bean, name);
       assertEquals(bean.getString(), name);
    }
 
@@ -132,7 +130,7 @@ public class BeanModelProviderGeneratedAccessorTest
    {
       String name = "abc";
       bean.setNestedBean(new AnotherBean());
-      provider.getBeanAccessorForPropertyPath("nestedBean.string").writeProperty(bean.getNestedBean(), "string", name);
+      provider.getPropertyDescriptor("nestedBean.string").writeProperty(bean.getNestedBean(), name);
       assertEquals(bean.getNestedBean().getString(), name);
    }
 
@@ -142,7 +140,7 @@ public class BeanModelProviderGeneratedAccessorTest
       String name = "abc";
       try
       {
-         provider.getBeanAccessorForPropertyPath("string").writeProperty(null, "string", name);
+         provider.getPropertyDescriptor("string").writeProperty(null, name);
          fail("expected TargetBeanIsNullException");
       }
       catch (TargetBeanIsNullException e)
@@ -156,12 +154,87 @@ public class BeanModelProviderGeneratedAccessorTest
    {
       try
       {
-         provider.getBeanAccessorForPropertyPath("readOnlyObject").writeProperty(bean, "readOnlyObject", "blah");
-         fail("expected ImmutablePropertyException");
+         provider.getPropertyDescriptor("readOnlyObject").writeProperty(bean, "blah");
+         fail("expected ReadOnlyPropertyException");
       }
-      catch (ImmutablePropertyException e)
+      catch (ReadOnlyPropertyException e)
       {
 
+      }
+   }
+
+   @org.junit.Test
+   public void testPropertyDescriptorGetValueType()
+   {
+      Assert.assertEquals(provider.getPropertyDescriptor("object").getValueType(), Object.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("string").getValueType(), String.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("primitiveInt").getValueType(), Integer.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("primitiveBoolean").getValueType(), Boolean.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("objectInteger").getValueType(), Integer.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("objectBoolean").getValueType(), Boolean.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("readOnlyObject").getValueType(), Object.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("readOnlyPrimitiveInt").getValueType(), Integer.class);
+
+      Assert.assertEquals(provider.getPropertyDescriptor("nestedBean").getValueType(), AnotherBean.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("nestedBean.string").getValueType(), String.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("nestedBean.stringList").getValueType(), List.class);
+
+      Assert.assertEquals(provider.getPropertyDescriptor("collections").getValueType(), BeanWithCollections.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.stringCollection").getValueType(), Collection.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.integerCollection").getValueType(), Collection.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.stringList").getValueType(), List.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.stringSortedSet").getValueType(), SortedSet.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.untypedCollection").getValueType(), Collection.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.readOnlyUntypedCollection").getValueType(), Collection.class);
+   }
+
+   @Test
+   public void testPropertyDescriptorGetElementType()
+   {
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.stringCollection").getElementType(), String.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.integerCollection").getElementType(), Integer.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.stringList").getElementType(), String.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.stringSortedSet").getElementType(), String.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.untypedCollection").getElementType(), Object.class);
+      Assert.assertEquals(provider.getPropertyDescriptor("collections.readOnlyUntypedCollection").getElementType(), Object.class);
+   }
+
+   @Test
+   public void testGetPropertyDescriptorWithUnknownProperty()
+   {
+      try
+      {
+         provider.getPropertyDescriptor("blah");
+         Assert.fail("expected to throw UnknownPropertyException");
+      }
+      catch (UnknownPropertyException e)
+      {
+      }
+   }
+
+   @Test
+   public void testGetPropertyDescriptorWithUnknownNestedProperty()
+   {
+      try
+      {
+         provider.getPropertyDescriptor("nestedBean.blah");
+         Assert.fail("expected to throw UnknownPropertyException");
+      }
+      catch (UnknownPropertyException e)
+      {
+      }
+   }
+
+   @Test
+   public void testGetElementTypeForNonCollection()
+   {
+      try
+      {
+         provider.getPropertyDescriptor("object").getElementType();
+         Assert.fail("expected to throw NotCollectionPropertyException");
+      }
+      catch (NotCollectionPropertyException e)
+      {
       }
    }
 

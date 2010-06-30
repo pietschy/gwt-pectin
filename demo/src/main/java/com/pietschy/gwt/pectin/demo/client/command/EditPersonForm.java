@@ -21,12 +21,8 @@ import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.FieldModelBase;
 import com.pietschy.gwt.pectin.client.ListFieldModelBase;
 import com.pietschy.gwt.pectin.client.binding.FormBinder;
-import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
-import com.pietschy.gwt.pectin.client.command.AsyncUiCommand;
-import com.pietschy.gwt.pectin.client.command.DelegatingUiCommand;
-import com.pietschy.gwt.pectin.client.command.UiCommand;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
@@ -63,16 +59,15 @@ public class EditPersonForm extends VerySimpleForm
       }
    };
 
-   private Button saveButton = new Button("Save");
-   private Button cancelButton = new Button("Cancel");
+   private Button saveButton = new Button();
 
    private NotificationDisplay notificationDisplay = new NotificationDisplay();
 
-   private FormBinder binder = new WidgetBinder();
+   private FormBinder binder = new FormBinder();
    private ValidationBinder validation = new ValidationBinder();
 
 
-   public EditPersonForm(EditPersonModel model, Channel<String> notifications, AsyncUiCommand<?, ?> save, UiCommand cancel)
+   public EditPersonForm(EditPersonModel model, Channel<String> notifications, SaveCommand save)
    {
       this.model = model;
 
@@ -94,16 +89,19 @@ public class EditPersonForm extends VerySimpleForm
       binder.bind(model.favoriteCheeses).to(favoriteCheeses);
 
       // we're using a UiCommand for our save behaviour
-      DelegatingUiCommand ds = new DelegatingUiCommand(save);
-      binder.bind(ds).to(saveButton);
-      binder.bind(cancel).to(cancelButton);
+      binder.bind(save).to(saveButton);
+      // our save command also changes it's text as things happen.
+      binder.bind(save.text()).toTextOf(saveButton);
+      // if we wanted more model/view separation here we could make `text`
+      // be `state` and use an appropriate formatter e.g:
+      // bind(save.state()).toTextOf(saveButton).withFormat(stateFormat);
 
-      // and when it works we'll show a little status message.. normally you'd send this to
-      // a NotificationArea that would display if with nice colors and make it fade after
-      // a few seconds.
+      // and when the save works we'll show a little status message.. normally you'd send
+      // this to a NotificationArea that would display if with nice colors and make it
+      // fade after a few seconds.
       binder.bind(notifications).to(notificationDisplay);
 
-      addRow("", notificationDisplay);
+      addRow(new HTML("&nbsp;"), notificationDisplay);
       addRow("Given Name", givenName, createValidationLabel(model.givenName));
       addRow("Surname", surname, createValidationLabel(model.surname));
       addRow("Gender", maleRadio, femaleRadio, createValidationLabel(model.gender));
@@ -111,8 +109,8 @@ public class EditPersonForm extends VerySimpleForm
       addTallRow("Favorite Cheeses", favoriteCheeses);
       addRow("",createValidationLabel(model.favoriteCheeses));
       addGap();
-      addNote("Our buttons are bound to our activities");
-      addRow("", saveButton, cancelButton);      
+      addNote("Our save button tracks the form state and updates appropriately");
+      addRow("", saveButton);
 
    }
 

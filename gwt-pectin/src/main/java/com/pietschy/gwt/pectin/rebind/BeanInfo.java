@@ -29,7 +29,7 @@ public class BeanInfo implements Iterable<PropertyInfo>
     */
    public BeanInfo(TypeOracle typeOracle, JClassType beanType, Set<Class> nestedBeanTypes)
    {
-      this(typeOracle, beanType, nestedBeanTypes, "");
+      this(typeOracle, beanType, nestedBeanTypes, null);
    }
 
    /**
@@ -147,6 +147,32 @@ public class BeanInfo implements Iterable<PropertyInfo>
          result.add(new MethodInfo(method));
       }
    }
+
+//   ArrayList<JField> getPublicFields(JClassType beanType)
+//   {
+//      ArrayList<JField> result = new ArrayList<JField>();
+//      extractPublicFields(beanType, result);
+//
+//      beanType = beanType.getSuperclass();
+//      while (beanType != null)
+//      {
+//         extractPublicFields(beanType, result);
+//         beanType = beanType.getSuperclass();
+//      }
+//
+//      return result;
+//   }
+//
+//   private void extractPublicFields(JClassType beanType, ArrayList<JField> result)
+//   {
+//      for (JField field : beanType.getFields())
+//      {
+//         if (field.isPublic() && !field.isStatic())
+//         {
+//            result.add(field);
+//         }
+//      }
+//   }
 
    public Set<Class> getNestedBeanTypes()
    {

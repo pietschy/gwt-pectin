@@ -3,7 +3,7 @@ package com.pietschy.gwt.pectin.reflect;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.AbstractBeanModelProvider;
 import com.pietschy.gwt.pectin.client.bean.BeanPropertyValueModel;
 import com.pietschy.gwt.pectin.client.bean.IncorrectPropertyTypeException;
 import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
@@ -27,7 +27,7 @@ import static org.testng.AssertJUnit.*;
  */
 public class BeanModelProviderValueModelTest
 {
-   private BeanModelProvider<TestBean> provider;
+   private AbstractBeanModelProvider<TestBean> provider;
    private TestBean bean;
 
    @BeforeMethod

@@ -24,4 +24,6 @@ public interface BeanPropertyModelBase
    boolean isMutableProperty();
 
    ValueModel<Boolean> getDirtyModel();
+
+   Class getValueType();
 }

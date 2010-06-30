@@ -25,7 +25,7 @@ package com.pietschy.gwt.pectin.client.bean;
  */
 public class TargetBeanIsNullException extends RuntimeException
 {
-   public TargetBeanIsNullException(Class clazz)
+   public TargetBeanIsNullException(Path path, Class clazz)
    {
       super("Target bean was null, expected instance of: " + clazz);
    }

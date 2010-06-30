@@ -16,37 +16,63 @@
 
 package com.pietschy.gwt.pectin.reflect;
 
-import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import com.pietschy.gwt.pectin.client.bean.BeanPropertyAccessor;
-import com.pietschy.gwt.pectin.client.bean.NotCollectionPropertyException;
-import com.pietschy.gwt.pectin.client.bean.UnknownPropertyException;
+import com.pietschy.gwt.pectin.client.bean.AbstractBeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.Path;
+import com.pietschy.gwt.pectin.client.bean.PropertyDescriptor;
+
+import java.util.HashMap;
 
 /**
  * This class provides an implementation of {@link com.pietschy.gwt.pectin.client.bean.BeanModelProvider}
  * that can be used in JVM based tests.  This class <b>can not</b> be used withing client code as it uses reflection.
  */
-public class ReflectionBeanModelProvider<B> extends BeanModelProvider<B>
+public class ReflectionBeanModelProvider<B> extends AbstractBeanModelProvider<B>
 {
-   private ProviderSupport<B> support;
+   private BeanDescriptor rootDescriptor;
+   private HashMap<String, BeanDescriptor> beanAccessors = new HashMap<String, BeanDescriptor>();
 
    public ReflectionBeanModelProvider(Class<B> clazz)
    {
-      support = new ProviderSupport<B>(clazz);
+      rootDescriptor = new BeanDescriptor(clazz);
    }
 
-   public Class getPropertyType(String property) throws UnknownPropertyException
+   @Override
+   public PropertyDescriptor getPropertyDescriptor(String fullPath)
    {
-      return support.getPropertyType(property);
+      ComputedPath path = new ComputedPath(fullPath);
 
+      return getBeanDescriptorFor(path).getPropertyDescriptor(path);
    }
 
-   public Class getElementType(String property) throws UnknownPropertyException, NotCollectionPropertyException
+   private BeanDescriptor getBeanDescriptorFor(Path path)
    {
-      return support.getElementType(property);
+      if (path.isTopLevel())
+      {
+         return rootDescriptor;
+      }
+      else
+      {
+         // try and get the cached version.
+         BeanDescriptor descriptor = beanAccessors.get(path.getParentPath());
+
+         if (descriptor == null)
+         {
+            ComputedPath parentPath = new ComputedPath(path.getParentPath());
+            BeanDescriptor parentDescriptor = getBeanDescriptorFor(parentPath);
+
+            Class parentBeanType = parentDescriptor.getPropertyType(parentPath);
+
+            ensureLegalNestedType(parentBeanType);
+
+            descriptor = new BeanDescriptor(parentBeanType);
+         }
+
+         return descriptor;
+      }
    }
 
-   public BeanPropertyAccessor getBeanAccessorForPropertyPath(String propertyPath) throws UnknownPropertyException
+   private void ensureLegalNestedType(Class parentBeanType)
    {
-      return support.getBeanAccessorForPropertyPath(propertyPath);
+      // todo: implement
    }
 }

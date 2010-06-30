@@ -86,10 +86,16 @@ public class EditPersonModel extends FormModel implements ValueTarget<Person>
       personProvider.setValue(person);
    }
 
-   public void commit()
+   public void commit(boolean checkpoint)
    {
-      personProvider.commit();
+      personProvider.commit(checkpoint);
    }
+
+   public void checkpoint()
+   {
+      personProvider.checkpoint();
+   }
+
 
    public void revert()
    {

@@ -3,7 +3,6 @@ package com.pietschy.gwt.pectin.demo.client.command;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.pietschy.gwt.pectin.client.channel.DefaultChannel;
 import com.pietschy.gwt.pectin.client.command.AbstractUiCommand;
-import com.pietschy.gwt.pectin.client.command.UiCommand;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 
 /**
@@ -25,13 +24,12 @@ public class EditPersonController
 
       // now create our commands.  In this case I'm having them operate directly on the model.
       SaveCommand saveCommand = createSaveCommand(model, saveService, notificationChannel);
-      UiCommand cancelCommand = new CancelUiCommand(saveCommand);
 
       // initialise the model
       model.setValue(person);
 
       // and finally create the view passing in the model and activities.
-      editPersonForm = new EditPersonForm(model, notificationChannel, saveCommand, cancelCommand);
+      editPersonForm = new EditPersonForm(model, notificationChannel, saveCommand);
 
       // if our controller needed to hook into the activities (such as to fire an
       // and editFinished event) then we could do something like..

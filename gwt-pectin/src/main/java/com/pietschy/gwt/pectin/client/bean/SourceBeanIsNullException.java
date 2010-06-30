@@ -9,8 +9,8 @@ package com.pietschy.gwt.pectin.client.bean;
  */
 public class SourceBeanIsNullException extends RuntimeException
 {
-   public SourceBeanIsNullException(PropertyKey propertyKey)
+   public SourceBeanIsNullException(Path path)
    {
-      super("Can't write property: " + propertyKey.getFullPath() + " as property: " + propertyKey.getParentPath() + " is null");
+      super("Can't write property: " + path.getFullPath() + " as property: " + path.getParentPath() + " is null");
    }
 }
