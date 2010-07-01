@@ -29,7 +29,7 @@ import java.util.HashMap;
 public class ReflectionBeanModelProvider<B> extends AbstractBeanModelProvider<B>
 {
    private BeanDescriptor rootDescriptor;
-   private HashMap<String, BeanDescriptor> beanAccessors = new HashMap<String, BeanDescriptor>();
+   private HashMap<String, BeanDescriptor> beanDescriptors = new HashMap<String, BeanDescriptor>();
 
    public ReflectionBeanModelProvider(Class<B> clazz)
    {
@@ -52,19 +52,28 @@ public class ReflectionBeanModelProvider<B> extends AbstractBeanModelProvider<B>
       }
       else
       {
+         // we get a descriptor for the parent path, i.e. for the path
+         // a.b.c we get the descriptor for a.b which will return a descriptor
+         // for the type of b.  This ensures that all paths of the form a.b.?
+         // will share the same BeanDescriptor.
+         String beanPath = path.getParentPath();
+
          // try and get the cached version.
-         BeanDescriptor descriptor = beanAccessors.get(path.getParentPath());
+         BeanDescriptor descriptor = beanDescriptors.get(beanPath);
 
          if (descriptor == null)
          {
-            ComputedPath parentPath = new ComputedPath(path.getParentPath());
-            BeanDescriptor parentDescriptor = getBeanDescriptorFor(parentPath);
+            // this will call "re-entrantly" till we hit the rootDescriptor from
+            // which point the path gets built from the bottom up.
+            PropertyDescriptor beanDescriptor = getPropertyDescriptor(path.getParentPath());
 
-            Class parentBeanType = parentDescriptor.getPropertyType(parentPath);
+            Class parentBeanType = beanDescriptor.getValueType();
 
             ensureLegalNestedType(parentBeanType);
 
             descriptor = new BeanDescriptor(parentBeanType);
+
+            beanDescriptors.put(beanPath, descriptor);
          }
 
          return descriptor;
