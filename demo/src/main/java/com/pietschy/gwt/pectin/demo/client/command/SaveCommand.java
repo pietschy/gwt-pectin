@@ -37,16 +37,30 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, Throwable>
       // and finally let's disable while we're active...
       disableWhen(isNot(model.dirty).or(active()));
 
-      text.setValue("Save");
 
-      binder.onTransitionOf(model.dirty).to(true).invoke(new Command()
+      // when ever the model goes dirty we makes sure our text is
+      // set to "Save".
+      binder.onTransitionOf(model.dirty).to(true).invoke(setText("Save"));
+      always().onStartInvoke(setText("Saving..."));
+      always().onSuccessInvoke(setText("Saved"));
+      always().onErrorInvoke(setText("Try save again"));
+
+      // The update to the model will also cause it to go non-dirty
+      // we'll disable.
+      always().sendResultTo(model);
+
+      text.setValue("Save");
+   }
+
+   private Command setText(final String text)
+   {
+      return new Command()
       {
          public void execute()
          {
-            text.setValue("Save");
+            SaveCommand.this.text.setValue(text);
          }
-      });
-
+      };
    }
 
    @Override
@@ -54,33 +68,17 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, Throwable>
    {
       if (model.validate())
       {
+         // passing `false` commits without affecting the dirty
+         // state.  The dirty state is reset when the model is
+         // updated with the result when the save completes.
          model.commit(false);
          invocation.proceed();
       }
    }
 
-   @Override
-   protected void onStarting()
-   {
-      text.setValue("Saving...");
-   }
-
-   @Override
-   protected void afterSuccess(Person result)
-   {
-      model.setValue(result);
-      text.setValue("Saved");
-   }
-
-   @Override
-   protected void afterError(Throwable error)
-   {
-      text.setValue("Try save again");
-   }
-
    /**
     * Invoke the async service to save our bean.
-    * 
+    *
     * @param callback used to publish our results.
     */
    protected void performAsyncOperation(final AsyncCommandCallback<Person, Throwable> callback)
