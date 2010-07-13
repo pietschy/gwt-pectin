@@ -2,7 +2,6 @@ package com.pietschy.gwt.pectin.demo.client.command;
 
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.pietschy.gwt.pectin.client.channel.DefaultChannel;
-import com.pietschy.gwt.pectin.client.command.AbstractUiCommand;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 
 /**
@@ -25,7 +24,8 @@ public class EditPersonController
       // now create our commands.  In this case I'm having them operate directly on the model.
       SaveCommand saveCommand = createSaveCommand(model, saveService, notificationChannel);
 
-      // initialise the model
+      // initialise the model, this could be done at any time, i.e. we don't need
+      // to get the person in the constructor if we're a long lived controller.
       model.setValue(person);
 
       // and finally create the view passing in the model and activities.
@@ -42,7 +42,8 @@ public class EditPersonController
       // a saveCommand.configure(EditPersonModel) style method.
       SaveCommand saveCommand = new SaveCommand(saveService, model);
 
-      // Configure our events...
+      // Configure our events... we could have also done this in the command if we
+      // wanted, just the command would need to be passed the notification channel.
       saveCommand.always()
          .onStartSend("Saving.... (we're just pretending, I'm using Random.nextBoolean() to fake errors.)")
          .to(notificationChannel);
@@ -68,19 +69,5 @@ public class EditPersonController
    public void dispose()
    {
       destination.remove(editPersonForm);
-   }
-
-   private class CancelUiCommand extends AbstractUiCommand
-   {
-      public CancelUiCommand(SaveCommand saveCommand)
-      {
-         disableWhen(saveCommand.active());
-      }
-
-      @Override
-      protected void doExecute()
-      {
-         model.revert();
-      }
    }
 }
