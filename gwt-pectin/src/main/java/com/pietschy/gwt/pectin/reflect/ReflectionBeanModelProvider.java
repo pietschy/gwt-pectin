@@ -37,7 +37,7 @@ public class ReflectionBeanModelProvider<B> extends AbstractBeanModelProvider<B>
    }
 
    @Override
-   public PropertyDescriptor getPropertyDescriptor(String fullPath)
+   public PropertyDescriptor createPropertyDescriptor(String fullPath)
    {
       ComputedPath path = new ComputedPath(fullPath);
 
@@ -63,9 +63,9 @@ public class ReflectionBeanModelProvider<B> extends AbstractBeanModelProvider<B>
 
          if (descriptor == null)
          {
-            // this will call "re-entrantly" till we hit the rootDescriptor from
+            // this will call "re-entrant-ly" till we hit the rootDescriptor from
             // which point the path gets built from the bottom up.
-            PropertyDescriptor beanDescriptor = getPropertyDescriptor(path.getParentPath());
+            PropertyDescriptor beanDescriptor = createPropertyDescriptor(beanPath);
 
             Class parentBeanType = beanDescriptor.getValueType();
 

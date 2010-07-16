@@ -15,21 +15,23 @@ import java.util.*;
  */
 public class BeanInfo implements Iterable<PropertyInfo>
 {
+   private Context context;
    private JClassType beanType;
+   private PropertyInfo property;
    private Map<String, PropertyInfo> properties;
-   private TypeOracle typeOracle;
-   private String parentPath;
-   private Set<Class> nestedBeanTypes;
+
 
    /**
     * Creates a top level BeanInfo instance.
     *
-    * @param typeOracle the type oracle.
-    * @param beanType   the beans type.
+    * @param context  the type oracle.
+    * @param beanType the beans type.
     */
-   public BeanInfo(TypeOracle typeOracle, JClassType beanType, Set<Class> nestedBeanTypes)
+   public BeanInfo(Context context, JClassType beanType)
    {
-      this(typeOracle, beanType, nestedBeanTypes, null);
+      this.context = context;
+      this.beanType = beanType;
+      processProperties();
    }
 
    /**
@@ -39,15 +41,12 @@ public class BeanInfo implements Iterable<PropertyInfo>
     * @param beanType   the beans type.
     * @param parentPath the path of this bean from the root bean.
     */
-   public BeanInfo(TypeOracle typeOracle, JClassType beanType, Set<Class> nestedBeanTypes, String parentPath)
+   public BeanInfo(PropertyInfo property)
    {
-      this.typeOracle = typeOracle;
-      this.beanType = beanType;
-      this.parentPath = parentPath;
-      this.nestedBeanTypes = nestedBeanTypes;
-      properties = scanProperties();
-      // verify any nested bean properties are ..
-      buildNestedBeanInfos(properties.values());
+      this.property = property;
+      this.context = property.getParentBeanInfo().getContext();
+      this.beanType = property.getAsClassType();
+      processProperties();
    }
 
 
@@ -61,31 +60,35 @@ public class BeanInfo implements Iterable<PropertyInfo>
       return properties.values().iterator();
    }
 
-   Map<String, PropertyInfo> scanProperties()
+   private String getPath()
    {
+      return property != null ? property.getFullPropertyPath() : null;
+   }
+
+   protected void processProperties()
+   {
+      properties = new HashMap<String, PropertyInfo>();
 
       ArrayList<MethodInfo> methods = getMethods(beanType);
-
-      HashMap<String, PropertyInfo> map = new HashMap<String, PropertyInfo>();
       for (MethodInfo method : methods)
       {
          if (method.isGetter())
          {
-            PropertyInfo info = new PropertyInfo(typeOracle,
-                                                 this,
-                                                 parentPath,
+            PropertyInfo info = new PropertyInfo(
+               this,
+                                                 getPath(),
                                                  method.getPropertyName(),
                                                  method.getReturnType(),
                                                  method.getName(),
                                                  method.isAnnotatedAsNestedBean());
-            map.put(info.getName(), info);
+            properties.put(info.getName(), info);
          }
       }
       for (MethodInfo method : methods)
       {
          if (method.isSetter())
          {
-            PropertyInfo info = map.get(method.getPropertyName());
+            PropertyInfo info = properties.get(method.getPropertyName());
             // a setter without a getter with the same type isn't a property so we ignore
             // setters that haven't had the info created from an existing getter.
             if (info != null && method.hasSingleParameterOfType(info.getType()))
@@ -95,20 +98,21 @@ public class BeanInfo implements Iterable<PropertyInfo>
          }
       }
 
-      return map;
+      processNestedBeans(properties.values());
    }
 
-   private void buildNestedBeanInfos(Iterable<PropertyInfo> properties)
+   private void processNestedBeans(Iterable<PropertyInfo> properties)
    {
+      // check the context
       for (PropertyInfo property : properties)
       {
-         if (property.isNestedBean())
+         if (context.isNestedBean(property))
          {
             // this will generate the nested bean info and barf if there are
             // any issues.
             BeanInfo nestedBean = property.getNestedBeanInfo();
             // now scan the the nested bean for more nesting.
-            buildNestedBeanInfos(nestedBean);
+            processNestedBeans(nestedBean);
          }
       }
    }
@@ -176,6 +180,21 @@ public class BeanInfo implements Iterable<PropertyInfo>
 
    public Set<Class> getNestedBeanTypes()
    {
-      return nestedBeanTypes;
+      return context.getNestedBeanTypes();
+   }
+
+   protected TypeOracle getTypeOracle()
+   {
+      return context.getTypeOracle();
+   }
+
+   public boolean isRootBean()
+   {
+      return property == null;
+   }
+
+   public Context getContext()
+   {
+      return context;
    }
 }

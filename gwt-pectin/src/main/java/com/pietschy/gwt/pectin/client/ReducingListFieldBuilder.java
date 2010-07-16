@@ -18,7 +18,8 @@ package com.pietschy.gwt.pectin.client;
 
 import com.pietschy.gwt.pectin.client.function.Reduce;
 import com.pietschy.gwt.pectin.client.list.ListModel;
-import com.pietschy.gwt.pectin.client.list.ReducingValueModel;
+
+import static com.pietschy.gwt.pectin.client.function.Functions.computedFrom;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,9 +41,9 @@ public class ReducingListFieldBuilder<T, S>
       this.model = model;
    }
 
-   public FieldModel<T> using(Reduce<T, S> function)
+   public FieldModel<T> using(Reduce<T, ? super S> function)
    {
-      ReducingValueModel<T, S> valueModel = new ReducingValueModel<T, S>(model, function);
-      return formModel.createFieldModel(valueModel, valueType);
+      return formModel.createFieldModel(computedFrom(model).using(function),
+                                        valueType);
    }
 }

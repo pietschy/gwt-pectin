@@ -9,10 +9,10 @@ package com.pietschy.gwt.pectin.demo.client.domain;
  */
 public class Address
 {
-   private String addressOne;
+   private String addressOne = "1 Orchard Drv";
    private String addressTwo;
-   private String suburb;
-   private String postCode;
+   private String suburb = "Fruitville";
+   private String postCode = "1234";
 
    public String getAddressOne()
    {

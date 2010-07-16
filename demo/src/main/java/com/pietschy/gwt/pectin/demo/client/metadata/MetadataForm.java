@@ -16,9 +16,9 @@
 
 package com.pietschy.gwt.pectin.demo.client.metadata;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.binding.FormBinder;
-import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.ComboBox;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
@@ -43,6 +43,11 @@ public class MetadataForm extends VerySimpleForm
    private CheckBox showPassword = new CheckBox("Show Password");
 
    private ComboBox<Protocol> protocol = new ComboBox<Protocol>(Protocol.values());
+   private String radioId = DOM.createUniqueId();
+   private RadioButton ftp = new RadioButton(radioId);
+   private RadioButton ftpImplicitSSL = new RadioButton(radioId);
+   private RadioButton ftpTls = new RadioButton(radioId);
+   private RadioButton sftp = new RadioButton(radioId);
    private TextBox port = new EnhancedTextBox();
    private Label defaultPortLabel = createHint();
 
@@ -70,7 +75,7 @@ public class MetadataForm extends VerySimpleForm
    };
 
 
-   private FormBinder binder = new WidgetBinder();
+   private FormBinder binder = new FormBinder();
 
    public MetadataForm(MetadataFormModel model)
    {
@@ -90,7 +95,7 @@ public class MetadataForm extends VerySimpleForm
 
       binder.bind(model.protocol).to(protocol);
       binder.bind(model.port).to(port);
-      binder.bind(model.defaultPort).toLabel(defaultPortLabel).withFormat(new DisplayFormat<Integer>()
+      binder.bind(model.defaultPort).toTextOf(defaultPortLabel).withFormat(new DisplayFormat<Integer>()
       {
          public String format(Integer port)
          {

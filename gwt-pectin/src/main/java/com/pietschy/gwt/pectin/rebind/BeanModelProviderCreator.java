@@ -22,7 +22,6 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
-import com.google.gwt.user.rebind.SourceWriter;
 import com.pietschy.gwt.pectin.client.bean.*;
 
 import java.io.PrintWriter;
@@ -82,7 +81,8 @@ public class BeanModelProviderCreator
             // class MyProvider extends AbstractBeanModelProvider<BeanType>
             JClassType beanType = classType.getSuperclass().isParameterized().getTypeArgs()[0];
 
-            BeanInfo beanInfo = new BeanInfo(typeOracle, beanType, nestedBeanTypes);
+            Context context = new Context(typeOracle, nestedBeanTypes, -1);
+            BeanInfo beanInfo = new BeanInfo(context, beanType);
 
             writer.indent();
 
@@ -133,68 +133,82 @@ public class BeanModelProviderCreator
       {
          public void visit(PropertyInfo property)
          {
-            // generate an appropriate constructor call...
-            BeanInfo parentBean = property.getParentBeanInfo();
-            if (property.isCollectionProperty())
+            if (validatePropertyPath(property))
             {
-               // CollectionPropertyDescriptor(String fullPath, String parentPath, String propertyName,
-               //                              Class beanType, Class collectionType, Class elementType, boolean mutable)
+               // generate an appropriate constructor call...
+               BeanInfo parentBean = property.getParentBeanInfo();
+               if (property.isCollectionProperty())
+               {
+                  // CollectionPropertyDescriptor(String fullPath, String parentPath, String propertyName,
+                  //                              Class beanType, Class collectionType, Class elementType, boolean mutable)
+                  source.println("private final PropertyDescriptor %s = new CollectionPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s.class, %s) {",
+                                 toDescriptorVarName(property),
+                                 quote(property.getFullPropertyPath()),
+                                 quote(property.getParentPath()),
+                                 quote(property.getName()),
+                                 parentBean.getTypeName(),
+                                 property.getTypeName(),
+                                 property.getCollectionElementTypeName(),
+                                 property.isMutable());
+               }
+               else
+               {
+                  // DefaultPropertyKey(Class type, String fullPath, String parentPath, String propertyName)
+                  source.println("private final PropertyDescriptor %s = new DefaultPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s) {",
+                                 toDescriptorVarName(property),
+                                 quote(property.getFullPropertyPath()),
+                                 quote(property.getParentPath()),
+                                 quote(property.getName()),
+                                 parentBean.getTypeName(),
+                                 property.getTypeName(),
+                                 property.isMutable());
+               }
 
-               source.println("private final PropertyDescriptor %s = new CollectionPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s.class, %s) {",
-                              toDescriptorVarName(property),
-                              quote(property.getFullPropertyPath()),
-                              quote(property.getParentPath()),
-                              quote(property.getName()),
-                              parentBean.getTypeName(),
-                              property.getTypeName(),
-                              property.getCollectionElementTypeName(),
-                              property.isMutable());
-            }
-            else
-            {
-               // DefaultPropertyKey(Class type, String fullPath, String parentPath, String propertyName)
-               source.println("private final PropertyDescriptor %s = new DefaultPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s) {",
-                              toDescriptorVarName(property),
-                              quote(property.getFullPropertyPath()),
-                              quote(property.getParentPath()),
-                              quote(property.getName()),
-                              parentBean.getTypeName(),
-                              property.getTypeName(),
-                              property.isMutable());
-            }
+               // now implement the methods....
+               source.indent();
+               source.println("public Object readProperty(Object bean) {");
+               source.indent();
+               source.println("return bean == null ? null : ((" + parentBean.getTypeName() + ")bean)." + property.getGetterMethodName() + "();");
+               source.outdent();
+               source.println("}");
 
-            // now implement the methods....
-            source.indent();
-            source.println("public Object readProperty(Object bean) {");
-            source.indent();
-            source.println("return bean == null ? null : ((" + parentBean.getTypeName() + ")bean)." + property.getGetterMethodName() + "();");
-            source.outdent();
-            source.println("}");
-
-            source.println("public void writeProperty(Object bean, Object value) {");
-            source.indent();
-            source.println("if (bean == null) {");
-            source.println("   throw new TargetBeanIsNullException(this, " + parentBean.getTypeName() + ".class);");
-            source.println("}");
-            if (property.isMutable())
-            {
-               source.println("((" + parentBean.getTypeName() + ")bean)." + property.getSetterMethodName() + "((" + property.getTypeName() + ") value);");
+               source.println("public void writeProperty(Object bean, Object value) {");
+               source.indent();
+               source.println("if (bean == null) {");
+               source.println("   throw new TargetBeanIsNullException(this, " + parentBean.getTypeName() + ".class);");
+               source.println("}");
+               if (property.isMutable())
+               {
+                  source.println("((" + parentBean.getTypeName() + ")bean)." + property.getSetterMethodName() + "((" + property.getTypeName() + ") value);");
+               }
+               else
+               {
+                  source.println("throw new ReadOnlyPropertyException(this);");
+               }
+               source.outdent();
+               source.println("}");
+               source.outdent();
+               source.println("};");
             }
-            else
-            {
-               source.println("throw new ReadOnlyPropertyException(this);");
-            }
-            source.outdent();
-            source.println("}");
-            source.outdent();
-            source.println("};");
          }
       });
    }
 
+   private boolean validatePropertyPath(PropertyInfo property)
+   {
+      // things this needs to check:
+      // a) property path isn't recursive
+      // b) or the recursive path has been limited for the type involved.
+//      if (property.isRecursive())
+//      {
+//         return false;
+//      }
+      return true;  
+   }
+
    private void generateGetPropertyDescriptorMethod(final Writer source, final BeanInfo beanInfo)
    {
-      source.println("public PropertyDescriptor getPropertyDescriptor(String path) {");
+      source.println("public PropertyDescriptor createPropertyDescriptor(String path) {");
       source.indent();
       beanInfo.visitAllProperties(new Visitor<PropertyInfo>()
       {
@@ -281,61 +295,6 @@ public class BeanModelProviderCreator
    createClassNameWithPackage(JClassType classType)
    {
       return createPackageName(classType) + "." + createClassName(classType);
-   }
-
-   public static class Writer
-   {
-      private SourceWriter writer;
-
-      public Writer(SourceWriter writer)
-      {
-         this.writer = writer;
-      }
-
-      public void print(String string)
-      {
-         writer.print(string);
-      }
-
-      public void println(String string)
-      {
-         writer.println(string);
-      }
-
-      public void println(String format, Object... args)
-      {
-         writer.println(String.format(format, args));
-      }
-
-      public void indent()
-      {
-         writer.indent();
-      }
-
-      public void outdent()
-      {
-         writer.outdent();
-      }
-
-      public void endJavaDocComment()
-      {
-         writer.endJavaDocComment();
-      }
-
-      public void beginJavaDocComment()
-      {
-         writer.beginJavaDocComment();
-      }
-
-      public void commit(TreeLogger logger)
-      {
-         writer.commit(logger);
-      }
-
-      public void println()
-      {
-         writer.println();
-      }
    }
 
 

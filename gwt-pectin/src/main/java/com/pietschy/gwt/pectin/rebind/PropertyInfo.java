@@ -14,7 +14,6 @@ import java.util.Set;
  */
 class PropertyInfo
 {
-   private TypeOracle typeOracle;
    private BeanInfo parentType;
    private String parentPath;
    private String name;
@@ -23,9 +22,8 @@ class PropertyInfo
    private String setterMethodName = null;
    private boolean nestedBean;
 
-   PropertyInfo(TypeOracle typeOracle, BeanInfo parentType, String parentPath, String name, JType type, String getterMethodName, boolean hasNestedAnnotation)
+   PropertyInfo(BeanInfo parentType, String parentPath, String name, JType type, String getterMethodName, boolean hasNestedAnnotation)
    {
-      this.typeOracle = typeOracle;
       this.parentType = parentType;
       this.parentPath = parentPath;
       this.name = name;
@@ -90,7 +88,7 @@ class PropertyInfo
 
    public BeanInfo getNestedBeanInfo()
    {
-      JClassType beanType = getAsClassType();
+      JClassType beanType = isClassOrInterface();
 
       if (beanType == null)
       {
@@ -108,14 +106,19 @@ class PropertyInfo
                                          " but returns an instanceOf Collection");
       }
 
-      return new BeanInfo(typeOracle, beanType, parentType.getNestedBeanTypes(), getFullPropertyPath());
+      return new BeanInfo(this);
    }
 
    public boolean isCollectionProperty()
    {
-      JClassType classType = getAsClassType();
+      JClassType classType = isClassOrInterface();
 
-      return classType != null && classType.isAssignableTo(typeOracle.findType("java.util.Collection"));
+      return classType != null && classType.isAssignableTo(getTypeOracle().findType("java.util.Collection"));
+   }
+
+   private TypeOracle getTypeOracle()
+   {
+      return parentType.getContext().getTypeOracle();
    }
 
    public String getCollectionElementTypeName()
@@ -131,18 +134,28 @@ class PropertyInfo
          throw new IllegalStateException("Property isn't a collection type.");
       }
 
-      JParameterizedType parameterisedType = getAsParameterisedType();
+      JParameterizedType parameterisedType = isParameterised();
       return parameterisedType != null ? parameterisedType.getTypeArgs()[0] : null;
    }
 
-   private JClassType getAsClassType()
+   private JClassType isClassOrInterface()
    {
       return type.isClassOrInterface();
    }
 
-   private JParameterizedType getAsParameterisedType()
+   private JParameterizedType isParameterised()
    {
       return type.isParameterized();
+   }
+
+   public JClassType getAsClassType()
+   {
+      JClassType classType = isClassOrInterface();
+      if (classType == null)
+      {
+         throw new IllegalStateException("Type isn't an interface or class:" + type);
+      }
+      return classType;
    }
 
    public String getTypeName()

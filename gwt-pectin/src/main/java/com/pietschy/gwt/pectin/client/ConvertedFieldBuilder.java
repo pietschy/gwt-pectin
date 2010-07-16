@@ -16,7 +16,11 @@
 
 package com.pietschy.gwt.pectin.client;
 
-import com.pietschy.gwt.pectin.client.value.*;
+import com.pietschy.gwt.pectin.client.value.Converter;
+import com.pietschy.gwt.pectin.client.value.MutableValueModel;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
+
+import static com.pietschy.gwt.pectin.client.function.Functions.convert;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,12 +46,13 @@ public class ConvertedFieldBuilder<T, S>
    {
       if (from instanceof MutableValueModel)
       {
-         ValueModel<T> vm = new ConvertingMutableValueModel<T, S>((MutableValueModel<S>) from, converter);
-         return formModel.createFieldModel(vm, valueType);
+         return formModel.createFieldModel(convert((MutableValueModel<S>) from).using(converter),
+                                           valueType);
       }
       else
       {
-         return formModel.createFieldModel(new ConvertingValueModel<T, S>(from, converter), valueType);
+         return formModel.createFieldModel(convert(from).using(converter),
+                                           valueType);
       }
    }
 }

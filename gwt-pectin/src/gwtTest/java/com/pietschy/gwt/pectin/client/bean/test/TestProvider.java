@@ -20,8 +20,9 @@ import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import com.pietschy.gwt.pectin.client.bean.NestedTypes;
 
 /**
- * this would normally be a static inner class but we need to be in a different
- * package to our created instance doesn't have any 'accidentally working' imports.
+ * This would normally be a static inner class but we I'm putting it in a different
+ * package so our generated provider will fail if it doesn't have all it's imports
+ * correctly defined.
 */
 @NestedTypes({AnotherBean.class})
 public abstract class TestProvider extends BeanModelProvider<TestBean>

@@ -25,7 +25,9 @@ public class TestBean
 
 //   private PublicFieldsDTO dto = new PublicFieldsDTO("abc");
    private AnotherBean nestedBean;
+   private AnotherBean readOnlyNestedBean = new AnotherBean();
    private BeanWithCollections collections;
+   private RecursiveBeanOne recursiveBean;
 
    public Object getObject()
    {
@@ -99,6 +101,11 @@ public class TestBean
       this.nestedBean = nestedBean;
    }
 
+   public AnotherBean getReadOnlyNestedBean()
+   {
+      return readOnlyNestedBean;
+   }
+
    @NestedBean
    public BeanWithCollections getCollections()
    {
@@ -123,5 +130,15 @@ public class TestBean
    public int getReadOnlyPrimitiveInt()
    {
       return readOnlyPrimitiveInt;
+   }
+
+   public RecursiveBeanOne getRecursiveBean()
+   {
+      return recursiveBean;
+   }
+
+   public void setRecursiveBean(RecursiveBeanOne recursiveBean)
+   {
+      this.recursiveBean = recursiveBean;
    }
 }

@@ -17,11 +17,12 @@
 package com.pietschy.gwt.pectin.client;
 
 import com.pietschy.gwt.pectin.client.function.Reduce;
-import com.pietschy.gwt.pectin.client.value.ReducingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.pietschy.gwt.pectin.client.function.Functions.computedFrom;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,7 +46,7 @@ public class ReducingFieldBuilder<T, S>
 
    public FieldModel<T> using(Reduce<T, S> function)
    {
-      ReducingValueModel<T, S> valueModel = new ReducingValueModel<T, S>(function, models);
-      return formModel.createFieldModel(valueModel, valueType);
+      return formModel.createFieldModel(computedFrom(models).using(function), 
+                                        valueType);
    }
 }

@@ -36,7 +36,7 @@ implements MutableValueModel<T>
    {
       // we could improve performance by disabling the change monitor
       // and firing the change event ourselves (to avoid a double conversion), 
-      // but we'd need to disable the monitor while setting the soruce value.
+      // but we'd need to disable the monitor while setting the source value.
       getSource().setValue(getConverter().toSource(value));
    }
 

@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.client;
 
 import com.pietschy.gwt.pectin.client.function.Function;
-import com.pietschy.gwt.pectin.client.value.ComputedValueModel;
+import com.pietschy.gwt.pectin.client.function.Functions;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
@@ -42,7 +42,7 @@ public class ComputedFieldBuilder<T, S>
 
    public FieldModel<T> using(Function<T, ? super S> function)
    {
-      ComputedValueModel<T, S> valueModel = new ComputedValueModel<T, S>(source, function);
-      return formModel.createFieldModel(valueModel, valueType);
+      return formModel.createFieldModel(Functions.convert(source).using(function),
+                                        valueType);
    }
 }

@@ -196,7 +196,7 @@ public abstract class AbstractBeanModelProvider<B> extends AbstractMutableValueM
 
       if (listModel == null)
       {
-         PropertyDescriptor descriptor = getPropertyDescriptor(propertyPath);
+         PropertyDescriptor descriptor = createPropertyDescriptor(propertyPath);
 
          if (!descriptor.isCollection())
          {
@@ -262,7 +262,7 @@ public abstract class AbstractBeanModelProvider<B> extends AbstractMutableValueM
 
       if (valueModel == null)
       {
-         PropertyDescriptor descriptor = getPropertyDescriptor(propertyPath);
+         PropertyDescriptor descriptor = createPropertyDescriptor(propertyPath);
 
          if (!valueType.equals(descriptor.getValueType()))
          {
@@ -304,7 +304,13 @@ public abstract class AbstractBeanModelProvider<B> extends AbstractMutableValueM
       }
    }
 
-   public abstract PropertyDescriptor getPropertyDescriptor(String path);
+   /**
+    * Called the first time a specific property path is requested.
+    *
+    * @param propertyPath the full path of the property
+    * @return a {@link com.pietschy.gwt.pectin.client.bean.PropertyDescriptor} for the specified path.
+    */
+   public abstract PropertyDescriptor createPropertyDescriptor(String propertyPath);
 
    /**
     * Registers a new converter for converting between collection based bean properties and the ListModel.

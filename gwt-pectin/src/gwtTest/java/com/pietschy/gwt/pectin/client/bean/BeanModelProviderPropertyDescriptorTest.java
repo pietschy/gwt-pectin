@@ -43,7 +43,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    {
       try
       {
-         provider.getPropertyDescriptor("blah");
+         provider.createPropertyDescriptor("blah");
          fail("expected to throw UnknownPropertyException");
       }
       catch (UnknownPropertyException e)
@@ -55,10 +55,10 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    public void testGetPropertyDescriptorForUnknownNestedPath()
    {
       // this should work so we guarantee our nestedBeanProperty exists
-      provider.getPropertyDescriptor("nestedBean");
+      provider.createPropertyDescriptor("nestedBean");
       try
       {
-         provider.getPropertyDescriptor("nestedBean.blah");
+         provider.createPropertyDescriptor("nestedBean.blah");
          fail("expected to throw UnknownPropertyException");
       }
       catch (UnknownPropertyException e)
@@ -82,6 +82,10 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
       doMutableTest("nestedBean.string", true);
       doMutableTest("nestedBean.stringList", true);
 
+      doMutableTest("readOnlyNestedBean", false);
+      doMutableTest("readOnlyNestedBean.string", true);
+      doMutableTest("readOnlyNestedBean.stringList", true);
+
       doMutableTest("collections", true);
       doMutableTest("collections.stringCollection", true);
       doMutableTest("collections.integerCollection", true);
@@ -93,7 +97,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
 
    private void doMutableTest(String propertyPath, boolean mutable)
    {
-      PropertyDescriptor descriptor = provider.getPropertyDescriptor(propertyPath);
+      PropertyDescriptor descriptor = provider.createPropertyDescriptor(propertyPath);
       assertEquals(descriptor.isMutable(), mutable);
    }
 
@@ -103,7 +107,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    {
       String name = "abc";
       bean.setString(name);
-      PropertyDescriptor descriptor = provider.getPropertyDescriptor("string");
+      PropertyDescriptor descriptor = provider.createPropertyDescriptor("string");
       assertEquals(descriptor.readProperty(bean), name);
    }
 
@@ -114,7 +118,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
       bean.setNestedBean(new AnotherBean());
       bean.getNestedBean().setString(name);
 
-      PropertyDescriptor descriptor = provider.getPropertyDescriptor("nestedBean.string");
+      PropertyDescriptor descriptor = provider.createPropertyDescriptor("nestedBean.string");
       assertEquals(descriptor.readProperty(bean.getNestedBean()), name);
    }
 
@@ -123,7 +127,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    public void testWriteValue()
    {
       String name = "abc";
-      PropertyDescriptor descriptor = provider.getPropertyDescriptor("string");
+      PropertyDescriptor descriptor = provider.createPropertyDescriptor("string");
       descriptor.writeProperty(bean, name);
       assertEquals(bean.getString(), name);
    }
@@ -133,7 +137,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    {
       String name = "abc";
       bean.setNestedBean(new AnotherBean());
-      PropertyDescriptor descriptor = provider.getPropertyDescriptor("nestedBean.string");
+      PropertyDescriptor descriptor = provider.createPropertyDescriptor("nestedBean.string");
       descriptor.writeProperty(bean.getNestedBean(), name);
       assertEquals(bean.getNestedBean().getString(), name);
    }
@@ -144,7 +148,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
       String name = "abc";
       try
       {
-         PropertyDescriptor descriptor = provider.getPropertyDescriptor("string");
+         PropertyDescriptor descriptor = provider.createPropertyDescriptor("string");
          descriptor.writeProperty(null, name);
          fail("expected TargetBeanIsNullException");
       }
@@ -159,7 +163,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    {
       try
       {
-         PropertyDescriptor key = provider.getPropertyDescriptor("readOnlyObject");
+         PropertyDescriptor key = provider.createPropertyDescriptor("readOnlyObject");
          key.writeProperty(bean, "blah");
          fail("expected ImmutablePropertyException");
       }
@@ -172,37 +176,37 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    @Test
    public void testGetValueType()
    {
-      assertEquals(provider.getPropertyDescriptor("object").getValueType(), Object.class);
-      assertEquals(provider.getPropertyDescriptor("string").getValueType(), String.class);
-      assertEquals(provider.getPropertyDescriptor("primitiveInt").getValueType(), Integer.class);
-      assertEquals(provider.getPropertyDescriptor("primitiveBoolean").getValueType(), Boolean.class);
-      assertEquals(provider.getPropertyDescriptor("objectInteger").getValueType(), Integer.class);
-      assertEquals(provider.getPropertyDescriptor("objectBoolean").getValueType(), Boolean.class);
-      assertEquals(provider.getPropertyDescriptor("readOnlyObject").getValueType(), Object.class);
-      assertEquals(provider.getPropertyDescriptor("readOnlyPrimitiveInt").getValueType(), Integer.class);
+      assertEquals(provider.createPropertyDescriptor("object").getValueType(), Object.class);
+      assertEquals(provider.createPropertyDescriptor("string").getValueType(), String.class);
+      assertEquals(provider.createPropertyDescriptor("primitiveInt").getValueType(), Integer.class);
+      assertEquals(provider.createPropertyDescriptor("primitiveBoolean").getValueType(), Boolean.class);
+      assertEquals(provider.createPropertyDescriptor("objectInteger").getValueType(), Integer.class);
+      assertEquals(provider.createPropertyDescriptor("objectBoolean").getValueType(), Boolean.class);
+      assertEquals(provider.createPropertyDescriptor("readOnlyObject").getValueType(), Object.class);
+      assertEquals(provider.createPropertyDescriptor("readOnlyPrimitiveInt").getValueType(), Integer.class);
 
-      assertEquals(provider.getPropertyDescriptor("nestedBean").getValueType(), AnotherBean.class);
-      assertEquals(provider.getPropertyDescriptor("nestedBean.string").getValueType(), String.class);
-      assertEquals(provider.getPropertyDescriptor("nestedBean.stringList").getValueType(), List.class);
+      assertEquals(provider.createPropertyDescriptor("nestedBean").getValueType(), AnotherBean.class);
+      assertEquals(provider.createPropertyDescriptor("nestedBean.string").getValueType(), String.class);
+      assertEquals(provider.createPropertyDescriptor("nestedBean.stringList").getValueType(), List.class);
 
-      assertEquals(provider.getPropertyDescriptor("collections").getValueType(), BeanWithCollections.class);
-      assertEquals(provider.getPropertyDescriptor("collections.stringCollection").getValueType(), Collection.class);
-      assertEquals(provider.getPropertyDescriptor("collections.integerCollection").getValueType(), Collection.class);
-      assertEquals(provider.getPropertyDescriptor("collections.stringList").getValueType(), List.class);
-      assertEquals(provider.getPropertyDescriptor("collections.stringSortedSet").getValueType(), SortedSet.class);
-      assertEquals(provider.getPropertyDescriptor("collections.untypedCollection").getValueType(), Collection.class);
-      assertEquals(provider.getPropertyDescriptor("collections.readOnlyUntypedCollection").getValueType(), Collection.class);
+      assertEquals(provider.createPropertyDescriptor("collections").getValueType(), BeanWithCollections.class);
+      assertEquals(provider.createPropertyDescriptor("collections.stringCollection").getValueType(), Collection.class);
+      assertEquals(provider.createPropertyDescriptor("collections.integerCollection").getValueType(), Collection.class);
+      assertEquals(provider.createPropertyDescriptor("collections.stringList").getValueType(), List.class);
+      assertEquals(provider.createPropertyDescriptor("collections.stringSortedSet").getValueType(), SortedSet.class);
+      assertEquals(provider.createPropertyDescriptor("collections.untypedCollection").getValueType(), Collection.class);
+      assertEquals(provider.createPropertyDescriptor("collections.readOnlyUntypedCollection").getValueType(), Collection.class);
    }
 
    @Test
    public void testGetElementType()
    {
-      assertEquals(provider.getPropertyDescriptor("collections.stringCollection").getElementType(), String.class);
-      assertEquals(provider.getPropertyDescriptor("collections.integerCollection").getElementType(), Integer.class);
-      assertEquals(provider.getPropertyDescriptor("collections.stringList").getElementType(), String.class);
-      assertEquals(provider.getPropertyDescriptor("collections.stringSortedSet").getElementType(), String.class);
-      assertEquals(provider.getPropertyDescriptor("collections.untypedCollection").getElementType(), Object.class);
-      assertEquals(provider.getPropertyDescriptor("collections.readOnlyUntypedCollection").getElementType(), Object.class);
+      assertEquals(provider.createPropertyDescriptor("collections.stringCollection").getElementType(), String.class);
+      assertEquals(provider.createPropertyDescriptor("collections.integerCollection").getElementType(), Integer.class);
+      assertEquals(provider.createPropertyDescriptor("collections.stringList").getElementType(), String.class);
+      assertEquals(provider.createPropertyDescriptor("collections.stringSortedSet").getElementType(), String.class);
+      assertEquals(provider.createPropertyDescriptor("collections.untypedCollection").getElementType(), Object.class);
+      assertEquals(provider.createPropertyDescriptor("collections.readOnlyUntypedCollection").getElementType(), Object.class);
    }
 
    @Test
@@ -210,7 +214,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    {
       try
       {
-         provider.getPropertyDescriptor("blah");
+         provider.createPropertyDescriptor("blah");
          fail("expected to throw UnknownPropertyException");
       }
       catch (UnknownPropertyException e)
@@ -223,7 +227,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    {
       try
       {
-         provider.getPropertyDescriptor("nestedBean.blah");
+         provider.createPropertyDescriptor("nestedBean.blah");
          fail("expected to throw UnknownPropertyException");
       }
       catch (UnknownPropertyException e)
@@ -236,7 +240,7 @@ public class BeanModelProviderPropertyDescriptorTest extends GWTTestCase
    {
       try
       {
-         provider.getPropertyDescriptor("object").getElementType();
+         provider.createPropertyDescriptor("object").getElementType();
          fail("expected to throw NotCollectionPropertyException");
       }
       catch (NotCollectionPropertyException e)
