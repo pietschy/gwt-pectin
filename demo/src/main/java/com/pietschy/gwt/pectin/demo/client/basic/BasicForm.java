@@ -20,7 +20,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
-import com.pietschy.gwt.pectin.client.form.FormBinder;
+import com.pietschy.gwt.pectin.client.form.binding.FormBinder;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;

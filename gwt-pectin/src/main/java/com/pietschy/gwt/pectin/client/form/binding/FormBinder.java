@@ -1,7 +1,7 @@
-package com.pietschy.gwt.pectin.client.form;
+package com.pietschy.gwt.pectin.client.form.binding;
 
 import com.pietschy.gwt.pectin.client.binding.*;
-import com.pietschy.gwt.pectin.client.form.binding.FormattedListFieldBindingBuilder;
+import com.pietschy.gwt.pectin.client.form.*;
 
 /**
  * FormBinder provides a builders to bind widgets to field models.  During the binding process
@@ -40,9 +40,9 @@ public class FormBinder extends Binder
       });
    }
 
-   public <T> com.pietschy.gwt.pectin.client.form.binding.FormattedFieldBindingBuilder<T> bind(final FormattedFieldModel<T> field)
+   public <T> FormattedFieldBindingBuilder<T> bind(final FormattedFieldModel<T> field)
    {
-      return new com.pietschy.gwt.pectin.client.form.binding.FormattedFieldBindingBuilder<T>(field, new BindingBuilderCallback()
+      return new FormattedFieldBindingBuilder<T>(field, new BindingBuilderCallback()
       {
          public void onBindingCreated(AbstractBinding binding, Object target)
          {
@@ -55,7 +55,7 @@ public class FormBinder extends Binder
       });
    }
 
-   public <T> com.pietschy.gwt.pectin.client.form.binding.FormattedListFieldBindingBuilder<T> bind(final FormattedListFieldModel<T> formattedList)
+   public <T> FormattedListFieldBindingBuilder<T> bind(final FormattedListFieldModel<T> formattedList)
    {
       return new FormattedListFieldBindingBuilder<T>(formattedList, new BindingBuilderCallback()
       {

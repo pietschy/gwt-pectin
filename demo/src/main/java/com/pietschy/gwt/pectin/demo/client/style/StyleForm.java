@@ -19,7 +19,7 @@ package com.pietschy.gwt.pectin.demo.client.style;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
-import com.pietschy.gwt.pectin.client.form.FormBinder;
+import com.pietschy.gwt.pectin.client.form.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.form.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.client.style.StyleBinder;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;

@@ -29,7 +29,7 @@ import java.util.HashMap;
 /**
  * <p>
  * FormModel provides builders for creating {@link FieldModel}s, {@link FormattedFieldModel}s
- * and {@link ListFieldModel}.  Widgets can then be bound to these models using a {@link FormBinder}.
+ * and {@link ListFieldModel}.  Widgets can then be bound to these models using a {@link com.pietschy.gwt.pectin.client.form.binding.FormBinder}.
  * </p>
  * <p>
  * FormModels also allow support properties to allow plugins to store additional
@@ -64,9 +64,9 @@ public class FormModel
     * @param type the value type held by the field.
     * @return a builder for the specified type.
     */
-   public <T> FormattedFieldBuilder<T> formattedFieldOfType(Class<T> type)
+   public <T> FormattedFieldFormatBuilder<T> formattedFieldOfType(Class<T> type)
    {
-      return new FormattedFieldBuilder<T>(this, type);
+      return new FormattedFieldFormatBuilder<T>(this, type);
    }
 
    /**
@@ -86,9 +86,9 @@ public class FormModel
     * @param type the value type held by the list.
     * @return a builder for the specified type.
     */
-   public <T> FormattedListFieldBuilder<T> formattedListOfType(Class<T> type)
+   public <T> FormattedListFieldFormatBuilder<T> formattedListOfType(Class<T> type)
    {
-      return new FormattedListFieldBuilder<T>(this, type);
+      return new FormattedListFieldFormatBuilder<T>(this, type);
    }
 
    /**

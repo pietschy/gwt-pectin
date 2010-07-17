@@ -20,7 +20,7 @@ import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
 
 /**
  * BindingCallbacks can be added to {@link FormModel}s by plugins to be notified when new
- * bindings are created by {@link FormBinder}.  This allows plugins to hook into the binding
+ * bindings are created by {@link com.pietschy.gwt.pectin.client.form.binding.FormBinder}.  This allows plugins to hook into the binding
  * process and install custom functionality.
  */
 public interface BindingCallback

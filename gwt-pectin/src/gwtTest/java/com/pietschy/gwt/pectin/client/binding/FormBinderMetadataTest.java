@@ -3,8 +3,8 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.ui.Button;
 import com.pietschy.gwt.pectin.client.form.FieldModel;
-import com.pietschy.gwt.pectin.client.form.FormBinder;
 import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 
 import static com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin.enable;

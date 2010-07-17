@@ -3,7 +3,7 @@ package com.pietschy.gwt.pectin.client.binding;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
-import com.pietschy.gwt.pectin.client.form.FormBinder;
+import com.pietschy.gwt.pectin.client.form.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeTest;

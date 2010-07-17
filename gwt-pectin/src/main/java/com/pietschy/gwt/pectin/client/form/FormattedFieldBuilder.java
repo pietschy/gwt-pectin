@@ -17,33 +17,61 @@
 package com.pietschy.gwt.pectin.client.form;
 
 import com.pietschy.gwt.pectin.client.format.Format;
+import com.pietschy.gwt.pectin.client.value.ValueHolder;
+import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
  * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 1, 2009
- * Time: 12:20:38 PM
- * To change this template use File | Settings | File Templates.
- */
+* User: andrew
+* Date: Sep 5, 2009
+* Time: 11:42:50 AM
+* To change this template use File | Settings | File Templates.
+*/
 public class FormattedFieldBuilder<T>
 {
+   private Format<T> formatter;
    private FormModel formModel;
    private Class<T> valueType;
+   private FormatExceptionPolicy<T> exceptionPolicy;
 
-   protected FormattedFieldBuilder(FormModel formModel, Class<T> valueType)
+   protected FormattedFieldBuilder(FormModel formModel, Class<T> type, Format<T> formatter, FormatExceptionPolicy<T> exceptionPolicy)
    {
       this.formModel = formModel;
-      this.valueType = valueType;
+      valueType = type;
+      this.formatter = formatter;
+      this.exceptionPolicy = exceptionPolicy;
    }
 
-   public FormattedFieldBindingBuilder<T> using(Format<T> formatter)
+   public FormattedFieldModel<T> create()
    {
-      return new FormattedFieldBindingBuilder<T>(formModel, valueType, formatter, new DefaultFormatExceptionPolicy<T>());
+      return formModel.createFormattedFieldModel(new ValueHolder<T>(), formatter, exceptionPolicy, valueType);
    }
 
-   public FormattedFieldBindingBuilder<T> using(Format<T> formatter, FormatExceptionPolicy<T> exceptionPolicy)
+   public FormattedFieldModel<T> createWithValue(T initialValue)
    {
-      return new FormattedFieldBindingBuilder<T>(formModel, valueType, formatter, exceptionPolicy);
+      return formModel.createFormattedFieldModel(new ValueHolder<T>(initialValue), formatter, exceptionPolicy, valueType);
    }
 
+   public FormattedFieldModel<T> boundTo(ValueModel<T> source)
+   {
+      return formModel.createFormattedFieldModel(source, formatter, exceptionPolicy, valueType);
+   }
+
+   /**
+    * Binds the field to the specified provider using the specified key.  The type
+    * of the key is determined by the provider.  I.e. a ValueModelProvider&lt;String&gt;
+    * will require a string key.
+    * @param provider the ValueModelProvider to use.
+    * @param key the key of the value (that will be passed to the provider).
+    * @return a new field model bound to the provider using the specified key.
+    */
+   public <K> FormattedFieldModel<T> boundTo(ValueModelProvider<K> provider, K key)
+   {
+      return boundTo(provider.getValueModel(key, valueType));
+   }
+   
+   public <S> ConvertedFormattedFieldBuilder<T,S> convertedFrom(ValueModel<S> source)
+   {
+      return new ConvertedFormattedFieldBuilder<T,S>(formModel, source, formatter, exceptionPolicy, valueType);
+   }
 }

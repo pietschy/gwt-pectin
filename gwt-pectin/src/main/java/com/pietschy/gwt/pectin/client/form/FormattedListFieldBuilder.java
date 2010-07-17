@@ -17,33 +17,59 @@
 package com.pietschy.gwt.pectin.client.form;
 
 import com.pietschy.gwt.pectin.client.format.Format;
+import com.pietschy.gwt.pectin.client.list.ArrayListModel;
+import com.pietschy.gwt.pectin.client.list.ListModel;
+
+import java.util.Collection;
 
 /**
  * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jul 1, 2009
- * Time: 12:20:38 PM
- * To change this template use File | Settings | File Templates.
- */
+* User: andrew
+* Date: Sep 5, 2009
+* Time: 11:42:50 AM
+* To change this template use File | Settings | File Templates.
+*/
 public class FormattedListFieldBuilder<T>
 {
+   private Format<T> formatter;
    private FormModel formModel;
    private Class<T> valueType;
+   private ListFormatExceptionPolicy<T> exceptionPolicy;
 
-   protected FormattedListFieldBuilder(FormModel formModel, Class<T> valueType)
+   protected FormattedListFieldBuilder(FormModel formModel, Class<T> type, Format<T> formatter, ListFormatExceptionPolicy<T> exceptionPolicy)
    {
       this.formModel = formModel;
-      this.valueType = valueType;
+      valueType = type;
+      this.formatter = formatter;
+      this.exceptionPolicy = exceptionPolicy;
    }
 
-   public FormattedListFieldBindingBuilder<T> using(Format<T> formatter)
+   public FormattedListFieldModel<T> create()
    {
-      return new FormattedListFieldBindingBuilder<T>(formModel, valueType, formatter, new DefaultListFormatExceptionPolicy<T>());
+      return formModel.createFormattedListFieldModel(new ArrayListModel<T>(), formatter, exceptionPolicy, valueType);
    }
 
-   public FormattedListFieldBindingBuilder<T> using(Format<T> formatter, ListFormatExceptionPolicy<T> exceptionPolicy)
+   public FormattedListFieldModel<T> createWithValue(Collection<T> initialValue)
    {
-      return new FormattedListFieldBindingBuilder<T>(formModel, valueType, formatter, exceptionPolicy);
+      return formModel.createFormattedListFieldModel(new ArrayListModel<T>(initialValue), formatter, exceptionPolicy, valueType);
+   }
+
+   public FormattedListFieldModel<T> boundTo(ListModel<T> source)
+   {
+      return formModel.createFormattedListFieldModel(source, formatter, exceptionPolicy, valueType);
+   }
+
+   /**
+    * Binds the field to the specified provider using the specified key.  The type
+    * of the key is determined by the provider.  I.e. a ListModelProvider&lt;String&gt;
+    * will require a string key.
+    * @param provider the ValueModelProvider to use.
+    * @param key the key of the value (that will be passed to the provider).
+    * @return a new field model bound to the provider using the specified key.
+    */
+   public <K> FormattedListFieldModel<T> boundTo(ListModelProvider<K> provider, K key)
+   {
+      return boundTo(provider.getListModel(key, valueType));
    }
 
 }

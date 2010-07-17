@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.TextSplitter;
-import com.pietschy.gwt.pectin.client.form.FormBinder;
+import com.pietschy.gwt.pectin.client.form.binding.FormBinder;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 
 /**

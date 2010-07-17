@@ -22,7 +22,7 @@ import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.ComboBox;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
-import com.pietschy.gwt.pectin.client.form.FormBinder;
+import com.pietschy.gwt.pectin.client.form.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 import com.pietschy.gwt.pectin.demo.client.domain.Protocol;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;

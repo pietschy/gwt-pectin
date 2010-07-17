@@ -4,7 +4,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.sample.contacts.client.presenter.EditContactPresenter;
 import com.google.gwt.sample.contacts.shared.Contact;
 import com.google.gwt.user.client.ui.*;
-import com.pietschy.gwt.pectin.client.form.FormBinder;
+import com.pietschy.gwt.pectin.client.form.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.form.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplayPanel;
 
