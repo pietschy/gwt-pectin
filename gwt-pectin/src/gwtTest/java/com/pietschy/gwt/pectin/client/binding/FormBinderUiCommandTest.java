@@ -5,6 +5,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.ui.Button;
 import com.pietschy.gwt.pectin.client.command.AbstractUiCommand;
 import com.pietschy.gwt.pectin.client.command.TemporalUiCommand;
+import com.pietschy.gwt.pectin.client.form.FormBinder;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 

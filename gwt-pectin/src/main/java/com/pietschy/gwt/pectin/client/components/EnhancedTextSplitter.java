@@ -16,9 +16,9 @@
 
 package com.pietschy.gwt.pectin.client.components;
 
-import com.pietschy.gwt.pectin.client.validation.IndexedValidationResult;
-import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
+import com.pietschy.gwt.pectin.client.form.validation.IndexedValidationResult;
+import com.pietschy.gwt.pectin.client.form.validation.component.IndexedValidationDisplay;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplay;
 
 /**
  * A subclass of {@link TextSplitter} that implements {@link IndexedValidationDisplay} and

@@ -18,16 +18,15 @@ package com.pietschy.gwt.pectin.demo.client.style;
 
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTML;
-import com.pietschy.gwt.pectin.client.binding.FormBinder;
-import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
+import com.pietschy.gwt.pectin.client.form.FormBinder;
+import com.pietschy.gwt.pectin.client.form.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.client.style.StyleBinder;
-import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 
 import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.metadataOf;
+import static com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin.metadataOf;
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,7 +49,7 @@ extends VerySimpleForm
    private HTML nickNameLabel = new HTML("Nick Name");
    private NickNameEditor nickName = new NickNameEditor();
 
-   private FormBinder binder = new WidgetBinder();
+   private FormBinder binder = new FormBinder();
    private StyleBinder style = new StyleBinder();
    private ValidationBinder validation = new ValidationBinder();
 

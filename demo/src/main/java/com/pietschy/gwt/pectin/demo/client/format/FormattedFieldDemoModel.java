@@ -16,10 +16,10 @@
 
 package com.pietschy.gwt.pectin.demo.client.format;
 
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.FormattedListFieldModel;
+import com.pietschy.gwt.pectin.client.form.FieldModel;
+import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.FormattedFieldModel;
+import com.pietschy.gwt.pectin.client.form.FormattedListFieldModel;
 import com.pietschy.gwt.pectin.client.format.IntegerFormat;
 import com.pietschy.gwt.pectin.client.function.Reduce;
 import com.pietschy.gwt.pectin.client.value.Converter;

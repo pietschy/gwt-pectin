@@ -3,9 +3,9 @@ package com.google.gwt.sample.contacts.client.view;
 
 import com.google.gwt.sample.contacts.shared.Contact;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import com.pietschy.gwt.pectin.client.metadata.Metadata;
-import com.pietschy.gwt.pectin.client.metadata.MetadataPlugin;
-import com.pietschy.gwt.pectin.client.validation.HasValidation;
+import com.pietschy.gwt.pectin.client.form.metadata.Metadata;
+import com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin;
+import com.pietschy.gwt.pectin.client.form.validation.HasValidation;
 import com.pietschy.gwt.pectin.reflect.ReflectionProviders;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;

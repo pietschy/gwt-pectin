@@ -4,10 +4,9 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.sample.contacts.client.presenter.EditContactPresenter;
 import com.google.gwt.sample.contacts.shared.Contact;
 import com.google.gwt.user.client.ui.*;
-import com.pietschy.gwt.pectin.client.binding.FormBinder;
-import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
-import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplayPanel;
+import com.pietschy.gwt.pectin.client.form.FormBinder;
+import com.pietschy.gwt.pectin.client.form.validation.binding.ValidationBinder;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplayPanel;
 
 public class EditContactView extends Composite implements EditContactPresenter.Display
 {
@@ -20,7 +19,7 @@ public class EditContactView extends Composite implements EditContactPresenter.D
    private final Button saveButton;
    private final Button cancelButton;
 
-   private FormBinder binder = new WidgetBinder();
+   private FormBinder binder = new FormBinder();
    private ValidationBinder validation = new ValidationBinder();
 
 

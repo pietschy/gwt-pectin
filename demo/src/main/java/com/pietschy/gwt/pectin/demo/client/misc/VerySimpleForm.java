@@ -17,7 +17,7 @@
 package com.pietschy.gwt.pectin.demo.client.misc;
 
 import com.google.gwt.user.client.ui.*;
-import com.pietschy.gwt.pectin.client.metadata.HasVisible;
+import com.pietschy.gwt.pectin.client.form.metadata.HasVisible;
 
 /**
  * Created by IntelliJ IDEA.

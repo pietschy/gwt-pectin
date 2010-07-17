@@ -17,8 +17,8 @@
 package com.pietschy.gwt.pectin.client.list;
 
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.pietschy.gwt.pectin.client.AbstractHasHandlers;
 import com.pietschy.gwt.pectin.client.channel.Destination;
+import com.pietschy.gwt.pectin.client.form.AbstractHasHandlers;
 
 import java.util.*;
 

@@ -17,21 +17,21 @@
 package com.pietschy.gwt.pectin.demo.client.command;
 
 import com.google.gwt.core.client.GWT;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import com.pietschy.gwt.pectin.client.validation.validator.NoEmptyElementsValidator;
-import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
-import com.pietschy.gwt.pectin.client.validation.validator.NotNullValidator;
+import com.pietschy.gwt.pectin.client.form.FieldModel;
+import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.ListFieldModel;
+import com.pietschy.gwt.pectin.client.form.validation.validator.NoEmptyElementsValidator;
+import com.pietschy.gwt.pectin.client.form.validation.validator.NotEmptyValidator;
+import com.pietschy.gwt.pectin.client.form.validation.validator.NotNullValidator;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueTarget;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.getValidationManager;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
+import static com.pietschy.gwt.pectin.client.form.validation.ValidationPlugin.getValidationManager;
+import static com.pietschy.gwt.pectin.client.form.validation.ValidationPlugin.validateField;
 
 /**
  *

@@ -21,9 +21,9 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.user.client.ui.TextArea;
-import com.pietschy.gwt.pectin.client.validation.ValidationResult;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
+import com.pietschy.gwt.pectin.client.form.validation.ValidationResult;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplay;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationStyles;
 
 /**
  * Created by IntelliJ IDEA.

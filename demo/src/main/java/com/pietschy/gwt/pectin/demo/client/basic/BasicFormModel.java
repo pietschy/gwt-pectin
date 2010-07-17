@@ -19,11 +19,11 @@ package com.pietschy.gwt.pectin.demo.client.basic;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import com.pietschy.gwt.pectin.client.bean.NestedTypes;
+import com.pietschy.gwt.pectin.client.form.FieldModel;
+import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.ListFieldModel;
 import com.pietschy.gwt.pectin.client.function.Join;
 import com.pietschy.gwt.pectin.client.function.Reduce;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
@@ -75,7 +75,9 @@ public class BasicFormModel extends FormModel
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
       favoriteCheeses = listOfType(String.class).boundTo(personProvider, "favoriteCheeses");
       
-      // a computed field
+      // Some computed fields
+      // (you can also compute regular models using the static methods of
+      // the Functions class.  I.e. ValueModel m = Functions.computedFrom(..).using(..)
       fullName = fieldOfType(String.class)
          .computedFrom(givenName, surname)
          .using(new Join(" "));

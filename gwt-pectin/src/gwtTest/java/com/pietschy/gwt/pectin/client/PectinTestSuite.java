@@ -23,7 +23,8 @@ import com.pietschy.gwt.pectin.client.bean.BeanModelProviderPropertyDescriptorTe
 import com.pietschy.gwt.pectin.client.bean.BeanModelProviderValueModelTest;
 import com.pietschy.gwt.pectin.client.binding.FormBinderMetadataTest;
 import com.pietschy.gwt.pectin.client.binding.FormBinderUiCommandTest;
-import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinderTest;
+import com.pietschy.gwt.pectin.client.form.MissingPropertiesFormModelTest;
+import com.pietschy.gwt.pectin.client.form.metadata.binding.MetadataBinderTest;
 import com.pietschy.gwt.pectin.client.style.StyleBinderTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;

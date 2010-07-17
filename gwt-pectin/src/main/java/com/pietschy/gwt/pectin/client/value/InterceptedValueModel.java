@@ -1,59 +1,14 @@
 package com.pietschy.gwt.pectin.client.value;
 
-import com.google.gwt.user.client.Command;
-import com.pietschy.gwt.pectin.client.interceptor.Interceptor;
-import com.pietschy.gwt.pectin.client.interceptor.InterceptorChain;
+import com.pietschy.gwt.pectin.client.interceptor.HasInterceptors;
 
 /**
- * A ValueModel that can allows value changes to be intercepted by interested third parties.  The
- * interceptors can abort the value change if required.
- * 
- * @see #interceptUsing(com.pietschy.gwt.pectin.client.interceptor.Interceptor)
+ * Created by IntelliJ IDEA.
+ * User: andrew
+ * Date: Jul 17, 2010
+ * Time: 9:31:25 AM
+ * To change this template use File | Settings | File Templates.
  */
-public class InterceptedValueModel<T> extends ValueHolder<T>
+public interface InterceptedValueModel<T> extends ValueModel<T>, HasInterceptors
 {
-   private InterceptorChain interceptors = new InterceptorChain();
-
-   public InterceptedValueModel()
-   {
-   }
-
-   public InterceptedValueModel(T value)
-   {
-      super(value);
-   }
-
-   @Override
-   public void setValue(final T newValue)
-   {
-      setValueInternal(newValue, false);
-   }
-
-   public void setValue(final T newValue, boolean force)
-   {
-      setValueInternal(newValue, force);
-   }
-
-   private void setValueInternal(final T newValue, boolean force)
-   {
-      if (force)
-      {
-         super.setValue(newValue);
-      }
-      else
-      {
-         interceptors.execute(new Command()
-         {
-            public void execute()
-            {
-               InterceptedValueModel.super.setValue(newValue);
-            }
-         });
-      }
-   }
-
-   public void interceptUsing(Interceptor interceptor)
-   {
-      interceptors.addInterceptor(interceptor);
-   }
 }

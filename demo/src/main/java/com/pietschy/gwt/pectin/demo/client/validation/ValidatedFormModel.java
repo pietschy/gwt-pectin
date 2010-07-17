@@ -17,25 +17,25 @@
 package com.pietschy.gwt.pectin.demo.client.validation;
 
 import com.google.gwt.core.client.GWT;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import com.pietschy.gwt.pectin.client.command.AbstractUiCommand;
 import com.pietschy.gwt.pectin.client.command.UiCommand;
-import com.pietschy.gwt.pectin.client.validation.FieldValidator;
-import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
-import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
-import com.pietschy.gwt.pectin.client.validation.validator.NotNullValidator;
+import com.pietschy.gwt.pectin.client.form.FieldModel;
+import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.FormattedFieldModel;
+import com.pietschy.gwt.pectin.client.form.ListFieldModel;
+import com.pietschy.gwt.pectin.client.form.validation.FieldValidator;
+import com.pietschy.gwt.pectin.client.form.validation.message.ErrorMessage;
+import com.pietschy.gwt.pectin.client.form.validation.validator.NotEmptyValidator;
+import com.pietschy.gwt.pectin.client.form.validation.validator.NotNullValidator;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
 
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.getValidationManager;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
+import static com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin.enable;
+import static com.pietschy.gwt.pectin.client.form.validation.ValidationPlugin.getValidationManager;
+import static com.pietschy.gwt.pectin.client.form.validation.ValidationPlugin.validateField;
 
 /**
  *

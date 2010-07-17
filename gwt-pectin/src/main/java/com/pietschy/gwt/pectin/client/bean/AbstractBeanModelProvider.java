@@ -2,8 +2,8 @@ package com.pietschy.gwt.pectin.client.bean;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.pietschy.gwt.pectin.client.ListModelProvider;
-import com.pietschy.gwt.pectin.client.ValueModelProvider;
+import com.pietschy.gwt.pectin.client.form.ListModelProvider;
+import com.pietschy.gwt.pectin.client.form.ValueModelProvider;
 import com.pietschy.gwt.pectin.client.value.AbstractMutableValueModel;
 import com.pietschy.gwt.pectin.client.value.DelegatingValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;

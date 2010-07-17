@@ -18,12 +18,13 @@ package com.pietschy.gwt.pectin.demo.client.style;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormModel;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.enable;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.getValidationManager;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
-import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
+import com.pietschy.gwt.pectin.client.form.FieldModel;
+import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.validation.validator.NotEmptyValidator;
+
+import static com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin.enable;
+import static com.pietschy.gwt.pectin.client.form.validation.ValidationPlugin.getValidationManager;
+import static com.pietschy.gwt.pectin.client.form.validation.ValidationPlugin.validateField;
 
 /**
  * There's nothing much to this model.  The style bindings in the form are

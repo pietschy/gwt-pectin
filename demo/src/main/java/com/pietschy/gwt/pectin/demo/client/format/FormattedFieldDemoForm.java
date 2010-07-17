@@ -19,11 +19,10 @@ package com.pietschy.gwt.pectin.demo.client.format;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import com.pietschy.gwt.pectin.client.binding.FormBinder;
-import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.TextSplitter;
+import com.pietschy.gwt.pectin.client.form.FormBinder;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 
 /**
@@ -54,7 +53,7 @@ extends VerySimpleForm
    };
    private Label luckNumberTotal = new Label();
 
-   private FormBinder binder = new WidgetBinder();
+   private FormBinder binder = new FormBinder();
 
 
    public FormattedFieldDemoForm(final FormattedFieldDemoModel model)

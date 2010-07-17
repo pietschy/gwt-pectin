@@ -20,7 +20,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import com.pietschy.gwt.pectin.client.FormModel;
+import com.pietschy.gwt.pectin.client.form.FormModel;
 
 /**
  * Created by IntelliJ IDEA.

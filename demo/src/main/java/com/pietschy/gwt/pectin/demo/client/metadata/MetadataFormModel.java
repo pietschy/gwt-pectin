@@ -17,11 +17,11 @@
 package com.pietschy.gwt.pectin.demo.client.metadata;
 
 import com.google.gwt.core.client.GWT;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.ListFieldModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.form.FieldModel;
+import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.FormattedFieldModel;
+import com.pietschy.gwt.pectin.client.form.ListFieldModel;
 import com.pietschy.gwt.pectin.client.format.IntegerFormat;
 import com.pietschy.gwt.pectin.client.function.Function;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
@@ -30,7 +30,7 @@ import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 
 import static com.pietschy.gwt.pectin.client.condition.Conditions.is;
 import static com.pietschy.gwt.pectin.client.condition.Conditions.valueOf;
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.*;
+import static com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin.*;
 
 
 /**

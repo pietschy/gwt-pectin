@@ -18,18 +18,18 @@ package com.pietschy.gwt.pectin.demo.client.metadata;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.*;
-import com.pietschy.gwt.pectin.client.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.components.AbstractDynamicList;
 import com.pietschy.gwt.pectin.client.components.ComboBox;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
+import com.pietschy.gwt.pectin.client.form.FormBinder;
 import com.pietschy.gwt.pectin.client.format.DisplayFormat;
 import com.pietschy.gwt.pectin.demo.client.domain.Protocol;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.metadataOf;
+import static com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin.metadataOf;
 
 /**
  *

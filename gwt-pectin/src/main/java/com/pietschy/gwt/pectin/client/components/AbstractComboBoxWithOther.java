@@ -24,14 +24,14 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.*;
+import com.pietschy.gwt.pectin.client.form.metadata.HasEnabled;
+import com.pietschy.gwt.pectin.client.form.validation.ValidationResult;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplay;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationStyles;
 import com.pietschy.gwt.pectin.client.list.ArrayListModel;
 import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
-import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
-import com.pietschy.gwt.pectin.client.validation.ValidationResult;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
 
 import java.util.ArrayList;
 import java.util.Collection;

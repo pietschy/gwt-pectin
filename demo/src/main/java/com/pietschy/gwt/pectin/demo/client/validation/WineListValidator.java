@@ -16,11 +16,11 @@
 
 package com.pietschy.gwt.pectin.demo.client.validation;
 
-import com.pietschy.gwt.pectin.client.validation.IndexedValidationResultCollector;
-import com.pietschy.gwt.pectin.client.validation.ListValidator;
-import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
-import com.pietschy.gwt.pectin.client.validation.message.InfoMessage;
-import com.pietschy.gwt.pectin.client.validation.message.WarningMessage;
+import com.pietschy.gwt.pectin.client.form.validation.IndexedValidationResultCollector;
+import com.pietschy.gwt.pectin.client.form.validation.ListValidator;
+import com.pietschy.gwt.pectin.client.form.validation.message.ErrorMessage;
+import com.pietschy.gwt.pectin.client.form.validation.message.InfoMessage;
+import com.pietschy.gwt.pectin.client.form.validation.message.WarningMessage;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 
 import java.util.List;

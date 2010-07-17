@@ -2,15 +2,15 @@ package com.google.gwt.sample.contacts.client.view;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.sample.contacts.shared.Contact;
-import com.pietschy.gwt.pectin.client.FieldModel;
-import com.pietschy.gwt.pectin.client.FormModel;
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import com.pietschy.gwt.pectin.client.validation.ValidationManager;
-import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
-import com.pietschy.gwt.pectin.client.validation.validator.NotEmptyValidator;
+import com.pietschy.gwt.pectin.client.form.FieldModel;
+import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.validation.ValidationManager;
+import com.pietschy.gwt.pectin.client.form.validation.ValidationPlugin;
+import com.pietschy.gwt.pectin.client.form.validation.validator.NotEmptyValidator;
 
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.watermark;
-import static com.pietschy.gwt.pectin.client.validation.ValidationPlugin.validateField;
+import static com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin.watermark;
+import static com.pietschy.gwt.pectin.client.form.validation.ValidationPlugin.validateField;
 
 /**
  * Created by IntelliJ IDEA.

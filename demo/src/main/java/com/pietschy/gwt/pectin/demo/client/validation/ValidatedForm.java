@@ -20,17 +20,16 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.pietschy.gwt.pectin.client.FieldModelBase;
-import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.ListFieldModelBase;
-import com.pietschy.gwt.pectin.client.binding.FormBinder;
-import com.pietschy.gwt.pectin.client.binding.WidgetBinder;
 import com.pietschy.gwt.pectin.client.components.EnhancedTextBox;
 import com.pietschy.gwt.pectin.client.components.NullSafeCheckBox;
-import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
-import com.pietschy.gwt.pectin.client.validation.binding.ValidationBinder;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplayLabel;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationDisplayPanel;
+import com.pietschy.gwt.pectin.client.form.FieldModelBase;
+import com.pietschy.gwt.pectin.client.form.FormBinder;
+import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.ListFieldModelBase;
+import com.pietschy.gwt.pectin.client.form.metadata.binding.MetadataBinder;
+import com.pietschy.gwt.pectin.client.form.validation.binding.ValidationBinder;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplayLabel;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplayPanel;
 import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.NickNameEditor;
@@ -63,7 +62,7 @@ public class ValidatedForm extends VerySimpleForm
    private Button clearButton = new Button("Clear");
    private Button fakeSererErrorButton = new Button("Fake a Server Validation Error");
 
-   FormBinder binder = new WidgetBinder();
+   FormBinder binder = new FormBinder();
    ValidationBinder validation = new ValidationBinder();
    MetadataBinder metadata = new MetadataBinder();
 

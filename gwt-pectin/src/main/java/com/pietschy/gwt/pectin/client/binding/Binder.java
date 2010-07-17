@@ -22,12 +22,12 @@ import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.command.AsyncUiCommand;
 import com.pietschy.gwt.pectin.client.command.UiCommand;
+import com.pietschy.gwt.pectin.client.form.metadata.HasEnabled;
+import com.pietschy.gwt.pectin.client.form.metadata.HasVisible;
+import com.pietschy.gwt.pectin.client.form.metadata.binding.ConditionBinderBuilder;
+import com.pietschy.gwt.pectin.client.form.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.list.MutableListModel;
-import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
-import com.pietschy.gwt.pectin.client.metadata.HasVisible;
-import com.pietschy.gwt.pectin.client.metadata.binding.ConditionBinderBuilder;
-import com.pietschy.gwt.pectin.client.metadata.binding.MetadataBinder;
 import com.pietschy.gwt.pectin.client.value.MutableValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 

@@ -31,9 +31,9 @@ extends AbstractMutableValueModel<T>
    {
    }
 
-   public ValueHolder(T value)
+   public ValueHolder(T initialValue)
    {
-      this.value = value;
+      this.value = initialValue;
    }
 
    public T getValue()

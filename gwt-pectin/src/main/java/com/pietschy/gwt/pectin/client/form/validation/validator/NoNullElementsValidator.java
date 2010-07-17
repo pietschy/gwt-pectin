@@ -1,0 +1,76 @@
+/*
+ * Copyright 2009 Andrew Pietsch
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing permissions
+ * and limitations under the License.
+ */
+
+package com.pietschy.gwt.pectin.client.validation.validator;
+
+import com.pietschy.gwt.pectin.client.validation.IndexedValidationResultCollector;
+import com.pietschy.gwt.pectin.client.validation.ListValidator;
+import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
+
+import java.util.List;
+
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: andrew
+ * Date: Jun 20, 2008
+ * Time: 5:35:18 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public class NoNullElementsValidator<T>
+implements ListValidator<T>
+{
+   public boolean stopAtFirstError = false;
+
+   public NoNullElementsValidator()
+   {
+   }
+
+   public NoNullElementsValidator(boolean stopAtFirstError)
+   {
+      this.stopAtFirstError = stopAtFirstError;
+   }
+
+   public void validate(List<? extends T> values, IndexedValidationResultCollector collector)
+   {
+      if (values != null)
+      {
+         for (int i = 0; i < values.size(); i++)
+         {
+            T value = values.get(i);
+            if (value == null)
+            {
+               collector.add(i, createErrorMessageForIndex(i));
+
+               if (stopAtFirstError)
+               {
+                  return;
+               }
+            }
+         }
+      }
+   }
+
+   protected ErrorMessage createErrorMessageForIndex(int i)
+   {
+      return new ErrorMessage(getErrorTextForIndex(i));
+   }
+
+   protected String getErrorTextForIndex(int index)
+   {
+      return "The value at position " + index + " is null";
+   }
+}
