@@ -14,11 +14,11 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.validation.validator;
+package com.pietschy.gwt.pectin.client.form.validation.validator;
 
-import com.pietschy.gwt.pectin.client.validation.Validator;
-import com.pietschy.gwt.pectin.client.validation.ValidationResultCollector;
-import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
+import com.pietschy.gwt.pectin.client.form.validation.ValidationResultCollector;
+import com.pietschy.gwt.pectin.client.form.validation.Validator;
+import com.pietschy.gwt.pectin.client.form.validation.message.ErrorMessage;
 
 /**
  * 

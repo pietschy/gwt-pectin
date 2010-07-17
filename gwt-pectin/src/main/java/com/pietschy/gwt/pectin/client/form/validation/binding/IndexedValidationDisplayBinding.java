@@ -14,14 +14,14 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.validation.binding;
+package com.pietschy.gwt.pectin.client.form.validation.binding;
 
 import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
-import com.pietschy.gwt.pectin.client.validation.HasIndexedValidation;
-import com.pietschy.gwt.pectin.client.validation.IndexedValidationEvent;
-import com.pietschy.gwt.pectin.client.validation.IndexedValidationHandler;
-import com.pietschy.gwt.pectin.client.validation.IndexedValidationResult;
-import com.pietschy.gwt.pectin.client.validation.component.IndexedValidationDisplay;
+import com.pietschy.gwt.pectin.client.form.validation.HasIndexedValidationResult;
+import com.pietschy.gwt.pectin.client.form.validation.IndexedValidationEvent;
+import com.pietschy.gwt.pectin.client.form.validation.IndexedValidationHandler;
+import com.pietschy.gwt.pectin.client.form.validation.IndexedValidationResult;
+import com.pietschy.gwt.pectin.client.form.validation.component.IndexedValidationDisplay;
 
 
 /**
@@ -36,13 +36,13 @@ extends AbstractBinding
 implements IndexedValidationHandler
 {
    private IndexedValidationDisplay display;
-   private HasIndexedValidation fieldValidator;
+   private HasIndexedValidationResult fieldValidator;
 
-   public IndexedValidationDisplayBinding(HasIndexedValidation fieldValidator, IndexedValidationDisplay display)
+   public IndexedValidationDisplayBinding(HasIndexedValidationResult fieldValidator, IndexedValidationDisplay display)
    {
       this.display = display;
       this.fieldValidator = fieldValidator;
-      registerHandler(this.fieldValidator.addValidationHandler(this));
+      registerDisposable(this.fieldValidator.addValidationHandler(this));
    }
 
    public void updateTarget()

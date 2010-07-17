@@ -14,10 +14,10 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.metadata.binding;
+package com.pietschy.gwt.pectin.client.form.metadata.binding;
 
+import com.pietschy.gwt.pectin.client.form.metadata.HasEnabled;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
-import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
 
 /**
  * Created by IntelliJ IDEA.

@@ -14,12 +14,12 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.metadata.binding;
+package com.pietschy.gwt.pectin.client.form.metadata.binding;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.BindingContainer;
-import com.pietschy.gwt.pectin.client.metadata.HasVisible;
+import com.pietschy.gwt.pectin.client.form.metadata.HasVisible;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
@@ -47,7 +47,7 @@ public class VisibilityBindingBuilder
     */
    public void to(UIObject widget)
    {
-      container.registerBindingAndUpdateTarget(new VisibleBinding(model, widget));
+      container.registerDisposableAndUpdateTarget(new VisibleBinding(model, widget));
    }
 
    /**
@@ -58,7 +58,7 @@ public class VisibilityBindingBuilder
     */
    public void to(UIObject widget, UIObject... others)
    {
-      container.registerBindingAndUpdateTarget(new VisibleBinding(model, widget, others));
+      container.registerDisposableAndUpdateTarget(new VisibleBinding(model, widget, others));
    }
 
 
@@ -70,7 +70,7 @@ public class VisibilityBindingBuilder
     */
    public void to(Element element)
    {
-      container.registerBindingAndUpdateTarget(new ElementVisibleBinding(model, element));
+      container.registerDisposableAndUpdateTarget(new ElementVisibleBinding(model, element));
    }
 
    /**
@@ -82,7 +82,7 @@ public class VisibilityBindingBuilder
     */
    public void to(Element element, Element... others)
    {
-      container.registerBindingAndUpdateTarget(new ElementVisibleBinding(model, element, others));
+      container.registerDisposableAndUpdateTarget(new ElementVisibleBinding(model, element, others));
    }
 
    /**
@@ -92,7 +92,7 @@ public class VisibilityBindingBuilder
     */
    public void to(HasVisible widget)
    {
-      container.registerBindingAndUpdateTarget(new HasVisibleBinding(model, widget));
+      container.registerDisposableAndUpdateTarget(new HasVisibleBinding(model, widget));
    }
 
    /**
@@ -103,7 +103,7 @@ public class VisibilityBindingBuilder
     */
    public void to(HasVisible widget, HasVisible... others)
    {
-      container.registerBindingAndUpdateTarget(new HasVisibleBinding(model, widget, others));
+      container.registerDisposableAndUpdateTarget(new HasVisibleBinding(model, widget, others));
    }
 
 

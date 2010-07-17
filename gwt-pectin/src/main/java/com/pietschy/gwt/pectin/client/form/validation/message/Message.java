@@ -14,7 +14,7 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.validation.message;
+package com.pietschy.gwt.pectin.client.form.validation.message;
 
 /**
  * Created by IntelliJ IDEA.

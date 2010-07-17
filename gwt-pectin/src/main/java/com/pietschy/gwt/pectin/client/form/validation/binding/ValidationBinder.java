@@ -14,21 +14,23 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.validation.binding;
+package com.pietschy.gwt.pectin.client.form.validation.binding;
 
-import com.pietschy.gwt.pectin.client.FieldModelBase;
-import com.pietschy.gwt.pectin.client.FormModel;
-import com.pietschy.gwt.pectin.client.ListFieldModelBase;
-import com.pietschy.gwt.pectin.client.binding.AbstractBinder;
-import com.pietschy.gwt.pectin.client.validation.ValidationPlugin;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
+import com.pietschy.gwt.pectin.client.binding.AbstractBindingContainer;
+import com.pietschy.gwt.pectin.client.form.FieldModelBase;
+import com.pietschy.gwt.pectin.client.form.FormModel;
+import com.pietschy.gwt.pectin.client.form.ListFieldModelBase;
+import com.pietschy.gwt.pectin.client.form.validation.HasIndexedValidationResult;
+import com.pietschy.gwt.pectin.client.form.validation.HasValidationResult;
+import com.pietschy.gwt.pectin.client.form.validation.ValidationPlugin;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationStyles;
 
 /**
  * ValidationBinder binds the validation status of a given field to arbitrary widgets.
- * @see com.pietschy.gwt.pectin.client.validation.component.ValidationDisplay
+ *
+ * @see com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplay
  */
-public class ValidationBinder
-extends AbstractBinder
+public class ValidationBinder extends AbstractBindingContainer
 {
    private ValidationStyles validationStyles;
 
@@ -41,8 +43,9 @@ extends AbstractBinder
    }
 
    /**
-    * Creates a new instance that uses the specified {@link com.pietschy.gwt.pectin.client.validation.component.ValidationStyles} to apply styles
+    * Creates a new instance that uses the specified {@link com.pietschy.gwt.pectin.client.form.validation.component.ValidationStyles} to apply styles
     * to widgets.
+    *
     * @param validationStyles the StyleApplicator to use.
     */
    public ValidationBinder(ValidationStyles validationStyles)
@@ -55,25 +58,29 @@ extends AbstractBinder
    }
 
 
+   public ValidationBindingBuilder bindValidationOf(HasValidationResult hasValidation)
+   {
+      return new ValidationBindingBuilder(this, hasValidation, validationStyles);
+   }
+
    public ValidationBindingBuilder bindValidationOf(FormModel form)
    {
-      return new ValidationBindingBuilder(this,
-                                         ValidationPlugin.getValidationManager(form).getFormValidator(),
-                                         validationStyles);
+      return bindValidationOf(ValidationPlugin.getValidationManager(form).getFormValidator());
    }
 
    public ValidationBindingBuilder bindValidationOf(FieldModelBase<?> field)
    {
-      return new ValidationBindingBuilder(this,
-                                         ValidationPlugin.getFieldValidator(field),
-                                         validationStyles);
+      return bindValidationOf(ValidationPlugin.getFieldValidator(field));
    }
 
-   public IndexedValidationBindingBuider bindValidationOf(ListFieldModelBase<?> field)
+   public IndexedValidationBindingBuilder bindValidationOf(ListFieldModelBase<?> field)
    {
-      return new IndexedValidationBindingBuider(this,
-                                                ValidationPlugin.getFieldValidator(field),
-                                                validationStyles);
+      return bindValidationOf(ValidationPlugin.getFieldValidator(field));
+   }
+
+   public IndexedValidationBindingBuilder bindValidationOf(HasIndexedValidationResult hasValidationResult)
+   {
+      return new IndexedValidationBindingBuilder(this, hasValidationResult, validationStyles);
    }
 
 }

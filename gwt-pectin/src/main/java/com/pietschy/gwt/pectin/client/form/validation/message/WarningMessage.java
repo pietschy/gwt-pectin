@@ -14,9 +14,9 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.validation.message;
+package com.pietschy.gwt.pectin.client.form.validation.message;
 
-import com.pietschy.gwt.pectin.client.validation.Severity;
+import com.pietschy.gwt.pectin.client.form.validation.Severity;
 
 /**
  * Created by IntelliJ IDEA.

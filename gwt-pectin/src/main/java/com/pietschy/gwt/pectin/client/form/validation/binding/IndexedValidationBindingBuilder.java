@@ -17,37 +17,39 @@
 package com.pietschy.gwt.pectin.client.form.validation.binding;
 
 import com.google.gwt.user.client.ui.UIObject;
-import com.pietschy.gwt.pectin.client.form.validation.HasValidationResult;
-import com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplay;
+import com.pietschy.gwt.pectin.client.form.validation.HasIndexedValidationResult;
+import com.pietschy.gwt.pectin.client.form.validation.component.IndexedValidationDisplay;
 import com.pietschy.gwt.pectin.client.form.validation.component.ValidationStyles;
 
 /**
  * Created by IntelliJ IDEA.
 * User: andrew
 * Date: Sep 15, 2009
-* Time: 12:09:38 PM
+* Time: 12:09:52 PM
 * To change this template use File | Settings | File Templates.
 */
-public class ValidationBindingBuilder
+public class IndexedValidationBindingBuilder
 {
-   private HasValidationResult validator;
+   private HasIndexedValidationResult validator;
    private ValidationBinder binder;
    private ValidationStyles validationStyles;
 
-   public ValidationBindingBuilder(ValidationBinder binder, HasValidationResult validator, ValidationStyles validationStyles)
+   public IndexedValidationBindingBuilder(ValidationBinder binder, HasIndexedValidationResult validator, ValidationStyles validationStyles)
    {
       this.binder = binder;
       this.validator = validator;
       this.validationStyles = validationStyles;
    }
    
-   public void to(final ValidationDisplay validationDisplay)
+   public void to(final IndexedValidationDisplay validationDisplay)
    {
-      binder.registerDisposableAndUpdateTarget(new ValidationDisplayBinding(validator, validationDisplay));
+      binder.registerDisposableAndUpdateTarget(new IndexedValidationDisplayBinding(validator, validationDisplay));
    }
    
-   public void toStyleOf(UIObject widget)
+   public void toStyle(UIObject widget)
    {
       binder.registerDisposableAndUpdateTarget(new ValidationStyleBinding(validator, widget, validationStyles));
    }
+   
+   
 }

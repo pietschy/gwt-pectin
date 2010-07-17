@@ -1,4 +1,4 @@
-package com.pietschy.gwt.pectin.client.metadata.binding;
+package com.pietschy.gwt.pectin.client.form.metadata.binding;
 
 /**
 * Created by IntelliJ IDEA.

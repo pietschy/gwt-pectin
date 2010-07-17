@@ -14,9 +14,9 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.metadata.binding;
+package com.pietschy.gwt.pectin.client.form.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.metadata.HasVisible;
+import com.pietschy.gwt.pectin.client.form.metadata.HasVisible;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.Collection;

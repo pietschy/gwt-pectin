@@ -14,13 +14,13 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.metadata.binding;
+package com.pietschy.gwt.pectin.client.form.metadata.binding;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.pietschy.gwt.pectin.client.Field;
-import com.pietschy.gwt.pectin.client.metadata.Metadata;
-import com.pietschy.gwt.pectin.client.metadata.MetadataPlugin;
+import com.pietschy.gwt.pectin.client.form.Field;
+import com.pietschy.gwt.pectin.client.form.metadata.Metadata;
+import com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.Collection;

@@ -1,10 +1,10 @@
-package com.pietschy.gwt.pectin.client.metadata.binding;
+package com.pietschy.gwt.pectin.client.form.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.Field;
 import com.pietschy.gwt.pectin.client.binding.AbstractValueBinding;
+import com.pietschy.gwt.pectin.client.form.Field;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
-import static com.pietschy.gwt.pectin.client.metadata.MetadataPlugin.getMetadata;
+import static com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin.getMetadata;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,13 +30,13 @@ public class ConditionBinderBuilder<T>
 
    public void when(ValueModel<Boolean> condition)
    {
-      binder.registerBindingAndUpdateTarget(new ConditionBinding<T>(target, condition, action));
+      binder.registerDisposableAndUpdateTarget(new ConditionBinding<T>(target, condition, action));
    }
 
    /**
-    * This method is deprecated, use {@link com.pietschy.gwt.pectin.client.metadata.MetadataPlugin#metadataOf(com.pietschy.gwt.pectin.client.Field)} instead.
+    * This method is deprecated, use {@link com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin#metadataOf(com.pietschy.gwt.pectin.client.form.Field)} instead.
     * E.g. <pre>binder.show(someWidget).when(metadataOf(someField).isVisible());</pre>
-    * @deprecated use {@link com.pietschy.gwt.pectin.client.metadata.MetadataPlugin#metadataOf(com.pietschy.gwt.pectin.client.Field)} instead.
+    * @deprecated use {@link com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin#metadataOf(com.pietschy.gwt.pectin.client.form.Field)} instead.
     * E.g. <pre>binder.show(someWidget).when(metadataOf(someField).isVisible());</pre>
     * @param field the field of interest.
     */
@@ -44,7 +44,7 @@ public class ConditionBinderBuilder<T>
    public void usingMetadataOf(Field field)
    {
       ValueModel<Boolean> condition = metadataAction.getModel(getMetadata(field));
-      binder.registerBindingAndUpdateTarget(new ConditionBinding<T>(target, condition, metadataAction));
+      binder.registerDisposableAndUpdateTarget(new ConditionBinding<T>(target, condition, metadataAction));
    }
 
    private class ConditionBinding<T> extends AbstractValueBinding<Boolean>

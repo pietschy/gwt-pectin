@@ -14,12 +14,12 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.validation.binding;
+package com.pietschy.gwt.pectin.client.form.validation.binding;
 
 import com.google.gwt.user.client.ui.UIObject;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
-import com.pietschy.gwt.pectin.client.validation.*;
-import com.pietschy.gwt.pectin.client.validation.component.ValidationStyles;
+import com.pietschy.gwt.pectin.client.form.validation.*;
+import com.pietschy.gwt.pectin.client.form.validation.component.ValidationStyles;
 
 
 /**
@@ -33,24 +33,24 @@ public class ValidationStyleBinding
 extends AbstractBinding
 implements ValidationHandler, IndexedValidationHandler
 {
-   private HasValidation validator;
+   private HasValidationResult validator;
    private UIObject widget;
    private ValidationStyles validationStyles;
 
-   public ValidationStyleBinding(HasValidation validator, UIObject widget, ValidationStyles applicator)
+   public ValidationStyleBinding(HasValidationResult validator, UIObject widget, ValidationStyles applicator)
    {
       this.validator = validator;
       this.widget = widget;
       validationStyles = applicator;
-      registerHandler(validator.addValidationHandler(this));
+      registerDisposable(validator.addValidationHandler(this));
    }
 
-   public ValidationStyleBinding(HasIndexedValidation validator, UIObject widget, ValidationStyles applicator)
+   public ValidationStyleBinding(HasIndexedValidationResult validator, UIObject widget, ValidationStyles applicator)
    {
       this.validator = validator;
       this.widget = widget;
       validationStyles = applicator;
-      registerHandler(validator.addValidationHandler((IndexedValidationHandler) this));
+      registerDisposable(validator.addValidationHandler((IndexedValidationHandler) this));
    }
 
    public void updateTarget()

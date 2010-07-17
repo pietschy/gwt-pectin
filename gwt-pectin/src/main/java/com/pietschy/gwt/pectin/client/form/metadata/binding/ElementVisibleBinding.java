@@ -14,7 +14,7 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.metadata.binding;
+package com.pietschy.gwt.pectin.client.form.metadata.binding;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.UIObject;

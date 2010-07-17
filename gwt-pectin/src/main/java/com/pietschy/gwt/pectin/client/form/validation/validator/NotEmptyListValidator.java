@@ -14,11 +14,11 @@
  * and limitations under the License.
  */
 
-package com.pietschy.gwt.pectin.client.validation.validator;
+package com.pietschy.gwt.pectin.client.form.validation.validator;
 
-import com.pietschy.gwt.pectin.client.validation.IndexedValidationResultCollector;
-import com.pietschy.gwt.pectin.client.validation.ListValidator;
-import com.pietschy.gwt.pectin.client.validation.message.ErrorMessage;
+import com.pietschy.gwt.pectin.client.form.validation.IndexedValidationResultCollector;
+import com.pietschy.gwt.pectin.client.form.validation.ListValidator;
+import com.pietschy.gwt.pectin.client.form.validation.message.ErrorMessage;
 
 import java.util.List;
 

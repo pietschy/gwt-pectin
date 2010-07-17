@@ -14,11 +14,11 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.metadata.binding;
+package com.pietschy.gwt.pectin.client.form.metadata.binding;
 
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.pietschy.gwt.pectin.client.binding.BindingContainer;
-import com.pietschy.gwt.pectin.client.metadata.HasEnabled;
+import com.pietschy.gwt.pectin.client.form.metadata.HasEnabled;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
@@ -46,7 +46,7 @@ public class EnabledBindingBuilder
     */
    public void to(HasEnabled widget) 
    {
-      container.registerBindingAndUpdateTarget(new HasEnabledBinding(field, widget));
+      container.registerDisposableAndUpdateTarget(new HasEnabledBinding(field, widget));
    }
    
    /**
@@ -56,7 +56,7 @@ public class EnabledBindingBuilder
     */
    public void to(FocusWidget widget) 
    {
-      container.registerBindingAndUpdateTarget(new FocusWidgetEnabledBinding(field, widget));
+      container.registerDisposableAndUpdateTarget(new FocusWidgetEnabledBinding(field, widget));
    }
    
 }

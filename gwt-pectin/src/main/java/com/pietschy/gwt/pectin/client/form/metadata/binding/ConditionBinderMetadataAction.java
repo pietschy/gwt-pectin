@@ -1,6 +1,6 @@
-package com.pietschy.gwt.pectin.client.metadata.binding;
+package com.pietschy.gwt.pectin.client.form.metadata.binding;
 
-import com.pietschy.gwt.pectin.client.metadata.Metadata;
+import com.pietschy.gwt.pectin.client.form.metadata.Metadata;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 /**
