@@ -36,8 +36,9 @@ import static com.pietschy.gwt.pectin.client.form.metadata.MetadataPlugin.metada
  */
 public class MetadataForm extends VerySimpleForm
 {
-   private TextBox givenName = new TextBox();
-   private TextBox surname = new TextBox();
+   private TextBox givenName = new EnhancedTextBox();
+   private TextBox surname = new EnhancedTextBox();
+   private TextBox loginId = new TextBox();
    private PasswordTextBox password = new PasswordTextBox();
    private TextBox passwordClear = new TextBox();
    private CheckBox showPassword = new CheckBox("Show Password");
@@ -84,6 +85,7 @@ public class MetadataForm extends VerySimpleForm
 
       binder.bind(model.givenName).to(givenName);
       binder.bind(model.surname).to(surname);
+      binder.bind(model.loginId).to(loginId);
 
       binder.bind(model.password).to(password);
       binder.bind(model.password).to(passwordClear);
@@ -119,6 +121,7 @@ public class MetadataForm extends VerySimpleForm
 
       addRow("First Name", givenName, "The first two fields use a plain text watermark");
       addRow("Last Name", surname);
+      addRow("Login Id", loginId, "The watermark is automatically computed from the first name and surname.");
       // put both password and passwordClear in the same row as we always show one
       // and hide the other.
       addRow("Password", hpWithNoGap(password, passwordClear), "And here we show & hide widgets based on the state of the checkbox.");
