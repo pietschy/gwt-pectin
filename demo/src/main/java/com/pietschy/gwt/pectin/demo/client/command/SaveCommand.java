@@ -1,10 +1,12 @@
 package com.pietschy.gwt.pectin.demo.client.command;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.Window;
 import com.pietschy.gwt.pectin.client.binding.Binder;
 import com.pietschy.gwt.pectin.client.command.AbstractAsyncUiCommand;
 import com.pietschy.gwt.pectin.client.command.AsyncCommandCallback;
+import com.pietschy.gwt.pectin.client.command.ExceptionHandler;
+import com.pietschy.gwt.pectin.client.command.ExceptionManager;
 import com.pietschy.gwt.pectin.client.interceptor.Invocation;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
@@ -18,12 +20,18 @@ import static com.pietschy.gwt.pectin.client.condition.Conditions.isNot;
  * success and error to the appropriate channels.  The active state of the command
  * is automatically updated.
  */
-public class SaveCommand extends AbstractAsyncUiCommand<Person, Throwable>
+public class SaveCommand extends AbstractAsyncUiCommand<Person, String>
 {
    private SaveServiceAsync service;
+   private ExceptionManager<String> exceptionManager = new ExceptionManager<String>();
    private EditPersonModel model;
    private ValueHolder<String> text = new ValueHolder<String>();
    private Binder binder = new Binder();
+   private static final String TEXT_SAVE = "Save";
+   private static final String TEXT_SAVING = "Saving...";
+   private static final String TEXT_SAVED = "Saved";
+   private static final String TEXT_TRY_SAVE_AGAIN = "Try save again";
+
 
    public SaveCommand(SaveServiceAsync service, EditPersonModel model)
    {
@@ -40,16 +48,39 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, Throwable>
 
       // when ever the model goes dirty we makes sure our text is
       // set to "Save".
-      binder.onTransitionOf(model.dirty).to(true).invoke(setText("Save"));
-      always().onStartInvoke(setText("Saving..."));
-      always().onSuccessInvoke(setText("Saved"));
-      always().onErrorInvoke(setText("Try save again"));
+      binder.onTransitionOf(model.dirty).to(true).invoke(setText(TEXT_SAVE));
+      // now configure our dynamic messages.  We could also do this by overriding
+      // onStart, afterResult, afterError if we wanted, there would be less listeners
+      // involved that way.
+      always().onStartInvoke(setText(TEXT_SAVING));
+      always().onSuccessInvoke(setText(TEXT_SAVED));
+      always().onErrorInvoke(setText(TEXT_TRY_SAVE_AGAIN));
 
-      // The update to the model will also cause it to go non-dirty
+      // Sending the new value tto the model will also cause it to go non-dirty
       // we'll disable.
       always().sendResultTo(model);
 
-      text.setValue("Save");
+      text.setValue(TEXT_SAVE);
+
+      // configure our exception handling...
+      exceptionManager.onCatching(SaveException.class).publishError("Oops, we caught a SaveException");
+
+      // We'd also install generic handlers for the various generic RPC exceptions, but I'm
+      // too lazy for the demo so we'll just do a catch all handler.
+      exceptionManager.onUnregisteredExceptionsInvoke(new ExceptionHandler<Throwable, String>()
+      {
+         @Override
+         public void handle(Throwable error)
+         {
+            // Something went really wrong so we'll abort the usual flow and display
+            // a 'we have a bug' type message.
+            abort();
+            Window.alert("Oops, we caught an unexpected exception!");
+            // this is a bit of a pain, should really have an onErrorOrAbortInvoke(..)
+            // option.
+            text.setValue(TEXT_TRY_SAVE_AGAIN);
+         }
+      });
    }
 
    private Command setText(final String text)
@@ -81,20 +112,9 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, Throwable>
     *
     * @param callback used to publish our results.
     */
-   protected void performAsyncOperation(final AsyncCommandCallback<Person, Throwable> callback)
+   protected void performAsyncOperation(final AsyncCommandCallback<Person, String> callback)
    {
-      service.save(model.getValue(), new AsyncCallback<Person>()
-      {
-         public void onSuccess(Person result)
-         {
-            callback.publishSuccess(result);
-         }
-
-         public void onFailure(Throwable caught)
-         {
-            callback.publishError(caught);
-         }
-      });
+      service.save(model.getValue(), asAsyncCallback(callback, exceptionManager));
    }
 
    public ValueModel<String> text()

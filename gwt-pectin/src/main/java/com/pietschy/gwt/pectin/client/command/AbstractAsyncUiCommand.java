@@ -1,15 +1,16 @@
 package com.pietschy.gwt.pectin.client.command;
 
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 
 /**
  * Base class for commands wishing to invoke an asynchronous operation.
  */
-public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCommand implements AsyncUiCommand<R,E>
+public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCommand implements AsyncUiCommand<R, E>
 {
 
-   private AsyncEventSupport<R,E> eventSupport = new AsyncEventSupport<R, E>();
+   private AsyncEventSupport<R, E> eventSupport = new AsyncEventSupport<R, E>();
 
    public AsyncEvents<R, E> always()
    {
@@ -19,6 +20,7 @@ public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCom
    /**
     * Gets a instance of {@link com.pietschy.gwt.pectin.client.command.AsyncEvents} that will only fire
     * on the next execution.
+    *
     * @return the events for the next execution.
     */
    public AsyncEvents<R, E> onNextCall()
@@ -29,6 +31,7 @@ public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCom
    /**
     * Gets the result channel for this command, using this is equivalent using the {@link #always()}
     * command events.
+    *
     * @return this command result channel.
     */
    public Channel<R> getResults()
@@ -39,6 +42,7 @@ public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCom
    /**
     * Gets the error channel for this command, using this is equivalent using the {@link #always()}
     * command events.
+    *
     * @return this command error channel.
     */
    public Channel<E> getErrors()
@@ -50,6 +54,7 @@ public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCom
    /**
     * Method for subclasses to perform work after the callback has succeeded.  This
     * method is called before the result is published.
+    *
     * @param result the result of the command
     */
    protected void afterSuccess(R result)
@@ -59,6 +64,7 @@ public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCom
    /**
     * Method for subclasses to perform work after an error has been generated.  This
     * method is called before the error is published.
+    *
     * @param error the error
     */
    protected void afterError(E error)
@@ -79,11 +85,36 @@ public abstract class AbstractAsyncUiCommand<R, E> extends AbstractTemporalUiCom
       runWithInterceptors(new ExecutionContext(context, eventSupport.prepareEvents()));
    }
 
+   /**
+    * Returns an async callback that will publish the result to the specified callback and will use
+    * the specified ExceptionManager to process any exceptions.
+    *
+    * @param callback         the callback to use to publish the result and errors.
+    * @param exceptionManager the {@link com.pietschy.gwt.pectin.client.command.ExceptionManager} to use
+    *                         for processing exceptions.
+    * @return a regular AsyncCallback that can be used with GWT RPC services.
+    */
+   protected AsyncCallback<R> asAsyncCallback(final AsyncCommandCallback<R, E> callback, final ExceptionManager<E> exceptionManager)
+   {
+      return new AsyncCallback<R>()
+      {
+         public void onSuccess(R result)
+         {
+            callback.publishSuccess(result);
+         }
+
+         public void onFailure(Throwable caught)
+         {
+            exceptionManager.processException(caught, callback);
+         }
+      };
+   }
+
 
    private class ExecutionContext implements Command, AsyncCommandCallback<R, E>
    {
       private Context context;
-      private AsyncEventSupport<R,E>.Trigger events;
+      private AsyncEventSupport<R, E>.Trigger events;
 
       public ExecutionContext(Context context, AsyncEventSupport<R, E>.Trigger trigger)
       {

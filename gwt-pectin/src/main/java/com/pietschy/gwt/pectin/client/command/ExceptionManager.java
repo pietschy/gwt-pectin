@@ -106,11 +106,20 @@ public class ExceptionManager<E>
          this.type = type;
       }
 
+      /**
+       * Invokes the custom error handler.  The handler can perform additional operations
+       * and choose publish a error or abort the command.
+       * @param handler the handler to invoke.
+       */
       public void invoke(ExceptionHandler<T, E> handler)
       {
          handlers.put(type, handler);
       }
 
+      /**
+       * Publishes the specified error.
+       * @param error the error to publish.
+       */
       public void publishError(final E error)
       {
          handlers.put(type, new ExceptionHandler<T, E>()
@@ -119,6 +128,21 @@ public class ExceptionManager<E>
             public void handle(T caught)
             {
                publishError(error);
+            }
+         });
+      }
+
+      /**
+       * Aborts the execution and not error will be published.
+       */
+      public void abort()
+      {
+         handlers.put(type, new ExceptionHandler<T, E>()
+         {
+            @Override
+            public void handle(Throwable error)
+            {
+               abort();
             }
          });
       }

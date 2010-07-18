@@ -10,7 +10,7 @@ import com.pietschy.gwt.pectin.client.interceptor.InterceptorChain;
  * 
  * @see #interceptUsing(com.pietschy.gwt.pectin.client.interceptor.Interceptor)
  */
-public class InterceptedValueHolder<T> extends ValueHolder<T> implements InterceptedValueModel<T>
+public class InterceptedValueHolder<T> extends ValueHolder<T> implements InterceptedMutableValueModel<T>
 {
    private InterceptorChain interceptors = new InterceptorChain();
 

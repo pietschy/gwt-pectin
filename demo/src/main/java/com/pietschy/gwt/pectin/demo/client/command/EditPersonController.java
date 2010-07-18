@@ -44,6 +44,8 @@ public class EditPersonController
 
       // Configure our events... we could have also done this in the command if we
       // wanted, just the command would need to be passed the notification channel.
+      // Another option would be to use binder.show(someStatusMessage).when(saveCommand.active());
+      // in our view.  Just depends on what you need.
       saveCommand.always()
          .onStartSend("Saving.... (we're just pretending, I'm using Random.nextBoolean() to fake errors.)")
          .to(notificationChannel);
@@ -52,10 +54,9 @@ public class EditPersonController
          .onSuccessSend("Save worked.")
          .to(notificationChannel);
 
-      // if we wanted to display the actual error we'd use always().sendErrorTo(...)
+      // send our errors direct to the notification channel.
       saveCommand.always()
-         .onErrorSend("Doh, it failed!")
-         .to(notificationChannel);
+         .sendErrorTo(notificationChannel);
 
       return saveCommand;
    }

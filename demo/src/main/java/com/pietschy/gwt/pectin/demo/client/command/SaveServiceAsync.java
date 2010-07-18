@@ -19,13 +19,11 @@ public class SaveServiceAsync
          @Override
          public void run()
          {
-            if (Random.nextBoolean())
+            switch (Random.nextInt(3))
             {
-               callback.onSuccess(person);
-            }
-            else
-            {
-               callback.onFailure(new Exception("Arrggghhh!!"));
+               case 0: callback.onFailure(new SaveException());break;
+               case 1: callback.onFailure(new Throwable("Aaarrrggg")); break;
+               default: callback.onSuccess(person); break;
             }
          }
       }.schedule(2000);
