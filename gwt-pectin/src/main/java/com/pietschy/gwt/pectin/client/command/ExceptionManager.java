@@ -5,15 +5,15 @@ import java.util.HashMap;
 /**
  * A class that can be used to process exceptions from async callbacks.
  * <pre>
- * ExceptionManger exceptions = ...;
+ * ExceptionManger exceptionManager = ...;
  *
  * // Configure our exception handling.
  * // Some exceptions just translate to messages...
- * exceptions.onCatching(UserNameInUseException.class)
+ * exceptionManager.onCatching(UserNameInUseException.class)
  *    .publishError(constants.userNameInUseMessage());
  *
  * // other exceptions need explicit handling...
- * exceptions.onCatching(StaleEntityException.class)
+ * exceptionManager.onCatching(StaleEntityException.class)
  *    .invoke(new ExceptionHandler() {
  *        public void handle(StaleEntityException error) {
  *           // do things like refreshing the entity...
@@ -24,7 +24,7 @@ import java.util.HashMap;
  *    });
  *
  * // We also need a default handler for all those RPC exceptions..
- * exceptions.onUnregisteredExceptionsInvoke(new ExceptionHandler() {
+ * exceptionManager.onUnregisteredExceptionsInvoke(new ExceptionHandler() {
  *    public void handle(Throwable error) {
  *       // handle things like status code exceptions etc.
  *    }
@@ -33,14 +33,7 @@ import java.util.HashMap;
  *
  * // And finally we can use it in our async command
  * public void performAsyncOperation(final AsyncCommandCallback commandCallback) {
- *    service.doStuff(new AsyncCallback() {
- *       public void onFailure(Throwable caught) {
- *          exceptions.processException(caught, commandCallback);
- *       }
- *       public void onSuccess(T success) {
- *          // do stuff..
- *       }
- *    }
+ *    service.doStuff(asAsyncCallback(commandCallback, exceptionManager));
  * }
  * </pre>
  *
