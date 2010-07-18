@@ -19,6 +19,7 @@ public class SaveServiceAsync
          @Override
          public void run()
          {
+            // using 3 so that the default case has the same likely hood as an error.
             switch (Random.nextInt(3))
             {
                case 0: callback.onFailure(new SaveException());break;
