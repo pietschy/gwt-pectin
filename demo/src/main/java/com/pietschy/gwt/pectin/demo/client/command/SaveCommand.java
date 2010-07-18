@@ -65,8 +65,8 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, String>
       // configure our exception handling...
       exceptionManager.onCatching(SaveException.class).publishError("Oops, we caught a SaveException");
 
-      // We'd also install generic handlers for the various generic RPC exceptions, but I'm
-      // too lazy for the demo so we'll just do a catch all handler.
+      // We can also install a generic handler for the various HTTP/RPC exceptions, but I'm too lazy
+      // for the demo so I'll just show an Oops message.
       exceptionManager.onUnregisteredExceptionsInvoke(new ExceptionHandler<Throwable, String>()
       {
          @Override
