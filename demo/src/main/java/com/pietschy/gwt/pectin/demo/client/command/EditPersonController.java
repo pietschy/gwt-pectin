@@ -47,7 +47,7 @@ public class EditPersonController
       // Another option would be to use binder.show(someStatusMessage).when(saveCommand.active());
       // in our view.  Just depends on what you need.
       saveCommand.always()
-         .onStartSend("Saving.... (we're just pretending, I'm using Random.nextBoolean() to fake errors.)")
+         .onStartSend("Saving.... (I'm just pretending, I'm randomly to faking a SaveException and Throwable.)")
          .to(notificationChannel);
 
       saveCommand.always()

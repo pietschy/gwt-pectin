@@ -60,6 +60,7 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, String>
       // we'll disable.
       always().sendResultTo(model);
 
+      // initialise out text.
       text.setValue(TEXT_SAVE);
 
       // configure our exception handling...
@@ -75,7 +76,7 @@ public class SaveCommand extends AbstractAsyncUiCommand<Person, String>
             // Something went really wrong so we'll abort the usual flow and display
             // a 'we have a bug' type message.
             abort();
-            Window.alert("Oops, we caught an unexpected exception!");
+            Window.alert("We caught a Throwable!");
             // this is a bit of a pain, should really have an onErrorOrAbortInvoke(..)
             // option.
             text.setValue(TEXT_TRY_SAVE_AGAIN);

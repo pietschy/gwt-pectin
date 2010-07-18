@@ -23,10 +23,8 @@ import com.pietschy.gwt.pectin.client.form.FormModel;
 import com.pietschy.gwt.pectin.client.form.ListFieldModel;
 import com.pietschy.gwt.pectin.client.form.validation.validator.NoEmptyElementsValidator;
 import com.pietschy.gwt.pectin.client.form.validation.validator.NotEmptyValidator;
-import com.pietschy.gwt.pectin.client.form.validation.validator.NotNullValidator;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 import com.pietschy.gwt.pectin.client.value.ValueTarget;
-import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Person;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 
@@ -43,7 +41,6 @@ public class EditPersonModel extends FormModel implements ValueTarget<Person>
 
    protected final FieldModel<String> givenName;
    protected final FieldModel<String> surname;
-   protected final FieldModel<Gender> gender;
    protected final ListFieldModel<Wine> favoriteWines;
    protected final ListFieldModel<String> favoriteCheeses;
 
@@ -54,7 +51,6 @@ public class EditPersonModel extends FormModel implements ValueTarget<Person>
       // Create our models...
       givenName = fieldOfType(String.class).boundTo(personProvider, "givenName");
       surname = fieldOfType(String.class).boundTo(personProvider, "surname");
-      gender = fieldOfType(Gender.class).boundTo(personProvider, "gender");
 
       // some list fields
       favoriteWines = listOfType(Wine.class).boundTo(personProvider, "favoriteWines");
@@ -62,7 +58,6 @@ public class EditPersonModel extends FormModel implements ValueTarget<Person>
 
       validateField(givenName).using(new NotEmptyValidator("Please enter your first name"));
       validateField(surname).using(new NotEmptyValidator("Please enter your surname"));
-      validateField(gender).using(new NotNullValidator("Please specify your gender"));
       validateField(favoriteCheeses).using(new NoEmptyElementsValidator(true)
       {
          @Override

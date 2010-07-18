@@ -16,7 +16,6 @@
 
 package com.pietschy.gwt.pectin.demo.client.command;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.*;
 import com.pietschy.gwt.pectin.client.channel.Channel;
 import com.pietschy.gwt.pectin.client.channel.Destination;
@@ -27,7 +26,6 @@ import com.pietschy.gwt.pectin.client.form.ListFieldModelBase;
 import com.pietschy.gwt.pectin.client.form.binding.FormBinder;
 import com.pietschy.gwt.pectin.client.form.validation.binding.ValidationBinder;
 import com.pietschy.gwt.pectin.client.form.validation.component.ValidationDisplayLabel;
-import com.pietschy.gwt.pectin.demo.client.domain.Gender;
 import com.pietschy.gwt.pectin.demo.client.domain.Wine;
 import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 
@@ -42,10 +40,6 @@ public class EditPersonForm extends VerySimpleForm
    // you type, much more exciting for the demo (c:
    private TextBox givenName = new EnhancedTextBox();
    private TextBox surname = new EnhancedTextBox();
-
-   private String buttonGroupId = DOM.createUniqueId();
-   private RadioButton maleRadio = new RadioButton(buttonGroupId, "Male");
-   private RadioButton femaleRadio = new RadioButton(buttonGroupId, "Female");
 
    private CheckBox cabSavCheckBox = new CheckBox("Cab Sav");
    private CheckBox merlotCheckBox = new CheckBox("Merlot");
@@ -76,10 +70,6 @@ public class EditPersonForm extends VerySimpleForm
       binder.bind(model.givenName).to(givenName);
       binder.bind(model.surname).to(surname);
 
-      // now lets bind a value using radio buttons
-      binder.bind(model.gender).withValue(Gender.MALE).to(maleRadio);
-      binder.bind(model.gender).withValue(Gender.FEMALE).to(femaleRadio);
-
       // and a list model to a collection of check boxes
       binder.bind(model.favoriteWines).containingValue(Wine.CAB_SAV).to(cabSavCheckBox);
       binder.bind(model.favoriteWines).containingValue(Wine.MERLOT).to(merlotCheckBox);
@@ -104,7 +94,6 @@ public class EditPersonForm extends VerySimpleForm
       addRow(new HTML("&nbsp;"), notificationDisplay);
       addRow("Given Name", givenName, createValidationLabel(model.givenName));
       addRow("Surname", surname, createValidationLabel(model.surname));
-      addRow("Gender", maleRadio, femaleRadio, createValidationLabel(model.gender));
       addRow("Favorite Wines", cabSavCheckBox, merlotCheckBox, shirazCheckBox);
       addTallRow("Favorite Cheeses", favoriteCheeses);
       addRow("",createValidationLabel(model.favoriteCheeses));
