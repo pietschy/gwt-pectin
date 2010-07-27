@@ -29,7 +29,6 @@ import com.pietschy.gwt.pectin.client.format.FormatException;
  */
 public class SimpleMoneyFormat implements Format<Double>
 {
-   NumberFormat currencyFormat = NumberFormat.getCurrencyFormat();
    NumberFormat numberFormat = NumberFormat.getDecimalFormat();
    NumberFormat displayFormat = NumberFormat.getFormat("$#,##0.00");
 
@@ -43,7 +42,7 @@ public class SimpleMoneyFormat implements Format<Double>
       text = text.trim();
       try
       {
-         return text.startsWith("$") ? currencyFormat.parse(text) : numberFormat.parse(text);
+         return text.startsWith("$") ? numberFormat.parse(text.substring(1)) : numberFormat.parse(text);
       }
       catch (NumberFormatException e)
       {
