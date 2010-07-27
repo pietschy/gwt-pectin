@@ -31,6 +31,7 @@ import java.util.Collection;
  */
 public class MetadataPlugin
 {
+   public static final String DEFAULT_WATERMARK_STYLE = "pectin-Watermark";
 
    public static <T> MetadataBindingBuilder<T> enable(Field field, Field... others)
    {
