@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.client.form;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Command;
 import com.pietschy.gwt.pectin.client.format.Format;
 import com.pietschy.gwt.pectin.client.format.FormatException;
 import com.pietschy.gwt.pectin.client.value.GuardedValueChangeHandler;
@@ -33,8 +34,8 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * To change this template use File | Settings | File Templates.
  */
 public class FormattedFieldModelImpl<T>
-extends AbstractFieldModelBase<T>
-implements FormattedFieldModel<T>
+   extends AbstractFieldModelBase<T>
+   implements FormattedFieldModel<T>
 {
    private ValueHolder<Format<T>> formatModel = new ValueHolder<Format<T>>();
    private MutableValueModel<String> textModel = new ValueHolder<String>();
@@ -55,7 +56,7 @@ implements FormattedFieldModel<T>
          writeTextToValue(event.getValue());
       }
    };
-   
+
    private ValueChangeHandler<Format<T>> formatMonitor = new ValueChangeHandler<Format<T>>()
    {
       public void onValueChange(ValueChangeEvent<Format<T>> event)
@@ -100,6 +101,34 @@ implements FormattedFieldModel<T>
    public ValueModel<Format<T>> getFormatModel()
    {
       return formatModel;
+   }
+
+   public void sanitiseText()
+   {
+      try
+      {
+         // we try and sanitise the users text by parsing it and
+         // reformating it.  We don't touch the real value while doing this
+         // as if the current text value is invalid we'll actually blat the
+         // current value.
+         T value = getFormat().parse(textModel.getValue());
+         writeValueToText(value);
+      }
+      catch (FormatException e)
+      {
+         // ignore
+      }
+   }
+
+   public Command sanitiseTextCommand()
+   {
+      return new Command()
+      {
+         public void execute()
+         {
+            sanitiseText();
+         }
+      };
    }
 
    public void setFormatExceptionPolicy(FormatExceptionPolicy<T> formatExceptionPolicy)

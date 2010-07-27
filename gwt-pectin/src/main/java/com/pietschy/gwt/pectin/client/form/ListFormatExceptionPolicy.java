@@ -29,5 +29,5 @@ import java.util.List;
  */
 public interface ListFormatExceptionPolicy<T>
 {
-   void onFormatException(List<T> valueList, FormatException e);
+   void onFormatException(String value, List<T> valueList, FormatException e);
 }

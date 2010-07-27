@@ -1,77 +1,48 @@
-/*
- * Copyright 2009 Andrew Pietsch 
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you 
- * may not use this file except in compliance with the License. You may 
- * obtain a copy of the License at 
- *      
- *      http://www.apache.org/licenses/LICENSE-2.0 
- *
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
- * implied. See the License for the specific language governing permissions 
- * and limitations under the License. 
- */
-
 package com.pietschy.gwt.pectin.client.form.binding;
 
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.HasBlurHandlers;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
-import com.pietschy.gwt.pectin.client.form.FormattedFieldModel;
-import com.pietschy.gwt.pectin.client.value.GuardedValueChangeHandler;
-import com.pietschy.gwt.pectin.client.value.MutableValueModel;
+import com.pietschy.gwt.pectin.client.form.FormattedFieldBase;
 
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
- * Date: Jul 1, 2009
- * Time: 4:53:36 PM
+ * Date: Jul 26, 2010
+ * Time: 9:30:30 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractFormattedBinding<T> extends AbstractBinding
+public abstract class AbstractFormattedBinding<M extends FormattedFieldBase> extends AbstractBinding
 {
-   private GuardedValueChangeHandler<String> fieldMonitor = new GuardedValueChangeHandler<String>()
-   {
-      public void onGuardedValueChanged(ValueChangeEvent<String> event)
-      {
-         updateTarget(event.getValue());
-      }
-   };
+   private M model;
 
-   private FormattedFieldModel<T> model;
-   private MutableValueModel<String> textModel;
-
-   public AbstractFormattedBinding(FormattedFieldModel<T> model)
+   protected AbstractFormattedBinding(M model)
    {
       this.model = model;
-      textModel = model.getTextModel();
-      registerDisposable(textModel.addValueChangeHandler(fieldMonitor));
    }
 
-   public FormattedFieldModel<T> getModel()
+   public M getModel()
    {
       return model;
    }
 
-   protected abstract void updateTarget(String value);
-
-   public void updateTarget()
+   protected void sanitiseTextOnBlur(HasBlurHandlers widget)
    {
-      updateTarget(textModel.getValue());
+      // We'll update the widget on focus lost in case the format version of the
+      // value is different from what was typed.. i.e if text->parse->value->format->text
+      // produces a different text value.
+      //
+      // We don't try and do this during value change events since if the widget fires
+      // value change event on key events the users typing will be clobbered.
+      registerDisposable(widget.addBlurHandler(new BlurMonitor()));
    }
 
-   protected void onWidgetChanged(String text)
+   private class BlurMonitor implements BlurHandler
    {
-      fieldMonitor.setIgnoreEvents(true);
-      try
+      public void onBlur(BlurEvent event)
       {
-         model.getTextModel().setValue(text);
-      }
-      finally
-      {
-         fieldMonitor.setIgnoreEvents(false);
+         model.sanitiseText();
       }
    }
-
 }

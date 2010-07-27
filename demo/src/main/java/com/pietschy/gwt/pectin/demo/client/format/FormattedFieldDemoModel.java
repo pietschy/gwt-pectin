@@ -24,6 +24,7 @@ import com.pietschy.gwt.pectin.client.format.IntegerFormat;
 import com.pietschy.gwt.pectin.client.function.Reduce;
 import com.pietschy.gwt.pectin.client.value.Converter;
 import com.pietschy.gwt.pectin.demo.client.misc.AgeFormat;
+import com.pietschy.gwt.pectin.demo.client.misc.SimpleMoneyFormat;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class FormattedFieldDemoModel extends FormModel
    protected final FormattedFieldModel<Integer> ageInDogYears;
    protected final FormattedListFieldModel<Integer> luckyNumbers;
    protected final FieldModel<Integer> sumOfLuckyNumbers;
+   protected final FormattedFieldModel<Double> moneyInBank;
 
    public FormattedFieldDemoModel()
    {
@@ -53,6 +55,10 @@ public class FormattedFieldDemoModel extends FormModel
          .using(new AgeFormat())
          .convertedFrom(age)
          .using(new DogYearsConverter());
+
+      moneyInBank = formattedFieldOfType(Double.class)
+         .using(new SimpleMoneyFormat())
+         .create();
 
       // a formatted list with a base type of Integer
       luckyNumbers = formattedListOfType(Integer.class)

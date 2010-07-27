@@ -6,10 +6,7 @@ import com.pietschy.gwt.pectin.client.format.IntegerFormat;
 import com.pietschy.gwt.pectin.client.list.ArrayListModel;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedHandler;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -20,6 +17,8 @@ import java.util.List;
 import static com.pietschy.gwt.pectin.reflect.AssertUtil.assertContentEquals;
 import static com.pietschy.gwt.pectin.reflect.AssertUtil.isListChangeEventWithValues;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -100,19 +99,52 @@ public class FormattedListFieldModelImplTest
       FormModel form = new FormModel();
       // not specifying the policy should use the default.
       FormattedListFieldModel<Integer> field = form.formattedListOfType(Integer.class).using(new IntegerFormat()).create();
-      Assert.assertNotNull(field.getFormatExceptionPolicy());
-      Assert.assertEquals(field.getFormatExceptionPolicy().getClass(), DefaultListFormatExceptionPolicy.class);
+      assertNotNull(field.getFormatExceptionPolicy());
+      assertEquals(field.getFormatExceptionPolicy().getClass(), DefaultListFormatExceptionPolicy.class);
 
       // specifying the policy should work.
       ListFormatExceptionPolicy<Integer> customPolicy = new ListFormatExceptionPolicy<Integer>()
       {
-         public void onFormatException(List<Integer> valueList, FormatException e)
+         public void onFormatException(String value, List<Integer> valueList, FormatException e)
          {
          }
       };
       field = form.formattedListOfType(Integer.class).using(new IntegerFormat(), customPolicy).create();
-      Assert.assertNotNull(field.getFormatExceptionPolicy());
+      assertNotNull(field.getFormatExceptionPolicy());
       Assert.assertEquals(field.getFormatExceptionPolicy(), customPolicy);
+   }
+
+
+   @Test
+   public void sanitiseTextWorksAndLeavesInvalidValuesAlone() throws FormatException
+   {
+      when(mockFormat.parse(eq("1.0"))).thenReturn(1);
+      when(mockFormat.parse(eq("2.0"))).thenReturn(2);
+      when(mockFormat.parse(eq("abc"))).thenThrow(new FormatException("blah"));
+
+      when(mockFormat.format(eq(1))).thenReturn("1");
+      when(mockFormat.format(eq(2))).thenReturn("2");
+
+      List<String> rawValues = Arrays.asList("1.0", "2.0", "abc");
+
+      field.getTextModel().setElements(rawValues);
+
+      // the value should be 1 & 2 and the text should still be "1.0", "2.0" & "abc"
+      assertContentEquals(field.asUnmodifiableList(), new Integer(1), new Integer(2));
+      assertContentEquals(field.getTextModel().asUnmodifiableList(), rawValues);
+
+
+      ListModelChangedHandler<Integer> mockVCH = (ListModelChangedHandler<Integer>) mock(ListModelChangedHandler.class);
+
+      field.addListModelChangedHandler(mockVCH);
+      field.sanitiseText();
+
+      // the value should be 1 & 2 and the text should be "1", "2" & "abc"
+      assertContentEquals(field.asUnmodifiableList(), new Integer(1), new Integer(2));
+      assertContentEquals(field.getTextModel().asUnmodifiableList(), "1", "2", "abc");
+
+      // and no event should be fired...
+      verify(mockVCH, times(0)).onListDataChanged(Matchers.<ListModelChangedEvent<Integer>>any());
    }
 
 

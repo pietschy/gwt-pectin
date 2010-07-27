@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
 import com.pietschy.gwt.pectin.client.form.*;
 import com.pietschy.gwt.pectin.client.form.metadata.binding.AllMetadataBindingBuilder;
-import com.pietschy.gwt.pectin.client.form.metadata.binding.WatermarkBinding;
+import com.pietschy.gwt.pectin.client.form.metadata.binding.TextBoxWatermarkBinding;
 import com.pietschy.gwt.pectin.client.value.ValueModel;
 
 import java.util.HashMap;
@@ -57,7 +57,7 @@ public class MetadataManager
       // if we're a FieldModel<String> bound to a text box then apply the water mark.
       if (String.class.getName().equals(model.getValueClass().getName()) && target instanceof TextBox)
       {
-         binding.registerDisposableAndUpdateTarget(new WatermarkBinding((ValueModel<String>) model,
+         binding.registerDisposableAndUpdateTarget(new TextBoxWatermarkBinding((ValueModel<String>) model,
                                                                    getMetadata(model).getWatermarkModel(),
                                                                    (TextBox) target));
       }
@@ -68,7 +68,7 @@ public class MetadataManager
    {
       if (target instanceof TextBox)
       {
-         binding.registerDisposableAndUpdateTarget(new WatermarkBinding(model.getTextModel(),
+         binding.registerDisposableAndUpdateTarget(new TextBoxWatermarkBinding(model.getTextModel(),
                                                                    getMetadata(model).getWatermarkModel(),
                                                                    (TextBox) target));
       }

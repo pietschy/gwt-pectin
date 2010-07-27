@@ -219,7 +219,7 @@ public abstract class AbstractBeanModelProvider<B> extends AbstractMutableValueM
             throw new UnsupportedCollectionTypeException(collectionType);
          }
 
-         listModel = createListValueModel(getSourceModel(descriptor),
+         listModel = createListModel(getSourceModel(descriptor),
                                           descriptor,
                                           converter,
                                           autoCommit);
@@ -239,7 +239,7 @@ public abstract class AbstractBeanModelProvider<B> extends AbstractMutableValueM
       return (BeanPropertyListModel<T>) listModel;
    }
 
-   private <T> BeanPropertyListModel<T> createListValueModel(ValueModel<?> sourceModel, PropertyDescriptor descriptor, CollectionConverter converter, ValueModel<Boolean> autoCommit)
+   protected <T> BeanPropertyListModel<T> createListModel(ValueModel<?> sourceModel, PropertyDescriptor descriptor, CollectionConverter converter, ValueModel<Boolean> autoCommit)
    {
       return new BeanPropertyListModel<T>(sourceModel, descriptor, converter, autoCommit);
    }

@@ -35,6 +35,8 @@ import com.pietschy.gwt.pectin.demo.client.misc.VerySimpleForm;
 public class FormattedFieldDemoForm
 extends VerySimpleForm
 {
+   private TextBox moneyInBank = new EnhancedTextBox();
+
    // we'll use an EnhancedTextBox as it fires value change events as
    // you type, much more exciting for the demo (c:
    private TextBox age = new EnhancedTextBox();
@@ -50,7 +52,7 @@ extends VerySimpleForm
       {
          return new EnhancedTextBox();
       }
-   };
+   };                
    private Label luckNumberTotal = new Label();
 
    private FormBinder binder = new FormBinder();
@@ -58,6 +60,9 @@ extends VerySimpleForm
 
    public FormattedFieldDemoForm(final FormattedFieldDemoModel model)
    {
+      // when binding to HasValue widgets we can request that the text
+      // value be sanitised (i.e. run through the formatter) on blur.
+      binder.bind(model.moneyInBank).to(moneyInBank).sanitiseTextOnBlur();
 
       binder.bind(model.age).to(age);
       binder.bind(model.ageInDogYears).to(ageInDogYears);
@@ -68,15 +73,19 @@ extends VerySimpleForm
 
       // Now bind the list to a Label for simple display.  This format only
       // has to deal with integer values.
-      binder.bind(model.luckyNumbers).toLabel(luckyNumberLabel).withFormat(new LuckyNumberLabelFormat());
+      binder.bind(model.luckyNumbers).toTextOf(luckyNumberLabel).withFormat(new LuckyNumberLabelFormat());
 
       // we'll show a second binding for our lucky numbers.
       binder.bind(model.luckyNumbers).to(luckyNumbersAgain);
 
-      binder.bind(model.sumOfLuckyNumbers).toLabel(luckNumberTotal);
+      binder.bind(model.sumOfLuckyNumbers).toTextOf(luckNumberTotal);
 
+      moneyInBank.setVisibleLength(10);
       age.setVisibleLength(5);
       ageInDogYears.setVisibleLength(5);
+
+      addNote("A basic formatted field displays a double as currency");
+      addRow("Money In Bank", moneyInBank, "The value will be sanitised on blur.");
 
       addNote("This shows two formatted fields, one of which is converted from the other.");
       addRow("Age", age);
@@ -93,8 +102,6 @@ extends VerySimpleForm
 
       addNote("This is the sum of your lucky numbers computed by a Reduce style function.");
       addRow("Total", luckNumberTotal);
-
-
 
    }
 

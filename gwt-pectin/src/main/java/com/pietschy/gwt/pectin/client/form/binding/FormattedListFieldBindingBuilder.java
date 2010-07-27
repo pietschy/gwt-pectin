@@ -43,12 +43,20 @@ public class FormattedListFieldBindingBuilder<T>
       this.field = field;
    }
 
-   public void to(HasValue<Collection<String>> widget)
+   public SanitiseTextBuilder to(HasValue<Collection<String>> widget)
    {
-      callback.onBindingCreated(new FormattedListFieldToHasValueBinding<T>(field, widget), widget);
+      FormattedListFieldToHasValueBinding<T> binding = new FormattedListFieldToHasValueBinding<T>(field, widget);
+      callback.onBindingCreated(binding, widget);
+      return new SanitiseTextBuilder(binding, widget);
    }
 
+   @Deprecated
    public ListDisplayFormatBuilder<T> toLabel(HasText label)
+   {
+      return toTextOf(label);
+   }
+
+   public ListDisplayFormatBuilder<T> toTextOf(HasText label)
    {
       FormattedListFieldToHasTextBinding<T> binding = new FormattedListFieldToHasTextBinding<T>(field, label, CollectionToStringFormat.DEFAULT_INSTANCE);
 

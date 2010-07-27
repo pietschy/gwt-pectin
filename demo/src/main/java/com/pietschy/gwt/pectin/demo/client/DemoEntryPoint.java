@@ -20,8 +20,10 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.LazyPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.pietschy.gwt.pectin.demo.client.basic.BasicDemo;
 import com.pietschy.gwt.pectin.demo.client.command.CommandDemo;
 import com.pietschy.gwt.pectin.demo.client.format.FormattedFieldDemo;
@@ -49,7 +51,7 @@ public class DemoEntryPoint
    public void onModuleLoad()
    {
       rootPanel = RootPanel.get("demo-target");
-      
+
 //      tabs.add(new BasicDemo(), "Basic", "basic");
 //      tabs.add(new FormattedFieldDemo(), "Formatted Fields", "formattedFields");
 //      tabs.add(new MetadataDemo(), "Metadata Plugin", "metadata");
@@ -57,14 +59,62 @@ public class DemoEntryPoint
 //      tabs.add(new StyleDemo(), "Style Bindings", "style");
 //      tabs.initialiseSelectionFromHistory();
 
-      tabs.add(new BasicDemo(), "Basic Form");
-      tabs.add(new MetadataDemo(), "Enabled/Visible/Watermarks");
-      tabs.add(new FormattedFieldDemo(), "Formatted fields");      
-      tabs.add(new ValidationDemo(), "Validation");
-      tabs.add(new StyleDemo(), "Style bindings");
-      tabs.add(new CommandDemo(), "UiCommands & Buttons");
+      tabs.add(new LazyPanel()
+      {
+         @Override
+         protected Widget createWidget()
+         {
+            return new BasicDemo();
+         }
+      }, "Basic Form");
+
+      tabs.add(new LazyPanel()
+      {
+         @Override
+         protected Widget createWidget()
+         {
+            return new MetadataDemo();
+         }
+      }, "Enabled/Visible/Watermarks");
+
+      tabs.add(new LazyPanel()
+      {
+         @Override
+         protected Widget createWidget()
+         {
+            return new FormattedFieldDemo();
+         }
+      }, "Formatted fields");
+
+      tabs.add(new LazyPanel()
+      {
+         @Override
+         protected Widget createWidget()
+         {
+            return new ValidationDemo();
+         }
+      }, "Validation");
+
+      tabs.add(new LazyPanel()
+      {
+         @Override
+         protected Widget createWidget()
+         {
+            return new StyleDemo();
+         }
+      }, "Style bindings");
+
+      tabs.add(new LazyPanel()
+      {
+         @Override
+         protected Widget createWidget()
+         {
+            return new CommandDemo();
+         }
+      }, "UiCommands & Buttons");
+
       tabs.selectTab(0);
-      
+
       rootPanel.add(tabs);
 
       Window.enableScrolling(true);

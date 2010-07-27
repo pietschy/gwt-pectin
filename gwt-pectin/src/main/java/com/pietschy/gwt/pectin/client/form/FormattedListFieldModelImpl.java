@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.client.form;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.Command;
 import com.pietschy.gwt.pectin.client.format.Format;
 import com.pietschy.gwt.pectin.client.format.FormatException;
 import com.pietschy.gwt.pectin.client.list.*;
@@ -42,7 +43,7 @@ public class FormattedListFieldModelImpl<T>
    private ArrayListModel<String> textModel = new ArrayListModel<String>();
    private ListFormatExceptionPolicy<T> formatExceptionPolicy = new ListFormatExceptionPolicy<T>()
    {
-      public void onFormatException(List<T> values, FormatException e)
+      public void onFormatException(String value, List<T> values, FormatException e)
       {
       }
    };
@@ -51,7 +52,7 @@ public class FormattedListFieldModelImpl<T>
    {
       public void onGuardedListDataChanged(ListModelChangedEvent<T> event)
       {
-         writeSourceToText();
+         writeValuesToText();
       }
    };
 
@@ -59,7 +60,7 @@ public class FormattedListFieldModelImpl<T>
    {
       public void onGuardedListDataChanged(ListModelChangedEvent<String> event)
       {
-         writeTextToSource();
+         writeTextToValues();
       }
    };
 
@@ -67,10 +68,9 @@ public class FormattedListFieldModelImpl<T>
    {
       public void onValueChange(ValueChangeEvent<Format<T>> event)
       {
-         writeSourceToText();
+         writeValuesToText();
       }
    };
-
 
    public FormattedListFieldModelImpl(FormModel formModel, ListModel<T> source, Format<T> format, ListFormatExceptionPolicy<T> exceptionPolicy, Class<T> valueType)
    {
@@ -107,6 +107,47 @@ public class FormattedListFieldModelImpl<T>
       return formatModel;
    }
 
+   public void sanitiseText()
+   {
+      // we try and sanitise the users text by parsing it and
+      // reformatting it.  We don't touch the real value while doing this
+      // as if the current text value is invalid we'll actually blat the
+      // current value.
+      ArrayList<String> sanitisedTextValues = new ArrayList<String>(size());
+
+      for (String text : textModel)
+      {
+         sanitisedTextValues.add(sanitiseText(text));
+      }
+
+      updateTextModel(sanitisedTextValues);
+   }
+
+   public Command sanitiseTextCommand()
+   {
+      return new Command()
+      {
+         public void execute()
+         {
+            sanitiseText();
+         }
+      };
+   }
+
+   private String sanitiseText(String text)
+   {
+      try
+      {
+         Format<T> format = getFormat();
+         T value = format.parse(text);
+         return format.format(value);
+      }
+      catch (FormatException e)
+      {
+         return text;
+      }
+   }
+
    public ListFormatExceptionPolicy<T> getFormatExceptionPolicy()
    {
       return formatExceptionPolicy;
@@ -122,51 +163,58 @@ public class FormattedListFieldModelImpl<T>
       this.formatExceptionPolicy = formatExceptionPolicy;
    }
 
-   protected void writeSourceToText()
+   private void writeTextToValues()
+   {
+      ArrayList<T> newValues = new ArrayList<T>(textModel.size());
+
+      for (String value : (ListModel<String>) textModel)
+      {
+         try
+         {
+            newValues.add(getFormat().parse(value));
+         }
+         catch (FormatException e)
+         {
+            formatExceptionPolicy.onFormatException(value, newValues, e);
+         }
+      }
+
+      updateModelValues(newValues);
+   }
+
+   private void writeValuesToText()
+   {
+      ArrayList<String> newValues = new ArrayList<String>(size());
+      for (T value : (ListModel<T>) this)
+      {
+         newValues.add(getFormat().format(value));
+      }
+      updateTextModel(newValues);
+   }
+
+   private void updateModelValues(ArrayList<T> newValues)
+   {
+      try
+      {
+         valueMonitor.setIgnoreEvents(true);
+         setElements(newValues);
+      }
+      finally
+      {
+         valueMonitor.setIgnoreEvents(false);
+      }
+   }
+
+   private void updateTextModel(ArrayList<String> newValues)
    {
       try
       {
          textMonitor.setIgnoreEvents(true);
-         ArrayList<String> newValues = new ArrayList<String>(size());
-         for (T value : this)
-         {
-            newValues.add(getFormat().format(value));
-         }
-
          textModel.setElements(newValues);
       }
       finally
       {
          textMonitor.setIgnoreEvents(false);
-      }
-   }
-
-   protected void writeTextToSource()
-   {
-      try
-      {
-         valueMonitor.setIgnoreEvents(true);
-
-         ArrayList<T> newValues = new ArrayList<T>(textModel.size());
-
-         for (String value : textModel)
-         {
-            try
-            {
-               newValues.add(getFormat().parse(value));
-            }
-            catch (FormatException e)
-            {
-               formatExceptionPolicy.onFormatException(newValues, e);
-            }
-         }
-
-         setElements(newValues);
-
-      }
-      finally
-      {
-         valueMonitor.setIgnoreEvents(false);
       }
    }
 

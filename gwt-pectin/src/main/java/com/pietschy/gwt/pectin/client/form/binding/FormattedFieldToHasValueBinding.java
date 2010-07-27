@@ -29,7 +29,7 @@ import com.pietschy.gwt.pectin.client.form.FormattedFieldModel;
  * To change this template use File | Settings | File Templates.
  */
 public class FormattedFieldToHasValueBinding<T>
-extends AbstractFormattedBinding<T>
+extends AbstractFormattedValueBinding<T>
 {
    private HasValue<String> widget;
 
@@ -57,4 +57,5 @@ extends AbstractFormattedBinding<T>
          onWidgetChanged(event.getValue());
       }
    }
+
 }

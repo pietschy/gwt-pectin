@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class DefaultListFormatExceptionPolicy<T> implements ListFormatExceptionPolicy<T>
 {
-   public void onFormatException(List<T> valueList, FormatException e)
+   public void onFormatException(String value, List<T> valueList, FormatException e)
    {
       // do nothing.
    }

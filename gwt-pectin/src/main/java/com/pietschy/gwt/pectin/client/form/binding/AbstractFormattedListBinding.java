@@ -16,7 +16,6 @@
 
 package com.pietschy.gwt.pectin.client.form.binding;
 
-import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
 import com.pietschy.gwt.pectin.client.form.FormattedListFieldModel;
 import com.pietschy.gwt.pectin.client.list.GuardedListModelChangedHandler;
 import com.pietschy.gwt.pectin.client.list.ListModelChangedEvent;
@@ -31,7 +30,7 @@ import java.util.Collection;
  * Time: 4:53:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractFormattedListBinding<T> extends AbstractBinding
+public abstract class AbstractFormattedListBinding<T> extends AbstractFormattedBinding<FormattedListFieldModel<T>>
 {
    private GuardedListModelChangedHandler<String> textListMonitor = new GuardedListModelChangedHandler<String>()
    {
@@ -41,19 +40,13 @@ public abstract class AbstractFormattedListBinding<T> extends AbstractBinding
       }
    };
 
-   private FormattedListFieldModel<T> model;
    private MutableListModel<String> textList;
 
-   public AbstractFormattedListBinding(FormattedListFieldModel<T> field)
+   public AbstractFormattedListBinding(FormattedListFieldModel<T> model)
    {
-      this.model = field;
-      textList = field.getTextModel();
+      super(model);
+      textList = model.getTextModel();
       registerDisposable(textList.addListModelChangedHandler(textListMonitor));
-   }
-
-   public FormattedListFieldModel<T> getModel()
-   {
-      return model;
    }
 
    protected abstract void setWidgetValues(Collection<String> values);
@@ -68,7 +61,7 @@ public abstract class AbstractFormattedListBinding<T> extends AbstractBinding
       textListMonitor.setIgnoreEvents(true);
       try
       {
-         model.getTextModel().setElements(values);
+         getModel().getTextModel().setElements(values);
       }
       finally
       {

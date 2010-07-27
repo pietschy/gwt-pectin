@@ -41,10 +41,11 @@ public class FormattedFieldBindingBuilder<T>
       this.field = field;
    }
    
-   public void to(HasValue<String> widget)
+   public SanitiseTextBuilder to(HasValue<String> widget)
    {
       FormattedFieldToHasValueBinding<T> binding = new FormattedFieldToHasValueBinding<T>(field, widget);
       callback.onBindingCreated(binding, widget);
+      return new SanitiseTextBuilder(binding, widget);
    }
    
    public DisplayFormatBuilder<T> toLabel(HasText label)

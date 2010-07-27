@@ -1,17 +1,19 @@
 package com.pietschy.gwt.pectin.client.form;
 
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.pietschy.gwt.pectin.client.format.Format;
 import com.pietschy.gwt.pectin.client.format.FormatException;
 import com.pietschy.gwt.pectin.client.format.IntegerFormat;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
-import org.testng.Assert;
+import org.mockito.Matchers;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.pietschy.gwt.pectin.reflect.AssertUtil.isValueChangeEventWithValue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -93,8 +95,8 @@ public class FormattedFieldModelImplTest
       FormModel form = new FormModel();
       // not specifying the policy should use the default.
       FormattedFieldModel<Integer> field = form.formattedFieldOfType(Integer.class).using(new IntegerFormat()).create();
-      Assert.assertNotNull(field.getFormatExceptionPolicy());
-      Assert.assertEquals(field.getFormatExceptionPolicy().getClass(), DefaultFormatExceptionPolicy.class);
+      assertNotNull(field.getFormatExceptionPolicy());
+      assertEquals(field.getFormatExceptionPolicy().getClass(), DefaultFormatExceptionPolicy.class);
 
       // specifying the policy should work.
       FormatExceptionPolicy<Integer> customPolicy = new FormatExceptionPolicy<Integer>()
@@ -105,8 +107,62 @@ public class FormattedFieldModelImplTest
          }
       };
       field = form.formattedFieldOfType(Integer.class).using(new IntegerFormat(), customPolicy).create();
-      Assert.assertNotNull(field.getFormatExceptionPolicy());
-      Assert.assertEquals(field.getFormatExceptionPolicy(), customPolicy);
+      assertNotNull(field.getFormatExceptionPolicy());
+      assertEquals(field.getFormatExceptionPolicy(), customPolicy);
+   }
+
+
+   @Test
+   public void sanitiseTextWorks() throws FormatException
+   {  
+      when(mockFormat.parse(eq("1.0"))).thenReturn(1);
+      when(mockFormat.format(eq(1))).thenReturn("1");
+
+      field.getTextModel().setValue("1.0");
+
+      // the value should be 1 and the text should still be "1.0"
+      assertEquals(field.getValue(), new Integer(1));
+      assertEquals(field.getTextModel().getValue(), "1.0");
+
+
+      ValueChangeHandler<Integer> mockVCH = (ValueChangeHandler<Integer>) mock(ValueChangeHandler.class);
+
+      field.addValueChangeHandler(mockVCH);
+      field.sanitiseText();
+
+      // the value should be 1 and the text should now be "1"
+      assertEquals(field.getValue(), new Integer(1));
+      assertEquals(field.getTextModel().getValue(), "1");
+
+      // and no event should be fired...
+      verify(mockVCH, times(0)).onValueChange(Matchers.<ValueChangeEvent<Integer>>any());
+   }
+
+   @Test
+   public void sanitiseTextWorksWithInvalidText() throws FormatException
+   {
+      when(mockFormat.parse(anyString())).thenThrow(new FormatException("blah"));
+      when(mockFormat.format(anyInt())).thenReturn("should not see this");
+
+      field.getTextModel().setValue("1.0");
+
+      // the value should be 1 and the text should still be "1.0" since the format should have
+      // barfed..
+      assertNull(field.getValue());
+      assertEquals(field.getTextModel().getValue(), "1.0");
+
+      ValueChangeHandler<Integer> mockVCH = (ValueChangeHandler<Integer>) mock(ValueChangeHandler.class);
+
+      field.addValueChangeHandler(mockVCH);
+      field.sanitiseText();
+
+      // the value should still be null since we should never touch the value..
+      assertNull(field.getValue());
+      // and the text value should remain unchanged since the formatter should have barfed.
+      assertEquals(field.getTextModel().getValue(), "1.0");
+
+      // and no event should be fired...
+      verify(mockVCH, times(0)).onValueChange(Matchers.<ValueChangeEvent<Integer>>any());
    }
 
    private static class DummyFormat implements Format<Integer>

@@ -16,7 +16,7 @@
 
 package com.pietschy.gwt.pectin.client.form.validation;
 
-import com.pietschy.gwt.pectin.client.form.HasFormat;
+import com.pietschy.gwt.pectin.client.form.FormattedFieldBase;
 import com.pietschy.gwt.pectin.client.form.validation.message.ErrorMessage;
 import com.pietschy.gwt.pectin.client.form.validation.message.Message;
 import com.pietschy.gwt.pectin.client.format.Format;
@@ -34,9 +34,9 @@ import java.util.List;
 public class FieldFormatValidator<T> implements Validator<String>, ListValidator<String>
 {
 
-   private HasFormat<T> model;
+   private FormattedFieldBase<T> model;
 
-   public FieldFormatValidator(HasFormat<T> model)
+   public FieldFormatValidator(FormattedFieldBase<T> model)
    {
       this.model = model;
    }
