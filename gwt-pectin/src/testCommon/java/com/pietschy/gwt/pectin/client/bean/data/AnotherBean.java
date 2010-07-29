@@ -14,15 +14,35 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.reflect.test;
+package com.pietschy.gwt.pectin.client.bean.data;
 
-import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
-import com.pietschy.gwt.pectin.client.bean.NestedTypes;
+import java.util.List;
 
 /**
- * this would normally be a static inner class but we need to be in a different
- * package to our created instance doesn't have any 'accidentally working' imports.
-*/
-@NestedTypes({AnotherBean.class})
-public abstract class TestProvider extends BeanModelProvider<TestBean>
-{}
+ * We extends AbstractTestBean so we ensure we pick up super class properties.
+ */
+public class AnotherBean
+{
+   private String string;
+   private List<String> stringList;
+
+   public String getString()
+   {
+      return string;
+   }
+
+   public void setString(String string)
+   {
+      this.string = string;
+   }
+
+   public List<String> getStringList()
+   {
+      return stringList;
+   }
+
+   public void setStringList(List<String> stringList)
+   {
+      this.stringList = stringList;
+   }
+}

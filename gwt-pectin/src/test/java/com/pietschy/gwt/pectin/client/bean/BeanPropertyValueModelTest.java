@@ -19,13 +19,12 @@ package com.pietschy.gwt.pectin.client.bean;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.pietschy.gwt.pectin.client.bean.data.TestBean;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
-import com.pietschy.gwt.pectin.reflect.test.TestBean;
 import org.mockito.Matchers;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;

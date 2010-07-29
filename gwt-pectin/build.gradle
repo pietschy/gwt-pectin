@@ -1,28 +1,49 @@
-usePlugin(com.pietschy.gradle.plugin.gwt.GwtLibPlugin)
+usePlugin(com.pietschy.gradle.gwt.GwtLibPlugin)
 usePlugin('maven')
 
 version = "0.${buildNumber}"
 
 dependencies {
+  testCompile('org.testng:testng:5.8:jdk15',
+              'org.mockito:mockito-all:1.8.4')
 
-   testCompile("org.testng:testng:5.8:jdk15",
-               "org.mockito:mockito-all:1.8.4",
-               "junit:junit:4.7")  // for GWT tests
+  gwtTestCompile('junit:junit:4.7')
 }
 
-// we hook into the build and add SNAPSHOT to non
-// release version numbers.
+sourceSets {
+  testCommon {
+    compileClasspath += main.classes
+  }
+
+  test {
+    // gradle doesn't have the notion of dependent sourceSets so
+    // I'm manualy faking it here (and in gwtTest)...
+    compileClasspath += testCommon.classes
+    runtimeClasspath += testCommon.classes
+  }
+
+  gwtTest {
+    compileClasspath += testCommon.classes
+    runtimeClasspath += testCommon.classes
+    // an egregious hack to get the testData classes and source onto the gwtTest runtime
+    // classpath.  No easier way to do it that I could find in the allotted time....
+    runtimeClasspath += files('src/testCommon/java')
+  }
+}
+
+// we hook into the build and add SNAPSHOT to non release version numbers.
 gradle.taskGraph.whenReady {taskGraph ->
-   if (!taskGraph.hasTask(':gwt-pectin:release'))
-   {
-      version = version + '-SNAPSHOT'
-   }
-   println "Version: ${version}"
+  if (!taskGraph.hasTask(':gwt-pectin:release'))
+  {
+    version = version + '-SNAPSHOT'
+  }
+  println "Version: ${version}"
 }
+
 
 // configure out testing
 test {
-   useTestNG()
+  useTestNG()
 }
 // testGwt is provided by GwtLibPlugin
 check.dependsOn('testGwt')
@@ -37,11 +58,11 @@ task release(dependsOn: ['build', 'uploadArchives']) << {
 
 // task for creating the gradle scripts.
 task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {
-   gradleVersion = '0.8'
+  gradleVersion = '0.8'
 }
 
 String getBuildNumber()
 {
-   return readBuildNumber(project)
+  return readBuildNumber(project)
 }
 

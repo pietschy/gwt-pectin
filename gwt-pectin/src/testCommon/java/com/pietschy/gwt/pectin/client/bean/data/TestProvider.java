@@ -14,7 +14,7 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.bean.test;
+package com.pietschy.gwt.pectin.client.bean.data;
 
 import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
 import com.pietschy.gwt.pectin.client.bean.NestedTypes;

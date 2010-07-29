@@ -1,9 +1,8 @@
 package com.pietschy.gwt.pectin.rebind;
 
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.*;
 import com.pietschy.gwt.pectin.client.bean.NestedBean;
-
-import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,12 +14,14 @@ import java.util.Set;
 class PropertyInfo
 {
    private BeanInfo parentType;
+   private BeanInfo myNestedBeanType;
    private String parentPath;
    private String name;
    private JType type;
    private String getterMethodName;
    private String setterMethodName = null;
-   private boolean nestedBean;
+   private boolean annotatedWithNestedBean;
+
 
    PropertyInfo(BeanInfo parentType, String parentPath, String name, JType type, String getterMethodName, boolean hasNestedAnnotation)
    {
@@ -29,26 +30,7 @@ class PropertyInfo
       this.name = name;
       this.type = type;
       this.getterMethodName = getterMethodName;
-      this.nestedBean = computeNestedBean(hasNestedAnnotation, parentType.getNestedBeanTypes());
-   }
-
-   private boolean computeNestedBean(boolean hasNestedAnnotation, Set<Class> nestedBeanTypes)
-   {
-      if (hasNestedAnnotation)
-      {
-         return true;
-      }
-      else
-      {
-         for (Class nestedBeanType : nestedBeanTypes)
-         {
-            if (getTypeName().equals(nestedBeanType.getName()))
-            {
-               return true;
-            }
-         }
-         return false;
-      }
+      this.annotatedWithNestedBean = hasNestedAnnotation;
    }
 
    public String getName()
@@ -68,7 +50,12 @@ class PropertyInfo
 
    public boolean isTopLevel()
    {
-      return getParentPath() == null;
+      return parentType.isRootBean();
+   }
+
+   public int getPropertyDepth()
+   {
+      return parentType.getPropertyDepth() + 1;
    }
 
    public BeanInfo getParentBeanInfo()
@@ -81,12 +68,17 @@ class PropertyInfo
       return parentPath;
    }
 
-   public boolean isNestedBean()
+   public boolean isAnnotatedWithNestedBean()
    {
-      return nestedBean;
+      return annotatedWithNestedBean;
    }
 
    public BeanInfo getNestedBeanInfo()
+   {
+      return myNestedBeanType;
+   }
+
+   public void createNestedBeanInfo() throws UnableToCompleteException
    {
       JClassType beanType = isClassOrInterface();
 
@@ -95,7 +87,7 @@ class PropertyInfo
          throw new IllegalStateException("property " + getName() +
                                          " on type " + parentType.getTypeName() +
                                          " is marked as @" + NestedBean.class.getSimpleName() +
-                                         " but doesn't return a class or interface types.");
+                                         " but doesn't return a class or interface type.");
       }
 
       if (isCollectionProperty())
@@ -106,7 +98,12 @@ class PropertyInfo
                                          " but returns an instanceOf Collection");
       }
 
-      return new BeanInfo(this);
+      myNestedBeanType = new BeanInfo(this);
+   }
+
+   public boolean hasNestedBeanInfo()
+   {
+      return getNestedBeanInfo() != null;
    }
 
    public boolean isCollectionProperty()
@@ -164,6 +161,11 @@ class PropertyInfo
       return primitive != null ? primitive.getQualifiedBoxedSourceName() : type.getQualifiedSourceName();
    }
 
+   public boolean isPrimitive()
+   {
+      return type.isPrimitive() != null;
+   }
+
    public boolean isMutable()
    {
       return setterMethodName != null;
@@ -182,5 +184,27 @@ class PropertyInfo
    public void setSetterMethodName(String setterMethodName)
    {
       this.setterMethodName = setterMethodName;
+   }
+
+   public PropertyInfo getParentProperty()
+   {
+      return getParentBeanInfo().asProperty();
+   }
+
+   public boolean isRecursive()
+   {
+      PropertyInfo parent = getParentProperty();
+      while (parent != null)
+      {
+         // if my type name is the same as any parent then we're 
+         // recursive.
+         if (getTypeName().equals(parent.getTypeName()))
+         {
+            return true;
+         }
+
+         parent = parent.getParentProperty();
+      }
+      return false;
    }
 }

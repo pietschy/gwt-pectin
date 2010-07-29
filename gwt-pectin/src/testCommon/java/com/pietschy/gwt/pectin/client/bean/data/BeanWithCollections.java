@@ -14,7 +14,7 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.reflect.test;
+package com.pietschy.gwt.pectin.client.bean.data;
 
 import java.util.*;
 

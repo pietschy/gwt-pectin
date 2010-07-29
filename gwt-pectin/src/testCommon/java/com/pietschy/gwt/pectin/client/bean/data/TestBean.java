@@ -1,4 +1,4 @@
-package com.pietschy.gwt.pectin.client.bean.test;
+package com.pietschy.gwt.pectin.client.bean.data;
 
 import com.pietschy.gwt.pectin.client.bean.NestedBean;
 
@@ -27,7 +27,6 @@ public class TestBean
    private AnotherBean nestedBean;
    private AnotherBean readOnlyNestedBean = new AnotherBean();
    private BeanWithCollections collections;
-   private RecursiveBeanOne recursiveBean;
 
    public Object getObject()
    {
@@ -132,13 +131,4 @@ public class TestBean
       return readOnlyPrimitiveInt;
    }
 
-   public RecursiveBeanOne getRecursiveBean()
-   {
-      return recursiveBean;
-   }
-
-   public void setRecursiveBean(RecursiveBeanOne recursiveBean)
-   {
-      this.recursiveBean = recursiveBean;
-   }
 }

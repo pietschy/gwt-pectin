@@ -19,9 +19,9 @@ package com.pietschy.gwt.pectin.client.bean;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.pietschy.gwt.pectin.client.bean.data.TestBean;
 import com.pietschy.gwt.pectin.client.value.ValueHolder;
 import com.pietschy.gwt.pectin.reflect.ComputedPath;
-import com.pietschy.gwt.pectin.reflect.test.TestBean;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Matchers;
 import org.testng.annotations.BeforeMethod;

@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.client.form.metadata;
 
 import com.google.gwt.user.client.ui.TextBox;
 import com.pietschy.gwt.pectin.client.binding.AbstractBinding;
+import com.pietschy.gwt.pectin.client.binding.BindingContainer;
 import com.pietschy.gwt.pectin.client.form.*;
 import com.pietschy.gwt.pectin.client.form.metadata.binding.AllMetadataBindingBuilder;
 import com.pietschy.gwt.pectin.client.form.metadata.binding.TextBoxWatermarkable;
@@ -70,7 +71,7 @@ public class MetadataManager
       new AllMetadataBindingBuilder(binding, getMetadata(model)).to(target);
    }
 
-   private void doWatermarkBindings(AbstractBinding binding, ValueModel<String> textModel, ValueModel<String> watermarkModel, Object target)
+   private void doWatermarkBindings(BindingContainer binding, ValueModel<String> textModel, ValueModel<String> watermarkModel, Object target)
    {
       Watermarkable watermarkable = prepareWatermarkable(target);
       if (watermarkable != null)
@@ -83,7 +84,7 @@ public class MetadataManager
    {
       if (target instanceof Watermarkable)
       {
-         return (TextBoxWatermarkable) target;
+         return (Watermarkable) target;
       }
       else if (target instanceof TextBox)
       {

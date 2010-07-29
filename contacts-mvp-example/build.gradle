@@ -1,4 +1,4 @@
-usePlugin(com.pietschy.gradle.plugin.gwt.GwtAppPlugin)
+usePlugin(com.pietschy.gradle.gwt.GwtAppPlugin)
 
 version = "0.${buildNumber}"
 

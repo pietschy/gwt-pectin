@@ -3,7 +3,7 @@ package com.pietschy.gwt.pectin.client.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.pietschy.gwt.pectin.client.bean.test.TestProvider;
+import com.pietschy.gwt.pectin.client.bean.data.TestProvider;
 
 
 /**

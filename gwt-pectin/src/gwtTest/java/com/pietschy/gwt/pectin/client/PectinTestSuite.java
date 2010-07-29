@@ -17,13 +17,11 @@
 package com.pietschy.gwt.pectin.client;
 
 import com.google.gwt.junit.tools.GWTTestSuite;
-import com.pietschy.gwt.pectin.client.bean.BeanModelProviderGeneralTest;
-import com.pietschy.gwt.pectin.client.bean.BeanModelProviderListModelTest;
-import com.pietschy.gwt.pectin.client.bean.BeanModelProviderPropertyDescriptorTest;
-import com.pietschy.gwt.pectin.client.bean.BeanModelProviderValueModelTest;
+import com.pietschy.gwt.pectin.client.bean.*;
 import com.pietschy.gwt.pectin.client.binding.FormBinderMetadataTest;
 import com.pietschy.gwt.pectin.client.binding.FormBinderUiCommandTest;
 import com.pietschy.gwt.pectin.client.form.MissingPropertiesFormModelTest;
+import com.pietschy.gwt.pectin.client.form.metadata.MetadataManagerTest;
 import com.pietschy.gwt.pectin.client.form.metadata.binding.MetadataBinderTest;
 import com.pietschy.gwt.pectin.client.style.StyleBinderTest;
 import junit.framework.Test;
@@ -51,12 +49,14 @@ public class PectinTestSuite extends GWTTestSuite
       gwtTestSuite.addTestSuite(BeanModelProviderValueModelTest.class);
       gwtTestSuite.addTestSuite(BeanModelProviderListModelTest.class);
       gwtTestSuite.addTestSuite(BeanModelProviderGeneralTest.class);
+      gwtTestSuite.addTestSuite(BeanModelProviderRecursiveTest.class);
 
       // Binder tests
       gwtTestSuite.addTestSuite(FormBinderUiCommandTest.class);
       gwtTestSuite.addTestSuite(FormBinderMetadataTest.class);
 
       // Metadata tests
+      gwtTestSuite.addTestSuite(MetadataManagerTest.class);
       gwtTestSuite.addTestSuite(MetadataBinderTest.class);
 
       // style tests

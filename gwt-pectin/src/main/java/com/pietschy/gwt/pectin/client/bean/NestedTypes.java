@@ -15,6 +15,7 @@ import java.lang.annotation.Target;
  * &#064;NestedTypes({Address.class})
  * private static class PersonProvider extends BeanModelProvider<Person>{}
  * </pre>
+ * @see com.pietschy.gwt.pectin.client.bean.LimitPropertyDepth
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

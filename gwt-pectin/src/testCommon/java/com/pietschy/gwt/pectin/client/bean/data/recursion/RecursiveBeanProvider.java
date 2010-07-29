@@ -14,35 +14,18 @@
  * and limitations under the License. 
  */
 
-package com.pietschy.gwt.pectin.client.bean.test;
+package com.pietschy.gwt.pectin.client.bean.data.recursion;
 
-import java.util.List;
+import com.pietschy.gwt.pectin.client.bean.BeanModelProvider;
+import com.pietschy.gwt.pectin.client.bean.LimitPropertyDepth;
+import com.pietschy.gwt.pectin.client.bean.NestedTypes;
 
 /**
- * We extends AbstractTestBean so we ensure we pick up super class properties.
- */
-public class AnotherBean
-{
-   private String string;
-   private List<String> stringList;
-
-   public String getString()
-   {
-      return string;
-   }
-
-   public void setString(String string)
-   {
-      this.string = string;
-   }
-
-   public List<String> getStringList()
-   {
-      return stringList;
-   }
-
-   public void setStringList(List<String> stringList)
-   {
-      this.stringList = stringList;
-   }
-}
+ * This would normally be a static inner class but we I'm putting it in a different
+ * package so our generated provider will fail if it doesn't have all it's imports
+ * correctly defined.
+*/
+@LimitPropertyDepth(4)
+@NestedTypes({RecursiveBeanOne.class, RecursiveBeanTwo.class})
+public abstract class RecursiveBeanProvider extends BeanModelProvider<TestBean>
+{}

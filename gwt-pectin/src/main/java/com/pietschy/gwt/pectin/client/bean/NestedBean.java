@@ -16,6 +16,10 @@ import java.lang.annotation.Target;
  *   public Address getAddress() {return address;}
  * }
  * </pre>
+ * As an alternative you can also the {@link com.pietschy.gwt.pectin.client.bean.NestedTypes}
+ * annotation on you {@link com.pietschy.gwt.pectin.client.bean.BeanModelProvider}.
+ *
+ * @see com.pietschy.gwt.pectin.client.bean.NestedTypes
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

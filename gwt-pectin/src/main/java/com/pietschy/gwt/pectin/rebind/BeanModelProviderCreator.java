@@ -18,6 +18,7 @@ package com.pietschy.gwt.pectin.rebind;
 
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
@@ -49,7 +50,7 @@ public class BeanModelProviderCreator
       this.typeName = typeName;
    }
 
-   public String createProvider()
+   public String createProvider() throws UnableToCompleteException
    {
       try
       {
@@ -76,12 +77,13 @@ public class BeanModelProviderCreator
          {
 
             Set<Class> nestedBeanTypes = getNestedTypeClasses(classType);
+            int maxNestingDepth = getRecursionDepth(classType);
 
             // bean type is in our declaration e.g.
             // class MyProvider extends AbstractBeanModelProvider<BeanType>
             JClassType beanType = classType.getSuperclass().isParameterized().getTypeArgs()[0];
 
-            Context context = new Context(typeOracle, nestedBeanTypes, -1);
+            Context context = new Context(typeName, logger, typeOracle, nestedBeanTypes, maxNestingDepth);
             BeanInfo beanInfo = new BeanInfo(context, beanType);
 
             writer.indent();
@@ -116,6 +118,12 @@ public class BeanModelProviderCreator
              ? Collections.<Class>emptySet()
              : new HashSet<Class>(Arrays.asList(nestedTypeAnnotation.value()));
    }
+   private int getRecursionDepth(JClassType classType)
+   {
+      LimitPropertyDepth maxNestedDepth = classType.findAnnotationInTypeHierarchy(LimitPropertyDepth.class);
+
+      return maxNestedDepth == null ? -1 : maxNestedDepth.value();
+   }
 
    private String toDescriptorVarName(PropertyInfo property)
    {
@@ -133,77 +141,62 @@ public class BeanModelProviderCreator
       {
          public void visit(PropertyInfo property)
          {
-            if (validatePropertyPath(property))
+            // generate an appropriate constructor call...
+            BeanInfo parentBean = property.getParentBeanInfo();
+            if (property.isCollectionProperty())
             {
-               // generate an appropriate constructor call...
-               BeanInfo parentBean = property.getParentBeanInfo();
-               if (property.isCollectionProperty())
-               {
-                  // CollectionPropertyDescriptor(String fullPath, String parentPath, String propertyName,
-                  //                              Class beanType, Class collectionType, Class elementType, boolean mutable)
-                  source.println("private final PropertyDescriptor %s = new CollectionPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s.class, %s) {",
-                                 toDescriptorVarName(property),
-                                 quote(property.getFullPropertyPath()),
-                                 quote(property.getParentPath()),
-                                 quote(property.getName()),
-                                 parentBean.getTypeName(),
-                                 property.getTypeName(),
-                                 property.getCollectionElementTypeName(),
-                                 property.isMutable());
-               }
-               else
-               {
-                  // DefaultPropertyKey(Class type, String fullPath, String parentPath, String propertyName)
-                  source.println("private final PropertyDescriptor %s = new DefaultPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s) {",
-                                 toDescriptorVarName(property),
-                                 quote(property.getFullPropertyPath()),
-                                 quote(property.getParentPath()),
-                                 quote(property.getName()),
-                                 parentBean.getTypeName(),
-                                 property.getTypeName(),
-                                 property.isMutable());
-               }
-
-               // now implement the methods....
-               source.indent();
-               source.println("public Object readProperty(Object bean) {");
-               source.indent();
-               source.println("return bean == null ? null : ((" + parentBean.getTypeName() + ")bean)." + property.getGetterMethodName() + "();");
-               source.outdent();
-               source.println("}");
-
-               source.println("public void writeProperty(Object bean, Object value) {");
-               source.indent();
-               source.println("if (bean == null) {");
-               source.println("   throw new TargetBeanIsNullException(this, " + parentBean.getTypeName() + ".class);");
-               source.println("}");
-               if (property.isMutable())
-               {
-                  source.println("((" + parentBean.getTypeName() + ")bean)." + property.getSetterMethodName() + "((" + property.getTypeName() + ") value);");
-               }
-               else
-               {
-                  source.println("throw new ReadOnlyPropertyException(this);");
-               }
-               source.outdent();
-               source.println("}");
-               source.outdent();
-               source.println("};");
+               // CollectionPropertyDescriptor(String fullPath, String parentPath, String propertyName,
+               //                              Class beanType, Class collectionType, Class elementType, boolean mutable)
+               source.println("private final PropertyDescriptor %s = new CollectionPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s.class, %s) {",
+                              toDescriptorVarName(property),
+                              quote(property.getFullPropertyPath()),
+                              quote(property.getParentPath()),
+                              quote(property.getName()),
+                              parentBean.getTypeName(),
+                              property.getTypeName(),
+                              property.getCollectionElementTypeName(),
+                              property.isMutable());
             }
+            else
+            {
+               // DefaultPropertyKey(Class type, String fullPath, String parentPath, String propertyName)
+               source.println("private final PropertyDescriptor %s = new DefaultPropertyDescriptor(%s, %s, %s, %s.class, %s.class, %s) {",
+                              toDescriptorVarName(property),
+                              quote(property.getFullPropertyPath()),
+                              quote(property.getParentPath()),
+                              quote(property.getName()),
+                              parentBean.getTypeName(),
+                              property.getTypeName(),
+                              property.isMutable());
+            }
+
+            // now implement the methods....
+            source.indent();
+            source.println("public Object readProperty(Object bean) {");
+            source.indent();
+            source.println("return bean == null ? null : ((" + parentBean.getTypeName() + ")bean)." + property.getGetterMethodName() + "();");
+            source.outdent();
+            source.println("}");
+
+            source.println("public void writeProperty(Object bean, Object value) {");
+            source.indent();
+            source.println("if (bean == null) {");
+            source.println("   throw new TargetBeanIsNullException(this, " + parentBean.getTypeName() + ".class);");
+            source.println("}");
+            if (property.isMutable())
+            {
+               source.println("((" + parentBean.getTypeName() + ")bean)." + property.getSetterMethodName() + "((" + property.getTypeName() + ") value);");
+            }
+            else
+            {
+               source.println("throw new ReadOnlyPropertyException(this);");
+            }
+            source.outdent();
+            source.println("}");
+            source.outdent();
+            source.println("};");
          }
       });
-   }
-
-   private boolean validatePropertyPath(PropertyInfo property)
-   {
-      // things this needs to check:
-      // a) property path isn't recursive
-      // b) or the recursive path has been limited for the type involved.
-//      if (property.isRecursive())
-//      {
-//         return false;
-//      }
-      return true;  
    }
 
    private void generateGetPropertyDescriptorMethod(final Writer source, final BeanInfo beanInfo)
@@ -229,7 +222,6 @@ public class BeanModelProviderCreator
       source.outdent();
       source.println("}");
    }
-
 
 
    public Writer

@@ -2,11 +2,13 @@ package com.pietschy.gwt.pectin.client.value;
 
 import com.pietschy.gwt.pectin.client.interceptor.Interceptor;
 import com.pietschy.gwt.pectin.client.interceptor.Invocation;
-import junit.framework.TestCase;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Time: 2:28:54 PM
  * To change this template use File | Settings | File Templates.
  */
-public class InterceptedValueHolderTest extends TestCase
+public class InterceptedValueHolderTest
 {
    @Test
    public void setValueForcedIgnoresInterceptors()
@@ -58,7 +60,6 @@ public class InterceptedValueHolderTest extends TestCase
             invocation.proceed();
          }
       });
-
 
       // interceptor should block the set
       model.setValue("abc");

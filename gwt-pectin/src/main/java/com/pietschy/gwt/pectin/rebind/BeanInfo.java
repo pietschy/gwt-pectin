@@ -1,10 +1,13 @@
 package com.pietschy.gwt.pectin.rebind;
 
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.TypeOracle;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,7 +30,7 @@ public class BeanInfo implements Iterable<PropertyInfo>
     * @param context  the type oracle.
     * @param beanType the beans type.
     */
-   public BeanInfo(Context context, JClassType beanType)
+   public BeanInfo(Context context, JClassType beanType) throws UnableToCompleteException
    {
       this.context = context;
       this.beanType = beanType;
@@ -41,7 +44,7 @@ public class BeanInfo implements Iterable<PropertyInfo>
     * @param beanType   the beans type.
     * @param parentPath the path of this bean from the root bean.
     */
-   public BeanInfo(PropertyInfo property)
+   public BeanInfo(PropertyInfo property) throws UnableToCompleteException
    {
       this.property = property;
       this.context = property.getParentBeanInfo().getContext();
@@ -65,17 +68,23 @@ public class BeanInfo implements Iterable<PropertyInfo>
       return property != null ? property.getFullPropertyPath() : null;
    }
 
-   protected void processProperties()
+   protected void processProperties() throws UnableToCompleteException
    {
       properties = new HashMap<String, PropertyInfo>();
 
+      extractMethodProperties(properties);
+
+      processNestedBeans(properties.values());
+   }
+
+   private void extractMethodProperties(Map<String, PropertyInfo> properties)
+   {
       ArrayList<MethodInfo> methods = getMethods(beanType);
       for (MethodInfo method : methods)
       {
          if (method.isGetter())
          {
-            PropertyInfo info = new PropertyInfo(
-               this,
+            PropertyInfo info = new PropertyInfo(this,
                                                  getPath(),
                                                  method.getPropertyName(),
                                                  method.getReturnType(),
@@ -97,34 +106,34 @@ public class BeanInfo implements Iterable<PropertyInfo>
             }
          }
       }
-
-      processNestedBeans(properties.values());
    }
 
-   private void processNestedBeans(Iterable<PropertyInfo> properties)
+   private void processNestedBeans(Iterable<PropertyInfo> properties) throws UnableToCompleteException
    {
       // check the context
       for (PropertyInfo property : properties)
       {
-         if (context.isNestedBean(property))
+         if (context.isNestedBeanCandidate(property))
          {
             // this will generate the nested bean info and barf if there are
             // any issues.
-            BeanInfo nestedBean = property.getNestedBeanInfo();
+            property.createNestedBeanInfo();
+
             // now scan the the nested bean for more nesting.
-            processNestedBeans(nestedBean);
+            processNestedBeans(property.getNestedBeanInfo());
          }
       }
    }
 
    public void visitAllProperties(Visitor<PropertyInfo> visitor)
    {
-      for (PropertyInfo info : properties.values())
+      for (PropertyInfo property : properties.values())
       {
-         visitor.visit(info);
-         if (info.isNestedBean())
+         visitor.visit(property);
+
+         if (property.hasNestedBeanInfo())
          {
-            info.getNestedBeanInfo().visitAllProperties(visitor);
+            property.getNestedBeanInfo().visitAllProperties(visitor);
          }
       }
    }
@@ -178,23 +187,23 @@ public class BeanInfo implements Iterable<PropertyInfo>
 //      }
 //   }
 
-   public Set<Class> getNestedBeanTypes()
-   {
-      return context.getNestedBeanTypes();
-   }
-
-   protected TypeOracle getTypeOracle()
-   {
-      return context.getTypeOracle();
-   }
-
    public boolean isRootBean()
    {
       return property == null;
    }
 
+   public PropertyInfo asProperty()
+   {
+      return property;
+   }
+
    public Context getContext()
    {
       return context;
+   }
+
+   public int getPropertyDepth()
+   {
+      return isRootBean() ? 0 : property.getPropertyDepth();
    }
 }

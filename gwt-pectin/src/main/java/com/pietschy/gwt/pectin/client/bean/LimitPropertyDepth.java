@@ -17,21 +17,23 @@ import java.lang.annotation.Target;
  * Since such a path is infinitely recursive Pectin needs to be given a limit for the depth
  * that the code generation will generate (since valid property paths are computed at compile time).
  * <p>
- * The follow example will limit the maximum depth of any property paths to 5.  So this would limit
- * the manager example above to <ocde>provider.getValueModel("manager.manager.manager.manager.manager", Employee.class)</code>
+ * The follow example will limit the maximum depth of any property paths to 3.  So this would limit
+ * the manager example above to <code>provider.getValueModel("manager.manager.manager", Employee.class)</code>
  * <pre>
  * &#064;NestedTypes({Employee.class})
- * &#064;NestedDepth(5)
- * public static class EmployeeProvider extends BeanModelProvider<Employee>{}
+ * &#064;LimitPropertyDepth(3)
+ * public static class EmployeeProvider extends BeanModelProvider&lt;Employee&gt;{}
  * </pre>
  * <p>
- * This annotation is only required if the provider has nested types and the bean has recursive paths.  Pectin will
- * throw a rebind exception if this annotation is required but has not been specified. (I.e. if you're not getting
+ * <b>NOTE:</b> This annotation is only required if the provider has nested types and the bean has recursive paths.  Pectin will
+ * throw an exception during the rebind process if this annotation is required but has not been specified. (I.e. if you're not getting
  * the exception then you don't need the annotation).
+ * <p>
+ * <b>NOTE:</b> You don't need to be exact with depth as the optimisation process will strip any unused paths.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface NestedDepth
+public @interface LimitPropertyDepth
 {
-   int value() default 10;
+   int value();
 }

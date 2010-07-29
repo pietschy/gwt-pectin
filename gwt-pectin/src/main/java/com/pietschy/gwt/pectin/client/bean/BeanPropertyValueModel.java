@@ -182,9 +182,6 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
       return isAutoCommit() ? autoCommitUpdateStrategy : defaultUpdateStrategy;
    }
 
-
-
-
    private interface UpdateStrategy<T>
    {
       void readFromSource();

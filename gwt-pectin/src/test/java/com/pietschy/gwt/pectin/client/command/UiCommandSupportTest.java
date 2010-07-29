@@ -3,8 +3,8 @@ package com.pietschy.gwt.pectin.client.command;
 import com.google.gwt.user.client.Command;
 import com.pietschy.gwt.pectin.client.interceptor.Interceptor;
 import com.pietschy.gwt.pectin.client.interceptor.Invocation;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -20,7 +20,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class UiCommandSupportTest
 {
-   @Before
+   @BeforeMethod
    public void setUp() throws Exception {
    }
 
@@ -109,12 +109,12 @@ public class UiCommandSupportTest
    {
       public Events always()
       {
-         return null;  //To change body of implemented methods use File | Settings | File Templates.
+         return null;
       }
 
       public Events onNextCall()
       {
-         return null;  //To change body of implemented methods use File | Settings | File Templates.
+         return null;
       }
 
       public void execute()
