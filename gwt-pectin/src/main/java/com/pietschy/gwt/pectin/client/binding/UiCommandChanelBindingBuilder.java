@@ -20,17 +20,17 @@ public class UiCommandChanelBindingBuilder<T>
       delegate = new ChanelBindingBuilder<T>(widgetBinder, channel);
    }
 
-   public void using(Destination<T> destination)
+   public void using(Destination<? super T> destination)
    {
       delegate.to(destination);
    }
 
-   public void using(ValueTarget<T> destination)
+   public void using(ValueTarget<? super T> destination)
    {
       delegate.to(destination);
    }
 
-   public void using(HasValue<T> destination)
+   public void using(HasValue<? super T> destination)
    {
       delegate.to(destination);
    }

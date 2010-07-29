@@ -25,17 +25,17 @@ public class ChanelBindingBuilder<T>
       this.channel = channel;
    }
 
-   public void to(Destination<T> destination)
+   public void to(Destination<? super T> destination)
    {
       binder.registerDisposable(channel.sendTo(destination));
    }
 
-   public void to(ValueTarget<T> destination)
+   public void to(ValueTarget<? super T> destination)
    {
       binder.registerDisposable(channel.sendTo(destination));
    }
 
-   public void to(HasValue<T> destination)
+   public void to(HasValue<? super T> destination)
    {
       binder.registerDisposable(channel.sendTo(destination));
    }

@@ -16,7 +16,6 @@
 
 package com.pietschy.gwt.pectin.client.binding;
 
-import com.pietschy.gwt.pectin.client.format.ListDisplayFormat;
 import com.pietschy.gwt.pectin.client.list.ListModel;
 import com.pietschy.gwt.pectin.client.value.ValueTarget;
 
@@ -33,7 +32,6 @@ public class ListModelToValueTargetBinding<T>
 extends AbstractListBinding<T>
 {
    private ValueTarget<Collection<T>> target;
-   private ListDisplayFormat<? super T> format;
 
    public ListModelToValueTargetBinding(ListModel<T> listModel, ValueTarget<Collection<T>> target)
    {

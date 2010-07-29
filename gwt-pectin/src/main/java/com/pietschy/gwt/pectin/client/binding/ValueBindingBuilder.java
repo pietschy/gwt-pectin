@@ -30,13 +30,13 @@ public class ValueBindingBuilder<T>
       return model;
    }
 
-   public void to(ValueTarget<T> widget)
+   public void to(ValueTarget<? super T> widget)
    {
       getCallback().onBindingCreated(new ValueModelToValueTargetBinding<T>(model, widget),
                                      widget);
    }
 
-   public void to(final ParameterisedCommand<T> command)
+   public void to(final ParameterisedCommand<? super T> command)
    {
       AbstractBinding binding = new ValueModelToValueTargetBinding<T>(model, new ValueTarget<T>()
       {
@@ -48,7 +48,7 @@ public class ValueBindingBuilder<T>
       getCallback().onBindingCreated(binding, command);
    }
 
-   public void to(final Destination<T> destination)
+   public void to(final Destination<? super T> destination)
    {
       AbstractBinding binding = new ValueModelToValueTargetBinding<T>(model, new ValueTarget<T>()
       {

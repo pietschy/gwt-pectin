@@ -29,9 +29,9 @@ import com.pietschy.gwt.pectin.client.value.ValueTarget;
 public class ValueModelToValueTargetBinding<T>
 extends AbstractValueBinding<T>
 {
-   private ValueTarget<T> target;
+   private ValueTarget<? super T> target;
 
-   public ValueModelToValueTargetBinding(ValueModel<T> model, ValueTarget<T> target)
+   public ValueModelToValueTargetBinding(ValueModel<T> model, ValueTarget<? super T> target)
    {
       super(model);
       this.target = target;
@@ -42,7 +42,7 @@ extends AbstractValueBinding<T>
       target.setValue(value);
    }
 
-   public ValueTarget<T> getTarget()
+   public ValueTarget<? super T> getTarget()
    {
       return target;
    }
