@@ -58,7 +58,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder} show/hide enable/disable instead.
     */
    @Deprecated
    public VisibilityBindingBuilder bindVisibilityOf(Field field)
@@ -67,7 +67,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    @Deprecated
    public EnabledBindingBuilder bindEnabledOf(Field field)
@@ -76,7 +76,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    @Deprecated
    public EnabledBindingBuilder bindDisabledOf(Field field)
@@ -99,7 +99,7 @@ public class MetadataBinder extends AbstractBindingContainer
 
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> show(HasVisible uiObject)
    {
@@ -107,7 +107,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> hide(HasVisible uiObject)
    {
@@ -115,7 +115,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> show(UIObject uiObject)
    {
@@ -123,7 +123,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> hide(UIObject uiObject)
    {
@@ -131,7 +131,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> show(Element element)
    {
@@ -139,7 +139,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> hide(Element element)
    {
@@ -147,7 +147,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> enable(HasEnabled widget)
    {
@@ -155,7 +155,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> enable(final FocusWidget widget)
    {
@@ -164,7 +164,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> disable(HasEnabled widget)
    {
@@ -172,7 +172,7 @@ public class MetadataBinder extends AbstractBindingContainer
    }
 
    /**
-    * @deprecated use WidgetBinder show/hide enable/disable instead.
+    * @deprecated use {@link Binder}  show/hide enable/disable instead.
     */
    public ConditionBinderBuilder<?> disable(final FocusWidget widget)
    {
