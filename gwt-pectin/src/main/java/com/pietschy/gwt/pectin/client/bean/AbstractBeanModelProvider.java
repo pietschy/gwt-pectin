@@ -16,7 +16,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * Time: 8:45:59 AM
  * To change this template use File | Settings | File Templates.
  */
-public abstract class AbstractBeanModelProvider<B> extends AbstractMutableValueModel<B> implements ValueModelProvider<String>, ListModelProvider<String>
+public abstract class AbstractBeanModelProvider<B> extends AbstractMutableValueModel<B> implements ValueModelProvider<String>, ListModelProvider<String>, HasDirtyModel
 {
    protected DelegatingValueModel<B> source = new DelegatingValueModel<B>(new ValueHolder<B>());
    private PropertyModelRegistry registry = new PropertyModelRegistry();
@@ -165,10 +165,26 @@ public abstract class AbstractBeanModelProvider<B> extends AbstractMutableValueM
       });
    }
 
+   /**
+    *
+    * @deprecated use {@link #dirty()} instead.
+    */
+   @Deprecated
    public ValueModel<Boolean> getDirtyModel()
+   {
+      return dirty();
+   }
+
+   /**
+    * Returns a value model that reflects this providers dirty state.
+    * @return a value model that reflects this providers dirty state.
+    */
+   public ValueModel<Boolean> dirty()
    {
       return registry.getDirtyModel();
    }
+
+
 
    /**
     * Gets a {@link com.pietschy.gwt.pectin.client.list.ListModel} based on the specified property name and value type.  Property types

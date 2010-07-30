@@ -55,7 +55,7 @@ public class PropertyModelRegistryTest
       BeanPropertyValueModel<T> model = (BeanPropertyValueModel<T>) Mockito.mock(BeanPropertyValueModel.class);
       ValueHolder<Boolean> dirty = new ValueHolder<Boolean>();
       dirtyModels.put(model, dirty);
-      when(model.getDirtyModel()).thenReturn(dirty);
+      when(model.dirty()).thenReturn(dirty);
       return model;
    }
 
@@ -65,7 +65,7 @@ public class PropertyModelRegistryTest
       BeanPropertyListModel<T> model = (BeanPropertyListModel<T>) Mockito.mock(BeanPropertyListModel.class);
       ValueHolder<Boolean> dirty = new ValueHolder<Boolean>();
       dirtyModels.put(model, dirty);
-      when(model.getDirtyModel()).thenReturn(dirty);
+      when(model.dirty()).thenReturn(dirty);
       return model;
    }
 

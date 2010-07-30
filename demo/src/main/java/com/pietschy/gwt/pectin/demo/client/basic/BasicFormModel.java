@@ -92,7 +92,7 @@ public class BasicFormModel extends FormModel
       suburb = fieldOfType(String.class).boundTo(personProvider, "address.suburb");
       postCode = fieldOfType(String.class).boundTo(personProvider, "address.postCode");
 
-      dirty = personProvider.getDirtyModel();
+      dirty = personProvider.dirty();
 
    }
 

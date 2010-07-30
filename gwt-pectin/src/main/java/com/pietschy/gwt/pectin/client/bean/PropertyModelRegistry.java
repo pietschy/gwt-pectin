@@ -79,7 +79,7 @@ public class PropertyModelRegistry
    private void doAddCommonBits(String key, BeanPropertyModelBase valueModel)
    {
       allModels.put(key, valueModel);
-      dirtyModel.addSourceModel(valueModel.getDirtyModel());
+      dirtyModel.addSourceModel(valueModel.dirty());
    }
 
 }

@@ -197,14 +197,14 @@ public class BeanPropertyListModelTest
       when(propertyDescriptor.isMutable()).thenReturn(true);
       model.readFromSource();
 
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
 
       model.setElements(Arrays.asList("ghi"));
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
       // dirty should recover
       model.setElements(listOne);
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
    }
 
    @Test
@@ -215,16 +215,16 @@ public class BeanPropertyListModelTest
       model.readFromSource();
 
       assertEquals(model.asUnmodifiableList(), listOne);
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
 
       model.setElements(listTwo);
       assertEquals(model.asUnmodifiableList(), listTwo);
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
       // we should get the second mock value (listTwo) and dirty should return to false
       model.readFromSource();
       assertEquals(model.asUnmodifiableList(), listTwo);
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
    }
 
 
@@ -235,7 +235,7 @@ public class BeanPropertyListModelTest
       model.readFromSource();
 
       assertEquals(model.size(), 0);
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
    }
 
 
@@ -247,16 +247,16 @@ public class BeanPropertyListModelTest
       model.readFromSource();
 
       assertEquals(model.asUnmodifiableList(), listOne);
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
 
       model.setElements(listTwo);
       assertEquals(model.asUnmodifiableList(), listTwo);
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
       // dirty should recover
       model.checkpoint();
       assertEquals(model.asUnmodifiableList(), listTwo);
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
    }
 
    @Test
@@ -268,16 +268,16 @@ public class BeanPropertyListModelTest
 
 
       assertEquals(model.asUnmodifiableList(), listOne);
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
 
       model.setElements(listTwo);
       assertEquals(model.asUnmodifiableList(), listTwo);
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
       // dirty should recover
       model.revert();
       assertEquals(model.asUnmodifiableList(), listOne);
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
    }
 
    @Test
@@ -289,11 +289,11 @@ public class BeanPropertyListModelTest
 
 
       model.setElements(listTwo);
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
       model.writeToSource(true);
       // not dirty anymore
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
       // and value was written out to the bean...
       verify(propertyDescriptor).writeProperty(isA(TestBean.class),
                                                argThat(new ThatMatchesList(listTwo)));
@@ -308,12 +308,12 @@ public class BeanPropertyListModelTest
 
 
       model.setElements(listTwo);
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
 
       model.writeToSource(false);
       // still dirty
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
       // and value was written out to the bean...
       verify(propertyDescriptor).writeProperty(isA(TestBean.class),
                                                argThat(new ThatMatchesList(listTwo)));
@@ -329,7 +329,7 @@ public class BeanPropertyListModelTest
       model.checkpoint();
       model.setElements(Arrays.asList("qbt", "def", "abc"));
 
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
    }
 
    @Test
@@ -342,7 +342,7 @@ public class BeanPropertyListModelTest
       model.checkpoint();
       model.setElements(Arrays.asList("abc", "def", "abc"));
 
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
    }
 
 
@@ -357,7 +357,7 @@ public class BeanPropertyListModelTest
 
       ValueChangeHandler<Boolean> dirtyHandler = mock(ValueChangeHandler.class);
 
-      model.getDirtyModel().addValueChangeHandler(dirtyHandler);
+      model.dirty().addValueChangeHandler(dirtyHandler);
 
       assertEquals(model.asUnmodifiableList(), listOne);
 

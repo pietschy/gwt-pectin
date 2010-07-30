@@ -66,7 +66,7 @@ public class BeanModelProviderGeneralTestRunner extends AbstractRunner<TestBean>
 
       provider.setValue(bean);
 
-      ValueModel<Boolean> providerDirty = provider.getDirtyModel();
+      ValueModel<Boolean> providerDirty = provider.dirty();
 
       callback.assertFalse(providerDirty.getValue(), "assert 0a failed");
 

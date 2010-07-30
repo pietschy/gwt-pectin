@@ -132,14 +132,14 @@ public class BeanPropertyValueModelTest
       when(propertyDescriptor.isMutable()).thenReturn(true);
       model.readFromSource();
 
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
 
       model.setValue("def");
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
       // dirty should recover
       model.setValue("abc");
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
    }
 
    @Test
@@ -150,16 +150,16 @@ public class BeanPropertyValueModelTest
       model.readFromSource();
 
       assertEquals(model.getValue(), "abc");
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
 
       model.setValue("def");
       assertEquals(model.getValue(), "def");
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
       // we should get the second mock value and dirty should recover
       model.readFromSource();
       assertEquals(model.getValue(), "xyz");
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
 
       verify(propertyDescriptor, never()).writeProperty(any(), any());
    }
@@ -172,16 +172,16 @@ public class BeanPropertyValueModelTest
       model.readFromSource();
 
       assertEquals(model.getValue(), "abc");
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
 
       model.setValue("def");
       assertEquals(model.getValue(), "def");
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
       // dirty should recover
       model.checkpoint();
       assertEquals(model.getValue(), "def");
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
    }
 
    @Test
@@ -192,16 +192,16 @@ public class BeanPropertyValueModelTest
       model.readFromSource();
 
       assertEquals(model.getValue(), "abc");
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
 
       model.setValue("def");
       assertEquals(model.getValue(), "def");
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
       // dirty should recover
       model.revert();
       assertEquals(model.getValue(), "abc");
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
    }
 
    @Test
@@ -212,19 +212,19 @@ public class BeanPropertyValueModelTest
       model.readFromSource();
 
       model.setValue("def");
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
 
 
       model.writeToSource(false);
       // still dirty
-      assertTrue(model.getDirtyModel().getValue());
+      assertTrue(model.dirty().getValue());
       // and value was written out to the bean...
       verify(propertyDescriptor).writeProperty(isA(TestBean.class), eq("def"));
 
       model.setValue("hij");
       model.writeToSource(true);
       // still dirty
-      assertFalse(model.getDirtyModel().getValue());
+      assertFalse(model.dirty().getValue());
       // and value was written out to the bean...
       verify(propertyDescriptor).writeProperty(isA(TestBean.class), eq("hij"));
    }
@@ -241,7 +241,7 @@ public class BeanPropertyValueModelTest
 
       ValueChangeHandler<Boolean> dirtyHandler = mock(ValueChangeHandler.class);
 
-      model.getDirtyModel().addValueChangeHandler(dirtyHandler);
+      model.dirty().addValueChangeHandler(dirtyHandler);
 
       assertEquals(model.getValue(), "abc");
 

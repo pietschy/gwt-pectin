@@ -25,7 +25,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
 /**
  *
  */
-public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> implements BeanPropertyModelBase
+public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> implements BeanPropertyModelBase, HasMutableModel
 {
    private PropertyDescriptor propertyDescriptor;
    private T checkpointValue;
@@ -147,14 +147,14 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
       getUpdateStrategy().revertToCheckpoint();
    }
 
-   public ValueModel<Boolean> getMutableModel()
+   public ValueModel<Boolean> mutable()
    {
       return mutableModel;
    }
 
    public boolean isMutable()
    {
-      return getMutableModel().getValue();
+      return mutable().getValue();
    }
 
    private void updateMutableState()
@@ -172,7 +172,16 @@ public class BeanPropertyValueModel<T> extends AbstractMutableValueModel<T> impl
       return propertyDescriptor.isMutable();
    }
 
+   /**
+    * @deprecated use {@link #dirty()} instead.
+    */
+   @Deprecated
    public ValueModel<Boolean> getDirtyModel()
+   {
+      return dirty();
+   }
+
+   public ValueModel<Boolean> dirty()
    {
       return dirtyModel;
    }

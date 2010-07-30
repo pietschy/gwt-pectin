@@ -1,7 +1,5 @@
 package com.pietschy.gwt.pectin.client.bean;
 
-import com.pietschy.gwt.pectin.client.value.ValueModel;
-
 /**
  * Created by IntelliJ IDEA.
  * User: andrew
@@ -9,7 +7,7 @@ import com.pietschy.gwt.pectin.client.value.ValueModel;
  * Time: 11:17:24 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface BeanPropertyModelBase
+public interface BeanPropertyModelBase extends HasDirtyModel
 {
    void writeToSource(boolean clearDirtyState);
 
@@ -22,8 +20,6 @@ public interface BeanPropertyModelBase
    boolean isMutable();
 
    boolean isMutableProperty();
-
-   ValueModel<Boolean> getDirtyModel();
 
    Class getValueType();
 }

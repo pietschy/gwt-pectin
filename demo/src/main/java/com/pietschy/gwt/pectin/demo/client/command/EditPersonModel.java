@@ -67,7 +67,7 @@ public class EditPersonModel extends FormModel implements ValueTarget<Person>
          }
       });
 
-      dirty = personProvider.getDirtyModel();
+      dirty = personProvider.dirty();
    }
 
 

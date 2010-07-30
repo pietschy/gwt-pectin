@@ -153,7 +153,16 @@ public class BeanPropertyListModel<T> extends ArrayListModel<T> implements BeanP
       getUpdateStrategy().add(element);
    }
 
+   /**
+    * @deprecated use {@link #dirty()} instead.
+    */
+   @Deprecated
    public ValueModel<Boolean> getDirtyModel()
+   {
+      return dirty();
+   }
+   
+   public ValueModel<Boolean> dirty()
    {
       return dirtyModel;
    }
